@@ -1,5 +1,6 @@
 ---
 import { helpCards } from '../data/projects.js';
+import Icon from './Icon.astro';
 ---
 <section class="section section-tinted" id="help">
   <div class="container">
@@ -8,7 +9,9 @@ import { helpCards } from '../data/projects.js';
     <div class="help-grid">
       {helpCards.map((card) => (
         <div class="help-card reveal">
-          <div class="help-icon">{card.icon}</div>
+          <div class="help-icon">
+            <Icon name={card.icon} size={26} />
+          </div>
           <h4>{card.title}</h4>
           <p>{card.body}</p>
         </div>

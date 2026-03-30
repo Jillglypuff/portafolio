@@ -391,20 +391,33 @@ function initNavHover() {
 
 // ─── Init ─────────────────────────────────────────────────────────
 onMounted(() => {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Always run: functional, nav, reveals, counters
+  initNav();
+  setupReveal();
+  animateStats();
+  initNavHover();
+
+  if (reducedMotion) {
+    // Make all entrance elements visible without animation
+    document.querySelectorAll<HTMLElement>(
+      '.hero-char, .hero-name-line, #hero-eyebrow, #hero-tagline, #hero-badges, #hero-actions, #hero-visual'
+    ).forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; });
+    return; // Skip all decorative animations
+  }
+
+  // Decorative — only run when motion is OK
   initCursor();
   initScrollProgress();
-  initNav();
   animateHero();
   initOrbitDots();
   initMagneticButtons();
   initCardTilt();
-  setupReveal();
   initSkillWave();
   initTimelineDraw();
-  animateStats();
   initFeaturedBullets();
   initTechPills();
   initContactSparkles();
-  initNavHover();
 });
 </script>

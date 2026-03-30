@@ -150,7 +150,7 @@ ul { list-style: none; }
   display: flex; flex-direction: column;
 }
 .hero-name-line { display: block; opacity: 0; transform: translateY(20px); }
-.hero-name-line.accent { color: var(--rose); font-style: italic; }
+.hero-name-line.accent { color: var(--rose); }
 .hero-tagline {
   font-size: 1.125rem;
   color: var(--text-muted);
@@ -817,4 +817,90 @@ ul { list-style: none; }
   .metric-chip { flex-direction: row; justify-content: flex-start; gap: 12px; text-align: left; }
   .flow-steps { flex-direction: column; align-items: flex-start; }
   .flow-step::after { content: '↓'; }
+}
+
+/* ─── GREAT VIBES: accent name ────────────────────────────────────── */
+.hero-name-line.accent {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-style: normal; /* Great Vibes is already cursive */
+  letter-spacing: 0.02em;
+}
+
+/* ─── SVG ICON in skill-group-icon ───────────────────────────────── */
+.skill-group-icon {
+  color: var(--rose);
+  margin-bottom: 12px;
+  display: flex;
+}
+.help-icon {
+  color: var(--rose);
+  margin-bottom: 14px;
+  display: flex;
+}
+.edu-icon {
+  color: var(--rose);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ─── CURSOR POINTER on interactive elements ──────────────────────── */
+.skill-tag,
+.stat-card,
+.help-card,
+.skill-group,
+.featured-card,
+.btn,
+.nav-links a,
+.nav-logo,
+.timeline-item {
+  cursor: pointer;
+}
+
+/* ─── FOCUS VISIBLE ──────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+/* Hide outline for mouse users but show for keyboard */
+.cursor-dot ~ :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─── PREFERS-REDUCED-MOTION (CRITICAL a11y) ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Make all animated-in elements visible immediately */
+  .reveal,
+  .reveal-blur,
+  .hero-char,
+  .hero-name-line,
+  #hero-eyebrow,
+  #hero-tagline,
+  #hero-badges,
+  #hero-actions,
+  #hero-visual {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  /* Keep badge shimmer off */
+  .badge::after { display: none; }
+
+  /* Keep scroll progress bar visible but static */
+  .scroll-progress { display: none; }
+
+  /* Keep cursor native */
+  body { cursor: auto !important; }
+  .cursor-dot, .cursor-ring, .cursor-sparkle, .particles { display: none !important; }
 }
