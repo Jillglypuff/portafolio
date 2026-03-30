@@ -898,3 +898,9 @@ ul { list-style: none; }
   body { cursor: auto !important; }
   .cursor-dot, .cursor-ring, .cursor-sparkle, .particles { display: none !important; }
 }
+
+/* ─── ICON ALIGNMENT ─────────────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; gap: 5px; }
+.featured-tag { display: flex; align-items: center; gap: 5px; }
+.contact-location { display: flex; align-items: center; gap: 6px; }
+[data-icon] { flex-shrink: 0; }

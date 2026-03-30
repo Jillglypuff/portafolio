@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import { featured, timeline } from '../data/projects.js';
 ---
 <section class="section section-tinted" id="experience">
@@ -6,11 +7,12 @@ import { featured, timeline } from '../data/projects.js';
     <div class="section-label reveal">Experience</div>
     <h2 class="section-title reveal">Where I've shipped<br /><em>real things</em></h2>
 
-    <!-- ── Featured role ── -->
     <div class="featured-card reveal">
       <div class="featured-header">
         <div>
-          <div class="featured-tag">⭐ Current role · {featured.period}</div>
+          <div class="featured-tag">
+            <Icon name="lucide:star" size={14} /> Current role · {featured.period}
+          </div>
           <h3 class="featured-title">{featured.role}</h3>
           <p class="featured-company">{featured.company} — {featured.location}</p>
         </div>

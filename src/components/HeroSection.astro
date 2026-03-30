@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 ---
 <section class="hero" id="hero">
   <div class="hero-inner">
@@ -12,9 +13,15 @@
       that run in English, Spanish, and Portuguese — for real clients.
     </p>
     <div class="hero-badges" id="hero-badges">
-      <span class="badge badge-green">⚡ In production at Kapix</span>
-      <span class="badge badge-purple">🌍 3 languages · EN · ES · PT</span>
-      <span class="badge badge-rose">🎓 Cenfotec · 2025</span>
+      <span class="badge badge-green">
+        <Icon name="lucide:zap" size={13} /> In production at Kapix
+      </span>
+      <span class="badge badge-purple">
+        <Icon name="lucide:globe" size={13} /> 3 languages · EN · ES · PT
+      </span>
+      <span class="badge badge-rose">
+        <Icon name="lucide:graduation-cap" size={13} /> Cenfotec · 2025
+      </span>
     </div>
     <div class="hero-actions" id="hero-actions">
       <a href="#experience" class="btn btn-primary">See the work</a>
