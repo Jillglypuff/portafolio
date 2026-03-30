@@ -150,7 +150,7 @@ ul { list-style: none; }
   display: flex; flex-direction: column;
 }
 .hero-name-line { display: block; opacity: 0; transform: translateY(20px); }
-.hero-name-line.accent { color: var(--rose); }
+.hero-name-line.accent { color: var(--rose); font-style: italic; }
 .hero-tagline {
   font-size: 1.125rem;
   color: var(--text-muted);
@@ -819,13 +819,7 @@ ul { list-style: none; }
   .flow-step::after { content: '↓'; }
 }
 
-/* ─── GREAT VIBES: accent name ────────────────────────────────────── */
-.hero-name-line.accent {
-  font-family: 'Great Vibes', cursive;
-  font-size: clamp(3.5rem, 7vw, 6.5rem);
-  font-style: normal; /* Great Vibes is already cursive */
-  letter-spacing: 0.02em;
-}
+/* Great Vibes removed — Playfair Display italic used instead */
 
 /* ─── SVG ICON in skill-group-icon ───────────────────────────────── */
 .skill-group-icon {
