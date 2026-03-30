@@ -73,22 +73,22 @@ export const timeline = [
 
 export const helpCards = [
   {
-    icon: 'globe',
+    icon: 'lucide:globe',
     title: 'Global-ready apps',
     body: "If your product needs to run in English, Spanish, and Portuguese — I've managed exactly that complexity in production. I know the edge cases.",
   },
   {
-    icon: 'link',
+    icon: 'lucide:link',
     title: 'Full-stack features',
     body: 'Need a feature from database to UI? I can build the Vue or React front end, the PHP or Node back end, and wire them together without silos.',
   },
   {
-    icon: 'users',
+    icon: 'lucide:users',
     title: 'Cross-functional teams',
     body: 'Four years at Amazon taught me how to work with PMs, senior engineers, and stakeholders. I ask the right questions, not just the technical ones.',
   },
   {
-    icon: 'sparkles',
+    icon: 'lucide:sparkles',
     title: 'AI-adjacent work',
     body: "Hands-on experience evaluating LLM-generated code quality. If you're building AI tooling or code review pipelines, that background is ready to use.",
   },
