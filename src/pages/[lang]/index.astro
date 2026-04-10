@@ -4,10 +4,9 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import HeroSection from '../../components/HeroSection.astro';
 import AboutSection from '../../components/AboutSection.astro';
-import ExperienceSection from '../../components/ExperienceSection.astro';
+import ProjectsSection from '../../components/ProjectsSection.astro';
 import SkillsSection from '../../components/SkillsSection.astro';
-import HelpSection from '../../components/HelpSection.astro';
-import EducationSection from '../../components/EducationSection.astro';
+
 import BlogSection from '../../components/BlogSection.astro';
 import ContactSection from '../../components/ContactSection.astro';
 import Particles from '../../components/Particles.vue';
@@ -38,10 +37,10 @@ const { lang } = Astro.params;
   <Nav lang={lang} />
   <HeroSection lang={lang} />
   <AboutSection lang={lang} />
-  <ExperienceSection lang={lang} />
+  <ProjectsSection lang={lang} />
+
   <SkillsSection lang={lang} />
-  <HelpSection lang={lang} />
-  <EducationSection lang={lang} />
+
   <BlogSection lang={lang} />
   <ContactSection lang={lang} />
 </Layout>

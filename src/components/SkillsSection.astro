@@ -1,81 +1,36 @@
 ---
-import { Icon } from 'astro-icon/components';
 import { useTranslations } from '../i18n/utils';
+import TechFloat from './TechFloat.vue';
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
-<section class="section" id="skills">
+<section class="section section-tech-hero" id="skills">
   <div class="container">
     <div class="section-label reveal">{t('nav.tech')}</div>
-    <h2 class="section-title reveal">{t('nav.tech')}<br /><em style="font-family: var(--font-cursive); font-size: 1.2em; color: var(--rose); font-style: normal;">Powered by code</em></h2>
-    <div class="skills-grid">
-      <div class="skill-group reveal">
-        <div class="skill-group-icon"><Icon name="lucide:palette" size={24} /></div>
-        <h4 class="skill-group-title">Frontend</h4>
-        <div class="skill-tags">
-          <span class="skill-tag">Vue.js</span>
-          <span class="skill-tag">React</span>
-          <span class="skill-tag">JavaScript</span>
-          <span class="skill-tag">HTML</span>
-          <span class="skill-tag">CSS</span>
-          <span class="skill-tag">Tailwind CSS</span>
-        </div>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-icon"><Icon name="lucide:server" size={24} /></div>
-        <h4 class="skill-group-title">Backend</h4>
-        <div class="skill-tags">
-          <span class="skill-tag">PHP</span>
-          <span class="skill-tag">Node.js</span>
-          <span class="skill-tag">Python</span>
-          <span class="skill-tag">Java</span>
-          <span class="skill-tag">Laravel</span>
-          <span class="skill-tag">CodeIgniter</span>
-        </div>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-icon"><Icon name="lucide:database" size={24} /></div>
-        <h4 class="skill-group-title">Data & Databases</h4>
-        <div class="skill-tags">
-          <span class="skill-tag">MySQL</span>
-          <span class="skill-tag">MongoDB</span>
-          <span class="skill-tag">ERP</span>
-        </div>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-icon"><Icon name="lucide:wrench" size={24} /></div>
-        <h4 class="skill-group-title">Tools & Platforms</h4>
-        <div class="skill-tags">
-          <span class="skill-tag">Git</span>
-          <span class="skill-tag">GitHub</span>
-          <span class="skill-tag">WordPress</span>
-          <span class="skill-tag">Slider Revolution</span>
-          <span class="skill-tag">FluentForm</span>
-          <span class="skill-tag">Salesforce</span>
-          <span class="skill-tag">VS Code</span>
-          <span class="skill-tag">Visual Studio</span>
-          <span class="skill-tag">NetBeans</span>
-          <span class="skill-tag">Cursor</span>
-        </div>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-icon"><Icon name="lucide:globe" size={24} /></div>
-        <h4 class="skill-group-title">{t('about.stat.lang')}</h4>
-        <div class="skill-tags">
-          <span class="skill-tag skill-tag-lang">{lang === 'es' ? 'Inglés' : lang === 'pt' ? 'Inglês' : 'English'}</span>
-          <span class="skill-tag skill-tag-lang">{lang === 'es' ? 'Español' : lang === 'pt' ? 'Espanhol' : 'Spanish'}</span>
-          <span class="skill-tag skill-tag-lang">{lang === 'es' ? 'Portugués' : lang === 'pt' ? 'Português' : 'Portuguese'}</span>
-        </div>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-icon"><Icon name="lucide:cpu" size={24} /></div>
-        <h4 class="skill-group-title">AI & Emerging</h4>
-        <div class="skill-tags">
-          <span class="skill-tag">LLM Evaluation</span>
-          <span class="skill-tag">Prompt Engineering</span>
-          <span class="skill-tag">Android Studio</span>
-        </div>
-      </div>
-    </div>
+    <h2 class="section-title reveal">{t('nav.tech')}<br /><em style="font-family: var(--font-cursive); font-size: 1.25em; color: var(--rose); font-style: normal; opacity: 0.9;">Powered by code</em></h2>
+  </div>
+
+  <div class="tech-interaction-wrapper">
+    <TechFloat client:load />
   </div>
 </section>
+
+<style>
+  .section-tech-hero {
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  .tech-interaction-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: -40px;
+    z-index: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .tech-interaction-wrapper {
+      margin-top: 0;
+    }
+  }
+</style>
+

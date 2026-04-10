@@ -1,0 +1,95 @@
+---
+import { useTranslations } from '../i18n/utils';
+import ProjectsFloral from './ProjectsFloral.vue';
+import ProjectStack from './ProjectStack.vue';
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Dynamically load images for stacks
+const allCapturas = import.meta.glob('../assets/proyectos/capturas/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
+const canva = Object.values(import.meta.glob('../assets/proyectos/diseños canva/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' })) as string[];
+const figma = Object.values(import.meta.glob('../assets/proyectos/figma/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' })) as string[];
+
+// Precise mapping for capturas
+const mobileCapturas: string[] = [];
+const webCapturas: string[] = [];
+
+Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
+  const fileName = path.split('/').pop() || '';
+  if (['1.jpeg', '2.jpeg', '3.jpeg'].includes(fileName)) {
+    mobileCapturas.push(img);
+  } else {
+    webCapturas.push(img);
+  }
+});
+---
+
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-label reveal">{t('nav.projects')}</div>
+    <h2 class="section-title reveal">
+      {t('projects.title')}<br />
+      <em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose); opacity: 0.9;">
+        {t('projects.subtitle')}
+      </em>
+    </h2>
+
+    <div class="projects-grid">
+      <div class="reveal" style="transition-delay: 0.1s">
+        <ProjectStack 
+          client:visible
+          title={t('projects.cat1')} 
+          images={figma}
+        />
+      </div>
+      <div class="reveal" style="transition-delay: 0.2s">
+        <ProjectStack 
+          client:visible
+          title={t('projects.cat2')} 
+          images={canva}
+        />
+      </div>
+      <div class="reveal" style="transition-delay: 0.3s">
+        <ProjectStack 
+          client:visible
+          title={t('projects.cat3')} 
+          images={mobileCapturas}
+        />
+      </div>
+      <div class="reveal" style="transition-delay: 0.4s">
+        <ProjectStack 
+          client:visible
+          title={t('projects.cat4')} 
+          images={webCapturas}
+        />
+      </div>
+    </div>
+  </div>
+
+  <ProjectsFloral client:load />
+</section>
+
+<style>
+  #projects {
+    padding: 120px 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 900px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

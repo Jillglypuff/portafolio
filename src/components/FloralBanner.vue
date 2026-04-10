@@ -21,19 +21,21 @@ const images = import.meta.glob('../assets/flowers/*.{png,jpg,jpeg,webp,svg}', {
 
 // Filter and map with specific scale logic
 const RAW_SOURCES = Object.entries(images)
-  .filter(([path]) => !path.includes('7.png') && !path.includes('14.png'))
-  .map(([path, img]: any) => {
+  .filter(([path]) => !path.includes('7.png') && !path.includes('14.png') && !path.includes('16.png') && !path.includes('18.png'))
+  .map(([path, img]: any, index: number) => {
     const src = img.default?.src || img.src || img.default || img;
-    // Extract filename to set specific weights
     const fileName = path.split('/').pop() || '';
-    let baseDepth = 0.5 + Math.random() * 0.3; // Default small
+    let baseDepth = 0.5 + Math.random() * 0.3; 
 
     if (fileName.includes('6.png')) baseDepth = 1.6;
     if (fileName.includes('13.png')) baseDepth = 1.5;
     if (fileName.includes('10.png')) baseDepth = 1.0;
     if (fileName.includes('11.png')) baseDepth = 0.6;
 
-    return { src, fileName, baseDepth };
+    // Unique multiplier for "individual" movement
+    const movementVariation = 0.8 + (index % 5) * 0.15;
+
+    return { src, fileName, baseDepth, movementVariation };
   });
 
 interface Flower {
@@ -42,6 +44,7 @@ interface Flower {
   baseX: number;
   baseY: number;
   depth: number;
+  variation: number;
 }
 
 const container = ref<HTMLElement | null>(null);
@@ -52,25 +55,49 @@ onMounted(() => {
   if (RAW_SOURCES.length === 0) return;
 
   const count = RAW_SOURCES.length;
+  const placed: { x: number; y: number; r: number }[] = [];
+
   for (let i = 0; i < count; i++) {
     const source = RAW_SOURCES[i];
     
-    // Logic to prevent 6 and 13 from being on the same side
-    let angle = (i / count) * Math.PI * 2;
-    if (source.fileName.includes('6.png')) angle = Math.PI * 0.25; // Top Right-ish
-    if (source.fileName.includes('13.png')) angle = Math.PI * 1.25; // Bottom Left-ish
+    let x = 0, y = 0, angle = 0;
+    let attempts = 0;
+    const radius = 80 * source.baseDepth; // Pixel-ish radius check
 
-    const distanceX = 350 + Math.random() * 200;
-    const distanceY = 200 + Math.random() * 150;
-    
-    const x = 50 + (Math.cos(angle) * distanceX) / (window.innerWidth / 100);
-    const y = 50 + (Math.sin(angle) * distanceY) / (window.innerHeight / 100);
+    // Find non-overlapping spot
+    while (attempts < 50) {
+      angle = (i / count) * Math.PI * 2 + (Math.random() * 0.5);
+      if (source.fileName.includes('6.png')) angle = Math.PI * 0.25;
+      if (source.fileName.includes('13.png')) angle = Math.PI * 1.25;
+
+      const distRelX = 350 + Math.random() * 250;
+      const distRelY = 200 + Math.random() * 180;
+      
+      const tx = 50 + (Math.cos(angle) * distRelX) / (window.innerWidth / 100);
+      const ty = 50 + (Math.sin(angle) * distRelY) / (window.innerHeight / 100);
+
+      // Simple collision check against previously placed
+      const isOverlap = placed.some(p => {
+        const dx = (tx - p.x) * (window.innerWidth / 100);
+        const dy = (ty - p.y) * (window.innerHeight / 100);
+        return Math.hypot(dx, dy) < (radius + p.r);
+      });
+
+      if (!isOverlap || attempts > 20) {
+        x = tx; y = ty;
+        break;
+      }
+      attempts++;
+    }
+
+    placed.push({ x, y, r: radius });
     
     activeFlowers.push({
       src: source.src,
       baseX: x,
       baseY: y,
       depth: source.baseDepth,
+      variation: source.movementVariation,
       initialStyle: {
         left: `${x}%`,
         top: `${y}%`,
@@ -118,8 +145,9 @@ onMounted(() => {
         if (!el) return;
         const flower = activeFlowers[i];
         
-        const moveX = (clientX - ww / 2) * 0.1 * flower.depth;
-        const moveY = (clientY - wh / 2) * 0.1 * flower.depth;
+        // Use depth AND individual variation for "individual" feel
+        const moveX = (clientX - ww / 2) * 0.08 * flower.depth * flower.variation;
+        const moveY = (clientY - wh / 2) * 0.08 * flower.depth * flower.variation;
 
         const rect = el.getBoundingClientRect();
         const fx = rect.left + rect.width / 2;
@@ -129,23 +157,23 @@ onMounted(() => {
         let evadeX = 0;
         let evadeY = 0;
         
-        // Larger flowers evade more/differently
-        const evadeDist = 200 * flower.depth;
+        const evadeDist = 180 * flower.depth;
         if (dist < evadeDist) {
           const angle = Math.atan2(fy - clientY, fx - clientX);
           const force = (evadeDist - dist) / evadeDist;
-          evadeX = Math.cos(angle) * 100 * force * flower.depth;
-          evadeY = Math.sin(angle) * 100 * force * flower.depth;
+          evadeX = Math.cos(angle) * 80 * force * flower.depth;
+          evadeY = Math.sin(angle) * 80 * force * flower.depth;
         }
 
         gsap.to(el, {
           x: moveX + evadeX,
           y: moveY + evadeY,
-          duration: 0.7,
+          duration: 0.8,
           ease: 'power2.out'
         });
       });
     };
+
 
     window.addEventListener('mousemove', handleMouseMove);
     onUnmounted(() => window.removeEventListener('mousemove', handleMouseMove));

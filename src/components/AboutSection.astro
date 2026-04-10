@@ -1,5 +1,6 @@
 ---
 import { useTranslations } from '../i18n/utils';
+import AboutFloral from './AboutFloral.vue';
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
@@ -14,24 +15,82 @@ const t = useTranslations(lang);
         <p>{t('about.p3')}</p>
         <p>{t('about.p4')}</p>
       </div>
-      <div class="about-stats reveal">
-        <div class="stat-card">
-          <span class="stat-number" data-target="3">3</span>
-          <span class="stat-label">{t('about.stat.lang')}</span>
+      <div class="about-stats">
+        <div class="stat-card reveal">
+          <div class="stat-title">
+            <span class="stat-reveal-item">{t('about.stat1.title')}</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-reveal-item">{t('about.stat1.sub')}</span>
+          </div>
         </div>
-        <div class="stat-card">
-          <span class="stat-number" data-target="4" data-plus="true">4+</span>
-          <span class="stat-label">{t('about.stat.years')}</span>
+        <div class="stat-card reveal">
+          <div class="stat-title">
+            <span class="stat-reveal-item">{t('about.stat2.title')}</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-reveal-item">{t('about.stat2.sub')}</span>
+          </div>
         </div>
-        <div class="stat-card">
-          <span class="stat-number" data-target="10" data-plus="true">10+</span>
-          <span class="stat-label">{t('about.stat.tech')}</span>
+        <div class="stat-card reveal">
+          <div class="stat-title">
+            <span class="stat-reveal-item">{t('about.stat3.title')}</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-reveal-item">{t('about.stat3.sub')}</span>
+          </div>
         </div>
-        <div class="stat-card">
-          <span class="stat-number" data-target="1">1</span>
-          <span class="stat-label">{t('about.stat.role')}</span>
+        <div class="stat-card reveal">
+          <div class="stat-title">
+            <span class="stat-reveal-item">{t('about.stat4.title')}</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-reveal-item">{t('about.stat4.sub')}</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <AboutFloral client:load />
+
+  <!-- Large Flower #7 (Static/Drift) - Keeping as requested -->
+  <div class="about-flowers-background" aria-hidden="true">
+    <img src="/src/assets/flowers/7.png" class="flower-main-right" alt="" />
+  </div>
 </section>
+
+<style>
+  .about-flowers-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+  
+  .flower-main-right {
+    position: absolute;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 450px;
+    opacity: 0.15;
+    filter: blur(2px) drop-shadow(0 0 30px var(--rose));
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-30px) rotate(10deg); }
+  }
+
+  @keyframes drift {
+    0% { transform: translate(0, -50%) rotate(0); }
+    100% { transform: translate(20px, -45%) rotate(5deg); }
+  }
+
+  @media (max-width: 900px) {
+    .flower-main-right { width: 300px; right: -50px; }
+  }
+</style>

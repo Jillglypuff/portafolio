@@ -292,54 +292,27 @@ function initTimelineDraw() {
 
 // ─── 11. Stat counters ────────────────────────────────────────────
 function animateStats() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*';
-  
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
-      const el = entry.target as HTMLElement;
+      const card = entry.target as HTMLElement;
+      const items = card.querySelectorAll('.stat-reveal-item');
       
-      if (el.dataset.target) {
-        // Numeric Count Path
-        const hasPlus = el.dataset.plus === 'true';
-        const target = parseInt(el.dataset.target, 10);
-        anime({
-          targets: el,
-          innerHTML: [0, target],
-          round: 1,
-          duration: 1200,
-          easing: 'easeOutExpo',
-          update(anim) {
-            if (hasPlus) el.textContent = Math.round(anim.animations[0].currentValue as number) + '+';
-          },
-        });
-      } else {
-        // Text Scramble Path
-        const originalText = el.textContent || '';
-        const iterations = 15;
-        let count = 0;
-        
-        const interval = setInterval(() => {
-          el.textContent = originalText
-            .split('')
-            .map((char, index) => {
-              if (char === ' ') return ' ';
-              if (index < (count / iterations) * originalText.length) return originalText[index];
-              return chars[Math.floor(Math.random() * chars.length)];
-            })
-            .join('');
-          
-          if (count >= iterations) {
-            el.textContent = originalText;
-            clearInterval(interval);
-          }
-          count++;
-        }, 60);
-      }
-      observer.unobserve(el);
+      // We stagger the reveal of title and info within each card
+      anime({
+        targets: Array.from(items),
+        translateY: [24, 0],
+        opacity: [0, 1],
+        easing: 'easeOutQuart',
+        duration: 900,
+        delay: anime.stagger(150),
+      });
+
+      observer.unobserve(card);
     });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('.stat-number').forEach((el) => observer.observe(el));
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.stat-card').forEach((el) => observer.observe(el));
 }
 
 // ─── 12. Featured bullets stagger in ─────────────────────────────
