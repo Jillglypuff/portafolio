@@ -1,11 +1,16 @@
 ---
-import { helpCards } from '../data/projects.js';
+import { helpCardsData } from '../data/projects.js';
 import { Icon } from 'astro-icon/components';
+import { useTranslations } from '../i18n/utils';
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const helpCards = helpCardsData[lang];
 ---
 <section class="section section-tinted" id="help">
   <div class="container">
     <div class="section-label reveal">How I can help</div>
-    <h2 class="section-title reveal">The problems I solve</h2>
+    <h2 class="section-title reveal">The problems I <em style="font-family: var(--font-cursive); font-size: 1.25em; color: var(--rose); font-style: normal;">solve</em></h2>
     <div class="help-grid">
       {helpCards.map((card) => (
         <div class="help-card reveal">

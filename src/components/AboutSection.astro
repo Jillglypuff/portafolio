@@ -1,38 +1,35 @@
 ---
+import { useTranslations } from '../i18n/utils';
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 <section class="section" id="about">
   <div class="container">
-    <div class="section-label reveal">About</div>
+    <div class="section-label reveal">{t('about.label')}</div>
     <div class="about-grid">
       <div class="about-text reveal">
-        <h2 class="section-title">Full-stack developer.<br /><em>Ships in production.</em></h2>
-        <p>
-          I build and maintain multilingual web applications at <strong>Kapix</strong> — real client
-          platforms running in English, Spanish, and Portuguese simultaneously. Not a side project:
-          in production, since April 2024.
-        </p>
-        <p>
-          Before writing code full-time, I spent four years at Amazon monitoring automation systems
-          and resolving failures in real time. That background gives me a "what breaks at scale?"
-          instinct that most junior developers don't have yet.
-        </p>
+        <h2 class="section-title">{t('about.title')}<br /><em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose); opacity: 0.9;">{t('about.subtitle')}</em></h2>
+        <p>{t('about.p1')}</p>
+        <p>{t('about.p2')}</p>
+        <p>{t('about.p3')}</p>
+        <p>{t('about.p4')}</p>
       </div>
       <div class="about-stats reveal">
         <div class="stat-card">
           <span class="stat-number" data-target="3">3</span>
-          <span class="stat-label">Languages spoken</span>
+          <span class="stat-label">{t('about.stat.lang')}</span>
         </div>
         <div class="stat-card">
           <span class="stat-number" data-target="4" data-plus="true">4+</span>
-          <span class="stat-label">Years in tech industry</span>
+          <span class="stat-label">{t('about.stat.years')}</span>
         </div>
         <div class="stat-card">
           <span class="stat-number" data-target="10" data-plus="true">10+</span>
-          <span class="stat-label">Technologies used</span>
+          <span class="stat-label">{t('about.stat.tech')}</span>
         </div>
         <div class="stat-card">
           <span class="stat-number" data-target="1">1</span>
-          <span class="stat-label">Current production role</span>
+          <span class="stat-label">{t('about.stat.role')}</span>
         </div>
       </div>
     </div>

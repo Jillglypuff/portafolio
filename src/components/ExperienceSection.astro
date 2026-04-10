@@ -1,17 +1,23 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { featured, timeline } from '../data/projects.js';
+import { featuredData, timelineData } from '../data/projects.js';
+import { useTranslations } from '../i18n/utils';
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const featured = featuredData[lang];
+const timeline = timelineData[lang];
 ---
 <section class="section section-tinted" id="experience">
   <div class="container">
-    <div class="section-label reveal">Experience</div>
-    <h2 class="section-title reveal">Where I've shipped<br /><em>real things</em></h2>
+    <div class="section-label reveal">{t('experience.title')}</div>
+    <h2 class="section-title reveal">{t('experience.title')}<br /><em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose); opacity: 0.9;">Professional journey</em></h2>
 
     <div class="featured-card reveal">
       <div class="featured-header">
         <div>
           <div class="featured-tag">
-            <Icon name="lucide:star" size={14} /> Current role · {featured.period}
+            <Icon name="lucide:star" size={14} /> {featured.role} · {featured.period}
           </div>
           <h3 class="featured-title">{featured.role}</h3>
           <p class="featured-company">{featured.company} — {featured.location}</p>

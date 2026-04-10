@@ -1,14 +1,17 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { useTranslations } from '../i18n/utils';
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 <section class="section section-contact" id="contact">
   <div class="container container-narrow">
-    <div class="section-label reveal" style="color: rgba(255,255,255,0.6)">Contact</div>
+    <div class="section-label reveal" style="color: rgba(255,255,255,0.6)">{t('contact.title')}</div>
     <h2 class="section-title reveal" style="color: #fff">
-      Let's build something<br /><em>worth shipping.</em>
+      Let's build something<br /><em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose-light); font-style: normal; text-shadow: 0 0 20px rgba(255,255,255,0.2);">worth shipping.</em>
     </h2>
     <p class="contact-sub reveal">
-      I'm open to junior full-stack roles, freelance projects, and remote positions.
+      {lang === 'es' ? 'Disponible para roles full-stack junior, proyectos freelance y posiciones remotas.' : lang === 'pt' ? 'Disponível para cargos full-stack júnior, projetos freelance e posições remotas.' : "I'm open to junior full-stack roles, freelance projects, and remote positions."}
     </p>
     <div class="contact-actions reveal">
       <a href="mailto:jillhn1234@gmail.com" class="btn btn-white">

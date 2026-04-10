@@ -1,10 +1,13 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { useTranslations } from '../i18n/utils';
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 <section class="section" id="skills">
   <div class="container">
-    <div class="section-label reveal">Skills</div>
-    <h2 class="section-title reveal">What I build with</h2>
+    <div class="section-label reveal">{t('nav.tech')}</div>
+    <h2 class="section-title reveal">{t('nav.tech')}<br /><em style="font-family: var(--font-cursive); font-size: 1.2em; color: var(--rose); font-style: normal;">Powered by code</em></h2>
     <div class="skills-grid">
       <div class="skill-group reveal">
         <div class="skill-group-icon"><Icon name="lucide:palette" size={24} /></div>
@@ -57,11 +60,11 @@ import { Icon } from 'astro-icon/components';
       </div>
       <div class="skill-group reveal">
         <div class="skill-group-icon"><Icon name="lucide:globe" size={24} /></div>
-        <h4 class="skill-group-title">Languages</h4>
+        <h4 class="skill-group-title">{t('about.stat.lang')}</h4>
         <div class="skill-tags">
-          <span class="skill-tag skill-tag-lang">English</span>
-          <span class="skill-tag skill-tag-lang">Spanish</span>
-          <span class="skill-tag skill-tag-lang">Portuguese</span>
+          <span class="skill-tag skill-tag-lang">{lang === 'es' ? 'Inglés' : lang === 'pt' ? 'Inglês' : 'English'}</span>
+          <span class="skill-tag skill-tag-lang">{lang === 'es' ? 'Español' : lang === 'pt' ? 'Espanhol' : 'Spanish'}</span>
+          <span class="skill-tag skill-tag-lang">{lang === 'es' ? 'Portugués' : lang === 'pt' ? 'Português' : 'Portuguese'}</span>
         </div>
       </div>
       <div class="skill-group reveal">

@@ -3,9 +3,13 @@
     <div
       v-for="p in particles"
       :key="p.id"
-      class="particle"
+      class="particle petal"
       :style="p.style"
-    ></div>
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12,2Q15,8 12,14Q9,8 12,2Z" />
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -13,7 +17,7 @@
 import { onMounted, reactive } from 'vue';
 import anime from 'animejs';
 
-const COLORS = ['#F2D7E3', '#EDE8F5', '#F9EDD5', '#fce4ec', '#e8eaf6'];
+const COLORS = ['#ff4b91', '#ff9ebb', '#fce4ec', '#f8bbd0', '#f48fb1'];
 
 interface Particle {
   id: number;
@@ -23,16 +27,17 @@ interface Particle {
 const particles = reactive<Particle[]>([]);
 
 onMounted(() => {
-  for (let i = 0; i < 24; i++) {
-    const size = Math.random() * 12 + 4;
+  for (let i = 0; i < 30; i++) {
+    const size = Math.random() * 15 + 8;
     particles.push({
       id: i,
       style: [
         `width:${size}px`,
-        `height:${size}px`,
+        `height:${size * 1.5}px`,
         `left:${Math.random() * 100}vw`,
         `top:${Math.random() * 100}vh`,
-        `background:${COLORS[Math.floor(Math.random() * COLORS.length)]}`,
+        `color:${COLORS[Math.floor(Math.random() * COLORS.length)]}`,
+        `opacity:${Math.random() * 0.4 + 0.2}`,
       ].join(';'),
     });
   }
@@ -41,14 +46,14 @@ onMounted(() => {
   setTimeout(() => {
     anime({
       targets: '.particle',
-      opacity: [0, 0.7, 0],
-      translateY: () => anime.random(-120, 120),
-      translateX: () => anime.random(-60, 60),
-      scale: [0.5, 1.2, 0.5],
-      duration: () => anime.random(4000, 9000),
-      delay: () => anime.random(0, 4000),
+      opacity: [0, 0.6, 0],
+      translateY: () => anime.random(200, 600),
+      translateX: () => anime.random(-100, 100),
+      rotate: () => anime.random(0, 360),
+      duration: () => anime.random(6000, 12000),
+      delay: () => anime.random(0, 5000),
       loop: true,
-      easing: 'easeInOutSine',
+      easing: 'linear',
     });
   }, 50);
 });
@@ -64,7 +69,11 @@ onMounted(() => {
 }
 .particle {
   position: absolute;
-  border-radius: 50%;
   opacity: 0;
+  transform-origin: center;
+}
+.petal svg {
+  width: 100%;
+  height: 100%;
 }
 </style>

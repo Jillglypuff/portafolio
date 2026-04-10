@@ -1,45 +1,55 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { useTranslations } from '../i18n/utils';
+import FloralBanner from './FloralBanner.vue';
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 <section class="hero" id="hero">
+  <FloralBanner client:load />
   <div class="hero-inner">
-    <p class="hero-eyebrow" id="hero-eyebrow">Shipping trilingual apps in production since 2024</p>
-    <h1 class="hero-name" id="hero-name">
-      <span class="hero-name-line">Jill</span>
-      <span class="hero-name-line accent">Hernandez</span>
-    </h1>
-    <p class="hero-tagline" id="hero-tagline">
-      Full-stack developer at Kapix building Vue.js + PHP web apps<br />
-      that run in English, Spanish, and Portuguese — for real clients.
-    </p>
-    <div class="hero-badges" id="hero-badges">
-      <span class="badge badge-green">
-        <Icon name="lucide:zap" size={13} /> In production at Kapix
-      </span>
-      <span class="badge badge-purple">
-        <Icon name="lucide:globe" size={13} /> 3 languages · EN · ES · PT
-      </span>
-      <span class="badge badge-rose">
-        <Icon name="lucide:graduation-cap" size={13} /> Cenfotec · Graduated 2025
-      </span>
+    <p class="hero-eyebrow" id="hero-eyebrow">{t('hero.eyebrow')}</p>
+    <div style="overflow: hidden;">
+      <h1 class="hero-name" id="hero-name">
+        <span class="hero-name-line">Jill</span>
+        <span class="hero-name-line accent" style="font-family: var(--font-cursive); font-size: 1.2em; font-weight: 400; margin-top: -10px;">Hernandez</span>
+      </h1>
     </div>
+    <div style="overflow: hidden;">
+      <p class="hero-tagline" id="hero-tagline">{t('hero.tagline')}</p>
+    </div>
+
     <div class="hero-actions" id="hero-actions">
-      <a href="#experience" class="btn btn-primary">See the work</a>
-      <a href="mailto:jillhn1234@gmail.com" class="btn btn-ghost">Say hello</a>
+      <a href={`/${lang}/#experience`} class="btn btn-primary">{t('hero.cta.work')}</a>
+      <a href="mailto:jillhn1234@gmail.com" class="btn btn-ghost">{t('hero.cta.hello')}</a>
     </div>
   </div>
 
-  <div class="hero-visual" id="hero-visual">
-    <div class="avatar-ring">
-      <div class="avatar-initials">JH</div>
-      <div class="orbit-dot orbit-dot-1" aria-hidden="true"></div>
-      <div class="orbit-dot orbit-dot-2" aria-hidden="true"></div>
-      <div class="orbit-dot orbit-dot-3" aria-hidden="true"></div>
-    </div>
-    <div class="floating-chip chip-1">Vue.js</div>
-    <div class="floating-chip chip-2">React</div>
-    <div class="floating-chip chip-3">Python</div>
-    <div class="floating-chip chip-4">PHP</div>
-    <div class="floating-chip chip-5">Node.js</div>
-  </div>
+
+
+<style>
+  .hero-flower-top {
+    position: absolute;
+    top: -60px;
+    left: -40px;
+    width: 200px;
+    height: 200px;
+    color: var(--rose);
+    opacity: 0.1;
+    z-index: -1;
+    transform: rotate(-15deg);
+  }
+  .hero-flower-bottom {
+    position: absolute;
+    bottom: -80px;
+    right: -40px;
+    width: 300px;
+    height: 300px;
+    color: var(--rose);
+    opacity: 0.08;
+    z-index: -1;
+    transform: rotate(20deg);
+  }
+</style>
 </section>

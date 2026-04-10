@@ -1,0 +1,123 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: 'Writing in progress',
+    subtitle: 'My personal blog',
+    body: "I'm currently setting up this space to share my experiences as a multilingual full-stack developer, along with tutorials and insights on the web industry. Check back soon!",
+    back: 'Back to Home'
+  },
+  es: {
+    title: 'Escribiendo experiencias',
+    subtitle: 'Mi blog personal',
+    body: 'Este espacio está en construcción. Pronto compartiré mis aprendizajes como desarrolladora full-stack bilingüe, tutoriales y reflexiones sobre la industria tecnológica. ¡Vuelve pronto!',
+    back: 'Volver al Inicio'
+  },
+  pt: {
+    title: 'Escrevendo experiências',
+    subtitle: 'Meu blog pessoal',
+    body: 'Este espaço está em construção. Em breve compartilharei meus aprendizados como desenvolvedora full-stack bilíngue, tutoriais e reflexões sobre a indústria de tecnologia. Volte logo!',
+    back: 'Voltar ao Início'
+  }
+};
+
+const page = content[lang];
+---
+
+<Layout title={`${page.subtitle} — Jill Hernandez`} lang={lang}>
+  <Nav lang={lang} aria-hidden="true" />
+  
+  <main class="blog-landing">
+    <div class="container container-narrow reveal">
+      <div class="section-label">{t('nav.blog')}</div>
+      <h1 class="blog-title">
+        {page.title}
+        <br />
+        <em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose); font-style: normal;">
+          {page.subtitle}
+        </em>
+      </h1>
+      
+      <p class="blog-desc">
+        {page.body}
+      </p>
+
+      <a href={`/${lang}/`} class="btn btn-ghost">
+        {page.back}
+      </a>
+    </div>
+
+    <!-- Decorative flowers (static) -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  .blog-landing {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 20px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blog-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+
+  .blog-desc {
+    font-size: 1.125rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  /* Decorative elements */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    font-size: 4rem;
+    opacity: 0.1;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 15%;
+    right: 12%;
+    font-size: 5rem;
+    opacity: 0.15;
+    filter: blur(3px);
+    transform: rotate(20deg);
+  }
+
+  .container {
+    position: relative;
+    z-index: 10;
+  }
+</style>

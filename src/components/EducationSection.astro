@@ -1,9 +1,13 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { useTranslations } from '../i18n/utils';
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 <section class="section" id="education">
   <div class="container container-narrow">
-    <div class="section-label reveal">Education</div>
+    <div class="section-label reveal">{t('education.title')}</div>
+    <h2 class="section-title reveal" style="margin-bottom: 32px;">Academic <em style="font-family: var(--font-cursive); font-size: 1.2em; color: var(--rose); font-style: normal;">foundation</em></h2>
     <div class="edu-card reveal">
       <div class="edu-icon"><Icon name="lucide:graduation-cap" size={32} /></div>
       <div class="edu-body">

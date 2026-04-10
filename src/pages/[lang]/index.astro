@@ -1,0 +1,47 @@
+---
+import { languages } from '../../i18n/ui';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import HeroSection from '../../components/HeroSection.astro';
+import AboutSection from '../../components/AboutSection.astro';
+import ExperienceSection from '../../components/ExperienceSection.astro';
+import SkillsSection from '../../components/SkillsSection.astro';
+import HelpSection from '../../components/HelpSection.astro';
+import EducationSection from '../../components/EducationSection.astro';
+import BlogSection from '../../components/BlogSection.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import Particles from '../../components/Particles.vue';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout lang={lang}>
+  <!-- Decorative blobs -->
+  <div class="blob blob-1" aria-hidden="true"></div>
+  <div class="blob blob-2" aria-hidden="true"></div>
+  <div class="blob blob-3" aria-hidden="true"></div>
+
+  <!-- Vue islands -->
+  <Particles client:load />
+  <Animations client:load />
+
+  <!-- Static sections -->
+  <Nav lang={lang} />
+  <HeroSection lang={lang} />
+  <AboutSection lang={lang} />
+  <ExperienceSection lang={lang} />
+  <SkillsSection lang={lang} />
+  <HelpSection lang={lang} />
+  <EducationSection lang={lang} />
+  <BlogSection lang={lang} />
+  <ContactSection lang={lang} />
+</Layout>

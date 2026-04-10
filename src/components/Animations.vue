@@ -10,9 +10,10 @@ function initCursor() {
 
   const dot  = Object.assign(document.createElement('div'), { className: 'cursor-dot' });
   const ring = Object.assign(document.createElement('div'), { className: 'cursor-ring' });
+  ring.style.borderColor = 'rgba(255, 75, 145, 0.45)';
   document.body.append(dot, ring);
 
-  const SPARKLE_COLORS = ['#F2D7E3', '#EDE8F5', '#C96B8A', '#9B72AA', '#F9EDD5'];
+  const SPARKLE_COLORS = ['#ff4b91', '#ff9ebb', '#fce4ec', '#f8bbd0', '#f48fb1'];
   let lastSparkle = 0;
 
   document.addEventListener('mousemove', (e) => {
@@ -74,10 +75,13 @@ function animateHero() {
     eyebrow.style.opacity = '1';
     let i = 0;
     const tick = setInterval(() => {
+      if (i >= text.length) {
+        clearInterval(tick);
+        return;
+      }
       eyebrow.textContent += text[i];
       i++;
-      if (i >= text.length) clearInterval(tick);
-    }, 55);
+    }, 35); // Faster typing
   }
 
   // Char-by-char hero name lines
@@ -91,21 +95,31 @@ function animateHero() {
     line.style.transform = 'none';
   });
 
-  const tl = anime.timeline({ easing: 'easeOutExpo', delay: 420 });
+  const tl = anime.timeline({ easing: 'easeOutQuart', delay: 420 });
   tl.add({
     targets: '.hero-name-line:first-child .hero-char',
-    opacity: [0, 1], translateY: [30, 0], rotate: [5, 0],
-    duration: 500, delay: anime.stagger(40),
+    opacity: [0, 1],
+    translateY: [80, 0],
+    rotate: [10, 0],
+    duration: 1000,
+    delay: anime.stagger(50),
   })
   .add({
     targets: '.hero-name-line.accent .hero-char',
-    opacity: [0, 1], translateY: [30, 0], rotate: [-5, 0],
-    duration: 500, delay: anime.stagger(40),
-  }, '-=300')
-  .add({ targets: '#hero-tagline', opacity: [0, 1], translateY: [16, 0], duration: 600 }, '-=100')
-  .add({ targets: '#hero-badges',  opacity: [0, 1], translateY: [12, 0], duration: 500 }, '-=300')
-  .add({ targets: '#hero-actions', opacity: [0, 1], translateY: [12, 0], duration: 500 }, '-=300')
-  .add({ targets: '#hero-visual',  opacity: [0, 1], scale: [0.88, 1], duration: 900, easing: 'easeOutElastic(1, 0.6)' }, '-=600');
+    opacity: [0, 1],
+    translateY: [80, 0],
+    rotate: [-8, 0],
+    duration: 1000,
+    delay: anime.stagger(50),
+  }, '-=800')
+  .add({
+    targets: '#hero-tagline',
+    opacity: [0, 1],
+    translateY: [40, 0],
+    duration: 1000,
+    easing: 'easeOutExpo'
+  }, '-=600')
+  .add({ targets: '#hero-actions', opacity: [0, 1], translateY: [12, 0], duration: 500 }, '-=300');
 
   // Floating chips loop
   anime({
@@ -278,22 +292,50 @@ function initTimelineDraw() {
 
 // ─── 11. Stat counters ────────────────────────────────────────────
 function animateStats() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*';
+  
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       const el = entry.target as HTMLElement;
-      const hasPlus = el.dataset.plus === 'true';
-      const target = parseInt(el.dataset.target ?? '0', 10);
-      anime({
-        targets: el,
-        innerHTML: [0, target],
-        round: 1,
-        duration: 1200,
-        easing: 'easeOutExpo',
-        update(anim) {
-          if (hasPlus) el.textContent = Math.round(anim.animations[0].currentValue as number) + '+';
-        },
-      });
+      
+      if (el.dataset.target) {
+        // Numeric Count Path
+        const hasPlus = el.dataset.plus === 'true';
+        const target = parseInt(el.dataset.target, 10);
+        anime({
+          targets: el,
+          innerHTML: [0, target],
+          round: 1,
+          duration: 1200,
+          easing: 'easeOutExpo',
+          update(anim) {
+            if (hasPlus) el.textContent = Math.round(anim.animations[0].currentValue as number) + '+';
+          },
+        });
+      } else {
+        // Text Scramble Path
+        const originalText = el.textContent || '';
+        const iterations = 15;
+        let count = 0;
+        
+        const interval = setInterval(() => {
+          el.textContent = originalText
+            .split('')
+            .map((char, index) => {
+              if (char === ' ') return ' ';
+              if (index < (count / iterations) * originalText.length) return originalText[index];
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join('');
+          
+          if (count >= iterations) {
+            el.textContent = originalText;
+            clearInterval(interval);
+          }
+          count++;
+        }, 60);
+      }
       observer.unobserve(el);
     });
   }, { threshold: 0.5 });
