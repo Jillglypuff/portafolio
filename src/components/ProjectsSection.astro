@@ -8,8 +8,8 @@ const t = useTranslations(lang);
 
 // Dynamically load images for stacks
 const allCapturas = import.meta.glob('../assets/proyectos/capturas/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
-const canva = Object.values(import.meta.glob('../assets/proyectos/diseños canva/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' })) as string[];
-const figma = Object.values(import.meta.glob('../assets/proyectos/figma/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' })) as string[];
+const canva = Object.values(import.meta.glob('../assets/proyectos/diseños canva/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' })).map((img: any) => img.src);
+const figma = Object.values(import.meta.glob('../assets/proyectos/figma/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' })).map((img: any) => img.src);
 
 // Precise mapping for capturas
 const mobileCapturas: string[] = [];
@@ -17,10 +17,12 @@ const webCapturas: string[] = [];
 
 Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
   const fileName = path.split('/').pop() || '';
-  if (['1.jpeg', '2.jpeg', '3.jpeg'].includes(fileName)) {
-    mobileCapturas.push(img);
+  const mobileFiles = ['1.jpeg', '2.jpeg', '3.jpeg', 'ss1.jpg', 'ss2.jpg', 'ss3.jpg'];
+  
+  if (mobileFiles.includes(fileName)) {
+    mobileCapturas.push(img.src);
   } else {
-    webCapturas.push(img);
+    webCapturas.push(img.src);
   }
 });
 ---
@@ -36,6 +38,7 @@ Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
     </h2>
 
     <div class="projects-grid">
+      <!-- Row 1: Landscape Stacks -->
       <div class="reveal" style="transition-delay: 0.1s">
         <ProjectStack 
           client:visible
@@ -46,22 +49,26 @@ Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
       <div class="reveal" style="transition-delay: 0.2s">
         <ProjectStack 
           client:visible
-          title={t('projects.cat2')} 
-          images={canva}
+          title={t('projects.cat4')} 
+          images={webCapturas}
         />
       </div>
+
+      <!-- Row 2: Portrait Stacks -->
       <div class="reveal" style="transition-delay: 0.3s">
         <ProjectStack 
           client:visible
-          title={t('projects.cat3')} 
-          images={mobileCapturas}
+          title={t('projects.cat2')} 
+          images={canva}
+          aspectRatio="portrait"
         />
       </div>
       <div class="reveal" style="transition-delay: 0.4s">
         <ProjectStack 
           client:visible
-          title={t('projects.cat4')} 
-          images={webCapturas}
+          title={t('projects.cat3')} 
+          images={mobileCapturas}
+          aspectRatio="portrait"
         />
       </div>
     </div>
@@ -82,7 +89,7 @@ Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
+    gap: 120px;
     position: relative;
     z-index: 1;
   }

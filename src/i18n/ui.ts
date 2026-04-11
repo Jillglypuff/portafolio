@@ -37,8 +37,8 @@ export const ui = {
     'contact.title': 'Contact',
 
     'nav.projects': 'Projects',
-    'projects.title': 'Digital Creations.',
-    'projects.subtitle': 'From concept to code.',
+    'projects.title': 'My work in practice',
+    'projects.subtitle': 'Built for real users.',
     'projects.cat1': 'UI/UX Design Figma',
     'projects.cat2': 'Content & Visual design',
     'projects.cat3': 'Mobile Development',
@@ -74,8 +74,8 @@ export const ui = {
     'contact.title': 'Contacto',
 
     'nav.projects': 'Proyectos',
-    'projects.title': 'Creaciones Digitales.',
-    'projects.subtitle': 'Del concepto al código.',
+    'projects.title': 'Mi trabajo en práctica.',
+    'projects.subtitle': 'Construido para usuarios reales.',
     'projects.cat1': 'UI/UX Design Figma',
     'projects.cat2': 'Content & Visual design',
     'projects.cat3': 'Mobile Development',
@@ -111,8 +111,8 @@ export const ui = {
     'contact.title': 'Contato',
 
     'nav.projects': 'Projetos',
-    'projects.title': 'Criações Digitais.',
-    'projects.subtitle': 'Do conceito ao código.',
+    'projects.title': 'Meu trabalho em prática.',
+    'projects.subtitle': 'Construído para usuários reais.',
     'projects.cat1': 'UI/UX Design Figma',
     'projects.cat2': 'Content & Visual design',
     'projects.cat3': 'Mobile Development',
