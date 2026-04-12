@@ -75,7 +75,7 @@ const t = useTranslations(lang);
 
 <style>
   .section-contact {
-    padding: 120px 0 160px;
+    padding: var(--section-padding, 120px) 0 calc(var(--section-padding, 120px) + 40px);
     background: var(--bg);
     text-align: center;
     position: relative;
@@ -126,7 +126,7 @@ const t = useTranslations(lang);
     box-shadow: var(--shadow-lg);
     position: relative;
     z-index: 1;
-    margin-top: 40px;
+    margin-top: 24px;
   }
 
   .contact-sub {

@@ -79,7 +79,7 @@ import { ref } from 'vue';
 const props = withDefaults(defineProps<{
   title: string;
   images: string[];
-  aspectRatio?: 'landscape' | 'portrait';
+  aspectRatio?: 'landscape' | 'portrait' | 'square';
 }>(), {
   aspectRatio: 'landscape'
 });
@@ -115,10 +115,13 @@ const getCardStyle = (idx: number) => {
     const centerOffset = (total - 1) / 2;
     const fanIdx = idx - centerOffset;
     
+    const isPortrait = props.aspectRatio === 'portrait';
+    const isSquare = props.aspectRatio === 'square';
+    
     // Adjust fanning based on aspect ratio
-    const spread = props.aspectRatio === 'portrait' ? 25 : 40;
+    const spread = isPortrait ? 25 : isSquare ? 30 : 40;
     const xOffset = fanIdx * spread;
-    const rotate = fanIdx * (props.aspectRatio === 'portrait' ? 4 : 8);
+    const rotate = fanIdx * (isPortrait ? 4 : isSquare ? 6 : 8);
     
     return {
       transform: `translateX(${xOffset}px) translateY(-20px) rotate(${rotate}deg) scale(${idx === currentIndex.value ? 1.05 : 1})`,
@@ -139,6 +142,8 @@ const getCardStyle = (idx: number) => {
 
   position: relative;
   width: 100%;
+  max-width: var(--card-w);
+  margin: 0 auto;
   height: var(--container-h);
   /* Invisible container for floating effect */
   background: transparent;
@@ -157,6 +162,12 @@ const getCardStyle = (idx: number) => {
   --card-w: 240px;
   --card-h: 420px;
   --container-h: 720px;
+}
+
+.stack-container.square {
+  --card-w: 320px;
+  --card-h: 320px;
+  --container-h: 580px;
 }
 
 .stack-container:hover {
@@ -214,6 +225,10 @@ const getCardStyle = (idx: number) => {
 
 .portrait .cards-visual {
   height: 460px;
+}
+
+.square .cards-visual {
+  height: 380px;
 }
 
 .project-card {
@@ -369,13 +384,42 @@ const getCardStyle = (idx: number) => {
 }
 
 @media (max-width: 600px) {
+  .stack-container {
+    --container-h: 320px;
+    padding: 16px;
+  }
+  .stack-container.portrait {
+    --container-h: 400px;
+  }
+  .stack-container.square {
+    --container-h: 340px;
+  }
+  .stack-meta {
+    padding-bottom: 15px;
+  }
+  .cards-visual {
+    height: 180px;
+  }
+  .portrait .cards-visual {
+    height: 240px;
+  }
+  .square .cards-visual {
+    height: 200px;
+  }
   .project-card {
-    width: 200px;
-    height: 140px;
+    width: 180px;
+    height: 120px;
   }
   .portrait .project-card {
-    width: 140px;
-    height: 200px;
+    width: 120px;
+    height: 180px;
+  }
+  .square .project-card {
+    width: 160px;
+    height: 160px;
+  }
+  .stack-title {
+    font-size: 1.1rem;
   }
   .lightbox-overlay {
     padding: 20px;

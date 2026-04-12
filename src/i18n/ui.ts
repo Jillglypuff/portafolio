@@ -43,6 +43,7 @@ export const ui = {
     'projects.cat2': 'Content & Visual design',
     'projects.cat3': 'Mobile Development',
     'projects.cat4': 'Web Systems',
+    'projects.cat5': 'Marketing & Stories',
   },
   es: {
     'nav.about': 'Sobre mí',
@@ -80,6 +81,7 @@ export const ui = {
     'projects.cat2': 'Content & Visual design',
     'projects.cat3': 'Mobile Development',
     'projects.cat4': 'Web Systems',
+    'projects.cat5': 'Marketing & Branding',
   },
   pt: {
     'nav.about': 'Sobre mim',
@@ -117,5 +119,6 @@ export const ui = {
     'projects.cat2': 'Content & Visual design',
     'projects.cat3': 'Mobile Development',
     'projects.cat4': 'Web Systems',
+    'projects.cat5': 'Marketing & Branding',
   },
 } as const;
