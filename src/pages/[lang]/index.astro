@@ -11,6 +11,7 @@ import BlogSection from '../../components/BlogSection.astro';
 import ContactSection from '../../components/ContactSection.astro';
 import Particles from '../../components/Particles.vue';
 import Animations from '../../components/Animations.vue';
+import ScrollFlower from '../../components/ScrollFlower.vue';
 
 export function getStaticPaths() {
   return [
@@ -37,6 +38,7 @@ const { lang } = Astro.params;
   <Nav lang={lang} />
   <HeroSection lang={lang} />
   <AboutSection lang={lang} />
+  <ScrollFlower client:visible />
   <ProjectsSection lang={lang} />
 
   <SkillsSection lang={lang} />

@@ -29,7 +29,14 @@ const webCapturas: string[] = [];
 
 Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
   const fileName = path.split('/').pop() || '';
-  const mobileFiles = ['1.jpeg', '2.jpeg', '3.jpeg', 'ss1.jpg', 'ss2.jpg', 'ss3.jpg'];
+  const lowercaseName = fileName.toLowerCase();
+  
+  // Skip ss1, ss2, ss3 as requested
+  if (lowercaseName.startsWith('ss1') || lowercaseName.startsWith('ss2') || lowercaseName.startsWith('ss3')) {
+    return;
+  }
+
+  const mobileFiles = ['1.jpeg', '2.jpeg', '3.jpeg'];
   
   if (mobileFiles.includes(fileName)) {
     mobileCapturas.push(img.src);
@@ -94,7 +101,7 @@ Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
     </div>
   </div>
 
-  <ProjectsFloral client:load />
+  <ProjectsFloral client:visible />
 </section>
 
 <style>
