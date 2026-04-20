@@ -10,6 +10,8 @@ export const ui = {
   en: {
     'nav.about': 'About me',
     'nav.tech': 'Technologies',
+    'seo.title': 'Jill Hernández — Full-Stack Developer | Jillglypuff',
+    'seo.description': 'Official portfolio of Jill Hernández (Jillglypuff). Multilingual Full-Stack Developer specialized in scalable web systems, APIs, and mobile apps.',
 
     'nav.blog': 'Blog',
     'nav.contact': 'Let\'s talk',
@@ -48,6 +50,8 @@ export const ui = {
   es: {
     'nav.about': 'Sobre mí',
     'nav.tech': 'Tecnologías',
+    'seo.title': 'Jill Hernández — Desarrolladora Full-Stack | Jillglypuff',
+    'seo.description': 'Portafolio oficial de Jill Hernández (Jillglypuff). Desarrolladora Full-Stack multilingüe especializada en sistemas web escalables, APIs y aplicaciones móviles.',
 
     'nav.blog': 'Blog',
     'nav.contact': 'Hablemos',
@@ -86,6 +90,8 @@ export const ui = {
   pt: {
     'nav.about': 'Sobre mim',
     'nav.tech': 'Tecnologias',
+    'seo.title': 'Jill Hernández — Desenvolvedora Full-Stack | Jillglypuff',
+    'seo.description': 'Portfólio oficial de Jill Hernández (Jillglypuff). Desenvolvedora Full-Stack multilíngue especializada em sistemas web escaláveis, APIs e aplicativos móveis.',
 
     'nav.blog': 'Blog',
     'nav.contact': 'Vamos conversar',

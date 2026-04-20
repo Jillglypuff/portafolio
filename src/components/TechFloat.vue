@@ -2,7 +2,7 @@
   <div class="tech-hero" ref="container">
     <!-- Center Flower #19 -->
     <div class="center-flower" ref="centerFlower">
-      <img src="/src/assets/flowers/19.png" alt="Featured Flower" />
+      <img :src="flowerSrc" alt="Featured Flower" />
       <div class="center-glow"></div>
     </div>
 
@@ -24,6 +24,9 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, onUnmounted } from 'vue';
 import { gsap } from 'gsap';
+import flower19 from '../assets/flowers/19.png';
+
+const flowerSrc = flower19.src || flower19;
 
 // Load logos
 const logoImages = import.meta.glob('../assets/logos/*.{png,jpg,jpeg,webp,svg}', { eager: true });

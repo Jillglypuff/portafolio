@@ -1,6 +1,7 @@
 ---
 import { useTranslations } from '../i18n/utils';
 import AboutFloral from './AboutFloral.vue';
+import flower7 from '../assets/flowers/7.png';
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
@@ -56,7 +57,7 @@ const t = useTranslations(lang);
 
   <!-- Large Flower #7 (Static/Drift) - Keeping as requested -->
   <div class="about-flowers-background" aria-hidden="true">
-    <img src="/src/assets/flowers/7.png" class="flower-main-right" alt="" />
+    <img src={flower7.src} class="flower-main-right" alt="" />
   </div>
 </section>
 
