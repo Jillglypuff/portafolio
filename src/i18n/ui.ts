@@ -12,6 +12,7 @@ export const ui = {
     'nav.tech': 'Technologies',
     'seo.title': 'Jill Hernández — Full-Stack Developer | Jillglypuff',
     'seo.description': 'Official portfolio of Jill Hernández (Jillglypuff). Multilingual Full-Stack Developer specialized in scalable web systems, APIs, and mobile apps.',
+    'seo.keywords': 'Jill Hernández, Jillglypuff, Software Engineer, Full-Stack Developer, Vue.js, React, Node.js, Web Development, Mobile Development, API Design',
 
     'nav.blog': 'Blog',
     'nav.contact': 'Let\'s talk',
@@ -52,6 +53,7 @@ export const ui = {
     'nav.tech': 'Tecnologías',
     'seo.title': 'Jill Hernández — Desarrolladora Full-Stack | Jillglypuff',
     'seo.description': 'Portafolio oficial de Jill Hernández (Jillglypuff). Desarrolladora Full-Stack multilingüe especializada en sistemas web escalables, APIs y aplicaciones móviles.',
+    'seo.keywords': 'Jill Hernández, Jillglypuff, Desarrolladora Full-Stack, Ingeniera de Software, Vue.js, React, Node.js, Desarrollo Web, Apps Móviles, Diseño de APIs',
 
     'nav.blog': 'Blog',
     'nav.contact': 'Hablemos',
@@ -92,6 +94,7 @@ export const ui = {
     'nav.tech': 'Tecnologias',
     'seo.title': 'Jill Hernández — Desenvolvedora Full-Stack | Jillglypuff',
     'seo.description': 'Portfólio oficial de Jill Hernández (Jillglypuff). Desenvolvedora Full-Stack multilíngue especializada em sistemas web escaláveis, APIs e aplicativos móveis.',
+    'seo.keywords': 'Jill Hernández, Jillglypuff, Desenvolvedora Full-Stack, Engenheira de Software, Vue.js, React, Node.js, Desenvolvimento Web, Apps Móveis, Design de APIs',
 
     'nav.blog': 'Blog',
     'nav.contact': 'Vamos conversar',
