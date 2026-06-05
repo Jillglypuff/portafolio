@@ -1,13 +1,26 @@
 ---
 import { useTranslations } from '../i18n/utils';
 import TechFloat from './TechFloat.vue';
+import flower19 from '../assets/flowers/19.png';
+
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 <section class="section section-tech-hero" id="skills">
-  <div class="container">
-    <div class="section-label reveal">{t('nav.tech')}</div>
-    <h2 class="section-title reveal">{t('nav.tech')}<br /><em style="font-family: var(--font-cursive); font-size: 1.25em; color: var(--rose); font-style: normal; opacity: 0.9;">Powered by code</em></h2>
+  <div class="container header-flex-container">
+    <div class="title-group">
+      <div class="section-label reveal">{t('nav.tech')}</div>
+      <h2 class="section-title reveal" style="margin-bottom: 0;">
+        {t('nav.tech')}<br />
+        <em style="font-family: var(--font-cursive); font-size: 1.25em; color: var(--rose); font-style: normal; opacity: 0.9;">Powered by code</em>
+      </h2>
+    </div>
+
+    <!-- Spinning Flower next to the title -->
+    <div class="header-flower-wrapper reveal">
+      <div class="header-flower-glow"></div>
+      <img src={flower19.src} class="header-spinning-flower" alt="Spinning Flower Decor" />
+    </div>
   </div>
 
   <div class="tech-interaction-wrapper">
@@ -20,17 +33,102 @@ const t = useTranslations(lang);
     padding-bottom: 0;
     overflow: hidden;
   }
+  
+  .header-flex-container {
+    display: flex;
+    justify-content: flex-start; /* Place flower directly next to the title */
+    align-items: center;
+    gap: 4rem; /* Spacing between title and flower */
+    margin-bottom: 48px;
+  }
+
+  .header-flower-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 190px; /* Bigger flower */
+    height: 190px;
+    flex-shrink: 0;
+  }
+
+  .header-flower-glow {
+    position: absolute;
+    width: 210px;
+    height: 210px;
+    background: radial-gradient(circle, rgba(255, 75, 145, 0.4) 0%, rgba(255, 75, 145, 0) 70%);
+    filter: blur(20px);
+    z-index: -1;
+    border-radius: 50%;
+  }
+
+  .header-spinning-flower {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 25px rgba(255, 75, 145, 0.35));
+    animation: spin-flower 35s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes spin-flower {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   .tech-interaction-wrapper {
     position: relative;
     width: 100%;
-    margin-top: -40px;
+    margin-top: -20px;
     z-index: 1;
   }
   
+  @media (max-width: 900px) {
+    .header-flex-container {
+      gap: 3rem;
+    }
+    .header-flower-wrapper {
+      width: 150px;
+      height: 150px;
+    }
+    .header-flower-glow {
+      width: 170px;
+      height: 170px;
+    }
+  }
+
   @media (max-width: 768px) {
+    .header-flex-container {
+      gap: 2rem;
+    }
+    .header-flower-wrapper {
+      width: 120px;
+      height: 120px;
+    }
+    .header-flower-glow {
+      width: 130px;
+      height: 130px;
+    }
     .tech-interaction-wrapper {
       margin-top: 0;
     }
   }
-</style>
 
+  @media (max-width: 480px) {
+    .header-flex-container {
+      gap: 1.5rem;
+    }
+    .header-flower-wrapper {
+      width: 90px;
+      height: 90px;
+    }
+    .header-flower-glow {
+      width: 100px;
+      height: 100px;
+    }
+  }
+</style>
