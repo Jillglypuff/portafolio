@@ -2,6 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
+import jillPhoto from '../../assets/jill.jpeg';
+import Animations from '../../components/Animations.vue';
 
 export function getStaticPaths() {
   return [
@@ -16,108 +18,657 @@ const t = useTranslations(lang);
 
 const content = {
   en: {
-    title: 'Writing in progress',
-    subtitle: 'My personal blog',
-    body: "I'm currently setting up this space to share my experiences as a multilingual full-stack developer, along with tutorials and insights on the web industry. Check back soon!",
+    title: "Dear Diary, This Is Where It Begins 🌸",
+    date: "June 5, 2026",
+    subtitle: "A developer diary by Jill",
+    intro: "Hi, I'm Jill. 💻✨",
+    introDesc: "I'm a Full Stack Developer, a curious learner, and the kind of person who somehow ends up opening fifteen browser tabs while trying to understand one technical concept.",
+    welcome: "If you've found your way here, welcome.",
+    welcomeSub: "This little corner of my portfolio is something I've wanted to create for a long time.",
+    notAnother: [
+      "Not another tutorial website.",
+      "Not another collection of documentation.",
+      "Not another \"Top 10 JavaScript Tips\" blog."
+    ],
+    instead: "There are already plenty of those.",
+    insteadDesc: "Instead, I wanted a place that feels a little more personal. A place where I can document what I'm learning, what I'm building, what breaks, what gets fixed, and all the lessons I collect along the way.",
+    sections: [
+      {
+        title: "How I ended up in tech 💻",
+        paragraphs: [
+          "The funny thing is that technology wasn't a straight path for me.",
+          "My journey started in technical support, helping people solve problems, troubleshooting systems, and learning how technology behaves when things don't go according to plan.",
+          "Over time, my curiosity kept growing.",
+          "I wanted to understand not only how systems were used, but how they were built.",
+          "That curiosity eventually led me into software development.",
+          "Today, I work across web applications, mobile apps, APIs, databases, AI integrations, and occasionally spend more time debugging than I'd like to admit. 😅"
+        ]
+      },
+      {
+        title: "Why a developer diary? 🌷",
+        paragraphs: [
+          "Because every week I learn something new.",
+          "Sometimes it's a framework.",
+          "Sometimes it's an AI concept.",
+          "Sometimes it's a deployment issue that teaches me a lesson I'll never forget.",
+          "And sometimes it's a tiny bug that somehow manages to hide for hours.",
+          "The reality is that learning technology isn't a straight line.",
+          "It's messy. It's exciting. It's frustrating. It's rewarding.",
+          "And I wanted a place to capture that journey."
+        ]
+      },
+      {
+        title: "What you'll find here ✨",
+        paragraphs: [
+          "This won't be a traditional tech blog.",
+          "You'll find:",
+          "• Things I'm currently learning",
+          "• Concepts explained the way I wish someone had explained them to me",
+          "• Notes from real projects",
+          "• Mobile development adventures",
+          "• AI discoveries",
+          "• Backend lessons",
+          "• The occasional debugging story",
+          "And hopefully a few insights that make your own learning journey a little easier."
+        ]
+      },
+      {
+        title: "A note to future me 💖",
+        paragraphs: [
+          "I hope that months from now, I can look back at these entries and see how much I've grown.",
+          "And if you're reading this as someone learning, building, or figuring things out too...",
+          "Welcome.",
+          "We're learning together.",
+          "See you in the next entry.",
+          "— Jill 🌸"
+        ]
+      }
+    ],
     back: 'Back to Home'
   },
   es: {
-    title: 'Escribiendo experiencias',
-    subtitle: 'Mi blog personal',
-    body: 'Este espacio está en construcción. Pronto compartiré mis aprendizajes como desarrolladora full-stack bilingüe, tutoriales y reflexiones sobre la industria tecnológica. ¡Vuelve pronto!',
+    title: "Querido Diario: Aquí es donde comienza 🌸",
+    date: "5 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    intro: "Hola, soy Jill. 💻✨",
+    introDesc: "Soy desarrolladora Full Stack, una aprendiz curiosa y el tipo de persona que termina abriendo quince pestañas en el navegador mientras intenta comprender un solo concepto técnico.",
+    welcome: "Si has encontrado el camino hasta aquí, bienvenido/a.",
+    welcomeSub: "Este pequeño rincón de mi portafolio es algo que he querido crear desde hace mucho tiempo.",
+    notAnother: [
+      "No otro sitio web de tutoriales.",
+      "No otra colección de documentación.",
+      "No otro blog de \"Los 10 mejores consejos de JavaScript\"."
+    ],
+    instead: "Ya existen suficientes de esos.",
+    insteadDesc: "En su lugar, quería un espacio que se sintiera un poco más personal. Un lugar donde pueda documentar lo que estoy aprendiendo, lo que estoy construyendo, lo que se rompe, lo que se soluciona y todas las lecciones que voy recopilando en el camino.",
+    sections: [
+      {
+        title: "Cómo terminé en la tecnología 💻",
+        paragraphs: [
+          "Lo curioso es que la tecnología no fue un camino directo para mí.",
+          "Mi viaje comenzó en soporte técnico, ayudando a las personas a resolver problemas, solucionando fallas en sistemas y aprendiendo cómo se comporta la tecnología cuando las cosas no salen según lo planeado.",
+          "Con el tiempo, mi curiosidad siguió creciendo.",
+          "Quería entender no solo cómo se usaban los sistemas, sino cómo se construían.",
+          "Esa curiosidad eventualmente me llevó al desarrollo de software.",
+          "Hoy en día, trabajo en aplicaciones web, aplicaciones móviles, APIs, bases de datos, integraciones de IA y, ocasionalmente, paso más tiempo depurando errores del que me gustaría admitir. 😅"
+        ]
+      },
+      {
+        title: "¿Por qué un diario de desarrolladora? 🌷",
+        paragraphs: [
+          "Porque cada semana aprendo algo nuevo.",
+          "A veces es un framework.",
+          "A veces es un concepto de IA.",
+          "A veces es un problema de despliegue que me enseña una lección que nunca olvidaré.",
+          "Y a veces es un pequeño error que se las arregla para esconderse durante horas.",
+          "La realidad es que aprender tecnología no es una línea recta.",
+          "Es caótico. Es emocionante. Es frustrante. Es gratificante.",
+          "Y quería un lugar para capturar ese viaje."
+        ]
+      },
+      {
+        title: "Lo que encontrarás aquí ✨",
+        paragraphs: [
+          "Este no será un blog de tecnología tradicional.",
+          "Encontrarás:",
+          "• Cosas que estoy aprendiendo actualmente",
+          "• Conceptos explicados de la forma en que me hubiera gustado que me los explicaran a mí",
+          "• Notas de proyectos reales",
+          "• Aventuras de desarrollo móvil",
+          "• Descubrimientos de IA",
+          "• Lecciones de backend",
+          "• Alguna que otra historia de depuración",
+          "Y con suerte, algunas ideas que faciliten un poco tu propio viaje de aprendizaje."
+        ]
+      },
+      {
+        title: "Una nota para mi yo del futuro 💖",
+        paragraphs: [
+          "Espero que, dentro de unos meses, pueda mirar atrás a estas entradas y ver cuánto he crecido.",
+          "Y si estás leyendo esto como alguien que también está aprendiendo, construyendo o resolviendo cosas...",
+          "Bienvenido/a.",
+          "Estamos aprendiendo juntos.",
+          "Nos vemos en la próxima entrada.",
+          "— Jill 🌸"
+        ]
+      }
+    ],
     back: 'Volver al Inicio'
   },
   pt: {
-    title: 'Escrevendo experiências',
-    subtitle: 'Meu blog pessoal',
-    body: 'Este espaço está em construção. Em breve compartilharei meus aprendizados como desenvolvedora full-stack bilíngue, tutoriais e reflexões sobre a indústria de tecnologia. Volte logo!',
+    title: "Querido Diário, é aqui que começa 🌸",
+    date: "5 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    intro: "Olá, eu sou a Jill. 💻✨",
+    introDesc: "Sou desenvolvedora Full Stack, uma aprendiz curiosa e o tipo de pessoa que acaba abrindo quinze abas no navegador enquanto tenta entender um único conceito técnico.",
+    welcome: "Se você encontrou o caminho até aqui, seja bem-vindo/a.",
+    welcomeSub: "Este pequeno canto do meu portfólio é algo que eu queria criar há muito tempo.",
+    notAnother: [
+      "Não mais um site de tutoriais.",
+      "Não mais uma coleção de documentação.",
+      "Não mais um blog de \"10 principais dicas de JavaScript\"."
+    ],
+    instead: "Já existem muitos desses por aí.",
+    insteadDesc: "Em vez disso, eu queria um lugar que parecesse um pouco mais pessoal. Um lugar onde eu possa documentar o que estou aprendendo, o que estou construindo, o que quebra, o que é consertado e todas as lições que coleciono ao longo do caminho.",
+    sections: [
+      {
+        title: "Como vim parar na tecnologia 💻",
+        paragraphs: [
+          "O engraçado é que a tecnologia não foi um caminho reto para mim.",
+          "Minha jornada começou no suporte técnico, ajudando as pessoas a resolver problemas, diagnosticando falhas em sistemas e aprendendo como a tecnologia se comporta quando as coisas não saem como planejado.",
+          "Com o tempo, minha curiosidade continuou crescendo.",
+          "Eu queria entender não apenas como os sistemas eram usados, mas como eram construídos.",
+          "Essa curiosidade acabou me levando ao desenvolvimento de software.",
+          "Hoje, trabalho com aplicações web, aplicativos móveis, APIs, bancos de dados, integrações de IA e, ocasionalmente, passo mais tempo depurando erros do que gostaria de admitir. 😅"
+        ]
+      },
+      {
+        title: "Por que um diário de desenvolvedora? 🌷",
+        paragraphs: [
+          "Porque toda semana eu aprendo algo novo.",
+          "Às vezes é um framework.",
+          "Às vezes é um conceito de IA.",
+          "Às vezes é um problema de deploy que me ensina uma lição que nunca esquecerei.",
+          "E às vezes é um pequeno bug que consegue se esconder por horas.",
+          "Minha jornada na tecnologia não é uma linha reta.",
+          "Isso é caótico. É emocionante. É frustrante. É gratificante.",
+          "E eu queria um lugar para capturar essa jornada."
+        ]
+      },
+      {
+        title: "O que você vai encontrar aqui ✨",
+        paragraphs: [
+          "Este não será um blog de tecnologia tradicional.",
+          "Você encontrará:",
+          "• Coisas que estou aprendendo atualmente",
+          "• Conceitos explicados da forma que eu gostaria que tivessem me explicado",
+          "• Notas de projetos reais",
+          "• Aventuras de desenvolvimento mobile",
+          "• Descobertas de IA",
+          "• Lições de backend",
+          "• Histórias ocasionais de depuração",
+          "E, com sorte, alguns insights que tornem a sua própria jornada de aprendizado um pouco mais fácil."
+        ]
+      },
+      {
+        title: "Uma nota para o meu eu do futuro 💖",
+        paragraphs: [
+          "Espero que, daqui a alguns meses, eu possa olhar para trás e ver o quanto cresci.",
+          "E se você está lendo isso como alguém que também está aprendendo, construindo ou descobrindo coisas...",
+          "Seja bem-vindo/a.",
+          "Estamos aprendendo juntos.",
+          "Nos vemos na próxima entrada.",
+          "— Jill 🌸"
+        ]
+      }
+    ],
     back: 'Voltar ao Início'
   }
 };
 
-const page = content[lang];
+const page = content[lang] || content.es;
 ---
 
-<Layout title={`${page.subtitle} — Jill Hernandez`} lang={lang}>
-  <Nav lang={lang} aria-hidden="true" />
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
   
-  <main class="blog-landing">
-    <div class="container container-narrow reveal">
-      <div class="section-label">{t('nav.blog')}</div>
-      <h1 class="blog-title">
-        {page.title}
-        <br />
-        <em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose); font-style: normal;">
-          {page.subtitle}
-        </em>
-      </h1>
-      
-      <p class="blog-desc">
-        {page.body}
-      </p>
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
 
-      <a href={`/${lang}/`} class="btn btn-ghost">
-        {page.back}
-      </a>
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header with Integrated Photo -->
+        <header class="post-header">
+          <div class="header-text-side">
+            <div class="post-meta">
+              <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+              <span class="post-dot">•</span>
+              <span class="post-date">{page.date}</span>
+            </div>
+            <h1 class="post-title">{page.title}</h1>
+            <p class="post-subtitle">{page.subtitle}</p>
+          </div>
+          
+          <div class="header-photo-side">
+            <div class="header-photo-wrapper">
+              <div class="photo-glow"></div>
+              <img src={jillPhoto.src} alt="Jill" class="header-profile-photo" />
+            </div>
+          </div>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          <p>{page.welcome}</p>
+          <p>{page.welcomeSub}</p>
+
+          <!-- Striking Negative Highlights -->
+          <ul class="bullet-list-negative">
+            {page.notAnother.map((item) => (
+              <li>
+                <span class="cross">✕</span> <span class="bullet-text">{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <p class="instead-label">{page.instead}</p>
+          <p>{page.insteadDesc}</p>
+
+          <hr class="post-divider" />
+
+          <!-- Dynamic Sections -->
+          {page.sections.map((section) => (
+            <div class="post-section">
+              <h2 class="section-heading">{section.title}</h2>
+              <div class="section-body">
+                {section.paragraphs.map((para) => {
+                  if (para.startsWith('•')) {
+                    return <ul class="bullet-list-normal"><li>{para.substring(2)}</li></ul>;
+                  }
+                  return <p>{para}</p>;
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </article>
+
     </div>
 
-    <!-- Decorative flowers (static) -->
+    <!-- Decorative ambient flowers (static, low opacity) -->
     <div class="decorative-flower-1" aria-hidden="true">🌸</div>
     <div class="decorative-flower-2" aria-hidden="true">🌺</div>
   </main>
 </Layout>
 
 <style>
-  .blog-landing {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 120px 20px 60px;
-    position: relative;
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
     overflow: hidden;
   }
 
-  .blog-title {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 8vw, 4rem);
-    line-height: 1.1;
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
     margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .header-text-side {
+    flex: 1;
+  }
+
+  .header-photo-side {
+    flex-shrink: 0;
+  }
+
+  .header-photo-wrapper {
+    position: relative;
+    width: 200px;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 2px solid var(--rose);
+    box-shadow: 0 12px 35px rgba(255, 75, 145, 0.25);
+    transition: transform 0.4s ease;
+  }
+
+  .header-photo-wrapper:hover {
+    transform: scale(1.04) rotate(3deg);
+  }
+
+  .header-profile-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .photo-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 75, 145, 0.2) 0%, transparent 85%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Bullet List negative style */
+  .bullet-list-negative {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bullet-list-negative li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cross {
+    color: var(--rose);
+    font-weight: 800;
+    font-size: 0.9rem;
+    background: rgba(255, 75, 145, 0.1);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .bullet-text {
+    font-weight: 500;
     color: var(--text);
   }
 
-  .blog-desc {
-    font-size: 1.125rem;
-    color: var(--text-muted);
-    max-width: 600px;
-    margin: 0 auto 40px;
-    line-height: 1.6;
+  .instead-label {
+    font-weight: 700;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
   }
 
-  /* Decorative elements */
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  .bullet-list-normal {
+    padding-left: 20px;
+    margin-bottom: 0.5rem;
+  }
+
+  .bullet-list-normal li {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Ambient Decor */
   .decorative-flower-1 {
     position: absolute;
-    top: 20%;
-    left: 10%;
-    font-size: 4rem;
-    opacity: 0.1;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
     filter: blur(2px);
     transform: rotate(-15deg);
+    pointer-events: none;
   }
 
   .decorative-flower-2 {
     position: absolute;
-    bottom: 15%;
-    right: 12%;
-    font-size: 5rem;
-    opacity: 0.15;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
     filter: blur(3px);
-    transform: rotate(20deg);
+    transform: rotate(25deg);
+    pointer-events: none;
   }
 
-  .container {
-    position: relative;
-    z-index: 10;
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-header {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .header-photo-wrapper {
+      width: 160px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+    .header-photo-wrapper {
+      width: 130px;
+    }
   }
 </style>
