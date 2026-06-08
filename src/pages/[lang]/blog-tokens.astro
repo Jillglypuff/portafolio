@@ -1,0 +1,714 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, I Finally Understood What Tokens Are 🌸",
+    date: "June 8, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    firstAssumption: {
+      heading: "My first assumption",
+      paragraphs: [
+        "At first, I thought tokens were something complicated.",
+        "Maybe some kind of AI currency.",
+        "Maybe a technical setting hidden somewhere.",
+        "Maybe something only AI engineers needed to worry about.",
+        "As it turns out...",
+        "Tokens are much simpler than that."
+      ]
+    },
+    discovery: {
+      heading: "Today's Discovery",
+      paragraphs: [
+        "A token is simply a small piece of text.",
+        "Not necessarily a word.",
+        "Not necessarily a character.",
+        "Just a chunk of text that an AI model processes.",
+        "For example: \"Hello\" might be one token. While a longer word could be split into multiple tokens.",
+        "The AI doesn't actually read text the same way humans do.",
+        "It reads tokens."
+      ]
+    },
+    click: {
+      heading: "What Finally Made It Click",
+      paragraphs: [
+        "The easiest way for me to understand it was this:",
+        "Imagine you're paying for luggage on a flight. The more things you pack, the more space you use.",
+        "Tokens work in a similar way.",
+        "Every instruction you write. Every paragraph. Every response the model generates.",
+        "All of it takes up space.",
+        "The larger the conversation becomes, the more tokens are used.",
+        "Suddenly, all those discussions about token usage started making sense."
+      ]
+    },
+    working: {
+      heading: "What I Learned Working With AI",
+      paragraphs: [
+        "A while ago, I participated in projects related to training and evaluating AI responses.",
+        "One thing I noticed was that some people would repeatedly rewrite prompts because they weren't getting the results they wanted.",
+        "The interesting part?",
+        "Sometimes the issue wasn't the model. It was the prompt.",
+        "A clear prompt often produces a better answer than a long, confusing one.",
+        "And better prompts usually mean fewer retries.",
+        "Which also means fewer tokens being consumed."
+      ]
+    },
+    lesson: {
+      heading: "The Real Lesson 🌷",
+      paragraphs: [
+        "Understanding tokens taught me something bigger.",
+        "AI isn't just about asking questions.",
+        "It's about communication.",
+        "The clearer we communicate what we want, the better the results tend to be.",
+        "And honestly, that's probably a lesson that applies far beyond technology."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "Tokens are pieces of text processed by AI.",
+        "Both prompts and responses consume tokens.",
+        "Better prompts often reduce unnecessary retries.",
+        "Understanding the system helps you use it more effectively."
+      ]
+    },
+    intro: "For the longest time, I didn't understand why people kept talking about tokens.",
+    introDesc: "Every time I saw discussions about token limits, token costs, or prompt optimization, I would think: \"Am I supposed to know what that means?\" 😅",
+    introExtra: "The funny part is that I was already using AI tools regularly. I just wasn't paying attention to what was happening behind the scenes.",
+    closing: "Next time, I'd like to talk about something that sounded much scarier than it actually was: MCP.",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Por Fin Entendí Qué Son los Tokens 🌸",
+    date: "8 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    firstAssumption: {
+      heading: "Mi primera suposición",
+      paragraphs: [
+        "Al principio, pensé que los tokens eran algo complicado.",
+        "Tal vez una especie de moneda de la IA.",
+        "Tal vez una configuración técnica escondida en algún lugar.",
+        "Tal vez algo de lo que solo los ingenieros de IA necesitaban preocuparse.",
+        "Resulta que...",
+        "Los tokens son mucho más simples que eso."
+      ]
+    },
+    discovery: {
+      heading: "El Descubrimiento de Hoy",
+      paragraphs: [
+        "Un token es simplemente un pequeño fragmento de texto.",
+        "No necesariamente una palabra.",
+        "No necesariamente un carácter.",
+        "Solo un fragmento de texto que procesa un modelo de IA.",
+        "Por ejemplo: \"Hola\" podría ser un token. Mientras que una palabra más larga podría dividirse en varios tokens.",
+        "La IA en realidad no lee el texto de la misma manera que los humanos.",
+        "Lee tokens."
+      ]
+    },
+    click: {
+      heading: "Lo Que Finalmente Lo Aclaró Todo",
+      paragraphs: [
+        "La forma más fácil para mí de entenderlo fue esta:",
+        "Imagina que estás pagando por el equipaje en un vuelo. Cuantas más cosas empaquetas, más espacio usas.",
+        "Los tokens funcionan de manera similar.",
+        "Cada instrucción que escribes. Cada párrafo. Cada respuesta que genera el modelo.",
+        "Todo ocupa espacio.",
+        "Cuanto más grande se vuelve la conversación, más tokens se utilizan.",
+        "De repente, todas esas discusiones sobre el uso de tokens empezaron a tener sentido."
+      ]
+    },
+    working: {
+      heading: "Lo Que Aprendí Trabajando con IA",
+      paragraphs: [
+        "Hace un tiempo, participé en proyectos relacionados con el entrenamiento y la evaluación de respuestas de IA.",
+        "Una cosa que noté fue que algunas personas reescribían los prompts repetidamente porque no obtenían los resultados que querían.",
+        "¿La parte interesante?",
+        "A veces el problema no era el modelo. Era el prompt.",
+        "Un prompt claro a menudo produce una mejor respuesta que uno largo y confuso.",
+        "Y mejores prompts generalmente significan menos reintentos.",
+        "Lo que también significa menos tokens consumidos."
+      ]
+    },
+    lesson: {
+      heading: "La Lección Real 🌷",
+      paragraphs: [
+        "Entender los tokens me enseñó algo más grande.",
+        "La IA no se trata solo de hacer preguntas.",
+        "Se trata de comunicación.",
+        "Cuanto más claramente comunicamos lo que queremos, mejores tienden a ser los resultados.",
+        "Y honestamente, esa es probablemente una lección que va mucho más allá de la tecnología."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "Los tokens son fragmentos de texto procesados por la IA.",
+        "Tanto los prompts como las respuestas consumen tokens.",
+        "Mejores prompts a menudo reducen los reintentos innecesarios.",
+        "Entender el sistema te ayuda a usarlo de manera más efectiva."
+      ]
+    },
+    intro: "Durante mucho tiempo, no entendí por qué la gente seguía hablando de tokens.",
+    introDesc: "Cada vez que veía discusiones sobre límites de tokens, costos de tokens u optimización de prompts, pensaba: \"¿Se supone que debo saber qué significa eso?\" 😅",
+    introExtra: "Lo gracioso es que ya estaba usando herramientas de IA con regularidad. Solo que no prestaba atención a lo que estaba pasando entre bastidores.",
+    closing: "La próxima vez, me gustaría hablar de algo que sonaba mucho más aterrador de lo que realmente era: MCP.",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Finalmente Entendi o Que São Tokens 🌸",
+    date: "8 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    firstAssumption: {
+      heading: "Minha primeira suposição",
+      paragraphs: [
+        "No começo, achei que tokens eram algo complicado.",
+        "Talvez uma espécie de moeda da IA.",
+        "Talvez uma configuração técnica escondida em algum lugar.",
+        "Talvez algo com que apenas os engenheiros de IA precisassem se preocupar.",
+        "Acontece que...",
+        "Tokens são muito mais simples do que isso."
+      ]
+    },
+    discovery: {
+      heading: "A Descoberta de Hoje",
+      paragraphs: [
+        "Um token é simplesmente um pequeno pedaço de texto.",
+        "Não necessariamente uma palavra.",
+        "Não necessariamente um caractere.",
+        "Apenas um fragmento de texto que um modelo de IA processa.",
+        "Por exemplo: \"Olá\" pode ser um token. Enquanto uma palavra mais longa pode ser dividida em vários tokens.",
+        "A IA na verdade não lê o texto da mesma forma que os humanos.",
+        "Ela lê tokens."
+      ]
+    },
+    click: {
+      heading: "O Que Finalmente Fez Tudo Fazer Sentido",
+      paragraphs: [
+        "A maneira mais fácil para mim de entender foi esta:",
+        "Imagine que você está pagando pela bagagem em um voo. Quanto mais coisas você coloca, mais espaço usa.",
+        "Os tokens funcionam de forma semelhante.",
+        "Cada instrução que você escreve. Cada parágrafo. Cada resposta que o modelo gera.",
+        "Tudo ocupa espaço.",
+        "Quanto maior a conversa se torna, mais tokens são usados.",
+        "De repente, todas aquelas discussões sobre uso de tokens começaram a fazer sentido."
+      ]
+    },
+    working: {
+      heading: "O Que Aprendi Trabalhando com IA",
+      paragraphs: [
+        "Há algum tempo, participei de projetos relacionados ao treinamento e avaliação de respostas de IA.",
+        "Uma coisa que notei foi que algumas pessoas reescreviam os prompts repetidamente porque não estavam obtendo os resultados que queriam.",
+        "A parte interessante?",
+        "Às vezes o problema não era o modelo. Era o prompt.",
+        "Um prompt claro frequentemente produz uma resposta melhor do que um longo e confuso.",
+        "E melhores prompts geralmente significam menos tentativas.",
+        "O que também significa menos tokens sendo consumidos."
+      ]
+    },
+    lesson: {
+      heading: "A Lição Real 🌷",
+      paragraphs: [
+        "Entender os tokens me ensinou algo maior.",
+        "A IA não é apenas sobre fazer perguntas.",
+        "É sobre comunicação.",
+        "Quanto mais claramente comunicamos o que queremos, melhores tendem a ser os resultados.",
+        "E honestamente, essa é provavelmente uma lição que vai muito além da tecnologia."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "Tokens são pedaços de texto processados pela IA.",
+        "Tanto os prompts quanto as respostas consomem tokens.",
+        "Melhores prompts frequentemente reduzem tentativas desnecessárias.",
+        "Entender o sistema ajuda a usá-lo de forma mais eficaz."
+      ]
+    },
+    intro: "Por muito tempo, eu não entendia por que as pessoas continuavam falando sobre tokens.",
+    introDesc: "Cada vez que via discussões sobre limites de tokens, custos de tokens ou otimização de prompts, eu pensava: \"Eu deveria saber o que isso significa?\" 😅",
+    introExtra: "O engraçado é que eu já estava usando ferramentas de IA regularmente. Só não estava prestando atenção ao que estava acontecendo nos bastidores.",
+    closing: "Da próxima vez, gostaria de falar sobre algo que soou muito mais assustador do que realmente era: MCP.",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          <p>{page.introExtra}</p>
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Working with AI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.working.heading}</h2>
+            <div class="section-body">
+              {page.working.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.lesson.heading}</h2>
+            <div class="section-body">
+              {page.lesson.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-header {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .header-photo-wrapper {
+      width: 160px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+    .header-photo-wrapper {
+      width: 130px;
+    }
+  }
+</style>

@@ -10,14 +10,24 @@ const content = {
     pinnedLabel: "★ Recommended Start",
     readMore: "Read →",
     upcomingTitle: "Upcoming Articles",
+    browseLabel: "More Entries",
     drafts: [
-      { title: "Building with RAG & MCP", desc: "How I integrate Large Language Models with local databases using Model Context Protocol." },
+      { title: "What is MCP?", desc: "A look into Model Context Protocol — the system that lets AI models talk to tools and local data." },
       { title: "Shipping with Expo React Native", desc: "Tips and tricks for shipping cross-platform mobile apps faster." }
     ],
     featuredPost: {
       title: "Dear Diary, This Is Where It Begins 🌸",
       desc: "An introduction to my personal dev diary. Why I created this space, my journey from tech support to development, and what you'll find here."
-    }
+    },
+    entries: [
+      {
+        number: "02",
+        shortTitle: "What Tokens Are",
+        title: "Dear Diary, I Finally Understood What Tokens Are 🌸",
+        desc: "Tokens sounded intimidating — turns out they're just small pieces of text.",
+        href: "blog-tokens"
+      }
+    ]
   },
   es: {
     title: "Diario de Desarrollo",
@@ -25,14 +35,24 @@ const content = {
     pinnedLabel: "★ Te recomiendo iniciar por aquí",
     readMore: "Leer →",
     upcomingTitle: "Próximos Artículos",
+    browseLabel: "Más Entradas",
     drafts: [
-      { title: "Construyendo con RAG y MCP", desc: "Cómo integro Modelos de Lenguaje con bases de datos usando Model Context Protocol." },
+      { title: "¿Qué es MCP?", desc: "Un vistazo al Model Context Protocol — el sistema que permite a los modelos de IA comunicarse con herramientas y datos locales." },
       { title: "El Arte de Expo React Native", desc: "Consejos y trucos para publicar aplicaciones móviles multiplataforma rápidamente." }
     ],
     featuredPost: {
       title: "Querido Diario: Aquí es donde comienza 🌸",
       desc: "Una introducción a mi diario personal de desarrollo. Por qué creé este espacio, mi transición de soporte técnico a desarrollo y qué encontrarás aquí."
-    }
+    },
+    entries: [
+      {
+        number: "02",
+        shortTitle: "Qué Son los Tokens",
+        title: "Querido Diario, Por Fin Entendí Qué Son los Tokens 🌸",
+        desc: "Los tokens sonaban intimidantes — resulta que son solo pequeños fragmentos de texto.",
+        href: "blog-tokens"
+      }
+    ]
   },
   pt: {
     title: "Diário de Desenvolvimento",
@@ -40,14 +60,24 @@ const content = {
     pinnedLabel: "★ Recomendo começar por aqui",
     readMore: "Ler →",
     upcomingTitle: "Próximos Artigos",
+    browseLabel: "Mais Entradas",
     drafts: [
-      { title: "Construindo com RAG e MCP", desc: "Como integro Modelos de Linguagem com bancos de dados usando Model Context Protocol." },
+      { title: "O que é MCP?", desc: "Um olhar sobre o Model Context Protocol — o sistema que permite que modelos de IA conversem com ferramentas e dados locais." },
       { title: "A Arte do Expo React Native", desc: "Dicas e truques para publicar aplicativos móveis multiplataforma rapidamente." }
     ],
     featuredPost: {
       title: "Querido Diário, é aqui que começa 🌸",
       desc: "Uma introdução ao meu diário pessoal de desenvolvimento. Por que criei este espaço, minha transição do suporte técnico para o desenvolvimento e o que você encontrará aqui."
-    }
+    },
+    entries: [
+      {
+        number: "02",
+        shortTitle: "O Que São Tokens",
+        title: "Querido Diário, Finalmente Entendi o Que São Tokens 🌸",
+        desc: "Tokens soavam intimidadores — são apenas pequenos pedaços de texto.",
+        href: "blog-tokens"
+      }
+    ]
   }
 };
 
@@ -68,25 +98,28 @@ const page = content[lang] || content.es;
       </h2>
     </div>
 
-    <!-- Blog Grid Layout -->
+    <!-- 3-column blog grid -->
     <div class="blog-grid">
-      
-      <!-- Pinned Featured Post Card -->
-      <div class="blog-card featured-blog-card reveal">
-        <div class="card-glow"></div>
-        <div class="badge-recommended">{page.pinnedLabel}</div>
-        <div class="card-content">
+
+      <!-- ── Col 1: Pinned post (fixed) ── -->
+      <div class="blog-card pinned-card reveal">
+        <div class="card-glow glow-rose"></div>
+        <div class="badge-pinned">{page.pinnedLabel}</div>
+        <div class="card-body">
           <h3 class="card-post-title">{page.featuredPost.title}</h3>
           <p class="card-post-desc">{page.featuredPost.desc}</p>
-          <a href={`/${lang}/blog/`} class="btn btn-primary btn-read-more">
-            {page.readMore}
-          </a>
         </div>
+        <a href={`/${lang}/blog/`} class="btn btn-primary card-btn">
+          {page.readMore}
+        </a>
       </div>
 
-      <!-- Upcoming/Draft Posts Side Panel -->
-      <div class="upcoming-panel reveal">
-        <h3 class="upcoming-heading">{page.upcomingTitle}</h3>
+      <!-- ── Col 2: Upcoming Articles ── -->
+      <div class="blog-card upcoming-card reveal">
+        <div class="card-glow glow-subtle"></div>
+        <div class="upcoming-header">
+          <h3 class="upcoming-heading">{page.upcomingTitle}</h3>
+        </div>
         <div class="upcoming-list">
           {page.drafts.map((draft) => (
             <div class="upcoming-item">
@@ -100,56 +133,99 @@ const page = content[lang] || content.es;
         </div>
       </div>
 
+      <!-- ── Col 3: Entry card (future carousel) ── -->
+      <div class="blog-card entries-card reveal">
+        <div class="card-glow glow-subtle"></div>
+        <div class="entries-header">
+          <h3 class="upcoming-heading">{page.browseLabel}</h3>
+        </div>
+        <div class="entries-list">
+          {page.entries.map((entry) => (
+            <div class="upcoming-item">
+              <div class="upcoming-bullet"></div>
+              <div class="upcoming-info">
+                <h4 class="upcoming-item-title">{entry.shortTitle}</h4>
+                <p class="upcoming-item-desc">{entry.desc}</p>
+                <a href={`/${lang}/${entry.href}/`} class="entry-read-link">{page.readMore}</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
+
+
 
 <style>
   .blog-header {
     margin-bottom: 40px;
   }
 
+  /* Override container padding for this section only */
+  #blog .container {
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 1400px;
+  }
+
+  /* ── 3-col equal grid ── */
   .blog-grid {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 40px;
+    grid-template-columns: 5fr 4fr 5fr;
+    gap: 24px;
     align-items: stretch;
   }
 
-  /* Pinned Card Style */
-  .featured-blog-card {
+  /* ── Shared card base ── */
+  .blog-card {
     position: relative;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 75, 145, 0.25);
     border-radius: 24px;
-    padding: 40px;
+    padding: 36px 32px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
   }
 
-  .featured-blog-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255, 75, 145, 0.5);
-    box-shadow: 0 20px 45px rgba(255, 75, 145, 0.12);
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3);
   }
 
+  /* Glow variants */
   .card-glow {
     position: absolute;
-    top: -20%;
+    top: -30%;
     right: -20%;
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba(255, 75, 145, 0.12) 0%, transparent 70%);
-    filter: blur(30px);
-    z-index: 1;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    filter: blur(40px);
     pointer-events: none;
+    z-index: 0;
   }
 
-  .badge-recommended {
+  .glow-rose   { background: radial-gradient(circle, rgba(255, 75, 145, 0.14) 0%, transparent 70%); }
+  .glow-subtle { background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%); }
+  .glow-gold   { background: radial-gradient(circle, rgba(255, 200, 100, 0.12) 0%, transparent 70%); }
+
+  /* ── Col 1: Pinned card ── */
+  .pinned-card {
+    border: 1px solid rgba(255, 75, 145, 0.25);
+    justify-content: space-between;
+  }
+
+  .pinned-card:hover {
+    border-color: rgba(255, 75, 145, 0.5);
+    box-shadow: 0 20px 48px rgba(255, 75, 145, 0.12);
+  }
+
+  .badge-pinned {
     display: inline-block;
     align-self: flex-start;
     padding: 6px 14px;
@@ -165,12 +241,11 @@ const page = content[lang] || content.es;
     z-index: 2;
   }
 
-  .card-content {
+  .card-body {
+    flex: 1;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
   }
 
   .card-post-title {
@@ -187,41 +262,44 @@ const page = content[lang] || content.es;
     font-size: 1.05rem;
     line-height: 1.6;
     margin-bottom: 32px;
+    flex: 1;
   }
 
-  .btn-read-more {
+  .card-btn {
     align-self: flex-start;
     padding: 12px 28px;
     font-size: 0.95rem;
+    z-index: 2;
   }
 
-  /* Upcoming Side Panel */
-  .upcoming-panel {
-    background: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 24px;
-    padding: 36px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+  /* ── Col 2: Upcoming card ── */
+  .upcoming-card {
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .upcoming-header {
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1;
   }
 
   .upcoming-heading {
     font-family: var(--font-display);
     font-size: 1.25rem;
     color: var(--text);
-    margin-bottom: 24px;
+    margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 700;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding-bottom: 12px;
   }
 
-  .upcoming-list {
+  .upcoming-list,
+  .entries-list {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    z-index: 1;
   }
 
   .upcoming-item {
@@ -235,16 +313,22 @@ const page = content[lang] || content.es;
     height: 8px;
     border-radius: 50%;
     background: var(--rose);
-    margin-top: 8px;
+    margin-top: 5px;
     flex-shrink: 0;
     box-shadow: 0 0 8px var(--rose);
+  }
+
+  .upcoming-info {
+    flex: 1;
   }
 
   .upcoming-item-title {
     font-size: 1.05rem;
     font-weight: 700;
     color: var(--text);
+    margin-top: 0;
     margin-bottom: 6px;
+    line-height: 1.3;
   }
 
   .upcoming-item-desc {
@@ -254,20 +338,53 @@ const page = content[lang] || content.es;
     margin: 0;
   }
 
-  /* Responsive Grid */
-  @media (max-width: 900px) {
+  /* ── Col 3: Entries card ── */
+  .entries-card {
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .entries-header {
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1;
+  }
+
+  .entry-read-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rose);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .entry-read-link:hover {
+    opacity: 0.75;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
     .blog-grid {
-      grid-template-columns: 1fr;
-      gap: 30px;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .pinned-card {
+      grid-column: 1 / -1;
     }
   }
 
-  @media (max-width: 600px) {
-    .featured-blog-card {
-      padding: 30px 20px;
+  @media (max-width: 640px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
     }
-    .upcoming-panel {
-      padding: 24px 20px;
+    .pinned-card {
+      grid-column: auto;
+    }
+    .blog-card {
+      padding: 28px 22px;
     }
   }
 </style>
