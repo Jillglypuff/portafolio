@@ -1,0 +1,740 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, MCP Sounded Scarier Than It Actually Is 🌸",
+    date: "June 12, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "There are certain tech terms that immediately make me feel like I should already know what they mean.",
+    introDesc: "MCP was one of those.",
+    introExtra: [
+      "The first time I heard Model Context Protocol, my brain immediately classified it as:",
+      "“advanced AI engineering thing — do not touch.”",
+      "It sounded complex. Very official. Like something that required twelve open tabs and at least one architecture diagram.",
+      "But eventually I had to work closer to it.",
+      "And turns out… it wasn’t what I imagined."
+    ],
+    firstAssumption: {
+      heading: "My first misunderstanding",
+      paragraphs: [
+        "At first, I thought MCP was another AI model.",
+        "Or maybe some hidden configuration.",
+        "Or one of those concepts people casually mention while secretly hoping nobody asks for details.",
+        "But MCP isn’t a model.",
+        "It’s a protocol.",
+        "And protocols are basically agreements."
+      ]
+    },
+    discovery: {
+      heading: "Today's Discovery",
+      paragraphs: [
+        "MCP (Model Context Protocol) is a way to standardize how AI models receive and interact with context.",
+        "(And yes, I had to read that sentence multiple times before it clicked.)",
+        "The easiest way I understand it is this:",
+        "Imagine joining a team meeting halfway through. Nobody explains anything. Everyone assumes you already know what’s happening. That’s chaos.",
+        "Now imagine someone gives you:",
+        "🌸 project notes<br>🌸 objectives<br>🌸 relevant documents<br>🌸 previous decisions",
+        "Suddenly you can contribute.",
+        "That’s what context does.",
+        "And MCP helps organize how that context gets shared."
+      ]
+    },
+    click: {
+      heading: "What Finally Made It Click ✨",
+      paragraphs: [
+        "The way I think about it now:",
+        "Without MCP →",
+        "Person A has information. Person B has different information. The AI has incomplete information. Everybody is confused.",
+        "With MCP →",
+        "Everyone gets access to the same notebook.",
+        "Much better."
+      ]
+    },
+    working: {
+      heading: "Why I Started Caring About It",
+      paragraphs: [
+        "Something I’ve learned while working around AI-related projects is that getting better responses isn’t always about using a bigger model.",
+        "Sometimes it’s about giving the model better access to what matters.",
+        "Context matters.",
+        "Structure matters.",
+        "And consistency matters.",
+        "That’s where concepts like MCP start becoming interesting.",
+        "Not because they sound advanced.",
+        "But because they solve very real communication problems."
+      ]
+    },
+    lesson: {
+      heading: "The Unexpected Lesson 🌷",
+      paragraphs: [
+        "Learning about MCP reminded me of something I keep finding in tech:",
+        "Sometimes the scary concepts aren’t actually difficult.",
+        "They’re just badly explained.",
+        "And honestly… that applies to more than technology."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "MCP stands for Model Context Protocol",
+        "It’s not an AI model",
+        "It helps organize and share context",
+        "Better context usually leads to better outputs",
+        "Complicated names don’t always mean complicated concepts"
+      ]
+    },
+    closing: "Next time I want to write about something that caused a surprisingly emotional debate in my head: React Native vs Flutter",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, MCP Sonaba Más Aterrador De Lo Que Realmente Es 🌸",
+    date: "12 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Hay ciertos términos tecnológicos que inmediatamente me hacen sentir que ya debería saber lo que significan.",
+    introDesc: "MCP era uno de esos.",
+    introExtra: [
+      "La primera vez que escuché Model Context Protocol, mi cerebro lo clasificó inmediatamente como:",
+      "\"cosa avanzada de ingeniería de IA — no tocar\".",
+      "Sonaba complejo. Muy oficial. Como algo que requería doce pestañas abiertas y al menos un diagrama de arquitectura.",
+      "Pero eventualmente tuve que trabajar más de cerca con él.",
+      "Y resulta que... no era lo que imaginaba."
+    ],
+    firstAssumption: {
+      heading: "Mi primer malentendido",
+      paragraphs: [
+        "Al principio, pensé que MCP era otro modelo de IA.",
+        "O tal vez alguna configuración oculta.",
+        "O uno de esos conceptos que la gente menciona casualmente mientras espera en secreto que nadie pida detalles.",
+        "Pero MCP no es un modelo.",
+        "Es un protocolo.",
+        "Y los protocolos son básicamente acuerdos."
+      ]
+    },
+    discovery: {
+      heading: "El Descubrimiento de Hoy",
+      paragraphs: [
+        "MCP (Model Context Protocol) es una forma de estandarizar cómo los modelos de IA reciben e interactúan con el contexto.",
+        "(Y sí, tuve que leer esa oración varias veces antes de entenderla).",
+        "La forma más fácil de entenderlo para mí es esta:",
+        "Imagina unirte a una reunión de equipo a la mitad. Nadie explica nada. Todos asumen que ya sabes lo que está pasando. Eso es un caos.",
+        "Ahora imagina que alguien te da:",
+        "🌸 notas del proyecto<br>🌸 objetivos<br>🌸 documentos relevantes<br>🌸 decisiones previas",
+        "De repente puedes contribuir.",
+        "Eso es lo que hace el contexto.",
+        "Y MCP ayuda a organizar cómo se comparte ese contexto."
+      ]
+    },
+    click: {
+      heading: "Lo Que Finalmente Lo Aclaró Todo ✨",
+      paragraphs: [
+        "La forma en que lo pienso ahora:",
+        "Sin MCP →",
+        "La persona A tiene información. La persona B tiene información diferente. La IA tiene información incompleta. Todos están confundidos.",
+        "Con MCP →",
+        "Todos tienen acceso al mismo cuaderno.",
+        "Mucho mejor."
+      ]
+    },
+    working: {
+      heading: "Por Qué Empezó a Importarme",
+      paragraphs: [
+        "Algo que he aprendido al trabajar en proyectos relacionados con IA es que obtener mejores respuestas no siempre se trata de usar un modelo más grande.",
+        "A veces se trata de darle al modelo un mejor acceso a lo que importa.",
+        "El contexto importa.",
+        "La estructura importa.",
+        "Y la consistencia importa.",
+        "Ahí es donde conceptos como MCP empiezan a volverse interesantes.",
+        "No porque suenen avanzados.",
+        "Sino porque resuelven problemas de comunicación muy reales."
+      ]
+    },
+    lesson: {
+      heading: "La Lección Inesperada 🌷",
+      paragraphs: [
+        "Aprender sobre MCP me recordó algo que sigo encontrando en la tecnología:",
+        "A veces los conceptos aterradores no son realmente difíciles.",
+        "Simplemente están mal explicados.",
+        "Y honestamente... eso se aplica a más cosas que la tecnología."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "MCP significa Model Context Protocol",
+        "No es un modelo de IA",
+        "Ayuda a organizar y compartir el contexto",
+        "Un mejor contexto suele conducir a mejores resultados",
+        "Nombres complicados no siempre significan conceptos complicados"
+      ]
+    },
+    closing: "La próxima vez quiero escribir sobre algo que causó un debate sorprendentemente emocional en mi cabeza: React Native vs Flutter",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, MCP Parecia Mais Assustador Do Que Realmente É 🌸",
+    date: "12 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Existem certos termos técnicos que imediatamente me fazem sentir que eu já deveria saber o que significam.",
+    introDesc: "MCP era um desses.",
+    introExtra: [
+      "A primeira vez que ouvi Model Context Protocol, meu cérebro o classificou imediatamente como:",
+      "\"coisa avançada de engenharia de IA — não toque\".",
+      "Parecia complexo. Muito oficial. Como algo que exigia doze abas abertas e pelo menos um diagrama de arquitetura.",
+      "Mas eventualmente tive que trabalhar mais perto dele.",
+      "E acontece que... não era o que eu imaginava."
+    ],
+    firstAssumption: {
+      heading: "Meu primeiro mal-entendido",
+      paragraphs: [
+        "No começo, achei que MCP era outro modelo de IA.",
+        "Ou talvez alguma configuração oculta.",
+        "Ou um daqueles conceitos que as pessoas mencionam casualmente enquanto esperam secretamente que ninguém peça detalhes.",
+        "Mas MCP não é um modelo.",
+        "É um protocolo.",
+        "E protocolos são basicamente acordos."
+      ]
+    },
+    discovery: {
+      heading: "A Descoberta de Hoje",
+      paragraphs: [
+        "MCP (Model Context Protocol) é uma maneira de padronizar como os modelos de IA recebem e interagem com o contexto.",
+        "(E sim, tive que ler essa frase várias vezes antes de entender).",
+        "A maneira mais fácil de entender para mim é esta:",
+        "Imagine entrar em uma reunião de equipe na metade. Ninguém explica nada. Todo mundo assume que você já sabe o que está acontecendo. Isso é um caos.",
+        "Agora imagine que alguém lhe dá:",
+        "🌸 notas do projeto<br>🌸 objetivos<br>🌸 documentos relevantes<br>🌸 decisões anteriores",
+        "De repente, você pode contribuir.",
+        "É isso que o contexto faz.",
+        "E o MCP ajuda a organizar como esse contexto é compartilhado."
+      ]
+    },
+    click: {
+      heading: "O Que Finalmente Fez Tudo Fazer Sentido ✨",
+      paragraphs: [
+        "A maneira como penso sobre isso agora:",
+        "Sem MCP →",
+        "A pessoa A tem informações. A pessoa B tem informações diferentes. A IA tem informações incompletas. Todo mundo está confuso.",
+        "Com MCP →",
+        "Todos têm acesso ao mesmo caderno.",
+        "Muito melhor."
+      ]
+    },
+    working: {
+      heading: "Por Que Comecei a Me Importar",
+      paragraphs: [
+        "Algo que aprendi trabalhando em projetos relacionados a IA é que obter respostas melhores nem sempre é sobre usar um modelo maior.",
+        "Às vezes, trata-se de dar ao modelo um acesso melhor ao que importa.",
+        "O contexto importa.",
+        "A estrutura importa.",
+        "E a consistência importa.",
+        "É aí que conceitos como o MCP começam a ficar interessantes.",
+        "Não porque pareçam avançados.",
+        "Mas porque resolvem problemas de comunicação muito reais."
+      ]
+    },
+    lesson: {
+      heading: "A Lição Inesperada 🌷",
+      paragraphs: [
+        "Aprender sobre o MCP me lembrou de algo que continuo encontrando na tecnologia:",
+        "Às vezes, os conceitos assustadores não são realmente difíceis.",
+        "Eles são apenas mal explicados.",
+        "E honestamente... isso se aplica a mais do que tecnologia."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "MCP significa Model Context Protocol",
+        "Não é um modelo de IA",
+        "Ajuda a organizar e compartilhar o contexto",
+        "Um contexto melhor geralmente leva a resultados melhores",
+        "Nomes complicados nem sempre significam conceitos complicados"
+      ]
+    },
+    closing: "Na próxima vez, quero escrever sobre algo que causou um debate surpreendentemente emocional na minha cabeça: React Native vs Flutter",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Working with AI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.working.heading}</h2>
+            <div class="section-body">
+              {page.working.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.lesson.heading}</h2>
+            <div class="section-body">
+              {page.lesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-header {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .header-photo-wrapper {
+      width: 160px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+    .header-photo-wrapper {
+      width: 130px;
+    }
+  }
+</style>
