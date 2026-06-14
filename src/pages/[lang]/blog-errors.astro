@@ -1,0 +1,791 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Errors Are Clues 🌸",
+    date: "June 13, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "There was a time when seeing red text in the console immediately activated survival mode.",
+    introDesc: "Something failed. Something broke. And obviously… my first instinct was to change random things and hope one of them worked 😭",
+    introExtra: [
+      "Move a line.",
+      "Refresh.",
+      "Add a console.log.",
+      "Refresh again.",
+      "Question life choices.",
+      "Repeat.",
+      "Spoiler: That strategy was not sustainable."
+    ],
+    firstAssumption: {
+      heading: "My first misunderstanding",
+      paragraphs: [
+        "For a long time I thought debugging meant:",
+        "finding the error → fixing the error",
+        "Fast. Efficient. Done.",
+        "Turns out debugging is usually more like detective work.",
+        "You collect clues.",
+        "You build theories.",
+        "You test assumptions.",
+        "And eventually… you discover the issue was one missing character.",
+        "Classic."
+      ]
+    },
+    discovery: {
+      heading: "Today's Discovery",
+      paragraphs: [
+        "Errors aren't interruptions.",
+        "They're feedback.",
+        "The console. Logs. Debugger. Network tab. Stack traces.",
+        "They're all trying to explain what happened.",
+        "(Usually more politely than we think.)",
+        "The problem is that sometimes we panic before reading."
+      ]
+    },
+    click: {
+      heading: "What Finally Made It Click ✨",
+      paragraphs: [
+        "One day I realized something.",
+        "The best developers I worked with weren't the fastest typers.",
+        "They were the calmest investigators.",
+        "Instead of changing five files immediately… they would:",
+        "🌸 Read the message<br>🌸 Identify where it failed<br>🌸 Reproduce the issue<br>🌸 Test one thing at a time",
+        "Meanwhile I was emotionally refreshing the browser."
+      ]
+    },
+    working: {
+      heading: "Things That Saved Me",
+      paragraphs: [
+        "A few habits that changed debugging for me:",
+        "→ Read the full error. Not just the first line.",
+        "→ Learn your IDE debugger. It feels complicated until it isn't.",
+        "→ Use logs intentionally. Not everywhere.",
+        "→ Search for understanding. Not for copy-paste.",
+        "→ If you find a solution online—rewrite it in your own structure.",
+        "Understand first."
+      ]
+    },
+    personalNote: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries with approximately zero patience…",
+        "waiting to understand the problem before touching the code has been unexpected character development.",
+        "I still want to fix everything immediately.",
+        "But technology keeps teaching me that slowing down is often faster.",
+        "Rude."
+      ]
+    },
+    lesson: {
+      heading: "The Real Lesson 💖",
+      paragraphs: [
+        "Most bugs aren't trying to embarrass us.",
+        "They're trying to tell us something.",
+        "And the faster we stop fighting the message… the faster we usually find the answer.",
+        "Now whenever I see an error… I try to ask:",
+        "Okay. What are you trying to tell me?",
+        "(And then panic slightly less.)"
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Errors are information",
+        "Debugging is investigation",
+        "Console logs are not decoration",
+        "Copying fixes ≠ understanding",
+        "Read first. Change later."
+      ]
+    },
+    closing: "Next entry: Coding an app doesn't start with writing code",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Los Errores Son Pistas 🌸",
+    date: "13 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Hubo un tiempo en que ver texto rojo en la consola activaba inmediatamente mi modo de supervivencia.",
+    introDesc: "Algo falló. Algo se rompió. Y obviamente... mi primer instinto era cambiar cosas al azar y esperar que una funcionara 😭",
+    introExtra: [
+      "Mover una línea.",
+      "Actualizar.",
+      "Agregar un console.log.",
+      "Actualizar de nuevo.",
+      "Cuestionar mis decisiones de vida.",
+      "Repetir.",
+      "Spoiler: Esa estrategia no era sostenible."
+    ],
+    firstAssumption: {
+      heading: "Mi primer malentendido",
+      paragraphs: [
+        "Por mucho tiempo pensé que debuggear significaba:",
+        "encontrar el error → arreglar el error",
+        "Rápido. Eficiente. Listo.",
+        "Resulta que debuggear es más bien un trabajo de detective.",
+        "Recolectas pistas.",
+        "Construyes teorías.",
+        "Pruebas suposiciones.",
+        "Y eventualmente... descubres que el problema era un carácter faltante.",
+        "Clásico."
+      ]
+    },
+    discovery: {
+      heading: "El Descubrimiento de Hoy",
+      paragraphs: [
+        "Los errores no son interrupciones.",
+        "Son retroalimentación.",
+        "La consola. Los logs. El debugger. La pestaña de red. Los stack traces.",
+        "Todos intentan explicar qué pasó.",
+        "(Generalmente de forma más educada de lo que pensamos).",
+        "El problema es que a veces entramos en pánico antes de leer."
+      ]
+    },
+    click: {
+      heading: "Lo Que Finalmente Lo Aclaró Todo ✨",
+      paragraphs: [
+        "Un día me di cuenta de algo.",
+        "Los mejores desarrolladores con los que he trabajado no eran los que escribían más rápido.",
+        "Eran los investigadores más calmados.",
+        "En lugar de cambiar cinco archivos de inmediato... ellos:",
+        "🌸 Leían el mensaje<br>🌸 Identificaban dónde falló<br>🌸 Reproducían el problema<br>🌸 Probaban una cosa a la vez",
+        "Mientras tanto, yo estaba actualizando emocionalmente el navegador."
+      ]
+    },
+    working: {
+      heading: "Cosas Que Me Salvaron",
+      paragraphs: [
+        "Algunos hábitos que cambiaron mi forma de debuggear:",
+        "→ Lee el error completo. No solo la primera línea.",
+        "→ Aprende a usar el debugger de tu IDE. Parece complicado hasta que no lo es.",
+        "→ Usa logs con intención. No en todas partes.",
+        "→ Busca entender. No solo copiar y pegar.",
+        "→ Si encuentras una solución en línea—reescríbela a tu manera.",
+        "Entiende primero."
+      ]
+    },
+    personalNote: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como una Aries con aproximadamente cero paciencia...",
+        "esperar para entender el problema antes de tocar el código ha sido un desarrollo de personaje inesperado.",
+        "Todavía quiero arreglar todo de inmediato.",
+        "Pero la tecnología me sigue enseñando que ir más lento a menudo es más rápido.",
+        "Qué grosero."
+      ]
+    },
+    lesson: {
+      heading: "La Lección Real 💖",
+      paragraphs: [
+        "La mayoría de los bugs no intentan avergonzarnos.",
+        "Están intentando decirnos algo.",
+        "Y cuanto más rápido dejemos de pelear con el mensaje... más rápido encontraremos la respuesta.",
+        "Ahora, cada vez que veo un error... intento preguntar:",
+        "Okay. ¿Qué intentas decirme?",
+        "(Y luego entro en pánico un poco menos)."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "Los errores son información",
+        "Debuggear es investigar",
+        "Los console.log no son decoración",
+        "Copiar arreglos ≠ entender",
+        "Lee primero. Cambia después."
+      ]
+    },
+    closing: "Próxima entrada: Programar una app no empieza escribiendo código",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Erros São Pistas 🌸",
+    date: "13 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Houve um tempo em que ver texto vermelho no console ativava imediatamente meu modo de sobrevivência.",
+    introDesc: "Algo falhou. Algo quebrou. E obviamente... meu primeiro instinto foi mudar coisas aleatoriamente e esperar que uma funcionasse 😭",
+    introExtra: [
+      "Mover uma linha.",
+      "Atualizar.",
+      "Adicionar um console.log.",
+      "Atualizar de novo.",
+      "Questionar minhas escolhas de vida.",
+      "Repetir.",
+      "Spoiler: Essa estratégia não era sustentável."
+    ],
+    firstAssumption: {
+      heading: "Meu primeiro mal-entendido",
+      paragraphs: [
+        "Por muito tempo, achei que depurar significava:",
+        "encontrar o erro → consertar o erro",
+        "Rápido. Eficiente. Feito.",
+        "Acontece que depurar é mais parecido com trabalho de detetive.",
+        "Você coleta pistas.",
+        "Você constrói teorias.",
+        "Você testa suposições.",
+        "E eventualmente... descobre que o problema era um caractere faltando.",
+        "Clássico."
+      ]
+    },
+    discovery: {
+      heading: "A Descoberta de Hoje",
+      paragraphs: [
+        "Erros não são interrupções.",
+        "São feedback.",
+        "O console. Logs. Depurador. Aba de rede. Stack traces.",
+        "Estão todos tentando explicar o que aconteceu.",
+        "(Geralmente de forma mais educada do que pensamos).",
+        "O problema é que às vezes entramos em pânico antes de ler."
+      ]
+    },
+    click: {
+      heading: "O Que Finalmente Fez Tudo Fazer Sentido ✨",
+      paragraphs: [
+        "Um dia percebi algo.",
+        "Os melhores desenvolvedores com quem trabalhei não eram os que digitavam mais rápido.",
+        "Eram os investigadores mais calmos.",
+        "Em vez de mudar cinco arquivos imediatamente... eles:",
+        "🌸 Lereiam a mensagem<br>🌸 Identificavam onde falhou<br>🌸 Reproduziam o problema<br>🌸 Testavam uma coisa de cada vez",
+        "Enquanto isso, eu atualizava emocionalmente o navegador."
+      ]
+    },
+    working: {
+      heading: "Coisas Que Me Salvaram",
+      paragraphs: [
+        "Alguns hábitos que mudaram a depuração para mim:",
+        "→ Leia o erro completo. Não apenas a primeira linha.",
+        "→ Aprenda a usar o depurador do seu IDE. Parece complicado até não ser mais.",
+        "→ Use logs com intenção. Não em todo lugar.",
+        "→ Busque entender. Não apenas copiar e colar.",
+        "→ Se você encontrar uma solução online—reescreva com sua própria estrutura.",
+        "Entenda primeiro."
+      ]
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como uma ariana com aproximadamente zero paciência...",
+        "esperar para entender o problema antes de tocar no código foi um desenvolvimento de personagem inesperado.",
+        "Ainda quero consertar tudo imediatamente.",
+        "Mas a tecnologia continua me ensinando que ir mais devagar costuma ser mais rápido.",
+        "Que rude."
+      ]
+    },
+    lesson: {
+      heading: "A Lição Real 💖",
+      paragraphs: [
+        "A maioria dos bugs não está tentando nos envergonhar.",
+        "Eles estão tentando nos dizer algo.",
+        "E quanto mais rápido pararmos de lutar contra a mensagem... mais rápido geralmente encontramos a resposta.",
+        "Agora, sempre que vejo um erro... tento perguntar:",
+        "Ok. O que você está tentando me dizer?",
+        "(E então entro em pânico um pouco menos)."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "Erros são informações",
+        "Depurar é investigar",
+        "Console logs não são decoração",
+        "Copiar correções ≠ entender",
+        "Leia primeiro. Mude depois."
+      ]
+    },
+    closing: "Próxima entrada: Programar um app não começa escrevendo código",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things That Saved Me -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.working.heading}</h2>
+            <div class="section-body">
+              {page.working.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.lesson.heading}</h2>
+            <div class="section-body">
+              {page.lesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-header {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .header-photo-wrapper {
+      width: 160px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+    .header-photo-wrapper {
+      width: 130px;
+    }
+  }
+</style>
