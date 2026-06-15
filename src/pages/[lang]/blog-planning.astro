@@ -1,0 +1,851 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Coding an App Doesn't Start With Writing Code 🌸",
+    date: "June 15, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "I used to think building an app looked something like this:",
+    introDesc: "Open IDE. Create project. Start coding. Become developer. Done.",
+    introExtra: [
+      "Very cinematic.",
+      "Very incorrect.",
+      "Because the more projects I worked on…",
+      "the more I realized:",
+      "writing code is usually one of the last steps."
+    ],
+    firstAssumption: {
+      heading: "My first misunderstanding",
+      paragraphs: [
+        "When I started learning development, I imagined experienced developers spent most of their day coding.",
+        "Typing fast.",
+        "Opening ten terminals.",
+        "Looking extremely productive.",
+        "Turns out…",
+        "a surprising amount of development looks like:",
+        "thinking.",
+        "reading.",
+        "asking questions.",
+        "changing decisions.",
+        "opening diagrams.",
+        "changing them again.",
+        "And suddenly two hours passed and you wrote twelve lines of code."
+      ]
+    },
+    discovery: {
+      heading: "Today's Discovery",
+      paragraphs: [
+        "Apps usually begin long before code exists.",
+        "Before creating components.",
+        "Before APIs.",
+        "Before databases.",
+        "There are questions first:",
+        "Who is using this?",
+        "What problem are we solving?",
+        "What happens if users do something unexpected?",
+        "What data do we actually need?",
+        "Do we need mobile?",
+        "Do we need multilingual support?",
+        "How do systems connect?",
+        "Sometimes one answer changes the whole architecture."
+      ]
+    },
+    invisibleWork: {
+      heading: "The Invisible Work",
+      paragraphs: [
+        "Things nobody warned me about:",
+        "🌸 Designing flows<br>🌸 Creating database structures<br>🌸 Naming things<br>🌸 Planning APIs<br>🌸 Defining validations<br>🌸 Reviewing edge cases<br>🌸 Deciding what NOT to build",
+        "Sometimes a single column in a database affects ten screens.",
+        "Sometimes changing one API changes an entire feature.",
+        "And suddenly development becomes less about coding…",
+        "and more about making decisions."
+      ]
+    },
+    click: {
+      heading: "What Finally Made It Click ✨",
+      paragraphs: [
+        "One day I realized something funny.",
+        "People usually see the final interface.",
+        "But behind it there might be:",
+        "one backend adjustment",
+        "three API changes",
+        "database updates",
+        "testing",
+        "deployments",
+        "debugging",
+        "documentation",
+        "and approximately seventeen moments of:",
+        "“wait… this changes everything.”"
+      ]
+    },
+    personalNote: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries this was deeply offensive information.",
+        "You mean I can’t immediately build the thing?",
+        "I have to plan?",
+        "Think?",
+        "Review requirements?",
+        "Unfortunately… yes.",
+        "But I’ve learned something:",
+        "good planning feels slower.",
+        "Until you compare it with rebuilding everything later."
+      ]
+    },
+    lesson: {
+      heading: "The Real Lesson 💖",
+      paragraphs: [
+        "Code is visible.",
+        "Thinking isn’t.",
+        "But invisible work is often what makes software survive.",
+        "And honestly—",
+        "I’ve started enjoying that part more than I expected.",
+        "Because architecture feels a little like solving puzzles.",
+        "And I really like puzzles.",
+        "(As long as they don’t involve production at 4 PM.)"
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Apps start with decisions",
+        "Architecture changes outcomes",
+        "Databases deserve respect",
+        "Not every problem needs code",
+        "Good planning saves rewrites"
+      ]
+    },
+    closing: "Next entry: AI is already generating full applications",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Programar una App No Empieza Escribiendo Código 🌸",
+    date: "15 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Solía pensar que construir una app se veía algo así:",
+    introDesc: "Abrir el IDE. Crear el proyecto. Empezar a programar. Convertirse en desarrollador. Fin.",
+    introExtra: [
+      "Muy cinematográfico.",
+      "Muy incorrecto.",
+      "Porque cuantos más proyectos trabajaba…",
+      "más me daba cuenta:",
+      "escribir código suele ser uno de los últimos pasos."
+    ],
+    firstAssumption: {
+      heading: "Mi primer malentendido",
+      paragraphs: [
+        "Cuando empecé a aprender desarrollo, imaginaba que los desarrolladores experimentados pasaban casi todo el día programando.",
+        "Escribiendo rápido.",
+        "Abriendo diez terminales.",
+        "Viéndose extremadamente productivos.",
+        "Resulta que…",
+        "una cantidad sorprendente de desarrollo se ve así:",
+        "pensando.",
+        "leyendo.",
+        "haciendo preguntas.",
+        "cambiando decisiones.",
+        "abriendo diagramas.",
+        "cambiándolos de nuevo.",
+        "Y de repente pasaron dos horas y escribiste doce líneas de código."
+      ]
+    },
+    discovery: {
+      heading: "El Descubrimiento de Hoy",
+      paragraphs: [
+        "Las aplicaciones usualmente empiezan mucho antes de que exista el código.",
+        "Antes de crear componentes.",
+        "Antes de APIs.",
+        "Antes de bases de datos.",
+        "Primero hay preguntas:",
+        "¿Quién va a usar esto?",
+        "¿Qué problema estamos resolviendo?",
+        "¿Qué pasa si los usuarios hacen algo inesperado?",
+        "¿Qué datos necesitamos realmente?",
+        "¿Necesitamos versión móvil?",
+        "¿Necesitamos soporte multilingüe?",
+        "¿Cómo se conectan los sistemas?",
+        "A veces una respuesta cambia toda la arquitectura."
+      ]
+    },
+    invisibleWork: {
+      heading: "El Trabajo Invisible",
+      paragraphs: [
+        "Cosas sobre las que nadie me advirtió:",
+        "🌸 Diseñar flujos<br>🌸 Crear estructuras de bases de datos<br>🌸 Nombrar cosas<br>🌸 Planificar APIs<br>🌸 Definir validaciones<br>🌸 Revisar casos extremos<br>🌸 Decidir qué NO construir",
+        "A veces una sola columna en una base de datos afecta diez pantallas.",
+        "A veces cambiar una API cambia una característica entera.",
+        "Y de repente el desarrollo se vuelve menos sobre programar…",
+        "y más sobre tomar decisiones."
+      ]
+    },
+    click: {
+      heading: "Lo Que Finalmente Lo Aclaró Todo ✨",
+      paragraphs: [
+        "Un día me di cuenta de algo gracioso.",
+        "La gente usualmente ve la interfaz final.",
+        "Pero detrás de ella podría haber:",
+        "un ajuste en el backend",
+        "tres cambios en la API",
+        "actualizaciones en la base de datos",
+        "pruebas",
+        "despliegues",
+        "depuración",
+        "documentación",
+        "y aproximadamente diecisiete momentos de:",
+        "“espera… esto lo cambia todo.”"
+      ]
+    },
+    personalNote: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como Aries, esta fue una información profundamente ofensiva.",
+        "¿Quieres decir que no puedo construir la cosa inmediatamente?",
+        "¿Tengo que planear?",
+        "¿Pensar?",
+        "¿Revisar requerimientos?",
+        "Desafortunadamente… sí.",
+        "Pero he aprendido algo:",
+        "una buena planificación se siente más lenta.",
+        "Hasta que la comparas con tener que reconstruir todo después."
+      ]
+    },
+    lesson: {
+      heading: "La Lección Real 💖",
+      paragraphs: [
+        "El código es visible.",
+        "El pensamiento no.",
+        "Pero el trabajo invisible es a menudo lo que hace que el software sobreviva.",
+        "Y honestamente—",
+        "He empezado a disfrutar esa parte más de lo que esperaba.",
+        "Porque la arquitectura se siente un poco como resolver rompecabezas.",
+        "Y me gustan mucho los rompecabezas.",
+        "(Siempre y cuando no involucren producción a las 4 PM)."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "Las apps empiezan con decisiones",
+        "La arquitectura cambia los resultados",
+        "Las bases de datos merecen respeto",
+        "No todo problema necesita código",
+        "Planificar bien ahorra reescrituras"
+      ]
+    },
+    closing: "Próxima entrada: La IA ya está generando aplicaciones completas",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Programar um App Não Começa Escrevendo Código 🌸",
+    date: "15 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Eu costumava pensar que construir um app parecia com isso:",
+    introDesc: "Abrir a IDE. Criar o projeto. Começar a programar. Virar desenvolvedora. Fim.",
+    introExtra: [
+      "Muito cinematográfico.",
+      "Muito incorreto.",
+      "Porque quanto mais projetos eu trabalhava…",
+      "mais eu percebia:",
+      "escrever código geralmente é um dos últimos passos."
+    ],
+    firstAssumption: {
+      heading: "Meu primeiro mal-entendido",
+      paragraphs: [
+        "Quando comecei a aprender desenvolvimento, eu imaginava que desenvolvedores experientes passavam a maior parte do dia programando.",
+        "Digitando rápido.",
+        "Abrindo dez terminais.",
+        "Parecendo extremamente produtivos.",
+        "Acontece que…",
+        "uma quantidade surpreendente do desenvolvimento parece assim:",
+        "pensando.",
+        "lendo.",
+        "fazendo perguntas.",
+        "mudando decisões.",
+        "abrindo diagramas.",
+        "mudando eles de novo.",
+        "E de repente duas horas se passaram e você escreveu doze linhas de código."
+      ]
+    },
+    discovery: {
+      heading: "A Descoberta de Hoje",
+      paragraphs: [
+        "Os aplicativos geralmente começam muito antes de o código existir.",
+        "Antes de criar componentes.",
+        "Antes de APIs.",
+        "Antes de bancos de dados.",
+        "Primeiro existem perguntas:",
+        "Quem vai usar isso?",
+        "Qual problema estamos resolvendo?",
+        "O que acontece se os usuários fizerem algo inesperado?",
+        "Quais dados realmente precisamos?",
+        "Precisamos de versão mobile?",
+        "Precisamos de suporte multilíngue?",
+        "Como os sistemas se conectam?",
+        "Às vezes, uma resposta muda toda a arquitetura."
+      ]
+    },
+    invisibleWork: {
+      heading: "O Trabalho Invisível",
+      paragraphs: [
+        "Coisas que ninguém me avisou:",
+        "🌸 Projetar fluxos<br>🌸 Criar estruturas de banco de dados<br>🌸 Dar nomes às coisas<br>🌸 Planejar APIs<br>🌸 Definir validações<br>🌸 Revisar casos extremos<br>🌸 Decidir o que NÃO construir",
+        "Às vezes, uma única coluna em um banco de dados afeta dez telas.",
+        "Às vezes, mudar uma API muda uma funcionalidade inteira.",
+        "E de repente o desenvolvimento se torna menos sobre programar…",
+        "e mais sobre tomar decisões."
+      ]
+    },
+    click: {
+      heading: "O Que Finalmente Fez Sentido ✨",
+      paragraphs: [
+        "Um dia percebi algo engraçado.",
+        "As pessoas geralmente veem a interface final.",
+        "Mas por trás dela pode haver:",
+        "um ajuste no backend",
+        "três mudanças na API",
+        "atualizações no banco de dados",
+        "testes",
+        "deploys",
+        "depuração",
+        "documentação",
+        "e aproximadamente dezessete momentos de:",
+        "“espera… isso muda tudo.”"
+      ]
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como uma ariana, esta foi uma informação profundamente ofensiva.",
+        "Quer dizer que não posso construir a coisa imediatamente?",
+        "Tenho que planejar?",
+        "Pensar?",
+        "Revisar requisitos?",
+        "Infelizmente… sim.",
+        "Mas eu aprendi algo:",
+        "um bom planejamento parece mais lento.",
+        "Até você compará-lo com ter que reconstruir tudo depois."
+      ]
+    },
+    lesson: {
+      heading: "A Lição Real 💖",
+      paragraphs: [
+        "O código é visível.",
+        "O pensamento não.",
+        "Mas o trabalho invisível costuma ser o que faz o software sobreviver.",
+        "E honestamente—",
+        "Comecei a gostar mais dessa parte do que esperava.",
+        "Porque a arquitetura parece um pouco com resolver quebra-cabeças.",
+        "E eu gosto muito de quebra-cabeças.",
+        "(Desde que não envolvam produção às 16h)."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "Apps começam com decisões",
+        "A arquitetura muda os resultados",
+        "Bancos de dados merecem respeito",
+        "Nem todo problema precisa de código",
+        "Planejar bem economiza reescritas"
+      ]
+    },
+    closing: "Próxima entrada: A IA já está gerando aplicativos completos",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Invisible Work -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.invisibleWork.heading}</h2>
+            <div class="section-body">
+              {page.invisibleWork.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.lesson.heading}</h2>
+            <div class="section-body">
+              {page.lesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-header {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .header-photo-wrapper {
+      width: 160px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+    .header-photo-wrapper {
+      width: 130px;
+    }
+  }
+</style>
