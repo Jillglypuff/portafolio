@@ -12,9 +12,30 @@ const content = {
     upcomingTitle: "Upcoming Articles",
     browseLabel: "More Entries",
     drafts: [
-      { title: "GSAP and My Little Obsession With Animations", desc: "How I discovered that movement also communicates." },
-      { title: "The Art of Expo React Native", desc: "What I learned building mobile apps faster." },
-      { title: "I Didn't Like My Own CMS, So I Scrapped It", desc: "I learned that finishing something doesn’t always mean it’s ready." },
+      { 
+        title: "GSAP and My Little Obsession With Animations", 
+        desc: "How I discovered that movement also communicates.",
+        publishDate: "2026-06-17",
+        href: "blog-gsap",
+        number: "07",
+        shortTitle: "GSAP & Animations"
+      },
+      { 
+        title: "The Art of Expo React Native", 
+        desc: "What I learned building mobile apps faster.",
+        publishDate: "2026-06-18",
+        href: "blog-expo",
+        number: "08",
+        shortTitle: "Expo React Native"
+      },
+      { 
+        title: "I Didn't Like My Own CMS, So I Deleted It", 
+        desc: "I learned that finishing something doesn’t always mean it’s ready.",
+        publishDate: "2026-06-19",
+        href: "blog-cms",
+        number: "09",
+        shortTitle: "My own CMS"
+      },
       { title: "I Built a Blog and Accidentally Learned Markdown", desc: "Turns out writing for developers is different from writing for everyone else." },
       { title: "I Kept Hearing Node.js Was Insecure", desc: "Then I learned the conversation was actually about dependencies." },
       { title: "Apparently I'm Human", desc: "Why websites keep asking me to prove I'm not a bot." }
@@ -69,9 +90,30 @@ const content = {
     upcomingTitle: "Próximos Artículos",
     browseLabel: "Más Entradas",
     drafts: [
-      { title: "GSAP y mi pequeña obsesión con las animaciones", desc: "Cómo descubrí que movimiento también comunica." },
-      { title: "El arte de Expo React Native", desc: "Lo que aprendí construyendo mobile más rápido." },
-      { title: "No me gustó mi propio CMS, así que lo descarté", desc: "Aprendí que terminar algo no siempre significa que está listo." },
+      { 
+        title: "GSAP y mi pequeña obsesión con las animaciones", 
+        desc: "Cómo descubrí que movimiento también comunica.",
+        publishDate: "2026-06-17",
+        href: "blog-gsap",
+        number: "07",
+        shortTitle: "GSAP y animaciones"
+      },
+      { 
+        title: "El arte de Expo React Native", 
+        desc: "Lo que aprendí construyendo mobile más rápido.",
+        publishDate: "2026-06-18",
+        href: "blog-expo",
+        number: "08",
+        shortTitle: "Expo React Native"
+      },
+      { 
+        title: "No me gustó mi propio CMS, así que lo borré", 
+        desc: "Aprendí que terminar algo no siempre significa que está listo.",
+        publishDate: "2026-06-19",
+        href: "blog-cms",
+        number: "09",
+        shortTitle: "Mi propio CMS"
+      },
       { title: "Construí un blog y accidentalmente aprendí Markdown", desc: "Resulta que escribir para desarrolladores es diferente a escribir para cualquier otra persona." },
       { title: "Seguía escuchando que Node.js era inseguro", desc: "Luego aprendí que la conversación en realidad era sobre dependencias." },
       { title: "Aparentemente soy humano", desc: "Por qué los sitios web siguen pidiéndome que demuestre que no soy un bot." }
@@ -126,10 +168,31 @@ const content = {
     upcomingTitle: "Próximos Artigos",
     browseLabel: "Mais Entradas",
     drafts: [
-      { title: "GSAP e minha pequena obsessão por animações", desc: "Como descobri que movimento também comunica." },
-      { title: "A arte do Expo React Native", desc: "O que aprendi construindo mobile mais rápido." },
-      { title: "Não gostei do meu próprio CMS, então o descartei", desc: "Aprendi que terminar algo nem sempre significa que está pronto." },
-      { title: "Construí um blog e acidentalmente aprendi Markdown", desc: "Acontece que escrever para desenvolvedores é diferente de escrever para qualquer outra pessoa." },
+      { 
+        title: "GSAP e minha pequena obsessão por animações", 
+        desc: "Como descubri que movimento também comunica.",
+        publishDate: "2026-06-17",
+        href: "blog-gsap",
+        number: "07",
+        shortTitle: "GSAP e animações"
+      },
+      { 
+        title: "A arte do Expo React Native", 
+        desc: "O que aprendi construindo mobile mais rápido.",
+        publishDate: "2026-06-18",
+        href: "blog-expo",
+        number: "08",
+        shortTitle: "Expo React Native"
+      },
+      { 
+        title: "Não gostei do meu próprio CMS, então o deletei", 
+        desc: "Aprendí que terminar algo nem sempre significa que está pronto.",
+        publishDate: "2026-06-19",
+        href: "blog-cms",
+        number: "09",
+        shortTitle: "Meu próprio CMS"
+      },
+      { title: "Construí um blog e acidentalmente aprendi Markdown", desc: "Acontece que escrever para desenvolvedores é diferente de qualquer outra pessoa." },
       { title: "Eu continuava ouvindo que o Node.js era inseguro", desc: "Então aprendi que a conversa na verdade era sobre dependências." },
       { title: "Aparentemente sou humano", desc: "Por que os sites continuam me pedindo para provar que não sou um bot." }
     ],
@@ -177,7 +240,30 @@ const content = {
   }
 };
 
-const page = content[lang] || content.es;
+const rawPage = content[lang] || content.es;
+
+// Obtener fecha actual en formato YYYY-MM-DD
+const today = new Date();
+const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+// Filtrar borradores que ya alcanzaron su fecha de publicación
+const publishedDrafts = rawPage.drafts
+  .filter(d => d.publishDate && d.publishDate <= todayStr)
+  .map(d => ({
+    number: d.number || "07",
+    shortTitle: d.shortTitle || d.title,
+    title: d.title,
+    desc: d.desc,
+    href: d.href || "#"
+  }));
+
+const page = {
+  ...rawPage,
+  // Agregar borradores publicados al inicio de la lista de entradas publicadas
+  entries: [...publishedDrafts, ...rawPage.entries],
+  // Dejar en drafts únicamente aquellos que no tienen fecha o su fecha es futura
+  drafts: rawPage.drafts.filter(d => !d.publishDate || d.publishDate > todayStr)
+};
 ---
 
 <section class="section section-tinted" id="blog">
@@ -229,22 +315,37 @@ const page = content[lang] || content.es;
         </div>
       </div>
 
-      <!-- ── Col 3: Entry card (future carousel) ── -->
+      <!-- ── Col 3: Entry card (horizontal slider) ── -->
       <div class="blog-card entries-card reveal">
         <div class="card-glow glow-subtle"></div>
+        
         <div class="entries-header">
           <h3 class="upcoming-heading">{page.browseLabel}</h3>
+          <div class="slider-controls">
+            <button class="slider-btn prev-btn" aria-label="Previous entry">←</button>
+            <button class="slider-btn next-btn" aria-label="Next entry">→</button>
+          </div>
         </div>
-        <div class="entries-list">
-          {page.entries.map((entry) => (
-            <div class="upcoming-item">
-              <div class="upcoming-bullet"></div>
-              <div class="upcoming-info">
-                <h4 class="upcoming-item-title">{entry.shortTitle}</h4>
-                <p class="upcoming-item-desc">{entry.desc}</p>
-                <a href={`/${lang}/${entry.href}/`} class="entry-read-link">{page.readMore}</a>
+
+        <div class="slider-wrapper">
+          <div class="entries-slider" id="entriesSlider">
+            {page.entries.map((entry, idx) => (
+              <div class={`slider-slide ${idx === 0 ? 'active' : ''}`} data-index={idx}>
+                <div class="upcoming-info">
+                  <div class="entry-number">{entry.number}</div>
+                  <h4 class="upcoming-item-title">{entry.title}</h4>
+                  <p class="upcoming-item-desc">{entry.desc}</p>
+                  <a href={`/${lang}/${entry.href}/`} class="entry-read-link">{page.readMore}</a>
+                </div>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Dot indicators -->
+        <div class="slider-dots">
+          {page.entries.map((_, idx) => (
+            <span class={`slider-dot ${idx === 0 ? 'active' : ''}`} data-index={idx}></span>
           ))}
         </div>
       </div>
@@ -460,6 +561,109 @@ const page = content[lang] || content.es;
     opacity: 0.75;
   }
 
+  /* ── Slider Styles ── */
+  .slider-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .entries-slider {
+    display: flex;
+    width: 100%;
+    position: relative;
+    min-height: 220px;
+  }
+
+  .slider-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(30px);
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .slider-slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    position: relative;
+    z-index: 2;
+  }
+
+  .slider-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .slider-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.25);
+    color: var(--text);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    font-size: 0.9rem;
+  }
+
+  .slider-btn:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.6);
+    transform: scale(1.05);
+  }
+
+  .slider-btn:active {
+    transform: scale(0.95);
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    z-index: 2;
+  }
+
+  .slider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .slider-dot.active {
+    background: var(--rose);
+    transform: scale(1.2);
+    box-shadow: 0 0 8px var(--rose);
+  }
+
+  .entry-number {
+    font-size: 2.2rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: rgba(255, 75, 145, 0.2);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 1024px) {
     .blog-grid {
@@ -484,3 +688,72 @@ const page = content[lang] || content.es;
     }
   }
 </style>
+
+<script>
+  function setupSliders() {
+    const slider = document.getElementById('entriesSlider');
+    if (!slider) return;
+
+    const slides = slider.querySelectorAll('.slider-slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    if (slides.length <= 1) {
+      if (prevBtn) prevBtn.style.display = 'none';
+      if (nextBtn) nextBtn.style.display = 'none';
+      return;
+    } else {
+      if (prevBtn) prevBtn.style.display = 'flex';
+      if (nextBtn) nextBtn.style.display = 'flex';
+    }
+
+    let currentIndex = 0;
+
+    function goToSlide(index) {
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+
+      slides.forEach((slide, idx) => {
+        if (idx === index) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        if (idx === index) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+
+      currentIndex = index;
+    }
+
+    // Clean existing listeners by cloning buttons
+    if (prevBtn) {
+      const newPrev = prevBtn.cloneNode(true);
+      prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+      newPrev.addEventListener('click', () => goToSlide(currentIndex - 1));
+    }
+
+    if (nextBtn) {
+      const newNext = nextBtn.cloneNode(true);
+      nextBtn.parentNode.replaceChild(newNext, nextBtn);
+      newNext.addEventListener('click', () => goToSlide(currentIndex + 1));
+    }
+
+    dots.forEach((dot, idx) => {
+      const newDot = dot.cloneNode(true);
+      dot.parentNode.replaceChild(newDot, dot);
+      newDot.addEventListener('click', () => goToSlide(idx));
+    });
+  }
+
+  // Setup on page load / page transitions
+  document.addEventListener('astro:page-load', setupSliders);
+  setupSliders();
+</script>

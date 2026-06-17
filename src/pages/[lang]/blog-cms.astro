@@ -1,0 +1,774 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, I Didn't Like My Own CMS, So I Deleted It 🌸",
+    date: "June 19, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "At some point while building my blog, I thought the difficult part would be making it work.",
+    introDesc: "Create the CMS. Create the editor. Connect the content. Display the articles.",
+    introExtra: [
+      "Done.",
+      "Right?",
+      "Well.",
+      "Technically… it worked.",
+      "And that was the problem."
+    ],
+    firstAssumption: {
+      heading: "My first wrong assumption",
+      paragraphs: [
+        "I thought if something was functional, I would automatically feel satisfied.",
+        "If pages loaded. If content rendered. If editing worked. Then the project was finished.",
+        "But when I opened it… I felt nothing.",
+        "No excitement. No pride. No feeling of: “yes, this is it.”",
+        "And I realized something uncomfortable.",
+        "Working and feeling right are not always the same thing."
+      ]
+    },
+    discovery: {
+      heading: "Discovery of the day",
+      paragraphs: [
+        "Building a CMS taught me something unexpected.",
+        "Content systems aren’t only about storing information.",
+        "They shape how you create. How you publish. How ideas move.",
+        "And suddenly I noticed: I had built something efficient. But not something I wanted to keep using."
+      ]
+    },
+    invisibleWork: {
+      heading: "The uncomfortable decision",
+      paragraphs: [
+        "So I did something dramatic.",
+        "I deleted it.",
+        "Not because it was broken. Not because it failed. Not because I couldn’t fix it.",
+        "I deleted it because I no longer believed in the direction.",
+        "And honestly—that felt harder than building it."
+      ]
+    },
+    click: {
+      heading: "The part nobody talks about",
+      paragraphs: [
+        "Deleting your own work feels strange.",
+        "Because suddenly your brain says:",
+        "“But you already invested time.”",
+        "“But it already works.”",
+        "“But what if rebuilding takes longer?”",
+        "And that’s when I learned something.",
+        "Keeping something only because of the effort you already spent… isn’t always the right decision."
+      ]
+    },
+    personalNote: {
+      heading: "When it finally clicked ✨",
+      paragraphs: [
+        "At some point I stopped asking: “How do I finish this?”",
+        "And started asking: “Would I actually enjoy maintaining this?”",
+        "That question changed everything.",
+        "Because the goal wasn’t publishing faster.",
+        "The goal was creating something that felt like mine. Something I wanted to open again. Something I wanted to keep writing in."
+      ]
+    },
+    lesson: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries, deleting hours of work felt extremely dramatic.",
+        "For approximately twelve minutes I considered pretending I liked it.",
+        "Then I deleted it. And immediately started redesigning. No regrets."
+      ]
+    },
+    realLesson: {
+      heading: "The real lesson 💖",
+      paragraphs: [
+        "Finishing something doesn’t automatically make it good.",
+        "And rebuilding doesn’t automatically mean failure.",
+        "Sometimes rebuilding means you finally understand what you wanted all along.",
+        "And honestly—I think that’s progress."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Functional doesn’t always mean finished",
+        "User experience includes creators too",
+        "Rebuilding isn’t always failure",
+        "Good products evolve",
+        "Sometimes deleting is progress"
+      ]
+    },
+    closing: "Next entry: I Built a Blog and Accidentally Learned Markdown",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, No Me Gustó Mi Propio CMS, Así Que Lo Borré 🌸",
+    date: "19 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "En algún momento mientras construía mi blog, pensé que la parte difícil sería hacerlo funcionar.",
+    introDesc: "Crear el CMS. Crear el editor. Conectar el contenido. Mostrar los artículos.",
+    introExtra: [
+      "Hecho.",
+      "¿Verdad?",
+      "Bueno.",
+      "Técnicamente… funcionó.",
+      "Y ese fue el problema."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Pensé que si algo era funcional, automáticamente me sentiría satisfecha.",
+        "Si las páginas cargaban. Si el contenido se renderizaba. Si la edición funcionaba. Entonces el proyecto estaba terminado.",
+        "But cuando lo abrí… no sentí nada.",
+        "Sin emoción. Sin orgullo. Sin la sensación de: “sí, esto es”.",
+        "Y me di cuenta de algo incómodo.",
+        "Que funcione y que se sienta correcto no siempre son la misma cosa."
+      ]
+    },
+    discovery: {
+      heading: "Descubrimiento del día",
+      paragraphs: [
+        "Construir un CMS me enseñó algo inesperado.",
+        "Los sistemas de contenido no se tratan solo de almacenar información.",
+        "Modelan cómo creas. Cómo publicas. Cómo se mueven las ideas.",
+        "Y de repente me di cuenta: había construido algo eficiente. Pero no algo que quisiera seguir usando."
+      ]
+    },
+    invisibleWork: {
+      heading: "La decisión incómoda",
+      paragraphs: [
+        "Así que hice algo dramático.",
+        "Lo borré.",
+        "No porque estuviera roto. No porque fallara. No porque no pudiera arreglarlo.",
+        "Lo borré porque ya no creía en la dirección que estaba tomando.",
+        "Y honestamente—eso se sintió más difícil que construirlo."
+      ]
+    },
+    click: {
+      heading: "La parte de la que nadie habla",
+      paragraphs: [
+        "Borrar tu propio trabajo se siente extraño.",
+        "Porque de repente tu cerebro dice:",
+        "“Pero ya invertiste tiempo”.",
+        "“Pero ya funciona”.",
+        "“Pero, ¿y si reconstruirlo toma más tiempo?”",
+        "Y ahí fue cuando aprendí algo.",
+        "Mantener algo solo por el esfuerzo que ya invertiste… no siempre es la decisión correcta."
+      ]
+    },
+    personalNote: {
+      heading: "Cuando finalmente hizo clic ✨",
+      paragraphs: [
+        "En algún momento dejé de preguntar: “¿Cómo termino esto?”",
+        "Y empecé a preguntar: “¿Realmente disfrutaría manteniendo esto?”",
+        "Esa pregunta lo cambió todo.",
+        "Porque el objetivo no era publicar más rápido.",
+        "El objetivo era crear algo que se sintiera como mío. Algo que quisiera volver a abrir. Algo en lo que quisiera seguir escribiendo."
+      ]
+    },
+    lesson: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como Aries, borrar horas de trabajo se sintió extremadamente dramático.",
+        "Durante aproximadamente doce minutos consideré fingir que me gustaba.",
+        "Luego lo borré. Y de inmediato comencé a rediseñar. Sin arrepentimientos."
+      ]
+    },
+    realLesson: {
+      heading: "La lección real 💖",
+      paragraphs: [
+        "Terminar algo no lo hace automáticamente bueno.",
+        "Y reconstruir no significa automáticamente un fracaso.",
+        "A veces reconstruir significa que finalmente entiendes lo que querías desde el principio.",
+        "Y honestamente—creo que eso es progreso."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "Lo funcional no siempre significa terminado",
+        "La experiencia de usuario también incluye a los creadores",
+        "Reconstruir no siempre es un fracaso",
+        "Los buenos productos evolucionan",
+        "A veces borrar es progresar"
+      ]
+    },
+    closing: "Siguiente entrada: Construí un blog y accidentalmente aprendí Markdown",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Não Gostei do Meu Próprio CMS, Então o Deletei 🌸",
+    date: "19 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Em algum momento enquanto construía meu blog, pensei que a parte difícil seria fazê-lo funcionar.",
+    introDesc: "Criar o CMS. Criar o editor. Conectar o conteúdo. Exibir os artigos.",
+    introExtra: [
+      "Feito.",
+      "Certo?",
+      "Bem.",
+      "Tecnicamente… funcionou.",
+      "E esse foi o problema."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Achei que se algo fosse funcional, eu me sentiria automaticamente satisfeita.",
+        "Se as páginas carregassem. Se o conteúdo renderizasse. Se a edição funcionasse. Então o projeto estava terminado.",
+        "Mas quando o abri… não senti nada.",
+        "Nenhum entusiasmo. Nenhum orgulho. Nenhuma sensação de: “sim, é isso”.",
+        "E percebi algo desconfortável.",
+        "Funcionar e parecer correto nem sempre são a mesma coisa."
+      ]
+    },
+    discovery: {
+      heading: "Descoberta do dia",
+      paragraphs: [
+        "Construir um CMS me ensinou algo inesperado.",
+        "Sistemas de conteúdo não servem apenas para armazenar informações.",
+        "Eles moldam como você cria. Como publica. Como as ideias se movem.",
+        "E de repente percebi: eu tinha construído algo eficiente. Mas não algo que eu quisesse continuar usando."
+      ]
+    },
+    invisibleWork: {
+      heading: "A decisão desconfortável",
+      paragraphs: [
+        "Então eu fiz algo dramático.",
+        "Eu o deletei.",
+        "Não porque estivesse quebrado. Não porque falhou. Não porque eu não pudesse consertar.",
+        "Eu o deletei porque não acreditava mais no caminho que ele estava tomando.",
+        "E honestamente—isso pareceu mais difícil do que construí-lo."
+      ]
+    },
+    click: {
+      heading: "A parte sobre a qual ninguém fala",
+      paragraphs: [
+        "Deletar seu próprio trabalho parece estranho.",
+        "Porque de repente seu cérebro diz:",
+        "“Mas você já investiu tempo”.",
+        "“Mas já funciona”.",
+        "“Mas e se reconstruir demorar mais?”",
+        "E foi aí que aprendi uma coisa.",
+        "Manter algo apenas pelo esforço que você já despendeu… nem sempre é a decisão certa."
+      ]
+    },
+    personalNote: {
+      heading: "Quando finalmente fez sentido ✨",
+      paragraphs: [
+        "A certa altura, parei de perguntar: “Como termino isso?”",
+        "E comecei a perguntar: “Eu realmente gostaria de dar manutenção a isso?”",
+        "Essa pergunta mudou tudo.",
+        "Porque o objetivo não era publicar mais rápido.",
+        "O objetivo era criar algo que parecesse meu. Algo que eu quisesse abrir novamente. Algo em que eu quisesse continuar escrevendo."
+      ]
+    },
+    lesson: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como ariana, deletar horas de trabalho pareceu extremamente dramático.",
+        "Por aproximadamente doze minutos, considerei fingir que gostava.",
+        "Depois o deletei. E imediatamente comecei a redesenhar. Sem arrependimentos."
+      ]
+    },
+    realLesson: {
+      heading: "A lição real 💖",
+      paragraphs: [
+        "Terminar algo não o torna automaticamente bom.",
+        "E reconstruir não significa automaticamente fracasso.",
+        "Às vezes, reconstruir significa que você finalmente entende o que queria desde o início.",
+        "E honestamente—acho que isso é progresso."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "Mobile não é web menor",
+        "A experiência do usuário muda de acordo com a plataforma",
+        "O desempenho parece mais visível",
+        "Simplicidade é difícil",
+        "Construir para pessoas é diferente de construir para telas"
+      ]
+    },
+    closing: "Próxima entrada: Construí um blog e acidentalmente aprendi Markdown",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Invisible Work -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.invisibleWork.heading}</h2>
+            <div class="section-body">
+              {page.invisibleWork.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.realLesson.heading}</h2>
+            <div class="section-body">
+              {page.realLesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    95% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>

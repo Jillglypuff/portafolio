@@ -1,0 +1,816 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, GSAP and My Little Obsession With Animations 🌸",
+    date: "June 17, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "At some point while building my portfolio, I realized something.",
+    introDesc: "Everything worked.",
+    introExtra: [
+      "The sections loaded.",
+      "The content was there.",
+      "The components behaved correctly.",
+      "Technically…",
+      "it was done.",
+      "But it didn’t feel like me.",
+      "And that’s when I made what was probably a dangerous decision:",
+      "“What if I add animations?”"
+    ],
+    firstAssumption: {
+      heading: "My first wrong assumption",
+      paragraphs: [
+        "For a long time, I thought animations were mostly decoration.",
+        "Something extra.",
+        "Something you add at the end if there’s time.",
+        "Something designers cared about more than developers.",
+        "Turns out—",
+        "good animations don’t just move things.",
+        "They guide attention.",
+        "Create rhythm.",
+        "Make interfaces feel intentional.",
+        "And suddenly I became suspiciously interested."
+      ]
+    },
+    discovery: {
+      heading: "Discovery of the day",
+      paragraphs: [
+        "That’s how I ended up discovering GSAP.",
+        "At first I just wanted simple effects.",
+        "A small transition.",
+        "A smoother entrance.",
+        "Nothing dramatic.",
+        "Then I opened the documentation.",
+        "And suddenly I had timelines.",
+        "Scroll triggers.",
+        "Transforms.",
+        "Sequences.",
+        "And opinions."
+      ]
+    },
+    invisibleWork: {
+      heading: "The part nobody warned me about",
+      paragraphs: [
+        "Animations are less about movement…",
+        "and more about timing.",
+        "Too fast → feels stressful.",
+        "Too slow → feels broken.",
+        "Too much → feels chaotic.",
+        "Too little → feels invisible.",
+        "And suddenly I was adjusting milliseconds like they personally offended me."
+      ]
+    },
+    click: {
+      heading: "When it finally clicked ✨",
+      paragraphs: [
+        "At one point I noticed something.",
+        "I wasn’t adding animations anymore.",
+        "I was designing moments.",
+        "How sections appear.",
+        "How users move.",
+        "What catches attention.",
+        "What feels calm.",
+        "What feels intentional.",
+        "And I realized:",
+        "the portfolio wasn’t becoming more animated.",
+        "It was becoming more personal."
+      ]
+    },
+    personalNote: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries, discovering animations was dangerous.",
+        "Because apparently my brain now thinks:",
+        "“what if this section faded in?”",
+        "for every project.",
+        "Not everything needs animation.",
+        "But I do enjoy when software feels alive."
+      ]
+    },
+    lesson: {
+      heading: "The real lesson 💖",
+      paragraphs: [
+        "I used to think development was mostly functionality.",
+        "Now I think experience matters too.",
+        "Because people don’t only remember what a product does.",
+        "Sometimes they remember how it felt to use it.",
+        "And I think that’s beautiful."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Animation should support the experience",
+        "Timing matters more than effects",
+        "Small details change perception",
+        "Not everything needs movement",
+        "Interfaces can have personality too"
+      ]
+    },
+    closing: "Next entry: The Art of Expo React Native",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, GSAP y Mi Pequeña Obsesión con las Animaciones 🌸",
+    date: "17 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "En algún momento mientras construía mi portafolio, me di cuenta de algo.",
+    introDesc: "Todo funcionaba.",
+    introExtra: [
+      "Las secciones cargaban.",
+      "El contenido estaba ahí.",
+      "Los componentes se comportaban correctamente.",
+      "Técnicamente…",
+      "estaba terminado.",
+      "Pero no se sentía como yo.",
+      "Y fue entonces cuando tomé lo que probablemente fue una decisión peligrosa:",
+      "“¿Qué pasa si agrego animaciones?”"
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Durante mucho tiempo, pensé que las animaciones eran principalmente decoración.",
+        "Algo extra.",
+        "Algo que agregas al final si hay tiempo.",
+        "Algo que les importaba más a los diseñadores que a los desarrolladores.",
+        "Resulta que—",
+        "las buenas animaciones no solo mueven cosas.",
+        "Guían la atención.",
+        "Crean ritmo.",
+        "Hacen que las interfaces se sientan intencionales.",
+        "Y de repente me interesé sospechosamente en ello."
+      ]
+    },
+    discovery: {
+      heading: "Descubrimiento del día",
+      paragraphs: [
+        "Así fue como terminé descubriendo GSAP.",
+        "Al principio solo quería efectos simples.",
+        "Una pequeña transición.",
+        "Una entrada más suave.",
+        "Nada dramático.",
+        "Luego abrí la documentación.",
+        "Y de repente tenía líneas de tiempo.",
+        "Scroll triggers.",
+        "Transforms.",
+        "Secuencias.",
+        "Y opiniones."
+      ]
+    },
+    invisibleWork: {
+      heading: "La parte que nadie me advirtió",
+      paragraphs: [
+        "Las animaciones se tratan menos de movimiento…",
+        "y más de sincronización (timing).",
+        "Demasiado rápido → se siente estresante.",
+        "Demasiado lento → se siente roto.",
+        "Demasiado → se siente caótico.",
+        "Muy poco → se siente invisible.",
+        "Y de repente estaba ajustando milisegundos como si me hubieran ofendido personalmente."
+      ]
+    },
+    click: {
+      heading: "Cuando finalmente hizo clic ✨",
+      paragraphs: [
+        "En un momento dado me di cuenta de algo.",
+        "Ya no estaba agregando animaciones.",
+        "Estaba diseñando momentos.",
+        "Cómo aparecen las secciones.",
+        "Cómo se mueven los usuarios.",
+        "Qué capta la atención.",
+        "Qué se siente tranquilo.",
+        "Qué se siente intencional.",
+        "Y me di cuenta:",
+        "el portafolio no se estaba volviendo más animado.",
+        "Se estaba volviendo más personal."
+      ]
+    },
+    personalNote: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como Aries, descubrir las animaciones fue peligroso.",
+        "Porque aparentemente mi cerebro ahora piensa:",
+        "“¿y si esta sección entra con un fade-in?”",
+        "para cada proyecto.",
+        "No todo necesita animación.",
+        "Pero sí disfruto cuando el software se siente vivo."
+      ]
+    },
+    lesson: {
+      heading: "La lección real 💖",
+      paragraphs: [
+        "Solía pensar que el desarrollo era principalmente funcionalidad.",
+        "Ahora creo que la experiencia también importa.",
+        "Porque la gente no solo recuerda lo que hace un producto.",
+        "A veces recuerdan cómo se sintió usarlo.",
+        "Y creo que eso es hermoso."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "La animación debe apoyar la experiencia",
+        "El timing importa más que los efectos",
+        "Los pequeños detalles cambian la percepción",
+        "No todo necesita movimiento",
+        "Las interfaces también pueden tener personalidad"
+      ]
+    },
+    closing: "Siguiente entrada: El Arte de Expo React Native",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, GSAP e Minha Pequena Obsessão por Animações 🌸",
+    date: "17 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Em algum momento enquanto construía meu portfólio, percebi algo.",
+    introDesc: "Tudo funcionava.",
+    introExtra: [
+      "As seções carregavam.",
+      "O conteúdo estava lá.",
+      "Os componentes se comportavam corretamente.",
+      "Tecnicamente…",
+      "estava pronto.",
+      "Mas não se parecia comigo.",
+      "E foi aí que tomei o que provavelmente foi uma decisão perigosa:",
+      "“E se eu adicionar animações?”"
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Por muito tempo, pensei que as animações fossem principalmente decoração.",
+        "Algo extra.",
+        "Algo que você adiciona no final se houver tempo.",
+        "Algo com o qual os designers se importavam mais do que os desenvolvedores.",
+        "Acontece que—",
+        "boas animações não apenas movem coisas.",
+        "Elas guiam a atenção.",
+        "Criam ritmo.",
+        "Fazem as interfaces parecerem intencionais.",
+        "E de repente fiquei desconfiadamente interessada."
+      ]
+    },
+    discovery: {
+      heading: "Descoberta do dia",
+      paragraphs: [
+        "Foi assim que acabei descobrindo o GSAP.",
+        "No começo, eu só queria efeitos simples.",
+        "Uma pequena transição.",
+        "Uma entrada mais suave.",
+        "Nada dramático.",
+        "Depois abri a documentação.",
+        "E de repente eu tinha timelines.",
+        "Scroll triggers.",
+        "Transforms.",
+        "Sequências.",
+        "E opiniões."
+      ]
+    },
+    invisibleWork: {
+      heading: "A parte que ninguém me avisou",
+      paragraphs: [
+        "Animações são menos sobre movimento…",
+        "e mais sobre tempo (timing).",
+        "Rápido demais → parece estressante.",
+        "Lento demais → parece quebrado.",
+        "Muito → parece caótico.",
+        "Muito pouco → parece invisível.",
+        "E de repente eu estava ajustando milissegundos como se eles tivessem me ofendido pessoalmente."
+      ]
+    },
+    click: {
+      heading: "Quando finalmente fez sentido ✨",
+      paragraphs: [
+        "A certa altura, notei uma coisa.",
+        "Eu já não estava apenas adicionando animações.",
+        "Eu estava desenhando momentos.",
+        "Como as seções aparecem.",
+        "Como os usuários se movem.",
+        "O que chama a atenção.",
+        "O que parece calmo.",
+        "O que parece intencional.",
+        "E percebi:",
+        "o portfólio não estava ficando mais animado.",
+        "Estava se tornando mais pessoal."
+      ]
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como ariana, descobrir animações foi perigoso.",
+        "Porque aparentemente meu cérebro agora pensa:",
+        "“E se esta seção aparecesse com um fade-in?”",
+        "para cada projeto.",
+        "Nem tudo precisa de animação.",
+        "Mas eu gosto quando o software se sente vivo."
+      ]
+    },
+    lesson: {
+      heading: "A lição real 💖",
+      paragraphs: [
+        "Eu costumava pensar que o desenvolvimento era principalmente funcionalidade.",
+        "Agora acho que a experiência também importa.",
+        "Porque as pessoas não se lembram apenas do que um produto faz.",
+        "Às vezes, lembram-se de como se sentiram ao usá-lo.",
+        "Acho isso lindo."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "A animação deve apoiar a experiência",
+        "O timing importa mais do que os efeitos",
+        "Pequenos detalhes mudam a percepção",
+        "Nem tudo precisa de movimento",
+        "Interfaces também podem ter personalidade"
+      ]
+    },
+    closing: "Próxima entrada: A Arte do Expo React Native",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Invisible Work -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.invisibleWork.heading}</h2>
+            <div class="section-body">
+              {page.invisibleWork.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.lesson.heading}</h2>
+            <div class="section-body">
+              {page.lesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    95% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>

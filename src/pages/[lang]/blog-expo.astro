@@ -1,0 +1,771 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, The Art of Expo React Native 🌸",
+    date: "June 18, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "At some point, I thought mobile development would feel familiar.",
+    introDesc: "React? I already knew React.",
+    introExtra: [
+      "JavaScript? Also familiar.",
+      "Components? Done.",
+      "So naturally I thought: “How different can it really be?”",
+      "Very different."
+    ],
+    firstAssumption: {
+      heading: "My first wrong assumption",
+      paragraphs: [
+        "When I started working with Expo React Native, I thought mobile development would mostly be: frontend… but smaller.",
+        "Same logic. Same components. Same flow.",
+        "Turns out—mobile has opinions. And those opinions are very strong."
+      ]
+    },
+    discovery: {
+      heading: "Discovery of the day",
+      paragraphs: [
+        "Expo made mobile feel approachable.",
+        "Instead of configuring everything from zero… I could focus on building.",
+        "Create screens. Navigate. Test quickly. Deploy faster.",
+        "And honestly—that part felt magical.",
+        "Until I learned something.",
+        "Mobile is not web."
+      ]
+    },
+    invisibleWork: {
+      heading: "Things that surprised me",
+      paragraphs: [
+        "Things nobody warned me about:",
+        "🌸 A layout that looks perfect can break on another device",
+        "🌸 Navigation suddenly becomes a design decision",
+        "🌸 Permissions are a full conversation",
+        "🌸 Performance becomes visible immediately",
+        "🌸 One small UI change somehow affects everything",
+        "🌸 Building is fast",
+        "🌸 Debugging… not always"
+      ]
+    },
+    click: {
+      heading: "The moment it finally clicked ✨",
+      paragraphs: [
+        "One day I realized something.",
+        "I stopped asking: “How do I make this look like the web?”",
+        "And started asking: “How should this feel on mobile?”",
+        "That changed everything.",
+        "Buttons. Spacing. Animations. Flows. Interactions.",
+        "Mobile stopped feeling like a smaller website. And started feeling like its own experience."
+      ]
+    },
+    personalNote: {
+      heading: "A tiny thing I unexpectedly loved",
+      paragraphs: [
+        "There’s something satisfying about seeing something you built… exist outside your browser.",
+        "Opening an app. Scrolling. Tapping. Seeing real interactions.",
+        "It feels different. More tangible somehow. And I really enjoyed that part."
+      ]
+    },
+    lesson: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries, waiting for builds was a deeply humbling experience.",
+        "I wanted immediate results.",
+        "Expo said: please wait. building… building… still building…",
+        "And somehow I survived."
+      ]
+    },
+    realLesson: {
+      heading: "The real lesson 💖",
+      paragraphs: [
+        "Expo made mobile development feel accessible.",
+        "But mobile taught me something bigger.",
+        "Different platforms deserve different thinking.",
+        "Because good products aren’t only built. They’re adapted."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Mobile is not smaller web",
+        "User experience changes by platform",
+        "Performance feels more visible",
+        "Simplicity is difficult",
+        "Building for people feels different than building for screens"
+      ]
+    },
+    closing: "Next entry: I Didn't Like My Own CMS, So I Scrapped It",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, El Arte de Expo React Native 🌸",
+    date: "18 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "En algún momento, pensé que el desarrollo móvil se sentiría familiar.",
+    introDesc: "¿React? Ya conocía React.",
+    introExtra: [
+      "¿JavaScript? También familiar.",
+      "¿Componentes? Hecho.",
+      "Así que naturalmente pensé: “¿Qué tan diferente puede ser realmente?”",
+      "Muy diferente."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Cuando comencé a trabajar con Expo React Native, pensé que el desarrollo móvil sería principalmente: frontend… pero más pequeño.",
+        "Misma lógica. Mismos componentes. Mismo flujo.",
+        "Resulta que—el desarrollo móvil tiene opiniones. Y esas opiniones son muy fuertes."
+      ]
+    },
+    discovery: {
+      heading: "Descubrimiento del día",
+      paragraphs: [
+        "Expo hizo que el desarrollo móvil se sintiera accesible.",
+        "En lugar de configurar todo desde cero… podía concentrarme en construir.",
+        "Crear pantallas. Navegar. Probar rápido. Desplegar más rápido.",
+        "And honestamente—esa parte se sintió mágica.",
+        "Hasta que aprendí algo.",
+        "El desarrollo móvil no es web."
+      ]
+    },
+    invisibleWork: {
+      heading: "Cosas que me sorprendieron",
+      paragraphs: [
+        "Cosas de las que nadie me advirtió:",
+        "🌸 Un diseño que parece perfecto puede romperse en otro dispositivo",
+        "🌸 La navegación de repente se convierte en una decisión de diseño",
+        "🌸 Los permisos son una conversación completa",
+        "🌸 El rendimiento se vuelve visible de inmediato",
+        "🌸 Un pequeño cambio en la UI de alguna manera afecta a todo",
+        "🌸 Construir es rápido",
+        "🌸 Depurar errores… no siempre"
+      ]
+    },
+    click: {
+      heading: "El momento en que finalmente hizo clic ✨",
+      paragraphs: [
+        "Un día me di cuenta de algo.",
+        "Dejé de preguntar: “¿Cómo hago para que esto se vea como la web?”",
+        "Y empecé a preguntar: “¿Cómo debería sentirse esto en el móvil?”",
+        "Eso lo cambió todo.",
+        "Botones. Espaciado. Animaciones. Flujos. Interacciones.",
+        "El móvil dejó de sentirse como un sitio web más pequeño. Y comenzó a sentirse como su propia experiencia."
+      ]
+    },
+    personalNote: {
+      heading: "Una pequeña cosa que amé inesperadamente",
+      paragraphs: [
+        "Hay algo satisfactorio en ver que algo que construiste… existe fuera de tu navegador.",
+        "Abrir una aplicación. Hacer scroll. Tocar botones. Ver interacciones reales.",
+        "Se siente diferente. Más tangible de alguna manera. Y realmente disfruté esa parte."
+      ]
+    },
+    lesson: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como Aries, esperar las compilaciones (builds) fue una experiencia profundamente humilde.",
+        "Quería resultados inmediatos.",
+        "Expo decía: por favor espere. compilando… compilando… todavía compilando…",
+        "Y de alguna manera sobreviví."
+      ]
+    },
+    realLesson: {
+      heading: "La lección real 💖",
+      paragraphs: [
+        "Expo hizo que el desarrollo móvil se sintiera accesible.",
+        "Pero el móvil me enseñó algo más grande.",
+        "Diferentes plataformas merecen diferente pensamiento.",
+        "Porque las buenas aplicaciones no solo se construyen. Se adaptan."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "El móvil no es una web más pequeña",
+        "La experiencia de usuario cambia por plataforma",
+        "El rendimiento se siente más visible",
+        "La simplicidad es difícil",
+        "Construir para personas se siente diferente a construir para pantallas"
+      ]
+    },
+    closing: "Siguiente entrada: No me gustó mi propio CMS, así que lo descarté",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, A Arte do Expo React Native 🌸",
+    date: "18 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Em algum momento, pensei que o desenvolvimento mobile pareceria familiar.",
+    introDesc: "React? Eu já conhecia React.",
+    introExtra: [
+      "JavaScript? Também familiar.",
+      "Componentes? Feito.",
+      "Então, naturalmente pensei: “Quão diferente isso realmente pode ser?”",
+      "Muito diferente."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Quando comecei a trabalhar com Expo React Native, pensei que o desenvolvimento mobile seria principalmente: frontend… mas menor.",
+        "Mesma lógica. Mesmos componentes. Mesmo fluxo.",
+        "Acontece que—o mobile tem opiniões. E essas opiniões são muito fortes."
+      ]
+    },
+    discovery: {
+      heading: "Descoberta do dia",
+      paragraphs: [
+        "O Expo fez o mobile parecer acessível.",
+        "Em vez de configurar tudo do zero… eu podia me concentrar em construir.",
+        "Criar telas. Navegar. Testar rápido. Fazer o deploy mais rápido.",
+        "E honestamente—essa parte pareceu mágica.",
+        "Até que aprendi uma coisa.",
+        "Mobile não é web."
+      ]
+    },
+    invisibleWork: {
+      heading: "Coisas que me surpreenderam",
+      paragraphs: [
+        "Coisas que ninguém me avisou:",
+        "🌸 Um layout que parece perfeito pode quebrar em outro dispositivo",
+        "🌸 A navegação de repente se torna uma decisão de design",
+        "🌸 As permissões são uma conversa completa",
+        "🌸 O desempenho se torna visível imediatamente",
+        "🌸 Uma pequena mudança de interface de alguma forma afeta tudo",
+        "🌸 Construir é rápido",
+        "🌸 Depurar erros… nem sempre"
+      ]
+    },
+    click: {
+      heading: "O momento em que finalmente fez sentido ✨",
+      paragraphs: [
+        "Um dia percebi uma coisa.",
+        "Parei de perguntar: “Como faço para que isso pareça com a web?”",
+        "E comecei a perguntar: “Como isso deve ser sentido no mobile?”",
+        "Isso mudou tudo.",
+        "Botões. Espaçamento. Animações. Fluxos. Interações.",
+        "O mobile deixou de parecer um site menor. E começou a parecer uma experiência própria."
+      ]
+    },
+    personalNote: {
+      heading: "Uma pequena coisa que amei inesperadamente",
+      paragraphs: [
+        "Há algo satisfatório em ver algo que você construiu… existir fora do seu navegador.",
+        "Abrir um aplicativo. Fazer scroll. Tocar em botões. Ver interações reais.",
+        "Parece diferente. Mais tangível de alguma forma. E eu realmente gostei dessa parte."
+      ]
+    },
+    lesson: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como ariana, esperar as builds foi uma experiência profundamente humilhante.",
+        "Eu queria resultados imediatos.",
+        "O Expo dizia: por favor aguarde. compilando… compilando… ainda compilando…",
+        "E de alguma forma eu sobreviviv."
+      ]
+    },
+    realLesson: {
+      heading: "A lição real 💖",
+      paragraphs: [
+        "O Expo fez o desenvolvimento mobile parecer acessível.",
+        "But o mobile me ensinou algo maior.",
+        "Diferentes plataformas merecem pensamentos diferentes.",
+        "Porque produtos bons não são apenas construídos. São adaptados."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "Mobile não é web menor",
+        "A experiência do usuário muda de acordo com a plataforma",
+        "O desempenho parece mais visível",
+        "Simplicidade é difícil",
+        "Construir para pessoas é diferente de construir para telas"
+      ]
+    },
+    closing: "Próxima entrada: Não gostei do meu próprio CMS, então o descartei",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Invisible Work -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.invisibleWork.heading}</h2>
+            <div class="section-body">
+              {page.invisibleWork.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.realLesson.heading}</h2>
+            <div class="section-body">
+              {page.realLesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    95% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>
