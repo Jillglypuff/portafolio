@@ -1,0 +1,851 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, I Built a Blog and Accidentally Learned Markdown 🌸",
+    date: "June 20, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "At some point while rebuilding my blog, I thought content management would be the difficult part.",
+    introDesc: "Create the editor. Store articles. Display posts.",
+    introExtra: [
+      "Done.",
+      "Simple.",
+      "Then suddenly everyone online kept mentioning something called Markdown.",
+      "And for a while…",
+      "I ignored it.",
+      "Because honestly—",
+      "it looked like normal text with decorative symbols.",
+      "Turns out I was very wrong."
+    ],
+    firstAssumption: {
+      heading: "My first wrong assumption",
+      paragraphs: [
+        "I thought Markdown was basically: plain text… but with extra steps.",
+        "Something developers used because they enjoyed making writing harder.",
+        "I couldn't understand why someone would write <code># Title</code> instead of just clicking the bold button like a normal person.",
+        "And then I had to actually use it.",
+        "My blog needed a way to render content consistently. Not just raw HTML. Not just plain strings. Something structured.",
+        "So I opened a Markdown file for the first time and started reading."
+      ]
+    },
+    discovery: {
+      heading: "Discovery of the day",
+      paragraphs: [
+        "Markdown is not a programming language.",
+        "It's not a framework either.",
+        "It's a lightweight syntax — a way of writing plain text that can be converted into formatted HTML automatically.",
+        "You write <code>**bold**</code> and it becomes <strong>bold</strong>.",
+        "You write <code># Heading</code> and it becomes an H1.",
+        "You write <code>- item</code> and it becomes a list.",
+        "That's it.",
+        "No buttons. No toolbars. No menus. Just text, with a few intentional symbols."
+      ]
+    },
+    realProblem: {
+      heading: "The real problem I was solving",
+      paragraphs: [
+        "Once I understood what Markdown was, I understood why my blog needed it.",
+        "Without it, every article would need raw HTML. Every paragraph would need tags. Every bold word would need <code>&lt;strong&gt;</code>.",
+        "With Markdown, content stays clean and readable even before it's rendered.",
+        "A writer doesn't need to know HTML to use it.",
+        "The content lives separately from the presentation.",
+        "And suddenly the whole concept made sense.",
+        "Markdown isn't making writing harder.",
+        "It's making writing portable."
+      ]
+    },
+    click: {
+      heading: "When it finally clicked ✨",
+      paragraphs: [
+        "I was writing a blog entry in a plain text file.",
+        "I typed <code>## My first wrong assumption</code> at the top of a section.",
+        "And when I previewed it… it rendered as a heading.",
+        "Styled. Structured. Clean.",
+        "I hadn't written a single line of CSS for that heading.",
+        "The Markdown parser handled it.",
+        "That was the moment I stopped thinking of Markdown as decoration.",
+        "It's a contract between writer and renderer."
+      ]
+    },
+    personalNote: {
+      heading: "The part nobody warned me about 🌷",
+      paragraphs: [
+        "Once I understood Markdown, I started seeing it everywhere.",
+        "README files on GitHub.",
+        "Documentation sites.",
+        "Comments in issue trackers.",
+        "Notion pages.",
+        "Discord messages.",
+        "It's one of those things that once you learn it, you realize it was already around you.",
+        "You just didn't have the vocabulary to recognize it."
+      ]
+    },
+    lesson: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries, I was personally offended that something this useful had been hiding in plain sight.",
+        "I had been writing blog content in raw HTML for longer than I'd like to admit.",
+        "The moment I switched to Markdown, the whole process felt lighter.",
+        "Less friction. More writing. More focus on the words."
+      ]
+    },
+    realLesson: {
+      heading: "The real lesson 💖",
+      paragraphs: [
+        "Sometimes the tools we ignore are the ones that would make everything easier.",
+        "Markdown didn't feel important until I actually needed it.",
+        "And once I used it, I couldn't imagine going back.",
+        "Learning a new syntax isn't always about becoming a better programmer.",
+        "Sometimes it's just about making your own workflow make more sense.",
+        "And honestly — I think that counts too."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Markdown is plain text with intentional symbols",
+        "It converts into HTML automatically",
+        "Content stays readable even before rendering",
+        "It separates writing from styling",
+        "It's everywhere once you know what to look for",
+        "The best tools are often the simplest ones"
+      ]
+    },
+    closing: "Next entry: I Kept Hearing Node.js Was Insecure",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Construí un Blog y Accidentalmente Aprendí Markdown 🌸",
+    date: "20 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "En algún momento mientras reconstruía mi blog, pensé que la gestión del contenido sería la parte difícil.",
+    introDesc: "Crear el editor. Almacenar artículos. Mostrar entradas.",
+    introExtra: [
+      "Hecho.",
+      "Simple.",
+      "Luego, de repente, todos en internet seguían mencionando algo llamado Markdown.",
+      "Y por un tiempo…",
+      "Lo ignoré.",
+      "Porque honestamente—",
+      "parecía texto normal con símbolos decorativos.",
+      "Resulta que estaba muy equivocada."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Pensé que Markdown era básicamente: texto plano… pero con pasos extra.",
+        "Algo que los desarrolladores usaban porque disfrutaban hacer la escritura más difícil.",
+        "No entendía por qué alguien escribiría <code># Título</code> en lugar de simplemente hacer clic en el botón de negrita como una persona normal.",
+        "Y luego tuve que usarlo de verdad.",
+        "Mi blog necesitaba una forma de renderizar contenido de manera consistente. No solo HTML puro. No solo cadenas de texto. Algo estructurado.",
+        "Así que abrí un archivo Markdown por primera vez y empecé a leer."
+      ]
+    },
+    discovery: {
+      heading: "Descubrimiento del día",
+      paragraphs: [
+        "Markdown no es un lenguaje de programación.",
+        "Tampoco es un framework.",
+        "Es una sintaxis ligera — una forma de escribir texto plano que puede convertirse automáticamente en HTML formateado.",
+        "Escribes <code>**negrita**</code> y se convierte en <strong>negrita</strong>.",
+        "Escribes <code># Encabezado</code> y se convierte en un H1.",
+        "Escribes <code>- elemento</code> y se convierte en una lista.",
+        "Eso es todo.",
+        "Sin botones. Sin barras de herramientas. Sin menús. Solo texto, con algunos símbolos intencionales."
+      ]
+    },
+    realProblem: {
+      heading: "El problema real que estaba resolviendo",
+      paragraphs: [
+        "Una vez que entendí qué era Markdown, comprendí por qué mi blog lo necesitaba.",
+        "Sin él, cada artículo necesitaría HTML puro. Cada párrafo necesitaría etiquetas. Cada palabra en negrita necesitaría <code>&lt;strong&gt;</code>.",
+        "Con Markdown, el contenido se mantiene limpio y legible incluso antes de renderizarse.",
+        "Una escritora no necesita saber HTML para usarlo.",
+        "El contenido vive separado de la presentación.",
+        "Y de repente todo el concepto tuvo sentido.",
+        "Markdown no hace que escribir sea más difícil.",
+        "Hace que escribir sea portable."
+      ]
+    },
+    click: {
+      heading: "Cuando finalmente hizo clic ✨",
+      paragraphs: [
+        "Estaba escribiendo una entrada de blog en un archivo de texto plano.",
+        "Escribí <code>## Mi primer supuesto incorrecto</code> al inicio de una sección.",
+        "Y cuando lo previsualicé… se renderizó como un encabezado.",
+        "Estilizado. Estructurado. Limpio.",
+        "No había escrito ni una sola línea de CSS para ese encabezado.",
+        "El parser de Markdown lo gestionó.",
+        "Ese fue el momento en que dejé de pensar en Markdown como decoración.",
+        "Es un contrato entre quien escribe y quien renderiza."
+      ]
+    },
+    personalNote: {
+      heading: "La parte de la que nadie me advirtió 🌷",
+      paragraphs: [
+        "Una vez que entendí Markdown, empecé a verlo en todas partes.",
+        "Archivos README en GitHub.",
+        "Sitios de documentación.",
+        "Comentarios en rastreadores de problemas.",
+        "Páginas de Notion.",
+        "Mensajes en Discord.",
+        "Es una de esas cosas que, una vez que la aprendes, te das cuenta de que ya estaba a tu alrededor.",
+        "Solo que no tenías el vocabulario para reconocerla."
+      ]
+    },
+    lesson: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como Aries, me ofendí personalmente de que algo tan útil se hubiera estado ocultando a plena vista.",
+        "Había estado escribiendo contenido del blog en HTML puro durante más tiempo del que me gustaría admitir.",
+        "El momento en que cambié a Markdown, todo el proceso se sintió más ligero.",
+        "Menos fricción. Más escritura. Más enfoque en las palabras."
+      ]
+    },
+    realLesson: {
+      heading: "La lección real 💖",
+      paragraphs: [
+        "A veces las herramientas que ignoramos son las que harían todo más fácil.",
+        "Markdown no me pareció importante hasta que realmente lo necesité.",
+        "Y una vez que lo usé, no pude imaginar volver atrás.",
+        "Aprender una nueva sintaxis no siempre se trata de convertirte en mejor programadora.",
+        "A veces se trata simplemente de hacer que tu propio flujo de trabajo tenga más sentido.",
+        "Y honestamente — creo que eso también cuenta."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "Markdown es texto plano con símbolos intencionales",
+        "Se convierte en HTML automáticamente",
+        "El contenido sigue siendo legible incluso antes de renderizarse",
+        "Separa la escritura del estilo",
+        "Está en todas partes una vez que sabes qué buscar",
+        "Las mejores herramientas suelen ser las más simples"
+      ]
+    },
+    closing: "Siguiente entrada: Seguía escuchando que Node.js era inseguro",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Construí um Blog e Acidentalmente Aprendi Markdown 🌸",
+    date: "20 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Em algum momento enquanto reconstruía meu blog, pensei que a gestão de conteúdo seria a parte difícil.",
+    introDesc: "Criar o editor. Armazenar artigos. Exibir posts.",
+    introExtra: [
+      "Feito.",
+      "Simples.",
+      "Então, de repente, todos na internet ficavam mencionando algo chamado Markdown.",
+      "E por um tempo…",
+      "Eu ignorei.",
+      "Porque honestamente—",
+      "parecia texto normal com símbolos decorativos.",
+      "Acontece que eu estava muito errada."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Achei que Markdown era basicamente: texto simples… mas com etapas extras.",
+        "Algo que os desenvolvedores usavam porque gostavam de tornar a escrita mais difícil.",
+        "Não conseguia entender por que alguém escreveria <code># Título</code> em vez de simplesmente clicar no botão de negrito como uma pessoa normal.",
+        "E então tive que usá-lo de verdade.",
+        "Meu blog precisava de uma maneira de renderizar conteúdo de forma consistente. Não apenas HTML puro. Não apenas strings simples. Algo estruturado.",
+        "Então abri um arquivo Markdown pela primeira vez e comecei a ler."
+      ]
+    },
+    discovery: {
+      heading: "Descoberta do dia",
+      paragraphs: [
+        "Markdown não é uma linguagem de programação.",
+        "Também não é um framework.",
+        "É uma sintaxe leve — uma forma de escrever texto simples que pode ser convertido automaticamente em HTML formatado.",
+        "Você escreve <code>**negrito**</code> e vira <strong>negrito</strong>.",
+        "Você escreve <code># Título</code> e vira um H1.",
+        "Você escreve <code>- item</code> e vira uma lista.",
+        "É isso.",
+        "Sem botões. Sem barras de ferramentas. Sem menus. Apenas texto, com alguns símbolos intencionais."
+      ]
+    },
+    realProblem: {
+      heading: "O problema real que eu estava resolvendo",
+      paragraphs: [
+        "Assim que entendi o que era Markdown, entendi por que meu blog precisava dele.",
+        "Sem ele, cada artigo precisaria de HTML puro. Cada parágrafo precisaria de tags. Cada palavra em negrito precisaria de <code>&lt;strong&gt;</code>.",
+        "Com Markdown, o conteúdo permanece limpo e legível mesmo antes de ser renderizado.",
+        "Uma escritora não precisa saber HTML para usá-lo.",
+        "O conteúdo vive separado da apresentação.",
+        "E de repente todo o conceito fez sentido.",
+        "Markdown não torna a escrita mais difícil.",
+        "Ele torna a escrita portátil."
+      ]
+    },
+    click: {
+      heading: "Quando finalmente fez sentido ✨",
+      paragraphs: [
+        "Eu estava escrevendo uma entrada de blog em um arquivo de texto simples.",
+        "Digitei <code>## Minha primeira suposição errada</code> no início de uma seção.",
+        "E quando visualizei… renderizou como um título.",
+        "Estilizado. Estruturado. Limpo.",
+        "Eu não tinha escrito uma única linha de CSS para esse título.",
+        "O parser de Markdown cuidou disso.",
+        "Esse foi o momento em que parei de pensar no Markdown como decoração.",
+        "É um contrato entre quem escreve e quem renderiza."
+      ]
+    },
+    personalNote: {
+      heading: "A parte sobre a qual ninguém me avisou 🌷",
+      paragraphs: [
+        "Assim que entendi Markdown, comecei a vê-lo em todo lugar.",
+        "Arquivos README no GitHub.",
+        "Sites de documentação.",
+        "Comentários em rastreadores de issues.",
+        "Páginas do Notion.",
+        "Mensagens no Discord.",
+        "É uma daquelas coisas que, uma vez que você aprende, percebe que já estava ao seu redor.",
+        "Você só não tinha o vocabulário para reconhecê-la."
+      ]
+    },
+    lesson: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como ariana, fiquei pessoalmente ofendida por algo tão útil estar se escondendo à vista de todos.",
+        "Eu estava escrevendo conteúdo do blog em HTML puro por mais tempo do que gostaria de admitir.",
+        "No momento em que mudei para Markdown, todo o processo pareceu mais leve.",
+        "Menos fricção. Mais escrita. Mais foco nas palavras."
+      ]
+    },
+    realLesson: {
+      heading: "A lição real 💖",
+      paragraphs: [
+        "Às vezes as ferramentas que ignoramos são as que tornariam tudo mais fácil.",
+        "Markdown não pareceu importante até que eu realmente precisasse dele.",
+        "E uma vez que o usei, não consegui imaginar voltar atrás.",
+        "Aprender uma nova sintaxe nem sempre é sobre se tornar uma programadora melhor.",
+        "Às vezes é apenas sobre fazer seu próprio fluxo de trabalho fazer mais sentido.",
+        "E honestamente — acho que isso também conta."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "Markdown é texto simples com símbolos intencionais",
+        "Converte em HTML automaticamente",
+        "O conteúdo permanece legível mesmo antes da renderização",
+        "Separa a escrita do estilo",
+        "Está em todo lugar quando você sabe o que procurar",
+        "As melhores ferramentas geralmente são as mais simples"
+      ]
+    },
+    closing: "Próxima entrada: Eu continuava ouvindo que o Node.js era inseguro",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header: text only -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Today's Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Problem -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.realProblem.heading}</h2>
+            <div class="section-body">
+              {page.realProblem.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What Made It Click -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.lesson.heading}</h2>
+            <div class="section-body">
+              {page.lesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.realLesson.heading}</h2>
+            <div class="section-body">
+              {page.realLesson.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    95% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Inline code styling */
+  .post-content code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.92em;
+    background: rgba(255, 75, 145, 0.1);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    border-radius: 5px;
+    padding: 2px 7px;
+    color: var(--rose);
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>

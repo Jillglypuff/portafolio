@@ -1,0 +1,1075 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, I Kept Hearing Node.js Was Insecure 🌸",
+    date: "June 22, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "For a while I kept hearing the same thing over and over.",
+    introDesc: `"Node.js has too many vulnerabilities." "Node isn't secure." "Don't use Node for serious applications."`,
+    introExtra: [
+      "And honestly—",
+      "I believed it.",
+      "Because if enough developers repeat something…",
+      "it starts sounding true.",
+      "But the more I worked with real projects…",
+      "the more I realized something.",
+      "The conversation was more complicated than I thought."
+    ],
+    firstAssumption: {
+      heading: "My first wrong assumption",
+      paragraphs: [
+        "I thought Node.js itself was the problem.",
+        "Like somewhere inside Node there was a giant red button labeled: <strong>security issues</strong>.",
+        "Turns out—",
+        "most of the conversation isn't about Node.",
+        "It's about everything around it.",
+        "Packages. Dependencies. Versions. Configurations.",
+        "And suddenly the villain became much less dramatic."
+      ]
+    },
+    discovery: {
+      heading: "Discovery of the day",
+      paragraphs: [
+        "Node applications rarely exist alone.",
+        "A typical application might look like:",
+        "Your Application → Framework → Dependencies → Dependencies of dependencies → More dependencies → Even more dependencies.",
+        "And suddenly:",
+        "one vulnerable package somewhere deep in the tree…",
+        "becomes your problem.",
+        "That was the moment I understood.",
+        "Node didn't suddenly become insecure.",
+        "Its ecosystem became very large."
+      ]
+    },
+    techNotes: {
+      heading: "Technical Notes ✨",
+      intro: "Things I learned while researching and working with Node environments.",
+      notes: [
+        {
+          title: "1. Installing one package installs… many packages",
+          before: "npm install package-name",
+          beforeLabel: "Sometimes this:",
+          after: "1 package\n↓\n32 dependencies\n↓\n145 subdependencies\n↓\nDone",
+          afterLabel: "actually becomes:",
+          note: "Which means: you didn't install one thing. You installed an entire family tree."
+        },
+        {
+          title: "2. Vulnerabilities are often discovered later",
+          before: null,
+          beforeLabel: null,
+          after: "Version 2.4.0\n↓\nSecurity issue discovered\n↓\nCVE published\n↓\nUpdate recommended",
+          afterLabel: "A dependency may be fine today. Then months later:",
+          note: "CVE = Common Vulnerabilities and Exposures. Basically: a public catalog of known security issues. That was terrifying and fascinating."
+        },
+        {
+          title: "3. npm already gives tools to help",
+          before: "npm audit",
+          beforeLabel: "One command I discovered:",
+          after: "3 vulnerabilities found\n\n1 low\n1 moderate\n1 high",
+          afterLabel: "Example output:",
+          extraCode: "npm audit fix",
+          extraLabel: "And then:",
+          note: "Tries to update what can safely be fixed. Not magic. But useful."
+        },
+        {
+          title: "4. Updating everything blindly is not security",
+          before: null,
+          beforeLabel: null,
+          after: "- release notes\n- breaking changes\n- compatibility\n- package activity",
+          afterLabel: "Usually people review:",
+          note: "This one surprised me. I assumed: more updates = safer. Not always. Sometimes updates break things. Which felt annoyingly responsible."
+        },
+        {
+          title: "5. Not every problem needs another dependency",
+          before: null,
+          beforeLabel: null,
+          after: "Array.map()\nfetch()\nDate()",
+          afterLabel: "When JavaScript already had:",
+          note: "This one hurt a little. I realized sometimes I searched \"How do I install a package to do this?\" when the answer was already built in. And suddenly I understood why people joke about installing 200 packages."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "The part nobody warned me about",
+      paragraphs: [
+        "Security isn't usually dramatic.",
+        "Nobody breaks into your app wearing a hoodie.",
+        "Most of the time it looks like:",
+        "outdated package. weak configuration. old environment variable. missing validation. forgotten dependency.",
+        "Which somehow feels less cinematic."
+      ]
+    },
+    click: {
+      heading: "When it finally clicked ✨",
+      paragraphs: [
+        "At some point I stopped asking:",
+        ""Is Node insecure?"",
+        "And started asking:",
+        ""What am I trusting?"",
+        "That changed the way I look at projects.",
+        "Because every install is also a decision.",
+        "Every dependency becomes part of your system.",
+        "And every shortcut eventually becomes maintenance."
+      ]
+    },
+    bonus: {
+      heading: "Bonus: Things I now pay more attention to",
+      intro: "Before adding a dependency:",
+      flowItems: [
+        "Can I build this?",
+        "Is it maintained?",
+        "Does it have recent releases?",
+        "How many downloads?",
+        "Open security issues?",
+        "Do I really need it?"
+      ],
+      note: "Not because everything is dangerous. But because everything has tradeoffs."
+    },
+    personalNote: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries, discovering my application secretly contained 300 packages felt personally offensive.",
+        "I installed one thing.",
+        "One.",
+        "Why do we suddenly have an ecosystem."
+      ]
+    },
+    realLesson: {
+      heading: "The real lesson 💖",
+      paragraphs: [
+        "Node.js didn't suddenly become insecure.",
+        "I just started understanding that modern development isn't only writing code.",
+        "It's also choosing what code to trust.",
+        "And honestly—",
+        "that feels like a much more interesting problem."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Dependencies are part of architecture",
+        "Updating deserves strategy",
+        "Security is usually accumulation",
+        "Simplicity reduces risk",
+        "Every install is a decision"
+      ]
+    },
+    closing: "Next entry: Apparently I'm Human",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Seguía Escuchando Que Node.js Era Inseguro 🌸",
+    date: "22 de Junio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Por un tiempo seguí escuchando lo mismo una y otra vez.",
+    introDesc: `"Node.js tiene demasiadas vulnerabilidades." "Node no es seguro." "No uses Node para aplicaciones serias."`,
+    introExtra: [
+      "Y honestamente—",
+      "lo creí.",
+      "Porque si suficientes desarrolladores repiten algo…",
+      "empieza a sonar verdadero.",
+      "Pero cuanto más trabajaba con proyectos reales…",
+      "más me daba cuenta de algo.",
+      "La conversación era más complicada de lo que pensaba."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Pensé que Node.js en sí era el problema.",
+        "Como si en algún lugar dentro de Node hubiera un gran botón rojo con la etiqueta: <strong>problemas de seguridad</strong>.",
+        "Resulta que—",
+        "la mayor parte de la conversación no es sobre Node.",
+        "Es sobre todo lo que lo rodea.",
+        "Paquetes. Dependencias. Versiones. Configuraciones.",
+        "Y de repente el villano se volvió mucho menos dramático."
+      ]
+    },
+    discovery: {
+      heading: "Descubrimiento del día",
+      paragraphs: [
+        "Las aplicaciones Node rara vez existen solas.",
+        "Una aplicación típica podría verse así:",
+        "Tu Aplicación → Framework → Dependencias → Dependencias de dependencias → Más dependencias → Aún más dependencias.",
+        "Y de repente:",
+        "un paquete vulnerable en algún lugar profundo del árbol…",
+        "se convierte en tu problema.",
+        "Ese fue el momento en que entendí.",
+        "Node no se volvió inseguro de repente.",
+        "Su ecosistema se volvió muy grande."
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas ✨",
+      intro: "Cosas que aprendí mientras investigaba y trabajaba con entornos Node.",
+      notes: [
+        {
+          title: "1. Instalar un paquete instala… muchos paquetes",
+          before: "npm install nombre-paquete",
+          beforeLabel: "A veces esto:",
+          after: "1 paquete\n↓\n32 dependencias\n↓\n145 subdependencias\n↓\nListo",
+          afterLabel: "en realidad se convierte en:",
+          note: "Lo que significa: no instalaste una sola cosa. Instalaste todo un árbol genealógico."
+        },
+        {
+          title: "2. Las vulnerabilidades suelen descubrirse después",
+          before: null,
+          beforeLabel: null,
+          after: "Versión 2.4.0\n↓\nProblema de seguridad descubierto\n↓\nCVE publicado\n↓\nActualización recomendada",
+          afterLabel: "Una dependencia puede estar bien hoy. Luego, meses después:",
+          note: "CVE = Common Vulnerabilities and Exposures. Básicamente: un catálogo público de problemas de seguridad conocidos. Eso fue aterrador y fascinante."
+        },
+        {
+          title: "3. npm ya ofrece herramientas para ayudar",
+          before: "npm audit",
+          beforeLabel: "Un comando que descubrí:",
+          after: "3 vulnerabilidades encontradas\n\n1 baja\n1 moderada\n1 alta",
+          afterLabel: "Salida de ejemplo:",
+          extraCode: "npm audit fix",
+          extraLabel: "Y luego:",
+          note: "Intenta actualizar lo que se puede arreglar de forma segura. No es magia. Pero es útil."
+        },
+        {
+          title: "4. Actualizar todo sin pensar no es seguridad",
+          before: null,
+          beforeLabel: null,
+          after: "- notas de la versión\n- cambios que rompen compatibilidad\n- compatibilidad\n- actividad del paquete",
+          afterLabel: "Generalmente la gente revisa:",
+          note: "Este me sorprendió. Asumí que: más actualizaciones = más seguro. No siempre. A veces las actualizaciones rompen cosas. Lo cual se sintió molestamente responsable."
+        },
+        {
+          title: "5. No todo problema necesita otra dependencia",
+          before: null,
+          beforeLabel: null,
+          after: "Array.map()\nfetch()\nDate()",
+          afterLabel: "Cuando JavaScript ya tenía:",
+          note: "Este dolió un poco. Me di cuenta de que a veces buscaba \"¿Cómo instalo un paquete para hacer esto?\" cuando la respuesta ya estaba incorporada. Y de repente entendí por qué la gente bromea con instalar 200 paquetes."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "La parte de la que nadie me advirtió",
+      paragraphs: [
+        "La seguridad no suele ser dramática.",
+        "Nadie irrumpe en tu aplicación con una capucha.",
+        "La mayoría de las veces se parece a:",
+        "paquete desactualizado. configuración débil. variable de entorno antigua. validación faltante. dependencia olvidada.",
+        "Lo cual se siente menos cinematográfico."
+      ]
+    },
+    click: {
+      heading: "Cuando finalmente hizo clic ✨",
+      paragraphs: [
+        "En algún momento dejé de preguntar:",
+        ""¿Es Node inseguro?"",
+        "Y empecé a preguntar:",
+        ""¿En qué estoy confiando?"",
+        "Eso cambió la forma en que miro los proyectos.",
+        "Porque cada instalación también es una decisión.",
+        "Cada dependencia se convierte en parte de tu sistema.",
+        "Y cada atajo eventualmente se convierte en mantenimiento."
+      ]
+    },
+    bonus: {
+      heading: "Bonus: Cosas a las que ahora presto más atención",
+      intro: "Antes de agregar una dependencia:",
+      flowItems: [
+        "¿Puedo construirlo yo?",
+        "¿Está mantenido?",
+        "¿Tiene versiones recientes?",
+        "¿Cuántas descargas tiene?",
+        "¿Tiene problemas de seguridad abiertos?",
+        "¿Realmente lo necesito?"
+      ],
+      note: "No porque todo sea peligroso. Sino porque todo tiene compensaciones."
+    },
+    personalNote: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como Aries, descubrir que mi aplicación contenía secretamente 300 paquetes se sintió personalmente ofensivo.",
+        "Instalé una sola cosa.",
+        "Una.",
+        "Por qué de repente tenemos un ecosistema."
+      ]
+    },
+    realLesson: {
+      heading: "La lección real 💖",
+      paragraphs: [
+        "Node.js no se volvió inseguro de repente.",
+        "Simplemente empecé a entender que el desarrollo moderno no es solo escribir código.",
+        "También se trata de elegir en qué código confiar.",
+        "Y honestamente—",
+        "eso parece un problema mucho más interesante."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "Las dependencias son parte de la arquitectura",
+        "Actualizar requiere estrategia",
+        "La seguridad suele ser acumulación",
+        "La simplicidad reduce el riesgo",
+        "Cada instalación es una decisión"
+      ]
+    },
+    closing: "Siguiente entrada: Aparentemente soy humana",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Eu Continuava Ouvindo Que o Node.js Era Inseguro 🌸",
+    date: "22 de Junho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Por um tempo, eu continuava ouvindo a mesma coisa repetidamente.",
+    introDesc: `"Node.js tem vulnerabilidades demais." "Node não é seguro." "Não use Node para aplicações sérias."`,
+    introExtra: [
+      "E honestamente—",
+      "eu acreditei.",
+      "Porque se desenvolvedores suficientes repetem algo…",
+      "começa a soar verdadeiro.",
+      "Mas quanto mais trabalhava com projetos reais…",
+      "mais percebia algo.",
+      "A conversa era mais complicada do que eu pensava."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Achei que o próprio Node.js era o problema.",
+        "Como se em algum lugar dentro do Node houvesse um grande botão vermelho com a etiqueta: <strong>problemas de segurança</strong>.",
+        "Acontece que—",
+        "a maior parte da conversa não é sobre o Node.",
+        "É sobre tudo ao redor dele.",
+        "Pacotes. Dependências. Versões. Configurações.",
+        "E de repente o vilão se tornou muito menos dramático."
+      ]
+    },
+    discovery: {
+      heading: "Descoberta do dia",
+      paragraphs: [
+        "Aplicações Node raramente existem sozinhas.",
+        "Uma aplicação típica pode se parecer com:",
+        "Sua Aplicação → Framework → Dependências → Dependências de dependências → Mais dependências → Ainda mais dependências.",
+        "E de repente:",
+        "um pacote vulnerável em algum lugar fundo na árvore…",
+        "se torna o seu problema.",
+        "Foi o momento em que entendi.",
+        "O Node não ficou inseguro de repente.",
+        "Seu ecossistema ficou muito grande."
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas ✨",
+      intro: "Coisas que aprendi enquanto pesquisava e trabalhava com ambientes Node.",
+      notes: [
+        {
+          title: "1. Instalar um pacote instala… muitos pacotes",
+          before: "npm install nome-do-pacote",
+          beforeLabel: "Às vezes isso:",
+          after: "1 pacote\n↓\n32 dependências\n↓\n145 subdependências\n↓\nFeito",
+          afterLabel: "na verdade se torna:",
+          note: "O que significa: você não instalou uma coisa só. Você instalou uma árvore genealógica inteira."
+        },
+        {
+          title: "2. Vulnerabilidades costumam ser descobertas depois",
+          before: null,
+          beforeLabel: null,
+          after: "Versão 2.4.0\n↓\nProblema de segurança descoberto\n↓\nCVE publicado\n↓\nAtualização recomendada",
+          afterLabel: "Uma dependência pode estar bem hoje. Depois, meses depois:",
+          note: "CVE = Common Vulnerabilities and Exposures. Basicamente: um catálogo público de problemas de segurança conhecidos. Isso foi aterrorizante e fascinante."
+        },
+        {
+          title: "3. O npm já oferece ferramentas para ajudar",
+          before: "npm audit",
+          beforeLabel: "Um comando que descobri:",
+          after: "3 vulnerabilidades encontradas\n\n1 baixa\n1 moderada\n1 alta",
+          afterLabel: "Exemplo de saída:",
+          extraCode: "npm audit fix",
+          extraLabel: "E então:",
+          note: "Tenta atualizar o que pode ser corrigido com segurança. Não é mágica. Mas é útil."
+        },
+        {
+          title: "4. Atualizar tudo às cegas não é segurança",
+          before: null,
+          beforeLabel: null,
+          after: "- notas de versão\n- mudanças que quebram compatibilidade\n- compatibilidade\n- atividade do pacote",
+          afterLabel: "As pessoas geralmente revisam:",
+          note: "Este me surpreendeu. Achei que: mais atualizações = mais seguro. Nem sempre. Às vezes as atualizações quebram coisas. O que pareceu irritantemente responsável."
+        },
+        {
+          title: "5. Nem todo problema precisa de outra dependência",
+          before: null,
+          beforeLabel: null,
+          after: "Array.map()\nfetch()\nDate()",
+          afterLabel: "Quando o JavaScript já tinha:",
+          note: "Este doeu um pouco. Percebi que às vezes eu pesquisava \"Como instalo um pacote para fazer isso?\" quando a resposta já estava embutida. E de repente entendi por que as pessoas brincam que instalam 200 pacotes."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "A parte sobre a qual ninguém me avisou",
+      paragraphs: [
+        "Segurança geralmente não é dramática.",
+        "Ninguém invade sua aplicação usando um capuz.",
+        "Na maioria das vezes parece:",
+        "pacote desatualizado. configuração fraca. variável de ambiente antiga. validação faltando. dependência esquecida.",
+        "O que parece menos cinematográfico."
+      ]
+    },
+    click: {
+      heading: "Quando finalmente fez sentido ✨",
+      paragraphs: [
+        "A certa altura, parei de perguntar:",
+        ""O Node é inseguro?"",
+        "E comecei a perguntar:",
+        ""Em que estou confiando?"",
+        "Isso mudou a forma como vejo os projetos.",
+        "Porque cada instalação também é uma decisão.",
+        "Cada dependência se torna parte do seu sistema.",
+        "E cada atalho eventualmente vira manutenção."
+      ]
+    },
+    bonus: {
+      heading: "Bônus: Coisas às quais agora presto mais atenção",
+      intro: "Antes de adicionar uma dependência:",
+      flowItems: [
+        "Posso construir isso?",
+        "É mantido ativamente?",
+        "Tem lançamentos recentes?",
+        "Quantos downloads tem?",
+        "Tem problemas de segurança abertos?",
+        "Eu realmente preciso disso?"
+      ],
+      note: "Não porque tudo seja perigoso. Mas porque tudo tem compensações."
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como ariana, descobrir que minha aplicação secretamente continha 300 pacotes pareceu pessoalmente ofensivo.",
+        "Instalei uma coisa só.",
+        "Uma.",
+        "Por que de repente temos um ecossistema."
+      ]
+    },
+    realLesson: {
+      heading: "A lição real 💖",
+      paragraphs: [
+        "O Node.js não ficou inseguro de repente.",
+        "Simplesmente comecei a entender que o desenvolvimento moderno não é apenas escrever código.",
+        "É também escolher em qual código confiar.",
+        "E honestamente—",
+        "isso parece um problema muito mais interessante."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "Dependências são parte da arquitetura",
+        "Atualizar merece estratégia",
+        "Segurança geralmente é acumulação",
+        "Simplicidade reduz riscos",
+        "Cada instalação é uma decisão"
+      ]
+    },
+    closing: "Próxima entrada: Aparentemente sou humana",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Notes -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.techNotes.heading}</h2>
+            <p class="tech-intro">{page.techNotes.intro}</p>
+
+            {page.techNotes.notes.map((note) => (
+              <div class="tech-note-block">
+                <h3 class="tech-note-title">{note.title}</h3>
+
+                {note.before && (
+                  <div>
+                    {note.beforeLabel && <p class="code-label">{note.beforeLabel}</p>}
+                    <pre class="code-block"><code>{note.before}</code></pre>
+                  </div>
+                )}
+
+                {note.afterLabel && <p class="code-label">{note.afterLabel}</p>}
+                <pre class="code-block code-block--output"><code>{note.after}</code></pre>
+
+                {note.extraCode && (
+                  <div>
+                    {note.extraLabel && <p class="code-label">{note.extraLabel}</p>}
+                    <pre class="code-block"><code>{note.extraCode}</code></pre>
+                  </div>
+                )}
+
+                <p class="tech-note-text">{note.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The part nobody warned me about -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.nobodyWarned.heading}</h2>
+            <div class="section-body">
+              {page.nobodyWarned.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- When it finally clicked -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Bonus: checklist -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.bonus.heading}</h2>
+            <p class="tech-intro">{page.bonus.intro}</p>
+            <div class="flow-list">
+              {page.bonus.flowItems.map((item, idx) => (
+                <div class="flow-item">
+                  {idx !== 0 && <div class="flow-arrow">↓</div>}
+                  <div class="flow-pill">{item}</div>
+                </div>
+              ))}
+            </div>
+            <p class="tech-note-text" style="margin-top: 1.5rem;">{page.bonus.note}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.realLesson.heading}</h2>
+            <div class="section-body">
+              {page.realLesson.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* Technical Notes */
+  .tech-intro {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 2rem !important;
+  }
+
+  .tech-note-block {
+    margin-bottom: 2.5rem;
+    padding: 1.75rem 2rem;
+    background: rgba(255, 75, 145, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.1);
+    border-radius: 16px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .tech-note-block:hover {
+    background: rgba(255, 75, 145, 0.06);
+    border-color: rgba(255, 75, 145, 0.2);
+  }
+
+  .tech-note-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--rose);
+    margin: 0 0 1.25rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.15);
+  }
+
+  .code-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+    font-style: italic;
+  }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+  }
+
+  .code-block--output code {
+    color: rgba(255, 200, 130, 0.9);
+  }
+
+  .tech-note-text {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 1rem 0 0 !important;
+    line-height: 1.7;
+  }
+
+  /* Flow / Checklist list */
+  .flow-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin: 1rem 0;
+  }
+
+  .flow-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flow-arrow {
+    color: var(--rose);
+    font-size: 1.1rem;
+    margin: 4px 0 4px 18px;
+    opacity: 0.7;
+  }
+
+  .flow-pill {
+    background: rgba(255, 75, 145, 0.08);
+    border: 1px solid rgba(255, 75, 145, 0.18);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 500;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .flow-pill:hover {
+    background: rgba(255, 75, 145, 0.14);
+    border-color: rgba(255, 75, 145, 0.35);
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .tech-note-block { padding: 1.25rem 1.25rem; }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>
