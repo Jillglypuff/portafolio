@@ -581,22 +581,22 @@ const page = content[lang] || content.es;
               <div class="tech-note-block">
                 <h3 class="tech-note-title">{note.title}</h3>
 
-                {note.before && (
+                {note.before ? (
                   <div>
-                    {note.beforeLabel && <p class="code-label">{note.beforeLabel}</p>}
+                    {note.beforeLabel ? <p class="code-label">{note.beforeLabel}</p> : null}
                     <pre class="code-block"><code>{note.before}</code></pre>
                   </div>
-                )}
+                ) : null}
 
-                {note.afterLabel && <p class="code-label">{note.afterLabel}</p>}
+                {note.afterLabel ? <p class="code-label">{note.afterLabel}</p> : null}
                 <pre class="code-block code-block--output"><code>{note.after}</code></pre>
 
-                {note.extraCode && (
+                {note.extraCode ? (
                   <div>
-                    {note.extraLabel && <p class="code-label">{note.extraLabel}</p>}
+                    {note.extraLabel ? <p class="code-label">{note.extraLabel}</p> : null}
                     <pre class="code-block"><code>{note.extraCode}</code></pre>
                   </div>
-                )}
+                ) : null}
 
                 <p class="tech-note-text">{note.note}</p>
               </div>
@@ -636,7 +636,7 @@ const page = content[lang] || content.es;
             <div class="flow-list">
               {page.bonus.flowItems.map((item, idx) => (
                 <div class="flow-item">
-                  {idx !== 0 && <div class="flow-arrow">↓</div>}
+                  {idx !== 0 ? <div class="flow-arrow">↓</div> : null}
                   <div class="flow-pill">{item}</div>
                 </div>
               ))}
