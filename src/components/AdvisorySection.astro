@@ -1,0 +1,74 @@
+---
+const { lang } = Astro.props;
+
+const content = {
+  en: {
+    label: "Advisory",
+    title: "Available for advisory",
+    desc: "I also provide advisory sessions for teams or businesses exploring electronic invoicing implementation in Costa Rica, focusing on requirements, technical planning, and integration strategy."
+  },
+  es: {
+    label: "Asesorías",
+    title: "Disponible para asesorías",
+    desc: "Ofrezco sesiones de asesoría para equipos o empresas que exploran la implementación de facturación electrónica en Costa Rica, enfocándose en requisitos, planificación técnica y estrategia de integración."
+  },
+  pt: {
+    label: "Consultoria",
+    title: "Disponível para consultoria",
+    desc: "Ofereço sessões de consultoria para equipes ou empresas que exploram a implementação de faturamento eletrônico na Costa Rica, focando em requisitos, planejamento técnico e estratégia de integração."
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<section class="section section-advisory" id="advisory">
+  <div class="container container-narrow">
+    <div class="section-label reveal">{page.label}</div>
+    <h2 class="section-title reveal">{page.title}</h2>
+    <div class="advisory-card reveal">
+      <p class="advisory-desc">{page.desc}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-advisory {
+    padding: var(--section-padding, 100px) 0;
+    background: var(--bg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .advisory-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 48px 40px;
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 1;
+    margin-top: 24px;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .advisory-desc {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .advisory-card {
+      padding: 32px 24px;
+    }
+    .advisory-desc {
+      font-size: 0.95rem;
+    }
+  }
+</style>

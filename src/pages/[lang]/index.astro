@@ -6,6 +6,7 @@ import HeroSection from '../../components/HeroSection.astro';
 import AboutSection from '../../components/AboutSection.astro';
 import ProjectsSection from '../../components/ProjectsSection.astro';
 import SkillsSection from '../../components/SkillsSection.astro';
+import AdvisorySection from '../../components/AdvisorySection.astro';
 
 import BlogSection from '../../components/BlogSection.astro';
 import ContactSection from '../../components/ContactSection.astro';
@@ -40,6 +41,7 @@ const { lang } = Astro.params;
   <AboutSection lang={lang} />
   <ScrollFlower client:visible />
   <ProjectsSection lang={lang} />
+  <AdvisorySection lang={lang} />
 
   <SkillsSection lang={lang} />
 
