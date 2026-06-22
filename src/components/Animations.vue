@@ -224,7 +224,7 @@ function setupReveal() {
       setTimeout(() => el.classList.add('visible'), delay);
       observer.unobserve(el);
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0 });
 
   document.querySelectorAll('.reveal, .reveal-blur').forEach((el) => observer.observe(el));
 }
@@ -417,8 +417,12 @@ onMounted(() => {
   if (reducedMotion) {
     // Make all entrance elements visible without animation
     document.querySelectorAll<HTMLElement>(
-      '.hero-char, .hero-name-line, #hero-eyebrow, #hero-tagline, #hero-badges, #hero-actions, #hero-visual'
-    ).forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; });
+      '.hero-char, .hero-name-line, #hero-eyebrow, #hero-tagline, #hero-badges, #hero-actions, #hero-visual, .reveal, .reveal-blur'
+    ).forEach((el) => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.classList.add('visible');
+    });
     return; // Skip all decorative animations
   }
 
