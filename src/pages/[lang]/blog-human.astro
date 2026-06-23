@@ -17,158 +17,163 @@ const t = useTranslations(lang);
 
 const content = {
   en: {
-    title: "Dear Diary, I Kept Hearing Node.js Was Insecure 🌸",
-    date: "June 22, 2026",
+    title: "Dear Diary, Apparently I'm Human 🌸",
+    date: "June 29, 2026",
     subtitle: "A developer diary by Jill",
     back: 'Back to Home',
-    intro: "For a while I kept hearing the same thing over and over.",
-    introDesc: `"Node.js has too many vulnerabilities." "Node isn't secure." "Don't use Node for serious applications."`,
+    intro: "A while ago I noticed something curious.",
+    introDesc: "Open a website. Click a button. And suddenly: ☑️ I'm not a robot.",
     introExtra: [
-      "And honestly—",
-      "I believed it.",
-      "Because if enough developers repeat something…",
-      "it starts sounding true.",
-      "But the more I worked with real projects…",
-      "the more I realized something.",
-      "The conversation was more complicated than I thought."
+      "That's it.",
+      "One checkbox.",
+      "And somehow… the website trusts me.",
+      "At first I thought: there is absolutely no way that checkbox is doing anything.",
+      "Because if avoiding bots was that easy—wouldn't everyone just click it?",
+      "Turns out—that little checkbox is doing a lot more than I thought."
     ],
     firstAssumption: {
       heading: "My first wrong assumption",
       paragraphs: [
-        "I thought Node.js itself was the problem.",
-        "Like somewhere inside Node there was a giant red button labeled: <strong>security issues</strong>.",
-        "Turns out—",
-        "most of the conversation isn't about Node.",
-        "It's about everything around it.",
-        "Packages. Dependencies. Versions. Configurations.",
-        "And suddenly the villain became much less dramatic."
+        "I genuinely thought CAPTCHA worked like this:",
+        "Checkbox → User clicks → Website says \"looks human\" → Access granted",
+        "Simple.",
+        "Suspiciously simple.",
+        "Too simple.",
+        "Turns out—that checkbox isn't usually the important part.",
+        "The decision often starts happening before you even click.",
+        "Which felt mildly offensive."
       ]
     },
     discovery: {
       heading: "Discovery of the day",
       paragraphs: [
-        "Node applications rarely exist alone.",
-        "A typical application might look like:",
-        "Your Application → Framework → Dependencies → Dependencies of dependencies → More dependencies → Even more dependencies.",
-        "And suddenly:",
-        "one vulnerable package somewhere deep in the tree…",
-        "becomes your problem.",
-        "That was the moment I understood.",
-        "Node didn't suddenly become insecure.",
-        "Its ecosystem became very large."
+        "Modern bot protection usually looks at behavior. Not identity.",
+        "Things like:",
+        "🌸 mouse movement",
+        "🌸 click patterns",
+        "🌸 page interaction",
+        "🌸 typing speed",
+        "🌸 browser information",
+        "🌸 request frequency",
+        "🌸 timing",
+        "Open website → Observe behavior → Generate confidence score → Allow / Challenge / Block",
+        "And suddenly I realized: the checkbox is basically customer service.",
+        "The real work already happened."
       ]
     },
     techNotes: {
       heading: "Technical Notes ✨",
-      intro: "Things I learned while researching and working with Node environments.",
+      intro: "Things I learned while reading about bot protection and modern validation.",
       notes: [
         {
-          title: "1. Installing one package installs… many packages",
-          before: "npm install package-name",
-          beforeLabel: "Sometimes this:",
-          after: "1 package\n↓\n32 dependencies\n↓\n145 subdependencies\n↓\nDone",
-          afterLabel: "actually becomes:",
-          note: "Which means: you didn't install one thing. You installed an entire family tree."
-        },
-        {
-          title: "2. Vulnerabilities are often discovered later",
+          title: "1. CAPTCHA is not always checking if you're human",
           before: null,
           beforeLabel: null,
-          after: "Version 2.4.0\n↓\nSecurity issue discovered\n↓\nCVE published\n↓\nUpdate recommended",
-          afterLabel: "A dependency may be fine today. Then months later:",
-          note: "CVE = Common Vulnerabilities and Exposures. Basically: a public catalog of known security issues. That was terrifying and fascinating."
+          after: "Risk Score\n0.0 → Very suspicious\n0.5 → Unsure\n1.0 → Probably human",
+          afterLabel: "Sometimes it's checking: \"How likely is this interaction automated?\"",
+          extraCode: null,
+          extraLabel: null,
+          note: "Lower score → more verification. Higher score → continue normally."
         },
         {
-          title: "3. npm already gives tools to help",
-          before: "npm audit",
-          beforeLabel: "One command I discovered:",
-          after: "3 vulnerabilities found\n\n1 low\n1 moderate\n1 high",
-          afterLabel: "Example output:",
-          extraCode: "npm audit fix",
-          extraLabel: "And then:",
-          note: "Tries to update what can safely be fixed. Not magic. But useful."
+          title: "2. Bots don't always look like bots anymore",
+          before: "while(true){\n click()\n}",
+          beforeLabel: "I imagined bots like:",
+          after: "Playwright\nPuppeteer\nSelenium",
+          afterLabel: "Modern automation tools can simulate browsers, scroll, delay interactions, rotate IPs, imitate clicks:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Which immediately made me respect detection systems more."
         },
         {
-          title: "4. Updating everything blindly is not security",
+          title: "3. Web scraping and bots are not exactly the same thing",
           before: null,
           beforeLabel: null,
-          after: "- release notes\n- breaking changes\n- compatibility\n- package activity",
-          afterLabel: "Usually people review:",
-          note: "This one surprised me. I assumed: more updates = safer. Not always. Sometimes updates break things. Which felt annoyingly responsible."
+          after: "Scraping → Extract information\n\nAutomation → Perform actions\n\nBot → Automated behavior",
+          afterLabel: "Simplified:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Same tools. Different intent. Good: search indexing, monitoring, accessibility. Not so good: fake accounts, spam, abuse, bypassing limits."
         },
         {
-          title: "5. Not every problem needs another dependency",
+          title: "4. Frontend validation is not security",
+          before: "<input required />",
+          beforeLabel: "You can have:",
+          after: "Frontend → Backend → Validation → Database\n\nNot:\n\nFrontend → Trust",
+          afterLabel: "That's why validation often happens:",
+          extraCode: null,
+          extraLabel: null,
+          note: "That second architecture sounds stressful."
+        },
+        {
+          title: "5. Security usually becomes layers",
           before: null,
           beforeLabel: null,
-          after: "Array.map()\nfetch()\nDate()",
-          afterLabel: "When JavaScript already had:",
-          note: "This one hurt a little. I realized sometimes I searched \"How do I install a package to do this?\" when the answer was already built in. And suddenly I understood why people joke about installing 200 packages."
+          after: "Rate limiting\n↓\nCAPTCHA\n↓\nValidation\n↓\nAuthentication\n↓\nLogging\n↓\nMonitoring",
+          afterLabel: "Instead of \"One checkbox\":",
+          extraCode: null,
+          extraLabel: null,
+          note: "And suddenly security looked less magical. And more like architecture."
         }
       ]
     },
     nobodyWarned: {
       heading: "The part nobody warned me about",
       paragraphs: [
-        "Security isn't usually dramatic.",
-        "Nobody breaks into your app wearing a hoodie.",
-        "Most of the time it looks like:",
-        "outdated package. weak configuration. old environment variable. missing validation. forgotten dependency.",
-        "Which somehow feels less cinematic."
+        "The weird part is… sometimes humans behave like bots.",
+        "Refresh. Refresh. Open twenty tabs. Submit forms too quickly. Copy. Paste. Refresh again.",
+        "Which means occasionally… actual humans become suspicious.",
+        "Honestly relatable."
       ]
     },
     click: {
       heading: "When it finally clicked ✨",
       paragraphs: [
-        "At some point I stopped asking:",
-        "\"Is Node insecure?\"",
-        "And started asking:",
-        "\"What am I trusting?\"",
-        "That changed the way I look at projects.",
-        "Because every install is also a decision.",
-        "Every dependency becomes part of your system.",
-        "And every shortcut eventually becomes maintenance."
+        "At some point I stopped thinking:",
+        "\"Why is this website making me prove I'm human?\"",
+        "And started thinking:",
+        "\"How many requests is this system receiving that made this necessary?\"",
+        "Because behind that tiny checkbox—there's traffic. Monitoring. Detection. Risk. Rules.",
+        "And a lot of invisible work."
       ]
     },
     bonus: {
-      heading: "Bonus: Things I now pay more attention to",
-      intro: "Before adding a dependency:",
+      heading: "Bonus: Things I now notice on websites",
+      intro: "When I see \"Verify you're human\", my brain now immediately thinks:",
       flowItems: [
-        "Can I build this?",
-        "Is it maintained?",
-        "Does it have recent releases?",
-        "How many downloads?",
-        "Open security issues?",
-        "Do I really need it?"
+        "Is this rate limited?",
+        "Is there scoring?",
+        "Is there server-side validation?",
+        "What happens if this fails?",
+        "How are they preventing abuse?"
       ],
-      note: "Not because everything is dangerous. But because everything has tradeoffs."
+      note: "Which feels extremely developer behavior."
     },
     personalNote: {
       heading: "Personal note 🌸",
       paragraphs: [
-        "As an Aries, discovering my application secretly contained 300 packages felt personally offensive.",
-        "I installed one thing.",
-        "One.",
-        "Why do we suddenly have an ecosystem."
+        "As an Aries, discovering I had to prove I'm human to continue felt slightly disrespectful.",
+        "But apparently websites have trust issues.",
+        "And honestly—after seeing how much automation exists… I get it."
       ]
     },
     realLesson: {
       heading: "The real lesson 💖",
       paragraphs: [
-        "Node.js didn't suddenly become insecure.",
-        "I just started understanding that modern development isn't only writing code.",
-        "It's also choosing what code to trust.",
-        "And honestly—",
-        "that feels like a much more interesting problem."
+        "That checkbox was never really the interesting part.",
+        "What surprised me was discovering how much invisible infrastructure exists just to protect normal interactions.",
+        "And I think that's beautiful.",
+        "Because good systems don't only work. They survive."
       ]
     },
     remember: {
       heading: "Things I Want To Remember 🌷",
       items: [
-        "Dependencies are part of architecture",
-        "Updating deserves strategy",
-        "Security is usually accumulation",
-        "Simplicity reduces risk",
-        "Every install is a decision"
+        "Security usually happens in layers",
+        "Validation belongs in more than one place",
+        "Behavior says more than identity",
+        "Automation isn't automatically bad",
+        "Invisible systems deserve appreciation"
       ]
     },
     closing: "Next entry: I Thought I Was Building a Website",
@@ -176,158 +181,163 @@ const content = {
     signature: "— Jill"
   },
   es: {
-    title: "Querido Diario, Seguía Escuchando Que Node.js Era Inseguro 🌸",
-    date: "22 de Junio, 2026",
+    title: "Querido Diario, Aparentemente Soy Humana 🌸",
+    date: "29 de Junio, 2026",
     subtitle: "El diario de desarrollo de Jill",
     back: 'Volver al Inicio',
-    intro: "Por un tiempo seguí escuchando lo mismo una y otra vez.",
-    introDesc: `"Node.js tiene demasiadas vulnerabilidades." "Node no es seguro." "No uses Node para aplicaciones serias."`,
+    intro: "Hace un tiempo noté algo curioso.",
+    introDesc: "Abres un sitio web. Haces clic en un botón. Y de repente: ☑️ No soy un robot.",
     introExtra: [
-      "Y honestamente—",
-      "lo creí.",
-      "Porque si suficientes desarrolladores repiten algo…",
-      "empieza a sonar verdadero.",
-      "Pero cuanto más trabajaba con proyectos reales…",
-      "más me daba cuenta de algo.",
-      "La conversación era más complicada de lo que pensaba."
+      "Eso es todo.",
+      "Una casilla de verificación.",
+      "Y de alguna manera… el sitio web confía en mí.",
+      "Al principio pensé: no hay forma de que esa casilla esté haciendo algo.",
+      "Porque si evitar bots fuera tan fácil—¿no haría clic todo el mundo?",
+      "Resulta que—esa pequeña casilla está haciendo mucho más de lo que pensaba."
     ],
     firstAssumption: {
       heading: "Mi primer supuesto incorrecto",
       paragraphs: [
-        "Pensé que Node.js en sí era el problema.",
-        "Como si en algún lugar dentro de Node hubiera un gran botón rojo con la etiqueta: <strong>problemas de seguridad</strong>.",
-        "Resulta que—",
-        "la mayor parte de la conversación no es sobre Node.",
-        "Es sobre todo lo que lo rodea.",
-        "Paquetes. Dependencias. Versiones. Configuraciones.",
-        "Y de repente el villano se volvió mucho menos dramático."
+        "Realmente pensé que CAPTCHA funcionaba así:",
+        "Casilla → Usuario hace clic → Sitio web dice \"parece humano\" → Acceso concedido",
+        "Simple.",
+        "Sospechosamente simple.",
+        "Demasiado simple.",
+        "Resulta que—esa casilla no suele ser la parte importante.",
+        "La decisión a menudo comienza antes de que hagas clic.",
+        "Lo cual se sintió levemente ofensivo."
       ]
     },
     discovery: {
       heading: "Descubrimiento del día",
       paragraphs: [
-        "Las aplicaciones Node rara vez existen solas.",
-        "Una aplicación típica podría verse así:",
-        "Tu Aplicación → Framework → Dependencias → Dependencias de dependencias → Más dependencias → Aún más dependencias.",
-        "Y de repente:",
-        "un paquete vulnerable en algún lugar profundo del árbol…",
-        "se convierte en tu problema.",
-        "Ese fue el momento en que entendí.",
-        "Node no se volvió inseguro de repente.",
-        "Su ecosistema se volvió muy grande."
+        "La protección moderna contra bots generalmente mira el comportamiento. No la identidad.",
+        "Cosas como:",
+        "🌸 movimiento del ratón",
+        "🌸 patrones de clic",
+        "🌸 interacción con la página",
+        "🌸 velocidad de escritura",
+        "🌸 información del navegador",
+        "🌸 frecuencia de solicitudes",
+        "🌸 tiempos",
+        "Abrir sitio web → Observar comportamiento → Generar puntuación de confianza → Permitir / Desafiar / Bloquear",
+        "Y de repente me di cuenta: la casilla es básicamente servicio al cliente.",
+        "El verdadero trabajo ya había ocurrido."
       ]
     },
     techNotes: {
       heading: "Notas Técnicas ✨",
-      intro: "Cosas que aprendí mientras investigaba y trabajaba con entornos Node.",
+      intro: "Cosas que aprendí mientras leía sobre protección contra bots y validación moderna.",
       notes: [
         {
-          title: "1. Instalar un paquete instala… muchos paquetes",
-          before: "npm install nombre-paquete",
-          beforeLabel: "A veces esto:",
-          after: "1 paquete\n↓\n32 dependencias\n↓\n145 subdependencias\n↓\nListo",
-          afterLabel: "en realidad se convierte en:",
-          note: "Lo que significa: no instalaste una sola cosa. Instalaste todo un árbol genealógico."
-        },
-        {
-          title: "2. Las vulnerabilidades suelen descubrirse después",
+          title: "1. CAPTCHA no siempre verifica si eres humano",
           before: null,
           beforeLabel: null,
-          after: "Versión 2.4.0\n↓\nProblema de seguridad descubierto\n↓\nCVE publicado\n↓\nActualización recomendada",
-          afterLabel: "Una dependencia puede estar bien hoy. Luego, meses después:",
-          note: "CVE = Common Vulnerabilities and Exposures. Básicamente: un catálogo público de problemas de seguridad conocidos. Eso fue aterrador y fascinante."
+          after: "Puntuación de Riesgo\n0.0 → Muy sospechoso\n0.5 → No está seguro\n1.0 → Probablemente humano",
+          afterLabel: "A veces verifica: \"¿Qué tan probable es que esta interacción sea automatizada?\"",
+          extraCode: null,
+          extraLabel: null,
+          note: "Puntuación baja → más verificación. Puntuación alta → continuar normalmente."
         },
         {
-          title: "3. npm ya ofrece herramientas para ayudar",
-          before: "npm audit",
-          beforeLabel: "Un comando que descubrí:",
-          after: "3 vulnerabilidades encontradas\n\n1 baja\n1 moderada\n1 alta",
-          afterLabel: "Salida de ejemplo:",
-          extraCode: "npm audit fix",
-          extraLabel: "Y luego:",
-          note: "Intenta actualizar lo que se puede arreglar de forma segura. No es magia. Pero es útil."
+          title: "2. Los bots ya no siempre parecen bots",
+          before: "while(true){\n click()\n}",
+          beforeLabel: "Imaginaba los bots así:",
+          after: "Playwright\nPuppeteer\nSelenium",
+          afterLabel: "Las herramientas modernas de automatización pueden simular navegadores, desplazarse, retrasar interacciones, rotar IPs, imitar clics:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Lo que inmediatamente me hizo respetar más los sistemas de detección."
         },
         {
-          title: "4. Actualizar todo sin pensar no es seguridad",
+          title: "3. Web scraping y bots no son exactamente lo mismo",
           before: null,
           beforeLabel: null,
-          after: "- notas de la versión\n- cambios que rompen compatibilidad\n- compatibilidad\n- actividad del paquete",
-          afterLabel: "Generalmente la gente revisa:",
-          note: "Este me sorprendió. Asumí que: más actualizaciones = más seguro. No siempre. A veces las actualizaciones rompen cosas. Lo cual se sintió molestamente responsable."
+          after: "Scraping → Extraer información\n\nAutomatización → Realizar acciones\n\nBot → Comportamiento automatizado",
+          afterLabel: "Simplificado:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Mismas herramientas. Diferente intención. Bueno: indexación de búsqueda, monitoreo, accesibilidad. No tan bueno: cuentas falsas, spam, abuso, eludir límites."
         },
         {
-          title: "5. No todo problema necesita otra dependencia",
+          title: "4. La validación en frontend no es seguridad",
+          before: "<input required />",
+          beforeLabel: "Puedes tener:",
+          after: "Frontend → Backend → Validación → Base de datos\n\nNo:\n\nFrontend → Confianza",
+          afterLabel: "Por eso la validación sucede:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Esa segunda arquitectura suena estresante."
+        },
+        {
+          title: "5. La seguridad generalmente se convierte en capas",
           before: null,
           beforeLabel: null,
-          after: "Array.map()\nfetch()\nDate()",
-          afterLabel: "Cuando JavaScript ya tenía:",
-          note: "Este dolió un poco. Me di cuenta de que a veces buscaba \"¿Cómo instalo un paquete para hacer esto?\" cuando la respuesta ya estaba incorporada. Y de repente entendí por qué la gente bromea con instalar 200 paquetes."
+          after: "Límite de velocidad\n↓\nCAPTCHA\n↓\nValidación\n↓\nAutenticación\n↓\nRegistro\n↓\nMonitoreo",
+          afterLabel: "En lugar de \"Una casilla\":",
+          extraCode: null,
+          extraLabel: null,
+          note: "Y de repente la seguridad se veía menos mágica. Y más como arquitectura."
         }
       ]
     },
     nobodyWarned: {
       heading: "La parte de la que nadie me advirtió",
       paragraphs: [
-        "La seguridad no suele ser dramática.",
-        "Nadie irrumpe en tu aplicación con una capucha.",
-        "La mayoría de las veces se parece a:",
-        "paquete desactualizado. configuración débil. variable de entorno antigua. validación faltante. dependencia olvidada.",
-        "Lo cual se siente menos cinematográfico."
+        "Lo extraño es que… a veces los humanos se comportan como bots.",
+        "Actualizar. Actualizar. Abrir veinte pestañas. Enviar formularios demasiado rápido. Copiar. Pegar. Actualizar de nuevo.",
+        "Lo que significa que ocasionalmente… los humanos reales se vuelven sospechosos.",
+        "Honestamente, relatable."
       ]
     },
     click: {
       heading: "Cuando finalmente hizo clic ✨",
       paragraphs: [
-        "En algún momento dejé de preguntar:",
-        "\"¿Es Node inseguro?\"",
-        "Y empecé a preguntar:",
-        "\"¿En qué estoy confiando?\"",
-        "Eso cambió la forma en que miro los proyectos.",
-        "Porque cada instalación también es una decisión.",
-        "Cada dependencia se convierte en parte de tu sistema.",
-        "Y cada atajo eventualmente se convierte en mantenimiento."
+        "En algún momento dejé de pensar:",
+        "\"¿Por qué este sitio web me hace demostrar que soy humana?\"",
+        "Y empecé a pensar:",
+        "\"¿Cuántas solicitudes está recibiendo este sistema que hicieron esto necesario?\"",
+        "Porque detrás de esa pequeña casilla—hay tráfico. Monitoreo. Detección. Riesgo. Reglas.",
+        "Y mucho trabajo invisible."
       ]
     },
     bonus: {
-      heading: "Bonus: Cosas a las que ahora presto más atención",
-      intro: "Antes de agregar una dependencia:",
+      heading: "Bonus: Cosas que ahora noto en los sitios web",
+      intro: "Cuando veo \"Verifica que eres humano\", mi cerebro ahora inmediatamente piensa:",
       flowItems: [
-        "¿Puedo construirlo yo?",
-        "¿Está mantenido?",
-        "¿Tiene versiones recientes?",
-        "¿Cuántas descargas tiene?",
-        "¿Tiene problemas de seguridad abiertos?",
-        "¿Realmente lo necesito?"
+        "¿Tiene límite de velocidad?",
+        "¿Hay puntuación?",
+        "¿Hay validación del lado del servidor?",
+        "¿Qué pasa si falla?",
+        "¿Cómo están previniendo el abuso?"
       ],
-      note: "No porque todo sea peligroso. Sino porque todo tiene compensaciones."
+      note: "Lo cual se siente extremadamente como comportamiento de desarrolladora."
     },
     personalNote: {
       heading: "Nota personal 🌸",
       paragraphs: [
-        "Como Aries, descubrir que mi aplicación contenía secretamente 300 paquetes se sintió personalmente ofensivo.",
-        "Instalé una sola cosa.",
-        "Una.",
-        "Por qué de repente tenemos un ecosistema."
+        "Como Aries, descubrir que tenía que demostrar que soy humana para continuar se sintió ligeramente irrespetuoso.",
+        "Pero aparentemente los sitios web tienen problemas de confianza.",
+        "Y honestamente—después de ver cuánta automatización existe… lo entiendo."
       ]
     },
     realLesson: {
       heading: "La lección real 💖",
       paragraphs: [
-        "Node.js no se volvió inseguro de repente.",
-        "Simplemente empecé a entender que el desarrollo moderno no es solo escribir código.",
-        "También se trata de elegir en qué código confiar.",
-        "Y honestamente—",
-        "eso parece un problema mucho más interesante."
+        "Esa casilla nunca fue realmente la parte interesante.",
+        "Lo que me sorprendió fue descubrir cuánta infraestructura invisible existe solo para proteger interacciones normales.",
+        "Y creo que eso es hermoso.",
+        "Porque los buenos sistemas no solo funcionan. Sobreviven."
       ]
     },
     remember: {
       heading: "Cosas Que Quiero Recordar 🌷",
       items: [
-        "Las dependencias son parte de la arquitectura",
-        "Actualizar requiere estrategia",
-        "La seguridad suele ser acumulación",
-        "La simplicidad reduce el riesgo",
-        "Cada instalación es una decisión"
+        "La seguridad generalmente ocurre en capas",
+        "La validación pertenece a más de un lugar",
+        "El comportamiento dice más que la identidad",
+        "La automatización no es automáticamente mala",
+        "Los sistemas invisibles merecen aprecio"
       ]
     },
     closing: "Siguiente entrada: Pensé Que Estaba Construyendo un Sitio Web",
@@ -335,158 +345,163 @@ const content = {
     signature: "— Jill"
   },
   pt: {
-    title: "Querido Diário, Eu Continuava Ouvindo Que o Node.js Era Inseguro 🌸",
-    date: "22 de Junho, 2026",
+    title: "Querido Diário, Aparentemente Sou Humana 🌸",
+    date: "29 de Junho, 2026",
     subtitle: "Diário de desenvolvimento da Jill",
     back: 'Voltar ao Início',
-    intro: "Por um tempo, eu continuava ouvindo a mesma coisa repetidamente.",
-    introDesc: `"Node.js tem vulnerabilidades demais." "Node não é seguro." "Não use Node para aplicações sérias."`,
+    intro: "Há um tempo notei algo curioso.",
+    introDesc: "Abre um site. Clica num botão. E de repente: ☑️ Não sou um robô.",
     introExtra: [
-      "E honestamente—",
-      "eu acreditei.",
-      "Porque se desenvolvedores suficientes repetem algo…",
-      "começa a soar verdadeiro.",
-      "Mas quanto mais trabalhava com projetos reais…",
-      "mais percebia algo.",
-      "A conversa era mais complicada do que eu pensava."
+      "É isso.",
+      "Uma caixa de seleção.",
+      "E de alguma forma… o site confia em mim.",
+      "No começo pensei: não tem como essa caixa de seleção estar fazendo algo.",
+      "Porque se evitar bots fosse tão fácil—todo mundo não clicaria?",
+      "Acontece que—essa pequena caixa está fazendo muito mais do que eu pensava."
     ],
     firstAssumption: {
       heading: "Minha primeira suposição errada",
       paragraphs: [
-        "Achei que o próprio Node.js era o problema.",
-        "Como se em algum lugar dentro do Node houvesse um grande botão vermelho com a etiqueta: <strong>problemas de segurança</strong>.",
-        "Acontece que—",
-        "a maior parte da conversa não é sobre o Node.",
-        "É sobre tudo ao redor dele.",
-        "Pacotes. Dependências. Versões. Configurações.",
-        "E de repente o vilão se tornou muito menos dramático."
+        "Eu realmente achei que o CAPTCHA funcionava assim:",
+        "Caixa → Usuário clica → Site diz \"parece humano\" → Acesso concedido",
+        "Simples.",
+        "Suspeitamente simples.",
+        "Simples demais.",
+        "Acontece que—essa caixa geralmente não é a parte importante.",
+        "A decisão geralmente começa antes mesmo de você clicar.",
+        "O que pareceu levemente ofensivo."
       ]
     },
     discovery: {
       heading: "Descoberta do dia",
       paragraphs: [
-        "Aplicações Node raramente existem sozinhas.",
-        "Uma aplicação típica pode se parecer com:",
-        "Sua Aplicação → Framework → Dependências → Dependências de dependências → Mais dependências → Ainda mais dependências.",
-        "E de repente:",
-        "um pacote vulnerável em algum lugar fundo na árvore…",
-        "se torna o seu problema.",
-        "Foi o momento em que entendi.",
-        "O Node não ficou inseguro de repente.",
-        "Seu ecossistema ficou muito grande."
+        "A proteção moderna contra bots geralmente olha o comportamento. Não a identidade.",
+        "Coisas como:",
+        "🌸 movimento do mouse",
+        "🌸 padrões de clique",
+        "🌸 interação com a página",
+        "🌸 velocidade de digitação",
+        "🌸 informações do navegador",
+        "🌸 frequência de requisições",
+        "🌸 temporização",
+        "Abrir site → Observar comportamento → Gerar pontuação de confiança → Permitir / Desafiar / Bloquear",
+        "E de repente percebi: a caixa de seleção é basicamente atendimento ao cliente.",
+        "O trabalho real já tinha acontecido."
       ]
     },
     techNotes: {
       heading: "Notas Técnicas ✨",
-      intro: "Coisas que aprendi enquanto pesquisava e trabalhava com ambientes Node.",
+      intro: "Coisas que aprendi enquanto lia sobre proteção contra bots e validação moderna.",
       notes: [
         {
-          title: "1. Instalar um pacote instala… muitos pacotes",
-          before: "npm install nome-do-pacote",
-          beforeLabel: "Às vezes isso:",
-          after: "1 pacote\n↓\n32 dependências\n↓\n145 subdependências\n↓\nFeito",
-          afterLabel: "na verdade se torna:",
-          note: "O que significa: você não instalou uma coisa só. Você instalou uma árvore genealógica inteira."
-        },
-        {
-          title: "2. Vulnerabilidades costumam ser descobertas depois",
+          title: "1. CAPTCHA nem sempre verifica se você é humano",
           before: null,
           beforeLabel: null,
-          after: "Versão 2.4.0\n↓\nProblema de segurança descoberto\n↓\nCVE publicado\n↓\nAtualização recomendada",
-          afterLabel: "Uma dependência pode estar bem hoje. Depois, meses depois:",
-          note: "CVE = Common Vulnerabilities and Exposures. Basicamente: um catálogo público de problemas de segurança conhecidos. Isso foi aterrorizante e fascinante."
+          after: "Pontuação de Risco\n0.0 → Muito suspeito\n0.5 → Não tem certeza\n1.0 → Provavelmente humano",
+          afterLabel: "Às vezes verifica: \"Qual a probabilidade desta interação ser automatizada?\"",
+          extraCode: null,
+          extraLabel: null,
+          note: "Pontuação baixa → mais verificação. Pontuação alta → continuar normalmente."
         },
         {
-          title: "3. O npm já oferece ferramentas para ajudar",
-          before: "npm audit",
-          beforeLabel: "Um comando que descobri:",
-          after: "3 vulnerabilidades encontradas\n\n1 baixa\n1 moderada\n1 alta",
-          afterLabel: "Exemplo de saída:",
-          extraCode: "npm audit fix",
-          extraLabel: "E então:",
-          note: "Tenta atualizar o que pode ser corrigido com segurança. Não é mágica. Mas é útil."
+          title: "2. Bots nem sempre parecem bots",
+          before: "while(true){\n click()\n}",
+          beforeLabel: "Imaginava bots assim:",
+          after: "Playwright\nPuppeteer\nSelenium",
+          afterLabel: "Ferramentas modernas de automação podem simular navegadores, rolar, atrasar interações, rotacionar IPs, imitar cliques:",
+          extraCode: null,
+          extraLabel: null,
+          note: "O que imediatamente me fez respeitar mais os sistemas de detecção."
         },
         {
-          title: "4. Atualizar tudo às cegas não é segurança",
+          title: "3. Web scraping e bots não são exatamente a mesma coisa",
           before: null,
           beforeLabel: null,
-          after: "- notas de versão\n- mudanças que quebram compatibilidade\n- compatibilidade\n- atividade do pacote",
-          afterLabel: "As pessoas geralmente revisam:",
-          note: "Este me surpreendeu. Achei que: mais atualizações = mais seguro. Nem sempre. Às vezes as atualizações quebram coisas. O que pareceu irritantemente responsável."
+          after: "Scraping → Extrair informações\n\nAutomação → Realizar ações\n\nBot → Comportamento automatizado",
+          afterLabel: "Simplificado:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Mesmas ferramentas. Intenção diferente. Bom: indexação de busca, monitoramento, acessibilidade. Não tão bom: contas falsas, spam, abuso, burlar limites."
         },
         {
-          title: "5. Nem todo problema precisa de outra dependência",
+          title: "4. Validação no frontend não é segurança",
+          before: "<input required />",
+          beforeLabel: "Você pode ter:",
+          after: "Frontend → Backend → Validação → Banco de dados\n\nNão:\n\nFrontend → Confiança",
+          afterLabel: "É por isso que a validação geralmente acontece:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Essa segunda arquitetura parece estressante."
+        },
+        {
+          title: "5. Segurança geralmente vira camadas",
           before: null,
           beforeLabel: null,
-          after: "Array.map()\nfetch()\nDate()",
-          afterLabel: "Quando o JavaScript já tinha:",
-          note: "Este doeu um pouco. Percebi que às vezes eu pesquisava \"Como instalo um pacote para fazer isso?\" quando a resposta já estava embutida. E de repente entendi por que as pessoas brincam que instalam 200 pacotes."
+          after: "Limitação de taxa\n↓\nCAPTCHA\n↓\nValidação\n↓\nAutenticação\n↓\nRegistro\n↓\nMonitoramento",
+          afterLabel: "Em vez de \"Uma caixa de seleção\":",
+          extraCode: null,
+          extraLabel: null,
+          note: "E de repente a segurança parecia menos mágica. E mais como arquitetura."
         }
       ]
     },
     nobodyWarned: {
       heading: "A parte sobre a qual ninguém me avisou",
       paragraphs: [
-        "Segurança geralmente não é dramática.",
-        "Ninguém invade sua aplicação usando um capuz.",
-        "Na maioria das vezes parece:",
-        "pacote desatualizado. configuração fraca. variável de ambiente antiga. validação faltando. dependência esquecida.",
-        "O que parece menos cinematográfico."
+        "A parte estranha é que… às vezes humanos se comportam como bots.",
+        "Atualizar. Atualizar. Abrir vinte abas. Enviar formulários rápido demais. Copiar. Colar. Atualizar de novo.",
+        "O que significa que ocasionalmente… humanos reais se tornam suspeitos.",
+        "Sinceramente, relatable."
       ]
     },
     click: {
       heading: "Quando finalmente fez sentido ✨",
       paragraphs: [
-        "A certa altura, parei de perguntar:",
-        "\"O Node é inseguro?\"",
-        "E comecei a perguntar:",
-        "\"Em que estou confiando?\"",
-        "Isso mudou a forma como vejo os projetos.",
-        "Porque cada instalação também é uma decisão.",
-        "Cada dependência se torna parte do seu sistema.",
-        "E cada atalho eventualmente vira manutenção."
+        "A certa altura, parei de pensar:",
+        "\"Por que este site está me fazendo provar que sou humana?\"",
+        "E comecei a pensar:",
+        "\"Quantas requisições este sistema está recebendo que tornaram isso necessário?\"",
+        "Porque atrás daquela pequena caixa de seleção—há tráfego. Monitoramento. Detecção. Risco. Regras.",
+        "E muito trabalho invisível."
       ]
     },
     bonus: {
-      heading: "Bônus: Coisas às quais agora presto mais atenção",
-      intro: "Antes de adicionar uma dependência:",
+      heading: "Bônus: Coisas que agora noto nos sites",
+      intro: "Quando vejo \"Verifique que você é humano\", meu cérebro agora imediatamente pensa:",
       flowItems: [
-        "Posso construir isso?",
-        "É mantido ativamente?",
-        "Tem lançamentos recentes?",
-        "Quantos downloads tem?",
-        "Tem problemas de segurança abertos?",
-        "Eu realmente preciso disso?"
+        "Tem limitação de taxa?",
+        "Tem pontuação?",
+        "Tem validação no servidor?",
+        "O que acontece se falhar?",
+        "Como estão prevenindo abuso?"
       ],
-      note: "Não porque tudo seja perigoso. Mas porque tudo tem compensações."
+      note: "O que parece extremamente comportamento de desenvolvedora."
     },
     personalNote: {
       heading: "Nota pessoal 🌸",
       paragraphs: [
-        "Como ariana, descobrir que minha aplicação secretamente continha 300 pacotes pareceu pessoalmente ofensivo.",
-        "Instalei uma coisa só.",
-        "Uma.",
-        "Por que de repente temos um ecossistema."
+        "Como ariana, descobrir que tinha que provar que sou humana para continuar pareceu ligeiramente desrespeitoso.",
+        "Mas aparentemente sites têm problemas de confiança.",
+        "E honestamente—depois de ver quanta automação existe… eu entendo."
       ]
     },
     realLesson: {
       heading: "A lição real 💖",
       paragraphs: [
-        "O Node.js não ficou inseguro de repente.",
-        "Simplesmente comecei a entender que o desenvolvimento moderno não é apenas escrever código.",
-        "É também escolher em qual código confiar.",
-        "E honestamente—",
-        "isso parece um problema muito mais interessante."
+        "Aquela caixa de seleção nunca foi realmente a parte interessante.",
+        "O que me surpreendeu foi descobrir quanta infraestrutura invisível existe apenas para proteger interações normais.",
+        "E acho que isso é lindo.",
+        "Porque bons sistemas não apenas funcionam. Eles sobrevivem."
       ]
     },
     remember: {
       heading: "Coisas Que Quero Lembrar 🌷",
       items: [
-        "Dependências são parte da arquitetura",
-        "Atualizar merece estratégia",
-        "Segurança geralmente é acumulação",
-        "Simplicidade reduz riscos",
-        "Cada instalação é uma decisão"
+        "Segurança geralmente acontece em camadas",
+        "Validação pertence a mais de um lugar",
+        "Comportamento diz mais que identidade",
+        "Automação não é automaticamente ruim",
+        "Sistemas invisíveis merecem apreciação"
       ]
     },
     closing: "Próxima entrada: Achei Que Estava Construindo um Site",
@@ -553,7 +568,7 @@ const page = content[lang] || content.es;
             <h2 class="section-heading">{page.firstAssumption.heading}</h2>
             <div class="section-body">
               {page.firstAssumption.paragraphs.map((para) => (
-                <p set:html={para}></p>
+                <p>{para}</p>
               ))}
             </div>
           </div>

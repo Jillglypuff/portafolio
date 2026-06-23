@@ -1,0 +1,1012 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, I Implemented Electronic Invoicing and Accidentally Learned Business Rules 🌸",
+    date: "July 13, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "For a long time, electronic invoicing sounded simple in my head.",
+    introDesc: "Generate invoice. Send invoice. Done.",
+    introExtra: [
+      "Very administrative.",
+      "Very harmless.",
+      "Very incorrect.",
+      "Because somewhere during implementation…",
+      "I discovered invoices are actually rules pretending to be documents."
+    ],
+    firstAssumption: {
+      heading: "My first wrong assumption",
+      paragraphs: [
+        "I imagined electronic invoicing like this:",
+        "Create invoice → Generate PDF → Send → Finished",
+        "Then reality arrived.",
+        "And suddenly there were questions.",
+        "Is the customer information valid?",
+        "Is tax calculated correctly?",
+        "Is the format accepted?",
+        "What happens if submission fails?",
+        "What happens if approval arrives later?",
+        "What state should the document have?",
+        "What data becomes immutable?",
+        "And somehow—",
+        "a document became architecture."
+      ]
+    },
+    discovery: {
+      heading: "Discovery of the day",
+      paragraphs: [
+        "Electronic invoicing isn't really about invoices.",
+        "It's about synchronization.",
+        "Very simplified:",
+        "ERP → Invoice creation → Validation → Generate XML → Send → Authority response → Update states → Notify user",
+        "And suddenly—",
+        "timing mattered."
+      ]
+    },
+    techNotes: {
+      heading: "Technical Notes ✨",
+      intro: "Things I learned while implementing electronic invoicing.",
+      notes: [
+        {
+          title: "1. Documents become states",
+          before: "Created\n↓\nDone",
+          beforeLabel: "I expected:",
+          after: "Draft\n↓\nGenerated\n↓\nSigned\n↓\nSent\n↓\nProcessing\n↓\nAccepted / Rejected",
+          afterLabel: "Reality felt closer to:",
+          extraCode: null,
+          extraLabel: null,
+          note: "One invoice. Many possible realities."
+        },
+        {
+          title: "2. Validation becomes architecture",
+          before: "Required fields\n↓\nBusiness rules\n↓\nTax calculations\n↓\nFormat validation\n↓\nSubmission",
+          beforeLabel: "Examples:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Which made validation feel much more important."
+        },
+        {
+          title: "3. APIs became part of accounting",
+          before: "ERP\n↓\nREST API\n↓\nResponse\n↓\nStore status",
+          beforeLabel: "Simplified communication:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "And suddenly backend decisions became business decisions. Unexpectedly stressful."
+        },
+        {
+          title: "4. XML became less scary",
+          before: "<invoice>\n    <total>100</total>\n</invoice>",
+          beforeLabel: "Example:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Turns out boring formats survive for a reason."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "The part nobody warned me about",
+      paragraphs: [
+        "One small business rule can affect:",
+        "database.",
+        "backend.",
+        "frontend.",
+        "notifications.",
+        "reports.",
+        "And suddenly one field becomes everyone's problem."
+      ]
+    },
+    click: {
+      heading: "When it finally clicked ✨",
+      paragraphs: [
+        "At some point I stopped thinking:",
+        "\"How do I generate invoices?\"",
+        "And started asking:",
+        "\"How does the business behave?\"",
+        "That changed everything."
+      ]
+    },
+    personalNote: {
+      heading: "Personal note 🌸",
+      paragraphs: [
+        "As an Aries, waiting for external responses felt deeply disrespectful.",
+        "I sent the request.",
+        "Please answer immediately.",
+        "Apparently systems don't care."
+      ]
+    },
+    realLesson: {
+      heading: "The real lesson 💖",
+      paragraphs: [
+        "Invoices are not PDFs.",
+        "They're workflows.",
+        "And honestly—",
+        "understanding business rules felt more interesting than I expected."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌷",
+      items: [
+        "Systems reflect business decisions",
+        "Validation saves pain",
+        "APIs are business tools",
+        "States deserve respect",
+        "Backend changes outcomes"
+      ]
+    },
+    closing: "Next entry: Dear Diary, I Finally Understood SaaS, PaaS, and IaaS",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Implementé Facturación Electrónica y Aprendí Reglas de Negocio Sin Querer 🌸",
+    date: "13 de Julio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Por mucho tiempo, la facturación electrónica sonaba simple en mi cabeza.",
+    introDesc: "Generar factura. Enviar factura. Listo.",
+    introExtra: [
+      "Muy administrativo.",
+      "Muy inofensivo.",
+      "Muy incorrecto.",
+      "Porque en algún momento durante la implementación…",
+      "descubrí que las facturas son en realidad reglas disfrazadas de documentos."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Imaginé la facturación electrónica así:",
+        "Crear factura → Generar PDF → Enviar → Terminado",
+        "Entonces llegó la realidad.",
+        "Y de repente surgieron preguntas.",
+        "¿La información del cliente es válida?",
+        "¿El impuesto está calculado correctamente?",
+        "¿El formato es aceptado?",
+        "¿Qué pasa si el envío falla?",
+        "¿Qué pasa si la aprobación llega después?",
+        "¿Qué estado debería tener el documento?",
+        "¿Qué datos se vuelven inmutables?",
+        "Y de alguna manera—",
+        "un documento se convirtió en arquitectura."
+      ]
+    },
+    discovery: {
+      heading: "Descubrimiento del día",
+      paragraphs: [
+        "La facturación electrónica no trata realmente de facturas.",
+        "Se trata de sincronización.",
+        "Muy simplificado:",
+        "ERP → Creación de factura → Validación → Generar XML → Enviar → Respuesta de la autoridad → Actualizar estados → Notificar al usuario",
+        "Y de repente—",
+        "el tiempo importaba."
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas ✨",
+      intro: "Cosas que aprendí mientras implementaba facturación electrónica.",
+      notes: [
+        {
+          title: "1. Los documentos se convierten en estados",
+          before: "Creado\n↓\nListo",
+          beforeLabel: "Esperaba:",
+          after: "Borrador\n↓\nGenerado\n↓\nFirmado\n↓\nEnviado\n↓\nProcesando\n↓\nAceptado / Rechazado",
+          afterLabel: "La realidad se sintió más como:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Una factura. Muchas realidades posibles."
+        },
+        {
+          title: "2. La validación se convierte en arquitectura",
+          before: "Campos requeridos\n↓\nReglas de negocio\n↓\nCálculos de impuestos\n↓\nValidación de formato\n↓\nEnvío",
+          beforeLabel: "Ejemplos:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Lo que hizo que la validación se sintiera mucho más importante."
+        },
+        {
+          title: "3. Las API se volvieron parte de la contabilidad",
+          before: "ERP\n↓\nREST API\n↓\nRespuesta\n↓\nGuardar estado",
+          beforeLabel: "Comunicación simplificada:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Y de repente las decisiones del backend se volvieron decisiones de negocio. Inesperadamente estresante."
+        },
+        {
+          title: "4. XML se volvió menos aterrador",
+          before: "<invoice>\n    <total>100</total>\n</invoice>",
+          beforeLabel: "Ejemplo:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Resulta que los formatos aburridos sobreviven por una razón."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "La parte de la que nadie me advirtió",
+      paragraphs: [
+        "Una pequeña regla de negocio puede afectar:",
+        "base de datos.",
+        "backend.",
+        "frontend.",
+        "notificaciones.",
+        "reportes.",
+        "Y de repente un campo se convierte en el problema de todos."
+      ]
+    },
+    click: {
+      heading: "Cuando finalmente hizo clic ✨",
+      paragraphs: [
+        "En algún momento dejé de pensar:",
+        "\"¿Cómo genero facturas?\"",
+        "Y empecé a preguntar:",
+        "\"¿Cómo se comporta el negocio?\"",
+        "Eso lo cambió todo."
+      ]
+    },
+    personalNote: {
+      heading: "Nota personal 🌸",
+      paragraphs: [
+        "Como Aries, esperar respuestas externas se sintió profundamente irrespetuoso.",
+        "Envié la solicitud.",
+        "Por favor responde inmediatamente.",
+        "Aparentemente a los sistemas no les importa."
+      ]
+    },
+    realLesson: {
+      heading: "La lección real 💖",
+      paragraphs: [
+        "Las facturas no son PDFs.",
+        "Son flujos de trabajo.",
+        "Y honestamente—",
+        "entender las reglas de negocio se sintió más interesante de lo que esperaba."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌷",
+      items: [
+        "Los sistemas reflejan decisiones de negocio",
+        "La validación ahorra dolor",
+        "Las API son herramientas de negocio",
+        "Los estados merecen respeto",
+        "El backend cambia resultados"
+      ]
+    },
+    closing: "Siguiente entrada: Querido Diario, Por Fin Entendí SaaS, PaaS e IaaS",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Implementei Fatura Eletrônica e Aprendi Regras de Negócio Sem Querer 🌸",
+    date: "13 de Julho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Por muito tempo, a fatura eletrônica soava simples na minha cabeça.",
+    introDesc: "Gerar fatura. Enviar fatura. Pronto.",
+    introExtra: [
+      "Muito administrativo.",
+      "Muito inofensivo.",
+      "Muito incorreto.",
+      "Porque em algum momento durante a implementação…",
+      "descobri que faturas são na verdade regras disfarçadas de documentos."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Imaginei a fatura eletrônica assim:",
+        "Criar fatura → Gerar PDF → Enviar → Finalizado",
+        "Então a realidade chegou.",
+        "E de repente surgiram perguntas.",
+        "As informações do cliente são válidas?",
+        "O imposto foi calculado corretamente?",
+        "O formato é aceito?",
+        "O que acontece se o envio falhar?",
+        "O que acontece se a aprovação chegar depois?",
+        "Qual estado o documento deve ter?",
+        "Quais dados se tornam imutáveis?",
+        "E de alguma forma—",
+        "um documento se tornou arquitetura."
+      ]
+    },
+    discovery: {
+      heading: "Descoberta do dia",
+      paragraphs: [
+        "Fatura eletrônica não é realmente sobre faturas.",
+        "É sobre sincronização.",
+        "Muito simplificado:",
+        "ERP → Criação de fatura → Validação → Gerar XML → Enviar → Resposta da autoridade → Atualizar estados → Notificar usuário",
+        "E de repente—",
+        "o tempo importava."
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas ✨",
+      intro: "Coisas que aprendi enquanto implementava fatura eletrônica.",
+      notes: [
+        {
+          title: "1. Documentos se tornam estados",
+          before: "Criado\n↓\nPronto",
+          beforeLabel: "Esperava:",
+          after: "Rascunho\n↓\nGerado\n↓\nAssinado\n↓\nEnviado\n↓\nProcessando\n↓\nAceito / Rejeitado",
+          afterLabel: "A realidade pareceu mais com:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Uma fatura. Muitas realidades possíveis."
+        },
+        {
+          title: "2. Validação se torna arquitetura",
+          before: "Campos obrigatórios\n↓\nRegras de negócio\n↓\nCálculos de impostos\n↓\nValidação de formato\n↓\nEnvio",
+          beforeLabel: "Exemplos:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "O que fez a validação parecer muito mais importante."
+        },
+        {
+          title: "3. APIs se tornaram parte da contabilidade",
+          before: "ERP\n↓\nREST API\n↓\nResposta\n↓\nArmazenar status",
+          beforeLabel: "Comunicação simplificada:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "E de repente decisões de backend se tornaram decisões de negócio. Inesperadamente estressante."
+        },
+        {
+          title: "4. XML se tornou menos assustador",
+          before: "<invoice>\n    <total>100</total>\n</invoice>",
+          beforeLabel: "Exemplo:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Acontece que formatos chatos sobrevivem por um motivo."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "A parte sobre a qual ninguém me avisou",
+      paragraphs: [
+        "Uma pequena regra de negócio pode afetar:",
+        "banco de dados.",
+        "backend.",
+        "frontend.",
+        "notificações.",
+        "relatórios.",
+        "E de repente um campo se torna o problema de todos."
+      ]
+    },
+    click: {
+      heading: "Quando finalmente fez sentido ✨",
+      paragraphs: [
+        "A certa altura, parei de pensar:",
+        "\"Como eu gero faturas?\"",
+        "E comecei a perguntar:",
+        "\"Como o negócio se comporta?\"",
+        "Isso mudou tudo."
+      ]
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌸",
+      paragraphs: [
+        "Como ariana, esperar respostas externas pareceu profundamente desrespeitoso.",
+        "Enviei a solicitação.",
+        "Por favor, responda imediatamente.",
+        "Aparentemente os sistemas não se importam."
+      ]
+    },
+    realLesson: {
+      heading: "A lição real 💖",
+      paragraphs: [
+        "Faturas não são PDFs.",
+        "São fluxos de trabalho.",
+        "E honestamente—",
+        "entender regras de negócio pareceu mais interessante do que eu esperava."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌷",
+      items: [
+        "Sistemas refletem decisões de negócio",
+        "Validação economiza dor",
+        "APIs são ferramentas de negócio",
+        "Estados merecem respeito",
+        "Backend muda resultados"
+      ]
+    },
+    closing: "Próxima entrada: Querido Diário, Finalmente Entendi SaaS, PaaS e IaaS",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Notes -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.techNotes.heading}</h2>
+            <p class="tech-intro">{page.techNotes.intro}</p>
+
+            {page.techNotes.notes.map((note) => (
+              <div class="tech-note-block">
+                <h3 class="tech-note-title">{note.title}</h3>
+
+                {note.before ? (
+                  <div>
+                    {note.beforeLabel ? <p class="code-label">{note.beforeLabel}</p> : null}
+                    <pre class="code-block"><code>{note.before}</code></pre>
+                  </div>
+                ) : null}
+
+                {note.afterLabel ? <p class="code-label">{note.afterLabel}</p> : null}
+                {note.after ? (
+                  <pre class="code-block code-block--output"><code>{note.after}</code></pre>
+                ) : null}
+
+                {note.extraCode ? (
+                  <div>
+                    {note.extraLabel ? <p class="code-label">{note.extraLabel}</p> : null}
+                    <pre class="code-block"><code>{note.extraCode}</code></pre>
+                  </div>
+                ) : null}
+
+                <p class="tech-note-text">{note.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The part nobody warned me about -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.nobodyWarned.heading}</h2>
+            <div class="section-body">
+              {page.nobodyWarned.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- When it finally clicked -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.realLesson.heading}</h2>
+            <div class="section-body">
+              {page.realLesson.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* Technical Notes */
+  .tech-intro {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 2rem !important;
+  }
+
+  .tech-note-block {
+    margin-bottom: 2.5rem;
+    padding: 1.75rem 2rem;
+    background: rgba(255, 75, 145, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.1);
+    border-radius: 16px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .tech-note-block:hover {
+    background: rgba(255, 75, 145, 0.06);
+    border-color: rgba(255, 75, 145, 0.2);
+  }
+
+  .tech-note-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--rose);
+    margin: 0 0 1.25rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.15);
+  }
+
+  .code-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+    font-style: italic;
+  }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+  }
+
+  .code-block--output code {
+    color: rgba(255, 200, 130, 0.9);
+  }
+
+  .tech-note-text {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 1rem 0 0 !important;
+    line-height: 1.7;
+  }
+
+  /* Flow / Checklist list */
+  .flow-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin: 1rem 0;
+  }
+
+  .flow-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flow-arrow {
+    color: var(--rose);
+    font-size: 1.1rem;
+    margin: 4px 0 4px 18px;
+    opacity: 0.7;
+  }
+
+  .flow-pill {
+    background: rgba(255, 75, 145, 0.08);
+    border: 1px solid rgba(255, 75, 145, 0.18);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 500;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .flow-pill:hover {
+    background: rgba(255, 75, 145, 0.14);
+    border-color: rgba(255, 75, 145, 0.35);
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .tech-note-block { padding: 1.25rem 1.25rem; }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>
