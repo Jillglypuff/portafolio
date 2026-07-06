@@ -377,11 +377,9 @@ const content = {
 
 const rawPage = content[lang] || content.es;
 
-// Obtener fecha actual en formato YYYY-MM-DD
 const today = new Date();
 const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-// Filtrar borradores que ya alcanzaron su fecha de publicación
 const publishedDrafts = rawPage.drafts
   .filter(d => d.publishDate && d.publishDate <= todayStr)
   .map(d => ({
@@ -394,9 +392,7 @@ const publishedDrafts = rawPage.drafts
 
 const page = {
   ...rawPage,
-  // Agregar borradores publicados al inicio de la lista de entradas publicadas, ordenadas de más reciente a más antigua
   entries: [...publishedDrafts, ...rawPage.entries].sort((a, b) => parseInt(b.number, 10) - parseInt(a.number, 10)),
-  // Dejar en drafts únicamente aquellos que no tienen fecha o su fecha es futura
   drafts: rawPage.drafts.filter(d => !d.publishDate || d.publishDate > todayStr)
 };
 ---
@@ -439,7 +435,7 @@ const page = {
         </div>
         <div class="upcoming-list">
           {page.drafts.map((draft) => (
-            <div class="upcoming-item">
+            <div class="upcoming-item" data-publish-date={draft.publishDate} data-href={draft.href} data-number={draft.number} data-short-title={draft.shortTitle}>
               <div class="upcoming-bullet"></div>
               <div class="upcoming-info">
                 <h4 class="upcoming-item-title">{draft.title}</h4>
@@ -465,12 +461,22 @@ const page = {
         <div class="carousel-wrapper">
           <div class="carousel-track" id="entriesCarousel">
             {page.entries.map((entry, idx) => (
-              <div class="carousel-slide" data-index={idx}>
+              <div class="carousel-slide" data-index={idx} data-number={entry.number}>
                 <div class="carousel-card">
                   <div class="entry-number">{entry.number}</div>
                   <h4 class="carousel-card-title">{entry.title}</h4>
                   <p class="carousel-card-desc">{entry.desc}</p>
                   <a href={`/${lang}/${entry.href}/`} class="entry-read-link">{page.readMore}</a>
+                </div>
+              </div>
+            ))}
+            {page.drafts.filter(d => d.publishDate).map((draft, idx) => (
+              <div class="carousel-slide" data-index={page.entries.length + idx} data-number={draft.number} data-publish-date={draft.publishDate} style="display:none">
+                <div class="carousel-card">
+                  <div class="entry-number">{draft.number}</div>
+                  <h4 class="carousel-card-title">{draft.title}</h4>
+                  <p class="carousel-card-desc">{draft.desc}</p>
+                  <a href={`/${lang}/${draft.href}/`} class="entry-read-link">{page.readMore}</a>
                 </div>
               </div>
             ))}
@@ -875,25 +881,73 @@ const page = {
 </style>
 
 <script>
-  function setupCarousel() {
-    const track = document.getElementById('entriesCarousel');
+  function todayStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function publishDrafts() {
+    var section = document.getElementById('blog');
+    if (!section) return;
+    var track = document.getElementById('entriesCarousel');
     if (!track) return;
 
-    const slides = track.querySelectorAll('.carousel-slide');
-    const wrapper = track.parentElement;
-    const prevBtn = document.querySelector('.carousel-prev');
-    const nextBtn = document.querySelector('.carousel-next');
+    var today = todayStr();
+    var upcomingItems = section.querySelectorAll('.upcoming-item');
+    var hasNew = false;
 
-    if (slides.length === 0) return;
+    upcomingItems.forEach(function (item) {
+      var pubDate = item.getAttribute('data-publish-date');
+      if (pubDate && pubDate <= today) {
+        var num = item.getAttribute('data-number');
+        item.remove();
+        hasNew = true;
 
-    const perPage = 2;
-    const totalPages = Math.ceil(slides.length / perPage);
-    let currentPage = 0;
+        var slide = track.querySelector('.carousel-slide[data-number="' + num + '"]');
+        if (slide) {
+          slide.style.display = '';
+          slide.removeAttribute('data-publish-date');
+        }
+      }
+    });
+
+    if (!hasNew) return;
+
+    var slides = Array.from(track.querySelectorAll('.carousel-slide'));
+    slides.sort(function (a, b) {
+      return parseInt(b.getAttribute('data-number'), 10) - parseInt(a.getAttribute('data-number'), 10);
+    });
+
+    slides.forEach(function (slide, idx) {
+      slide.setAttribute('data-index', idx);
+      track.appendChild(slide);
+    });
+
+    setupCarousel();
+  }
+
+  function setupCarousel() {
+    var track = document.getElementById('entriesCarousel');
+    if (!track) return;
+
+    var visibleSlides = track.querySelectorAll('.carousel-slide:not([style*="display:none"])');
+    var wrapper = track.parentElement;
+    var prevBtn = document.querySelector('.carousel-prev');
+    var nextBtn = document.querySelector('.carousel-next');
+
+    if (visibleSlides.length === 0) return;
+
+    var perPage = 2;
+    var totalPages = Math.ceil(visibleSlides.length / perPage);
+    var currentPage = 0;
 
     if (totalPages <= 1) {
       if (prevBtn) prevBtn.style.display = 'none';
       if (nextBtn) nextBtn.style.display = 'none';
       return;
+    } else {
+      if (prevBtn) prevBtn.style.display = '';
+      if (nextBtn) nextBtn.style.display = '';
     }
 
     function goToPage(page) {
@@ -905,18 +959,22 @@ const page = {
     }
 
     if (prevBtn) {
-      const newPrev = prevBtn.cloneNode(true);
+      var newPrev = prevBtn.cloneNode(true);
       prevBtn.parentNode.replaceChild(newPrev, prevBtn);
       newPrev.addEventListener('click', function () { goToPage(currentPage - 1); });
     }
 
     if (nextBtn) {
-      const newNext = nextBtn.cloneNode(true);
+      var newNext = nextBtn.cloneNode(true);
       nextBtn.parentNode.replaceChild(newNext, nextBtn);
       newNext.addEventListener('click', function () { goToPage(currentPage + 1); });
     }
   }
 
-  document.addEventListener('astro:page-load', setupCarousel);
+  document.addEventListener('astro:page-load', function () {
+    publishDrafts();
+    setupCarousel();
+  });
+  publishDrafts();
   setupCarousel();
 </script>
