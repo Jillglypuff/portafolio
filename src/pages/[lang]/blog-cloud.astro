@@ -1,0 +1,988 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, I Finally Understood SaaS, PaaS, and IaaS 🌸",
+    date: "July 20, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "I thought cloud computing was just \"someone else's computer.\"",
+    introDesc: "Turns out, it's really about deciding what you want to manage—and what you don't.",
+    introExtra: [
+      "Cloud computing used to sound like one of those topics everyone casually understood except me.",
+      "People would say things like:",
+      "\"We'll deploy it to the cloud.\"",
+      "Or: \"We'll use a PaaS.\"",
+      "Everyone nodded.",
+      "I nodded too.",
+      "Did I fully understand the difference?",
+      "Absolutely not."
+    ],
+    firstAssumption: {
+      heading: "My first misconception",
+      paragraphs: [
+        "In my head, cloud services looked something like this:",
+        "Write code → Deploy → Internet magic ✨ → Application is online",
+        "It felt simple.",
+        "Until I started deploying my own projects and realized that someone, somewhere, is responsible for much more than just running the application.",
+        "Servers. Operating systems. Networking. Security. Scaling. Monitoring. Backups.",
+        "And suddenly those three acronyms started making a lot more sense."
+      ]
+    },
+    discovery: {
+      heading: "Three layers, three different responsibilities",
+      paragraphs: [
+        "One of the easiest ways to understand cloud services is by asking:",
+        "Who is responsible for what?",
+        "The more responsibility the provider takes, the less infrastructure you need to manage."
+      ]
+    },
+    techNotes: {
+      heading: "Technical Notes ✨",
+      intro: "Things I learned while researching cloud services.",
+      notes: [
+        {
+          title: "1. IaaS — Infrastructure as a Service",
+          before: "You manage:\n✔ Operating System\n✔ Runtime\n✔ Application\n✔ Database\n✔ Security\n\nProvider manages:\n✔ Physical hardware\n✔ Networking\n✔ Virtualization",
+          beforeLabel: "Typical responsibilities:",
+          after: null,
+          afterLabel: null,
+          extraCode: "Amazon EC2\nMicrosoft Azure Virtual Machines\nGoogle Compute Engine\nDigitalOcean Droplets",
+          extraLabel: "Common providers:",
+          note: "IaaS offers maximum flexibility... but also maximum responsibility."
+        },
+        {
+          title: "2. PaaS — Platform as a Service",
+          before: "Push code\n↓\nPlatform builds application\n↓\nDeploy\n↓\nApplication is online",
+          beforeLabel: "Typical workflow:",
+          after: "Vercel\nRender\nRailway\nHeroku",
+          afterLabel: "Examples:",
+          extraCode: null,
+          extraLabel: null,
+          note: "This is exactly why I enjoy deploying my portfolio on Vercel. I don't need to configure Linux. I don't need to install Node. I don't need to worry about web servers. I simply focus on building the application."
+        },
+        {
+          title: "3. SaaS — Software as a Service",
+          before: null,
+          beforeLabel: null,
+          after: "GitHub\nNotion\nFigma\nSlack\nGoogle Docs\nCanva",
+          afterLabel: "Examples:",
+          extraCode: null,
+          extraLabel: null,
+          note: "This one is actually the easiest. You don't build the software. You simply use it. The provider manages everything. You only need an account."
+        },
+        {
+          title: "4. Real examples from my own projects",
+          before: "Vue\n↓\nVercel (PaaS)\n↓\nCustom Domain",
+          beforeLabel: "While building my portfolio, my stack looked something like this:",
+          after: "Figma\n\nSupabase",
+          afterLabel: "For designing interfaces / For storing project data:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Supabase is interesting because it provides multiple managed services, including PostgreSQL databases, authentication, storage, and APIs. It allows developers to focus more on application logic instead of managing infrastructure."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "Visualizing the difference",
+      paragraphs: [
+        "SaaS — You use software",
+        "↓",
+        "PaaS — You build software",
+        "↓",
+        "IaaS — You build and manage infrastructure",
+        "The lower you go...",
+        "the more control you gain.",
+        "the more responsibility you accept."
+      ]
+    },
+    click: {
+      heading: "Why does this matter? ✨",
+      paragraphs: [
+        "Understanding these concepts changes how you think about architecture.",
+        "Instead of asking: \"Which cloud service should I use?\"",
+        "You start asking:",
+        "How much control do I need?",
+        "How much maintenance do I want?",
+        "How much time do I want to spend managing servers?",
+        "Can I let someone else handle the infrastructure?",
+        "Those questions usually matter more than the technology itself."
+      ]
+    },
+    personalNote: {
+      heading: "Personal note 🌷",
+      paragraphs: [
+        "As an Aries, discovering that someone else could manage the servers for me felt like excellent news.",
+        "I enjoy building applications.",
+        "I don't necessarily dream about configuring Linux at 2 a.m.",
+        "Maybe one day.",
+        "Not today."
+      ]
+    },
+    realLesson: {
+      heading: "Technical takeaway 🌸",
+      paragraphs: [
+        "There isn't a \"best\" option.",
+        "Each model solves different problems.",
+        "SaaS: Using software without managing infrastructure.",
+        "PaaS: Developing and deploying applications quickly.",
+        "IaaS: Full infrastructure control and custom environments.",
+        "Choosing between them is an architectural decision, not just a technical one."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "Cloud computing isn't one thing—it's a collection of service models",
+        "More control usually means more responsibility",
+        "PaaS lets me focus on building instead of maintaining infrastructure",
+        "SaaS powers many of the tools I already use every day",
+        "Good architecture starts with understanding trade-offs"
+      ]
+    },
+    closing: "Next entry: Dear Diary, Code for the People 🌸",
+    closingDesc: "A short film about WordPress made me think less about software... and more about the kind of internet we're building together.",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Por Fin Entendí SaaS, PaaS e IaaS 🌸",
+    date: "20 de Julio, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Pensé que la computación en la nube era solo \"la computación de otra persona\".",
+    introDesc: "Resulta que realmente se trata de decidir qué quieres gestionar—y qué no.",
+    introExtra: [
+      "La computación en la nube solía sonar como uno de esos temas que todos entendían casualmente excepto yo.",
+      "La gente decía cosas como:",
+      "\"Lo desplegaremos en la nube.\"",
+      "O: \"Usaremos un PaaS.\"",
+      "Todos asintieron.",
+      "Yo también asentí.",
+      "¿Entendía completamente la diferencia?",
+      "Absolutamente no."
+    ],
+    firstAssumption: {
+      heading: "Mi primera confusión",
+      paragraphs: [
+        "En mi cabeza, los servicios en la nube se veían algo así:",
+        "Escribir código → Desplegar → Magia de internet ✨ → La aplicación está en línea",
+        "Se sentía simple.",
+        "Hasta que empecé a desplegar mis propios proyectos y me di cuenta de que alguien, en algún lugar, es responsable de mucho más que solo ejecutar la aplicación.",
+        "Servidores. Sistemas operativos. Redes. Seguridad. Escalabilidad. Monitoreo. Copias de seguridad.",
+        "Y de repente esas tres siglas empezaron a tener mucho más sentido."
+      ]
+    },
+    discovery: {
+      heading: "Tres capas, tres responsabilidades diferentes",
+      paragraphs: [
+        "Una de las formas más fáciles de entender los servicios en la nube es preguntando:",
+        "¿Quién es responsable de qué?",
+        "Cuanta más responsabilidad asume el proveedor, menos infraestructura necesitas gestionar."
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas ✨",
+      intro: "Cosas que aprendí mientras investigaba los servicios en la nube.",
+      notes: [
+        {
+          title: "1. IaaS — Infraestructura como Servicio",
+          before: "Tú gestionas:\n✔ Sistema Operativo\n✔ Tiempo de ejecución\n✔ Aplicación\n✔ Base de datos\n✔ Seguridad\n\nEl proveedor gestiona:\n✔ Hardware físico\n✔ Redes\n✔ Virtualización",
+          beforeLabel: "Responsabilidades típicas:",
+          after: null,
+          afterLabel: null,
+          extraCode: "Amazon EC2\nMicrosoft Azure Virtual Machines\nGoogle Compute Engine\nDigitalOcean Droplets",
+          extraLabel: "Proveedores comunes:",
+          note: "IaaS ofrece máxima flexibilidad... pero también máxima responsabilidad."
+        },
+        {
+          title: "2. PaaS — Plataforma como Servicio",
+          before: "Enviar código\n↓\nLa plataforma construye la aplicación\n↓\nDesplegar\n↓\nLa aplicación está en línea",
+          beforeLabel: "Flujo de trabajo típico:",
+          after: "Vercel\nRender\nRailway\nHeroku",
+          afterLabel: "Ejemplos:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Esto es exactamente por qué disfruto desplegar mi portafolio en Vercel. No necesito configurar Linux. No necesito instalar Node. No necesito preocuparme por servidores web. Simplemente me enfoco en construir la aplicación."
+        },
+        {
+          title: "3. SaaS — Software como Servicio",
+          before: null,
+          beforeLabel: null,
+          after: "GitHub\nNotion\nFigma\nSlack\nGoogle Docs\nCanva",
+          afterLabel: "Ejemplos:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Este en realidad es el más fácil. No construyes el software. Simplemente lo usas. El proveedor gestiona todo. Solo necesitas una cuenta."
+        },
+        {
+          title: "4. Ejemplos reales de mis propios proyectos",
+          before: "Vue\n↓\nVercel (PaaS)\n↓\nDominio personalizado",
+          beforeLabel: "Mientras construía mi portafolio, mi stack se veía algo así:",
+          after: "Figma\n\nSupabase",
+          afterLabel: "Para diseñar interfaces / Para almacenar datos del proyecto:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Supabase es interesante porque ofrece múltiples servicios gestionados, incluyendo bases de datos PostgreSQL, autenticación, almacenamiento y APIs. Permite a los desarrolladores enfocarse más en la lógica de la aplicación en lugar de gestionar infraestructura."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "Visualizando la diferencia",
+      paragraphs: [
+        "SaaS — Usas software",
+        "↓",
+        "PaaS — Construyes software",
+        "↓",
+        "IaaS — Construyes y gestionas infraestructura",
+        "Más bajo vas...",
+        "más control obtienes.",
+        "más responsabilidad aceptas."
+      ]
+    },
+    click: {
+      heading: "¿Por qué importa esto? ✨",
+      paragraphs: [
+        "Entender estos conceptos cambia la forma en que piensas sobre la arquitectura.",
+        "En lugar de preguntar: \"¿Qué servicio en la nube debería usar?\"",
+        "Empiezas a preguntar:",
+        "¿Cuánto control necesito?",
+        "¿Cuánto mantenimiento quiero?",
+        "¿Cuánto tiempo quiero gastar gestionando servidores?",
+        "¿Puedo dejar que alguien más maneje la infraestructura?",
+        "Esas preguntas generalmente importan más que la tecnología en sí."
+      ]
+    },
+    personalNote: {
+      heading: "Nota personal 🌷",
+      paragraphs: [
+        "Como Aries, descubrir que alguien más podía gestionar los servidores por mí fue excelentísima noticia.",
+        "Disfruto construir aplicaciones.",
+        "No sueño necesariamente con configurar Linux a las 2 a.m.",
+        "Quizás algún día.",
+        "Hoy no."
+      ]
+    },
+    realLesson: {
+      heading: "Resumen técnico 🌸",
+      paragraphs: [
+        "No existe una opción \"mejor\".",
+        "Cada modelo resuelve diferentes problemas.",
+        "SaaS: Usar software sin gestionar infraestructura.",
+        "PaaS: Desarrollar y desplegar aplicaciones rápidamente.",
+        "IaaS: Control total de infraestructura y entornos personalizados.",
+        "Elegir entre ellos es una decisión arquitectónica, no solo técnica."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "La computación en la nube no es una sola cosa—es una colección de modelos de servicio",
+        "Más control generalmente significa más responsabilidad",
+        "PaaS me permite enfocarme en construir en lugar de mantener infraestructura",
+        "SaaS alimenta muchas de las herramientas que ya uso todos los días",
+        "La buena arquitectura comienza con entender compensaciones"
+      ]
+    },
+    closing: "Siguiente entrada: Querido Diario, Code for the People 🌸",
+    closingDesc: "Un cortometraje sobre WordPress me hizo pensar menos en software... y más en el tipo de internet que estamos construyendo juntos.",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Finalmente Entendi SaaS, PaaS e IaaS 🌸",
+    date: "20 de Julho, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Achei que computação em nuvem era apenas \"o computador de outra pessoa\".",
+    introDesc: "Acontece que é realmente sobre decidir o que você quer gerenciar—e o que não.",
+    introExtra: [
+      "Computação em nuvem costumava soar como um daqueles assuntos que todos entendiam casualmente, exceto eu.",
+      "As pessoas diziam coisas como:",
+      "\"Vamos implantar na nuvem.\"",
+      "Ou: \"Vamos usar um PaaS.\"",
+      "Todos acenaram.",
+      "Eu também acenei.",
+      "Eu entendia completamente a diferença?",
+      "Absolutamente não."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira confusão",
+      paragraphs: [
+        "Na minha cabeça, serviços em nuvem se pareciam com isso:",
+        "Escrever código → Implantar → Magia da internet ✨ → Aplicação está online",
+        "Parecia simples.",
+        "Até que comecei a implantar meus próprios projetos e percebi que alguém, em algum lugar, é responsável por muito mais do que apenas executar a aplicação.",
+        "Servidores. Sistemas operacionais. Redes. Segurança. Escalabilidade. Monitoramento. Backups.",
+        "E de repente aquelas três siglas começaram a fazer muito mais sentido."
+      ]
+    },
+    discovery: {
+      heading: "Três camadas, três responsabilidades diferentes",
+      paragraphs: [
+        "Uma das formas mais fáceis de entender serviços em nuvem é perguntando:",
+        "Quem é responsável pelo quê?",
+        "Quanto mais responsabilidade o provedor assume, menos infraestrutura você precisa gerenciar."
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas ✨",
+      intro: "Coisas que aprendi enquanto pesquisava serviços em nuvem.",
+      notes: [
+        {
+          title: "1. IaaS — Infraestrutura como Serviço",
+          before: "Você gerencia:\n✔ Sistema Operacional\n✔ Tempo de execução\n✔ Aplicação\n✔ Banco de dados\n✔ Segurança\n\nO provedor gerencia:\n✔ Hardware físico\n✔ Redes\n✔ Virtualização",
+          beforeLabel: "Responsabilidades típicas:",
+          after: null,
+          afterLabel: null,
+          extraCode: "Amazon EC2\nMicrosoft Azure Virtual Machines\nGoogle Compute Engine\nDigitalOcean Droplets",
+          extraLabel: "Provedores comuns:",
+          note: "IaaS oferece flexibilidade máxima... mas também responsabilidade máxima."
+        },
+        {
+          title: "2. PaaS — Plataforma como Serviço",
+          before: "Enviar código\n↓\nA plataforma constrói a aplicação\n↓\nImplantar\n↓\nAplicação está online",
+          beforeLabel: "Fluxo de trabalho típico:",
+          after: "Vercel\nRender\nRailway\nHeroku",
+          afterLabel: "Exemplos:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Isso é exatamente por que gosto de implantar meu portfólio na Vercel. Não preciso configurar Linux. Não preciso instalar Node. Não preciso me preocupar com servidores web. Simplesmente me concentro em construir a aplicação."
+        },
+        {
+          title: "3. SaaS — Software como Serviço",
+          before: null,
+          beforeLabel: null,
+          after: "GitHub\nNotion\nFigma\nSlack\nGoogle Docs\nCanva",
+          afterLabel: "Exemplos:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Este na verdade é o mais fácil. Você não constrói o software. Simplesmente usa. O provedor gerencia tudo. Você só precisa de uma conta."
+        },
+        {
+          title: "4. Exemplos reais dos meus próprios projetos",
+          before: "Vue\n↓\nVercel (PaaS)\n↓\nDomínio personalizado",
+          beforeLabel: "Enquanto construía meu portfólio, meu stack parecia algo assim:",
+          after: "Figma\n\nSupabase",
+          afterLabel: "Para projetar interfaces / Para armazenar dados do projeto:",
+          extraCode: null,
+          extraLabel: null,
+          note: "Supabase é interessante porque fornece múltiplos serviços gerenciados, incluindo bancos de dados PostgreSQL, autenticação, armazenamento e APIs. Permite que desenvolvedores se concentrem mais na lógica da aplicação em vez de gerenciar infraestrutura."
+        }
+      ]
+    },
+    nobodyWarned: {
+      heading: "Visualizando a diferença",
+      paragraphs: [
+        "SaaS — Você usa software",
+        "↓",
+        "PaaS — Você constrói software",
+        "↓",
+        "IaaS — Você constrói e gerencia infraestrutura",
+        "Quanto mais fundo você vai...",
+        "mais controle você ganha.",
+        "mais responsabilidade você aceita."
+      ]
+    },
+    click: {
+      heading: "Por que isso importa? ✨",
+      paragraphs: [
+        "Entender esses conceitos muda a forma como você pensa sobre arquitetura.",
+        "Em vez de perguntar: \"Qual serviço em nuvem devo usar?\"",
+        "Você começa a perguntar:",
+        "Quanto controle eu preciso?",
+        "Quanta manutenção eu quero?",
+        "Quanto tempo eu quero gastar gerenciando servidores?",
+        "Posso deixar outra pessoa cuidar da infraestrutura?",
+        "Essas perguntas geralmente importam mais do que a tecnologia em si."
+      ]
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌷",
+      paragraphs: [
+        "Como ariana, descobrir que outra pessoa poderia gerenciar os servidores para mim foi excelentíssima notícia.",
+        "Gosto de construir aplicações.",
+        "Não sonho necessariamente em configurar Linux às 2h da manhã.",
+        "Talvez algum dia.",
+        "Hoje não."
+      ]
+    },
+    realLesson: {
+      heading: "Resumo técnico 🌸",
+      paragraphs: [
+        "Não existe uma opção \"melhor\".",
+        "Cada modelo resolve problemas diferentes.",
+        "SaaS: Usar software sem gerenciar infraestrutura.",
+        "PaaS: Desenvolver e implantar aplicações rapidamente.",
+        "IaaS: Controle total de infraestrutura e ambientes personalizados.",
+        "Escolher entre eles é uma decisão arquitetural, não apenas técnica."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "Computação em nuvem não é uma coisa só—é uma coleção de modelos de serviço",
+        "Mais controle geralmente significa mais responsabilidade",
+        "PaaS me permite focar em construir em vez de manter infraestrutura",
+        "SaaS alimenta muitas das ferramentas que já uso todos os dias",
+        "Boa arquitetura começa com entender trade-offs"
+      ]
+    },
+    closing: "Próxima entrada: Querido Diário, Code for the People 🌸",
+    closingDesc: "Um curta-metragem sobre WordPress me fez pensar menos em software... e mais no tipo de internet que estamos construindo juntos.",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first assumption -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Discovery -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Notes -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.techNotes.heading}</h2>
+            <p class="tech-intro">{page.techNotes.intro}</p>
+
+            {page.techNotes.notes.map((note) => (
+              <div class="tech-note-block">
+                <h3 class="tech-note-title">{note.title}</h3>
+
+                {note.before ? (
+                  <div>
+                    {note.beforeLabel ? <p class="code-label">{note.beforeLabel}</p> : null}
+                    <pre class="code-block"><code>{note.before}</code></pre>
+                  </div>
+                ) : null}
+
+                {note.afterLabel ? <p class="code-label">{note.afterLabel}</p> : null}
+                {note.after ? (
+                  <pre class="code-block code-block--output"><code>{note.after}</code></pre>
+                ) : null}
+
+                {note.extraCode ? (
+                  <div>
+                    {note.extraLabel ? <p class="code-label">{note.extraLabel}</p> : null}
+                    <pre class="code-block"><code>{note.extraCode}</code></pre>
+                  </div>
+                ) : null}
+
+                <p class="tech-note-text">{note.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Visualizing the difference -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.nobodyWarned.heading}</h2>
+            <div class="section-body">
+              {page.nobodyWarned.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- When it finally clicked -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.click.heading}</h2>
+            <div class="section-body">
+              {page.click.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The Real Lesson -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.realLesson.heading}</h2>
+            <div class="section-body">
+              {page.realLesson.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            {page.closingDesc ? <p class="closing-desc">{page.closingDesc}</p> : null}
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* Technical Notes */
+  .tech-intro {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 2rem !important;
+  }
+
+  .tech-note-block {
+    margin-bottom: 2.5rem;
+    padding: 1.75rem 2rem;
+    background: rgba(255, 75, 145, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.1);
+    border-radius: 16px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .tech-note-block:hover {
+    background: rgba(255, 75, 145, 0.06);
+    border-color: rgba(255, 75, 145, 0.2);
+  }
+
+  .tech-note-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--rose);
+    margin: 0 0 1.25rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.15);
+  }
+
+  .code-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+    font-style: italic;
+  }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+  }
+
+  .code-block--output code {
+    color: rgba(255, 200, 130, 0.9);
+  }
+
+  .tech-note-text {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 1rem 0 0 !important;
+    line-height: 1.7;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-desc {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+    margin-bottom: 1.5rem !important;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .tech-note-block { padding: 1.25rem 1.25rem; }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>
