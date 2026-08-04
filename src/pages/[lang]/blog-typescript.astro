@@ -1,0 +1,1073 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, TypeScript Didn't Make Me Faster 🌸",
+    date: "September 7, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "When I first heard about TypeScript... my first thought was:",
+    introDesc: "\"Why would I add types to JavaScript?\"",
+    introExtra: [
+      "JavaScript already worked.",
+      "I could build applications. Deploy them. Ship features.",
+      "Adding types felt like adding extra work.",
+      "Then I started working on larger projects.",
+      "That's when TypeScript finally made sense."
+    ],
+    firstAssumption: {
+      heading: "My first misconception",
+      paragraphs: [
+        "I thought TypeScript was another programming language. It isn't.",
+        "TypeScript is JavaScript... with superpowers.",
+        "It adds static typing, better tooling, and compile-time validation.",
+        "The browser never sees TypeScript. Eventually, it all becomes JavaScript."
+      ]
+    },
+    cheaperBugs: {
+      heading: "Bugs are cheaper before they exist",
+      paragraphs: [
+        "One of the biggest advantages of TypeScript isn't writing code. It's avoiding bad code.",
+        "Imagine a simple function that calculates totals. If someone passes a string instead of a number, JavaScript fails at runtime.",
+        "With TypeScript, your editor highlights the mistake immediately—often before you even save the file."
+      ],
+      badCallLabel: "Argument type mismatch warning in IDE:"
+    },
+    typesAreDoc: {
+      heading: "Types are documentation",
+      paragraphs: [
+        "One thing I didn't expect was how much easier code becomes to read.",
+        "When a function parameter is typed with an interface, you instantly know what fields are expected without reading the implementation.",
+        "JavaScript leaves you guessing what 'data' contains. TypeScript documents it automatically."
+      ]
+    },
+    interfaces: {
+      heading: "Interfaces became my favorite feature",
+      paragraphs: [
+        "One concept that completely changed how I organize projects was interfaces.",
+        "Instead of remembering object structures, I define them once. Now every part of the application agrees on what a User looks like. Frontend, Backend, APIs... everyone speaks the same language."
+      ]
+    },
+    generics: {
+      heading: "Generics looked terrifying...",
+      paragraphs: [
+        "...until they didn't.",
+        "The first time I saw generic type variables (<T>), it looked extremely complex. Months later, Generics became one of my favorite features.",
+        "Instead of writing multiple functions, one function can safely work with different data types while preserving type information. That's incredibly powerful."
+      ]
+    },
+    inference: {
+      heading: "Type inference is underrated",
+      paragraphs: [
+        "One thing I appreciate about TypeScript is that it doesn't force you to type everything.",
+        "Often, it already knows. If you declare a string, it infers the type automatically. The compiler does a lot of the work for you."
+      ]
+    },
+    refactoring: {
+      heading: "Refactoring becomes less scary",
+      paragraphs: [
+        "One thing I noticed after using TypeScript for a while... I became less afraid of changing code.",
+        "Rename a property, move a function, or split a module, and the compiler points out everything that needs to be updated. It's like having another developer reviewing my work in real time."
+      ]
+    },
+    notJustTypes: {
+      heading: "TypeScript isn't just about types",
+      paragraphs: [
+        "Some of my favorite features have nothing to do with typing. Good tooling makes development much more enjoyable:"
+      ],
+      list: [
+        "Better IntelliSense",
+        "Smarter autocomplete",
+        "Safer refactoring",
+        "Better navigation",
+        "Earlier error detection"
+      ]
+    },
+    whereItShines: {
+      heading: "Where TypeScript really shines",
+      paragraphs: [
+        "Small projects? JavaScript is usually enough.",
+        "Large applications? That's where TypeScript starts paying for itself.",
+        "With hundreds of files, multiple developers, shared components, and reusable APIs, static typing becomes less about convenience and more about maintainability."
+      ]
+    },
+    takeaway: {
+      heading: "Technical takeaway 🌸",
+      paragraphs: [
+        "Some TypeScript concepts every developer should learn:"
+      ],
+      items: [
+        "Primitive Types",
+        "Interfaces",
+        "Type Aliases",
+        "Enums",
+        "Generics",
+        "Utility Types",
+        "Union Types",
+        "Type Inference",
+        "Optional Properties",
+        "Narrowing"
+      ],
+      closing: "Learning these concepts gradually is much easier than trying to learn everything at once."
+    },
+    personalNote: {
+      heading: "Personal note 🌷",
+      paragraphs: [
+        "I don't think TypeScript makes someone a better developer. Good architecture, good naming, and good communication still matter.",
+        "But TypeScript removes uncertainty. Instead of guessing what a variable should contain, the code tells you.",
+        "Instead of finding bugs in production, you find them while writing the feature. And honestly... I sleep a little better because of that."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "TypeScript is JavaScript, not a replacement for it.",
+        "Types are documentation.",
+        "Interfaces improve communication across a project.",
+        "Generics are less scary than they look.",
+        "Good tooling makes development more enjoyable.",
+        "Catching bugs during development is always cheaper than finding them in production."
+      ]
+    },
+    closing: "Next entry: Google Maps Is More Than Just a Map 🌸",
+    closingSign: "Understanding the APIs that power navigation, places, routing, and location-based applications.",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, TypeScript No Me Hizo Más Rápida 🌸",
+    date: "7 de Septiembre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Cuando escuché hablar de TypeScript por primera vez... mi primer pensamiento fue:",
+    introDesc: "\"¿Por qué agregaría tipos a JavaScript?\"",
+    introExtra: [
+      "JavaScript ya funcionaba.",
+      "Podía construir aplicaciones. Desplegarlas. Lanzar características.",
+      "Agregar tipos se sentía como agregar trabajo extra.",
+      "Luego comencé a trabajar en proyectos más grandes.",
+      "Fue entonces cuando TypeScript finalmente tuvo sentido."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Pensé que TypeScript era otro lenguaje de programación. No lo es.",
+        "TypeScript es JavaScript... con superpoderes.",
+        "Agrega tipado estático, mejores herramientas y validación en tiempo de compilación.",
+        "El navegador nunca ve TypeScript. Con el tiempo, todo se convierte en JavaScript."
+      ]
+    },
+    cheaperBugs: {
+      heading: "Los errores son más baratos antes de que existan",
+      paragraphs: [
+        "Una de las mayores ventajas de TypeScript no es escribir código. Es evitar el código defectuoso.",
+        "Imagina una función simple para calcular totales. Si alguien pasa un texto en lugar de un número, JavaScript falla en tiempo de ejecución.",
+        "Con TypeScript, tu editor resalta el error de inmediato, a menudo antes de guardar el archivo."
+      ],
+      badCallLabel: "Advertencia de discrepancia de tipo en el IDE:"
+    },
+    typesAreDoc: {
+      heading: "Los tipos son documentación",
+      paragraphs: [
+        "Una cosa que no esperaba era cuánto más fácil se vuelve leer el código.",
+        "Cuando el parámetro de una función está tipado con una interfaz, sabes al instante qué campos se esperan sin leer la implementación.",
+        "JavaScript te deja adivinando qué contiene 'data'. TypeScript lo documenta automáticamente."
+      ]
+    },
+    interfaces: {
+      heading: "Las interfaces se convirtieron en mi característica favorita",
+      paragraphs: [
+        "Un concepto que cambió por completo cómo organizo los proyectos fueron las interfaces.",
+        "En lugar de recordar las estructuras de los objetos, las defino una vez. Ahora todas las partes de la aplicación están de acuerdo en cómo se ve un Usuario. Frontend, Backend, APIs... todos hablan el mismo idioma."
+      ]
+    },
+    generics: {
+      heading: "Los genéricos parecían aterradores...",
+      paragraphs: [
+        "...hasta que dejaron de serlo.",
+        "La primera vez que vi variables de tipo genérico (<T>), parecía extremadamente complejo. Meses después, los Genéricos se convirtieron en una de mis características favoritas.",
+        "En lugar de escribir múltiples funciones, una sola función puede trabajar de manera segura con diferentes tipos de datos conservando la información del tipo. Eso es increíblemente potente."
+      ]
+    },
+    inference: {
+      heading: "La inferencia de tipos está subestimada",
+      paragraphs: [
+        "Una cosa que aprecio de TypeScript es que no te obliga a tipar todo.",
+        "A menudo, ya lo sabe. Si declaras una cadena de texto, infiere el tipo automáticamente. El compilador hace gran parte del trabajo por ti."
+      ]
+    },
+    refactoring: {
+      heading: "Refactorizar se vuelve menos aterrador",
+      paragraphs: [
+        "Una cosa que noté después de usar TypeScript por un tiempo... me volví menos temerosa de cambiar el código.",
+        "Renombra una propiedad, mueve una función o divide un módulo, y el compilador señala todo lo que necesita ser actualizado. Es como tener a otro desarrollador revisando mi trabajo en tiempo real."
+      ]
+    },
+    notJustTypes: {
+      heading: "TypeScript no es solo sobre tipos",
+      paragraphs: [
+        "Algunas de mis características favoritas no tienen nada que ver con el tipado. Las buenas herramientas hacen que el desarrollo sea mucho más agradable:"
+      ],
+      list: [
+        "Mejor IntelliSense",
+        "Autocompletado más inteligente",
+        "Refactorización más segura",
+        "Mejor navegación",
+        "Detección temprana de errores"
+      ]
+    },
+    whereItShines: {
+      heading: "Dónde brilla realmente TypeScript",
+      paragraphs: [
+        "¿Proyectos pequeños? JavaScript suele ser suficiente.",
+        "¿Aplicaciones grandes? Ahí es donde TypeScript comienza a amortizarse.",
+        "Con cientos de archivos, múltiples desarrolladores, componentes compartidos y APIs reutilizables, el tipado estático se vuelve menos una conveniencia y más una cuestión de mantenibilidad."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusión técnica 🌸",
+      paragraphs: [
+        "Algunos conceptos de TypeScript que todo desarrollador debería aprender:"
+      ],
+      items: [
+        "Tipos Primitivos",
+        "Interfaces",
+        "Alias de Tipo",
+        "Enums",
+        "Genéricos",
+        "Tipos de Utilidad",
+        "Tipos de Unión",
+        "Inferencia de Tipos",
+        "Propiedades Opcionales",
+        "Estrechamiento (Narrowing)"
+      ],
+      closing: "Aprender estos conceptos gradualmente es mucho más fácil que intentar aprender todo a la vez."
+    },
+    personalNote: {
+      heading: "Nota personal 🌷",
+      paragraphs: [
+        "No creo que TypeScript haga a alguien mejor desarrollador. La buena arquitectura, los buenos nombres y la buena comunicación siguen importando.",
+        "Pero TypeScript elimina la incertidumbre. En lugar de adivinar qué debería contener una variable, el código te lo dice.",
+        "En lugar de encontrar errores en producción, los encuentras mientras escribes la funcionalidad. Y honestamente... duermo un poco mejor gracias a eso."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "TypeScript es JavaScript, no un reemplazo.",
+        "Los tipos son documentación.",
+        "Las interfaces mejoran la comunicación en todo el proyecto.",
+        "Los genéricos son menos aterradores de lo que parecen.",
+        "Las buenas herramientas hacen que el desarrollo sea más agradable.",
+        "Detectar errores durante el desarrollo siempre es más barato que encontrarlos en producción."
+      ]
+    },
+    closing: "Siguiente entrada: Google Maps Es Más Que Un Mapa 🌸",
+    closingSign: "Comprendiendo las APIs que impulsan la navegación, lugares, rutas y aplicaciones basadas en la ubicación.",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, TypeScript Não Me Tornou Mais Rápida 🌸",
+    date: "7 de Setembro, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Quando ouvi falar do TypeScript pela primeira vez... meu primeiro pensamento foi:",
+    introDesc: "\"Por que eu adicionaria tipos ao JavaScript?\"",
+    introExtra: [
+      "O JavaScript já funcionava.",
+      "Eu podia construir aplicações. Implantá-las. Lançar recursos.",
+      "Adicionar tipos parecia adicionar trabalho extra.",
+      "Depois comecei a trabalhar em projetos maiores.",
+      "Foi aí que o TypeScript finalmente fez sentido."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Pensei que o TypeScript fosse outra linguagem de programação. Não é.",
+        "O TypeScript é JavaScript... com superpoderes.",
+        "Ele adiciona tipagem estática, melhores ferramentas e validação em tempo de compilação.",
+        "O navegador nunca vê o TypeScript. Com o tempo, tudo se torna JavaScript."
+      ]
+    },
+    cheaperBugs: {
+      heading: "Bugs são mais baratos antes de existirem",
+      paragraphs: [
+        "Uma das maiores vantagens do TypeScript não é escrever código. É evitar código defeituoso.",
+        "Imagine uma função simples para calcular totais. Se alguém passar um texto em vez de um número, o JavaScript falha em tempo de execução.",
+        "Com o TypeScript, seu editor destaca o erro imediatamente — muitas vezes antes mesmo de você salvar o arquivo."
+      ],
+      badCallLabel: "Aviso de incompatibilidade de tipo no IDE:"
+    },
+    typesAreDoc: {
+      heading: "Tipos são documentação",
+      paragraphs: [
+        "Uma coisa que eu não esperava era o quão mais fácil se torna ler o código.",
+        "Quando o parâmetro de uma função é tipado com uma interface, você sabe instantaneamente quais campos são esperados sem ler a implementação.",
+        "O JavaScript deixa você adivinhando o que 'data' contém. O TypeScript documenta automaticamente."
+      ]
+    },
+    interfaces: {
+      heading: "Interfaces se tornaram meu recurso favorito",
+      paragraphs: [
+        "Um conceito que mudou completamente a forma como organizo projetos foram as interfaces.",
+        "Em vez de lembrar das estruturas dos objetos, eu as defino uma vez. Agora todas as partes da aplicação concordam em como um Usuário se parece. Frontend, Backend, APIs... todos falam a mesma língua."
+      ]
+    },
+    generics: {
+      heading: "Genéricos pareciam assustadores...",
+      paragraphs: [
+        "...até que deixaram de ser.",
+        "A primeira vez que vi variáveis de tipo genérico (<T>), parecia extremamente complexo. Meses depois, os Genéricos se tornaram um dos meus recursos favoritos.",
+        "Em vez de escrever várias funções, uma única função pode trabalhar com segurança com diferentes tipos de dados preservando a informação do tipo. Isso é incrivelmente poderoso."
+      ]
+    },
+    inference: {
+      heading: "A inferência de tipos é subestimada",
+      paragraphs: [
+        "Uma coisa que aprecio no TypeScript é que ele não te obriga a tipar tudo.",
+        "Muitas vezes, ele já sabe. Se você declara uma string, ele infere o tipo automaticamente. O compilador faz muito do trabalho por você."
+      ]
+    },
+    refactoring: {
+      heading: "Refatorar torna-se menos assustador",
+      paragraphs: [
+        "Uma coisa que notei depois de usar o TypeScript por um tempo... fiquei com menos medo de mudar o código.",
+        "Renomeie uma propriedade, mova uma função ou divida um módulo, e o compilador aponta tudo o que precisa ser atualizado. É como ter outro desenvolvedor revisando meu trabalho em tempo real."
+      ]
+    },
+    notJustTypes: {
+      heading: "TypeScript não é apenas sobre tipos",
+      paragraphs: [
+        "Alguns dos meus recursos favoritos não têm nada a ver com tipagem. Ferramentas boas tornam o desenvolvimento muito mais agradável:"
+      ],
+      list: [
+        "Melhor IntelliSense",
+        "Autocompletar mais inteligente",
+        "Refatoração mais segura",
+        "Melhor navegação",
+        "Detecção precoce de erros"
+      ]
+    },
+    whereItShines: {
+      heading: "Onde o TypeScript realmente brilha",
+      paragraphs: [
+        "Projetos pequenos? O JavaScript costuma ser suficiente.",
+        "Aplicações grandes? É aí que o TypeScript começa a se pagar.",
+        "Com centenas de arquivos, vários desenvolvedores, componentes compartilhados e APIs reutilizáveis, a tipagem estática torna-se menos sobre conveniência e mais sobre manutenibilidade."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusão técnica 🌸",
+      paragraphs: [
+        "Alguns conceitos de TypeScript que todo desenvolvedor deveria aprender:"
+      ],
+      items: [
+        "Tipos Primitivos",
+        "Interfaces",
+        "Aliases de Tipo",
+        "Enums",
+        "Genéricos",
+        "Tipos Utilitários",
+        "Tipos de União",
+        "Inferência de Tipos",
+        "Propriedades Opcionais",
+        "Estreitamento (Narrowing)"
+      ],
+      closing: "Aprender esses conceitos gradualmente é muito mais fácil do que tentar aprender tudo de uma vez."
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌷",
+      paragraphs: [
+        "Não acho que o TypeScript torne alguém um desenvolvedor melhor. Boa arquitetura, bons nomes e boa comunicação ainda importam.",
+        "Mas o TypeScript remove a incerteza. Em vez de adivinhar o que uma variável deve conter, o código te diz.",
+        "Em vez de encontrar bugs em produção, você os encontra enquanto escreve o recurso. E honestamente... durmo um pouco melhor por causa disso."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "TypeScript é JavaScript, não um substituto.",
+        "Tipos são documentação.",
+        "Interfaces melhoram a comunicação em todo o projeto.",
+        "Genéricos são menos assustadores do que parecem.",
+        "Ferramentas boas tornam o desenvolvimento mais agradável.",
+        "Pegar bugs durante o desenvolvimento é sempre mais barato do que encontrá-los na produção."
+      ]
+    },
+    closing: "Próxima entrada: Google Maps É Mais Do Que Um Mapa 🌸",
+    closingSign: "Compreendendo as APIs que alimentam a navegação, locais, rotas e aplicativos baseados em localização.",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first misconception -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para, idx) => (
+                <p>{para}</p>
+              ))}
+              
+              <!-- Compilation Flow Graphic -->
+              <div class="compilation-flow">
+                <div class="flow-step">
+                  <span class="step-icon">TS</span>
+                  <span class="step-label">TypeScript</span>
+                </div>
+                <div class="flow-connector">→</div>
+                <div class="flow-step check-step">
+                  <span class="step-icon">⚙</span>
+                  <span class="step-label">{lang === 'en' ? 'Type Checking' : lang === 'pt' ? 'Checagem de Tipos' : 'Chequeo de Tipos'}</span>
+                </div>
+                <div class="flow-connector">→</div>
+                <div class="flow-step js-step">
+                  <span class="step-icon">JS</span>
+                  <span class="step-label">JavaScript</span>
+                </div>
+                <div class="flow-connector">→</div>
+                <div class="flow-step browser-step">
+                  <span class="step-icon">🌐</span>
+                  <span class="step-label">{lang === 'en' ? 'Browser' : lang === 'pt' ? 'Navegador' : 'Navegador'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Bugs are cheaper -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.cheaperBugs.heading}</h2>
+            {page.cheaperBugs.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Type checking function code error visualization -->
+            <p class="code-label">{page.cheaperBugs.badCallLabel}</p>
+            <pre class="code-block error-code"><code>{`function calculateTotal(price: number, tax: number) {
+    return price + tax;
+}
+
+// ❌ Type checking error in editor:
+calculateTotal("100", 13);
+//             ~~~~~
+// Error: Argument of type 'string' is not assignable 
+// to parameter of type 'number'.`}</code></pre>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Types are documentation -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.typesAreDoc.heading}</h2>
+            {page.typesAreDoc.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Interfaces -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.interfaces.heading}</h2>
+            {page.interfaces.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <pre class="code-block code-block-success"><code>{`interface User {
+    id: number;
+    name: string;
+    email: string;
+}`}</code></pre>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Generics -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.generics.heading}</h2>
+            {page.generics.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <pre class="code-block"><code>{`function identity<T>(value: T): T {
+    return value;
+}`}</code></pre>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Inference -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.inference.heading}</h2>
+            {page.inference.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <pre class="code-block"><code>{`const name = "Jill"; // Infers name: string`}</code></pre>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Refactoring -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.refactoring.heading}</h2>
+            {page.refactoring.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Tooling -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.notJustTypes.heading}</h2>
+            {page.notJustTypes.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <ul class="remember-list" style="margin: 1.5rem 0;">
+              {page.notJustTypes.list.map((item) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">✔</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Where it shines -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whereItShines.heading}</h2>
+            {page.whereItShines.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Takeaway -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.takeaway.heading}</h2>
+            {page.takeaway.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <ul class="remember-list" style="margin: 1.5rem 0;">
+              {page.takeaway.items.map((item) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{page.takeaway.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal Note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* Compilation Flow Graphic */
+  .compilation-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 2rem 0;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 20px;
+    padding: 2rem;
+  }
+
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 110px;
+    text-align: center;
+  }
+
+  .step-icon {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 75, 145, 0.15);
+    border: 1px solid rgba(255, 75, 145, 0.3);
+    color: var(--rose);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(255, 75, 145, 0.2);
+  }
+
+  .check-step .step-icon {
+    background: rgba(174, 115, 237, 0.15);
+    border-color: rgba(174, 115, 237, 0.3);
+    color: #ba68c8;
+    box-shadow: 0 0 10px rgba(186, 104, 200, 0.2);
+  }
+
+  .js-step .step-icon {
+    background: rgba(255, 183, 77, 0.15);
+    border-color: rgba(255, 183, 77, 0.3);
+    color: #ffb74d;
+    box-shadow: 0 0 10px rgba(255, 183, 77, 0.2);
+  }
+
+  .browser-step .step-icon {
+    background: rgba(79, 195, 247, 0.15);
+    border-color: rgba(79, 195, 247, 0.3);
+    color: #4fc3f7;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.2);
+  }
+
+  .step-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .flow-connector {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    opacity: 0.5;
+  }
+
+  /* Code blocks styles */
+  .code-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+    font-style: italic;
+  }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .error-code {
+    border-left: 3px solid #e57373;
+    border-color: rgba(229, 115, 115, 0.3);
+    background: rgba(229, 115, 115, 0.01);
+  }
+
+  .code-block-success {
+    border-left: 3px solid #81c784;
+    border-color: rgba(129, 199, 132, 0.3);
+    background: rgba(129, 199, 132, 0.01);
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .question-item {
+    background: rgba(255, 255, 255, 0.01);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .question-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .question-item .remember-dot {
+    color: var(--text-muted);
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .compilation-flow {
+      flex-direction: column;
+      gap: 12px;
+      padding: 1.5rem;
+    }
+    .flow-connector {
+      transform: rotate(90deg);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>

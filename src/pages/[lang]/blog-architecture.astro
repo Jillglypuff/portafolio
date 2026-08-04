@@ -1,0 +1,1220 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Architecture Before Code 🌸",
+    date: "August 10, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "Open the IDE. Create a project. Start writing code. Become a software developer.",
+    introDesc: "Simple. Very cinematic. Very inaccurate.",
+    introExtra: [
+      "The more projects I've worked on...",
+      "the more I've realized something.",
+      "Writing code is usually one of the last steps."
+    ],
+    firstAssumption: {
+      heading: "My first misconception",
+      paragraphs: [
+        "When I started learning software development, I imagined experienced developers spent most of their day writing code.",
+        "Typing quickly. Switching between terminals. Building features non-stop.",
+        "Reality looks very different.",
+        "A large part of software development is actually:",
+        "🌸 Thinking\n🌸 Reading\n🌸 Asking questions\n🌸 Changing decisions\n🌸 Reviewing requirements\n🌸 Designing",
+        "And suddenly... two hours have passed, and you've written twelve lines of code."
+      ]
+    },
+    questionsSection: {
+      heading: "Software begins with questions",
+      paragraphs: [
+        "Before choosing a framework. Before creating a database. Before writing an API.",
+        "Someone has to answer questions like:"
+      ],
+      list: [
+        "Who is going to use this?",
+        "What problem are we solving?",
+        "What's the smallest version we can build?",
+        "What happens if something fails?",
+        "What information do we actually need?",
+        "Does it need authentication?",
+        "Will it support multiple languages?",
+        "Will it eventually become a mobile application?"
+      ],
+      closing: "Sometimes... one answer changes the entire architecture."
+    },
+    invisibleArchitecture: {
+      heading: "The invisible architecture",
+      paragraphs: [
+        "Most users only see the final interface. Developers know that's just the surface.",
+        "A typical application usually starts looking more like this:"
+      ],
+      closing: "Code is only one part of that journey."
+    },
+    designing: {
+      heading: "Designing before developing",
+      paragraphs: [
+        "One thing I've started appreciating much more is designing the application before building it.",
+        "Sometimes that means wireframes, user flows, storyboards, or Figma prototypes.",
+        "The goal isn't to make something beautiful. It's to answer questions before they become bugs.",
+        "Moving a button in Figma takes seconds. Moving an entire workflow after development can take days."
+      ]
+    },
+    databases: {
+      heading: "Databases deserve more respect",
+      paragraphs: [
+        "One lesson I've learned is that changing a database is rarely \"just adding one column.\""
+      ],
+      schemaLabel: "A simple structure might start like this:",
+      schemaQuestionsLabel: "Looks simple. Until someone asks:",
+      questions: [
+        "\"Can one order have multiple shipments?\"",
+        "\"Can a user have multiple billing addresses?\""
+      ],
+      closing: "Small business decisions often become database decisions. And database decisions tend to stay with the project for a long time."
+    },
+    apis: {
+      heading: "APIs are contracts",
+      paragraphs: [
+        "One thing I enjoy about backend development is designing APIs.",
+        "Not because writing endpoints is difficult. But because APIs define how every part of the application communicates.",
+        "Sometimes the conversation starts before a single endpoint exists."
+      ],
+      closing: "Changing one endpoint later can affect: Mobile applications, Frontend, Integrations, Documentation, Automated tests.",
+      extraClosing: "An API isn't just code. It's a contract."
+    },
+    thenCode: {
+      heading: "Then comes the code",
+      paragraphs: [
+        "Only after understanding the problem does development really begin.",
+        "The framework matters. The language matters. But they matter less than the decisions made beforehand.",
+        "Laravel. Vue. React. Node.js. React Native.",
+        "They're all tools.",
+        "Good architecture makes those tools easier to use. Poor architecture makes every framework feel difficult."
+      ]
+    },
+    deployment: {
+      heading: "Deployment is not the finish line",
+      paragraphs: [
+        "Many people imagine deployment as the last step. In reality... it's usually the beginning.",
+        "After production comes: Monitoring, Bug fixes, Performance improvements, User feedback, New requirements, New versions.",
+        "Software is rarely \"finished.\" It evolves."
+      ]
+    },
+    technicalTakeaway: {
+      heading: "Technical takeaway 🌸",
+      paragraphs: [
+        "One concept that helped me understand software development better is the Software Development Life Cycle (SDLC).",
+        "Agile doesn't remove these stages. It simply repeats them in smaller iterations. Every sprint is another opportunity to improve the product."
+      ]
+    },
+    personalNote: {
+      heading: "Personal note 🌷",
+      paragraphs: [
+        "One of the projects I'm currently building started as a simple idea. A website. That's all.",
+        "Months later... it includes authentication, payment processing, maps, logistics, administrative dashboards, and several automation ideas that are still on my whiteboard.",
+        "The project didn't become more complex because I wrote more code. It became more complex because I understood the problem better.",
+        "And I think that's one of the most interesting parts of software engineering.",
+        "The more you learn... the more you realize good software starts long before the first commit."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "Code is only one phase of software development.",
+        "Good architecture saves time later.",
+        "Databases deserve careful planning.",
+        "APIs are contracts, not just endpoints.",
+        "The best engineering decisions often happen before writing code."
+      ]
+    },
+    closing: "Next entry: No One Told Me APIs Were Conversations 🌸",
+    closingSign: "The moment I stopped seeing APIs as endpoints... what does that mean for software developers?",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Arquitectura Antes que Código 🌸",
+    date: "10 de Agosto, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Abre el IDE. Crea un proyecto. Comienza a escribir código. Conviértete en desarrollador de software.",
+    introDesc: "Simple. Muy cinematográfico. Muy inexacto.",
+    introExtra: [
+      "Mientras más proyectos he trabajado...",
+      "más me he dado cuenta de algo.",
+      "Escribir código suele ser uno de los últimos pasos."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Cuando comencé a aprender desarrollo de software, me imaginaba que los desarrolladores experimentados pasaban la mayor parte del día escribiendo código.",
+        "Escribiendo rápido. Cambiando entre terminales. Construyendo características sin parar.",
+        "La realidad se ve muy diferente.",
+        "Una gran parte del desarrollo de software es en realidad:",
+        "🌸 Pensar\n🌸 Leer\n🌸 Hacer preguntas\n🌸 Cambiar decisiones\n🌸 Revisar requisitos\n🌸 Diseñar",
+        "Y de repente... han pasado dos horas y has escrito doce líneas de código."
+      ]
+    },
+    questionsSection: {
+      heading: "El software comienza con preguntas",
+      paragraphs: [
+        "Antes de elegir un framework. Antes de crear una base de datos. Antes de escribir una API.",
+        "Alguien tiene que responder preguntas como:"
+      ],
+      list: [
+        "¿Quién va a usar esto?",
+        "¿Qué problema estamos resolviendo?",
+        "¿Cuál es la versión más pequeña que podemos construir?",
+        "¿Qué pasa si algo falla?",
+        "¿Qué información necesitamos realmente?",
+        "¿Necesita autenticación?",
+        "¿Soportará múltiples idiomas?",
+        "¿Eventualmente se convertirá en una aplicación móvil?"
+      ],
+      closing: "A veces... una sola respuesta cambia toda la arquitectura."
+    },
+    invisibleArchitecture: {
+      heading: "La arquitectura invisible",
+      paragraphs: [
+        "La mayoría de los usuarios solo ven la interfaz final. Los desarrolladores saben que eso es solo la superficie.",
+        "Una aplicación típica generalmente comienza a verse más como esto:"
+      ],
+      closing: "El código es solo una parte de ese viaje."
+    },
+    designing: {
+      heading: "Diseñar antes de desarrollar",
+      paragraphs: [
+        "Una cosa que he comenzado a apreciar mucho más es diseñar la aplicación antes de construirla.",
+        "A veces eso significa wireframes, flujos de usuario, storyboards o prototipos de Figma.",
+        "El objetivo no es hacer algo hermoso. Es responder preguntas antes de que se conviertan en errores.",
+        "Mover un botón en Figma toma segundos. Mover todo un flujo de trabajo después del desarrollo puede tomar días."
+      ]
+    },
+    databases: {
+      heading: "Las bases de datos merecen más respeto",
+      paragraphs: [
+        "Una lección que he aprendido es que cambiar una base de datos rara vez es \"solo agregar una columna\"."
+      ],
+      schemaLabel: "Una estructura simple podría comenzar así:",
+      schemaQuestionsLabel: "Parece simple. Hasta que alguien pregunta:",
+      questions: [
+        "\"¿Puede un pedido tener múltiples envíos?\"",
+        "\"¿Puede un usuario tener múltiples direcciones de facturación?\""
+      ],
+      closing: "Las pequeñas decisiones de negocio a menudo se convierten en decisiones de base de datos. Y las decisiones de base de datos tienden a quedarse con el proyecto durante mucho tiempo."
+    },
+    apis: {
+      heading: "Las APIs son contratos",
+      paragraphs: [
+        "Una cosa que disfruto del desarrollo backend es diseñar APIs.",
+        "No porque escribir endpoints sea difícil. Sino porque las APIs definen cómo se comunica cada parte de la aplicación.",
+        "A veces la conversación comienza antes de que exista un solo endpoint."
+      ],
+      closing: "Cambiar un endpoint más tarde puede afectar: Aplicaciones móviles, Frontend, Integraciones, Documentación, Pruebas automatizadas.",
+      extraClosing: "Una API no es solo código. Es un contrato."
+    },
+    thenCode: {
+      heading: "Luego viene el código",
+      paragraphs: [
+        "Solo después de entender el problema comienza realmente el desarrollo.",
+        "El framework importa. El lenguaje importa. Pero importan menos que las decisiones tomadas de antemano.",
+        "Laravel. Vue. React. Node.js. React Native.",
+        "Todos son herramientas.",
+        "Una buena arquitectura hace que esas herramientas sean más fáciles de usar. Una mala arquitectura hace que cada framework se sienta difícil."
+      ]
+    },
+    deployment: {
+      heading: "El despliegue no es la línea de meta",
+      paragraphs: [
+        "Mucha gente imagina el despliegue como el último paso. En realidad... suele ser el comienzo.",
+        "Después de producción viene: Monitoreo, Corrección de errores, Mejoras de rendimiento, Comentarios de los usuarios, Nuevos requisitos, Nuevas versiones.",
+        "El software rara vez está \"terminado\". Evoluciona."
+      ]
+    },
+    technicalTakeaway: {
+      heading: "Conclusión técnica 🌸",
+      paragraphs: [
+        "Un concepto que me ayudó a entender mejor el desarrollo de software es el Ciclo de Vida del Desarrollo de Software (SDLC).",
+        "Agile no elimina estas etapas. Simplemente las repite en iteraciones más pequeñas. Cada sprint es otra oportunidad para mejorar el producto."
+      ]
+    },
+    personalNote: {
+      heading: "Nota personal 🌷",
+      paragraphs: [
+        "Uno de los proyectos que estoy construyendo actualmente comenzó como una idea simple. Un sitio web. Eso es todo.",
+        "Meses después... incluye autenticación, procesamiento de pagos, mapas, logística, paneles administrativos y varias ideas de automatización que todavía están en mi pizarra.",
+        "El proyecto no se volvió más complejo porque escribí más código. Se volvió más complejo porque entendí mejor el problema.",
+        "Y creo que esa es una de las partes más interesantes de la ingeniería de software.",
+        "Mientras más aprendes... más te das cuenta de que el buen software comienza mucho antes del primer commit."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "El código es solo una fase del desarrollo de software.",
+        "La buena arquitectura ahorra tiempo más tarde.",
+        "Las bases de datos merecen una planificación cuidadosa.",
+        "Las APIs son contratos, no solo endpoints.",
+        "Las mejores decisiones de ingeniería a menudo ocurren antes de escribir código."
+      ]
+    },
+    closing: "Siguiente entrada: Nadie Me Dijo Que las APIs Eran Conversaciones 🌸",
+    closingSign: "El momento en que dejé de ver las APIs como endpoints... ¿qué significa eso para los desarrolladores de software?",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Arquitetura Antes do Código 🌸",
+    date: "10 de Agosto, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Abra o IDE. Crie um projeto. Comece a escrever código. Torne-se um desenvolvedor de software.",
+    introDesc: "Simples. Muito cinematográfico. Muito impreciso.",
+    introExtra: [
+      "Quanto mais projetos eu trabalhei...",
+      "mais eu percebi uma coisa.",
+      "Escrever código geralmente é um dos últimos passos."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Quando comecei a aprender desenvolvimento de software, imaginei que os desenvolvedores experientes passavam a maior parte do dia escrevendo código.",
+        "Digitando rápido. Alternando entre terminais. Construindo recursos sem parar.",
+        "A realidade parece muito diferente.",
+        "Uma grande parte do desenvolvimento de software é na verdade:",
+        "🌸 Pensar\n🌸 Ler\n🌸 Fazer perguntas\n🌸 Mudar decisões\n🌸 Revisar requisitos\n🌸 Projetar",
+        "E de repente... duas horas se passaram e você escreveu doze linhas de código."
+      ]
+    },
+    questionsSection: {
+      heading: "O software começa com perguntas",
+      paragraphs: [
+        "Antes de escolher um framework. Antes de criar um banco de dados. Antes de escrever uma API.",
+        "Alguém tem que responder a perguntas como:"
+      ],
+      list: [
+        "Quem vai usar isso?",
+        "Qual problema estamos resolvendo?",
+        "Qual é a menor versão que podemos construir?",
+        "O que acontece se algo falhar?",
+        "De quais informações realmente precisamos?",
+        "Precisa de autenticação?",
+        "Suportará múltiplos idiomas?",
+        "Eventualmente se tornará um aplicativo móvel?"
+      ],
+      closing: "Às vezes... uma resposta muda toda a arquitetura."
+    },
+    invisibleArchitecture: {
+      heading: "A arquitetura invisível",
+      paragraphs: [
+        "A maioria dos usuários só vê a interface final. Os desenvolvedores sabem que isso é apenas a superfície.",
+        "Um aplicativo típico geralmente começa a parecer mais com isso:"
+      ],
+      closing: "O código é apenas uma parte dessa jornada."
+    },
+    designing: {
+      heading: "Projetar antes de desenvolver",
+      paragraphs: [
+        "Uma coisa que passei a valorizar muito mais é projetar a aplicação antes de construí-la.",
+        "Às vezes isso significa wireframes, fluxos de usuário, storyboards ou protótipos no Figma.",
+        "O objetivo não é fazer algo bonito. É responder a perguntas antes que elas se tornem bugs.",
+        "Mover um botão no Figma leva segundos. Mover todo um fluxo de trabalho após o desenvolvimento pode levar dias."
+      ]
+    },
+    databases: {
+      heading: "Bancos de dados merecem mais respeito",
+      paragraphs: [
+        "Uma lição que aprendi é que alterar um banco de dados raramente é \"apenas adicionar uma coluna\"."
+      ],
+      schemaLabel: "Uma estrutura simples pode começar assim:",
+      schemaQuestionsLabel: "Parece simples. Até que alguém pergunta:",
+      questions: [
+        "\"Um pedido pode ter múltiplos envios?\"",
+        "\"Um usuário pode ter múltiplos endereços de cobrança?\""
+      ],
+      closing: "Pequenas decisões de negócios muitas vezes se tornam decisões de banco de dados. E decisões de banco de dados tendem a permanecer no projeto por muito tempo."
+    },
+    apis: {
+      heading: "APIs são contratos",
+      paragraphs: [
+        "Uma coisa de que gosto no desenvolvimento backend é projetar APIs.",
+        "Não porque escrever endpoints seja difícil. Mas porque as APIs definem como cada parte da aplicação se comunica.",
+        "Às vezes a conversa começa antes mesmo de existir um único endpoint."
+      ],
+      closing: "Alterar um endpoint mais tarde pode afetar: Aplicativos móveis, Frontend, Integrações, Documentação, Testes automatizados.",
+      extraClosing: "Uma API não é apenas código. É um contrato."
+    },
+    thenCode: {
+      heading: "Depois vem o código",
+      paragraphs: [
+        "Apenas após entender o problema o desenvolvimento realmente começa.",
+        "O framework importa. A linguagem importa. Mas eles importam menos do que as decisões tomadas anteriormente.",
+        "Laravel. Vue. React. Node.js. React Native.",
+        "Todos são ferramentas.",
+        "Uma boa arquitetura torna essas ferramentas mais fáceis de usar. Uma arquitetura ruim faz com que cada framework pareça difícil."
+      ]
+    },
+    deployment: {
+      heading: "A implantação não é a linha de chegada",
+      paragraphs: [
+        "Muitas pessoas imaginam a implantação como a última etapa. Na realidade... geralmente é o começo.",
+        "Depois da produção vem: Monitoramento, Correções de bugs, Melhorias de desempenho, Feedback dos usuários, Novos requisitos, Novas versões.",
+        "O software raramente está \"pronto\". Ele evolui."
+      ]
+    },
+    technicalTakeaway: {
+      heading: "Conclusão técnica 🌸",
+      paragraphs: [
+        "Um conceito que me ajudou a entender melhor o desenvolvimento de software é o Ciclo de Vida do Desenvolvimento de Software (SDLC).",
+        "Agile não elimina estas etapas. Simplesmente as repete em iterações menores. Cada sprint é mais uma oportunidade para melhorar o produto."
+      ]
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌷",
+      paragraphs: [
+        "Um dos projetos que estou construindo atualmente começou como uma ideia simples. Um site. Apenas isso.",
+        "Meses depois... inclui autenticação, processamento de pagamentos, mapas, logística, painéis administrativos e várias ideias de automação que ainda estão no meu quadro branco.",
+        "O projeto não se tornou mais complexo porque escrevi mais código. Tornou-se mais complexo porque entendi melhor o problema.",
+        "O mais interessante é perceber que um bom software começa muito antes do primeiro commit."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "O código é apenas uma fase do desenvolvimento de software.",
+        "Uma boa arquitetura economiza tempo depois.",
+        "Bancos de dados merecem planejamento cuidadoso.",
+        "APIs são contratos, não apenas endpoints.",
+        "As melhores decisões de engenharia costumam acontecer antes de escrever o código."
+      ]
+    },
+    closing: "Próxima entrada: Ninguém Me Disse Que APIs Eram Conversas 🌸",
+    closingSign: "O momento em que parei de ver APIs como endpoints... o que isso significa para os desenvolvedores de software?",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first misconception -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => {
+                if (para.includes("🌸")) {
+                  return (
+                    <ul class="remember-list" style="margin: 1.5rem 0;">
+                      {para.split("\n").map((item) => (
+                        <li class="remember-item question-item">
+                          <span class="remember-dot">🌸</span>
+                          <span>{item.replace("🌸 ", "")}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                }
+                return <p>{para}</p>;
+              })}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Software begins with questions -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.questionsSection.heading}</h2>
+            <div class="section-body">
+              {page.questionsSection.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+              <ul class="remember-list" style="margin: 1.5rem 0;">
+                {page.questionsSection.list.map((item) => (
+                  <li class="remember-item question-item">
+                    <span class="remember-dot">?</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p>{page.questionsSection.closing}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Invisible Architecture -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.invisibleArchitecture.heading}</h2>
+            {page.invisibleArchitecture.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Interactive pipeline / vertical timeline flowchart -->
+            <div class="pipeline-container">
+              {(() => {
+                const steps = lang === 'en' ? 
+                  ["Idea", "Research", "Requirements", "User Flows", "Wireframes", "Architecture", "Database Design", "API Design", "Development", "Testing", "Deployment", "Maintenance"] :
+                  lang === 'pt' ?
+                  ["Ideia", "Pesquisa", "Requisitos", "Fluxos de Usuário", "Wireframes", "Arquitetura", "Design de Banco de Dados", "Design de API", "Desenvolvimento", "Testes", "Implantação", "Manutenção"] :
+                  ["Idea", "Investigación", "Requisitos", "Flujos de Usuario", "Wireframes", "Arquitectura", "Diseño de Base de Datos", "Diseño de API", "Desarrollo", "Pruebas", "Despliegue", "Mantenimiento"];
+                
+                return steps.map((step, idx) => (
+                  <div class="pipeline-item">
+                    {idx !== 0 ? <div class="pipeline-line"></div> : null}
+                    <div class={`pipeline-node ${step === (lang === 'en' ? 'Development' : lang === 'pt' ? 'Desenvolvimento' : 'Desarrollo') ? 'pipeline-node-active' : ''}`}>
+                      <span class="pipeline-index">{String(idx + 1).padStart(2, '0')}</span>
+                      <span class="pipeline-label">{step}</span>
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+            
+            <p style="margin-top: 2rem;">{page.invisibleArchitecture.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Designing before developing -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.designing.heading}</h2>
+            <div class="section-body">
+              {page.designing.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Databases -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.databases.heading}</h2>
+            {page.databases.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <p class="code-label">{page.databases.schemaLabel}</p>
+            
+            <!-- Side-by-side Database Schema Cards -->
+            <div class="schema-grid">
+              <div class="schema-card">
+                <div class="schema-header">{lang === 'en' ? 'Users Table' : lang === 'pt' ? 'Tabela de Usuários' : 'Tabla de Usuarios'}</div>
+                <ul class="schema-fields">
+                  <li><span class="field-key">id</span> <span class="field-type">INT PRIMARY KEY</span></li>
+                  <li><span class="field-key">{lang === 'pt' ? 'nome' : 'name'}</span> <span class="field-type">VARCHAR</span></li>
+                  <li><span class="field-key">email</span> <span class="field-type">VARCHAR UNIQUE</span></li>
+                </ul>
+              </div>
+              <div class="schema-card">
+                <div class="schema-header">{lang === 'en' ? 'Orders Table' : lang === 'pt' ? 'Tabela de Pedidos' : 'Tabla de Pedidos'}</div>
+                <ul class="schema-fields">
+                  <li><span class="field-key">id</span> <span class="field-type">INT PRIMARY KEY</span></li>
+                  <li><span class="field-key">user_id</span> <span class="field-type">INT FOREIGN KEY</span></li>
+                  <li><span class="field-key">status</span> <span class="field-type">VARCHAR</span></li>
+                  <li><span class="field-key">total</span> <span class="field-type">DECIMAL</span></li>
+                </ul>
+              </div>
+            </div>
+            
+            <p style="margin-top: 1.5rem;">{page.databases.schemaQuestionsLabel}</p>
+            <ul class="remember-list" style="margin-bottom: 1.5rem;">
+              {page.databases.questions.map((q) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">✦</span>
+                  <span style="font-style: italic;">{q}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{page.databases.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- APIs -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.apis.heading}</h2>
+            {page.apis.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- REST API Contract Badges -->
+            <div class="api-endpoints-container">
+              <div class="api-endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/products</span>
+              </div>
+              <div class="api-endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/orders</span>
+              </div>
+              <div class="api-endpoint">
+                <span class="method patch">PATCH</span>
+                <span class="path">/users/{`{id}`}</span>
+              </div>
+              <div class="api-endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="path">/cart/{`{item}`}</span>
+              </div>
+            </div>
+            
+            <p style="margin-top: 1.5rem;">{page.apis.closing}</p>
+            <p class="lead-text" style="color: var(--rose); margin-top: 1rem;">{page.apis.extraClosing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Then Code -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.thenCode.heading}</h2>
+            <div class="section-body">
+              {page.thenCode.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Deployment -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.deployment.heading}</h2>
+            <div class="section-body">
+              {page.deployment.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Takeaway -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.technicalTakeaway.heading}</h2>
+            {page.technicalTakeaway.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <p class="code-label" style="margin-top: 1.5rem;">SDLC (Software Development Life Cycle):</p>
+            
+            <!-- SDLC Flowchart -->
+            <div class="sdlc-container">
+              {(() => {
+                const sdlcSteps = lang === 'en' ? 
+                  ["Requirements", "Design", "Development", "Testing", "Deployment", "Maintenance"] :
+                  lang === 'pt' ?
+                  ["Requisitos", "Design", "Desenvolvimento", "Testes", "Implantação", "Manutenção"] :
+                  ["Requisitos", "Diseño", "Desarrollo", "Pruebas", "Despliegue", "Mantenimiento"];
+                
+                return sdlcSteps.map((step, idx) => (
+                  <div class="sdlc-step-wrapper">
+                    {idx !== 0 ? <div class="sdlc-arrow">→</div> : null}
+                    <div class="sdlc-step">
+                      <span class="sdlc-label">{step}</span>
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal Note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  .code-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+    font-style: italic;
+  }
+
+  /* Invisible Architecture Pipeline Diagram */
+  .pipeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 2rem 0;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 75, 145, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem 1.5rem;
+  }
+
+  .pipeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .pipeline-line {
+    width: 2px;
+    height: 28px;
+    background: linear-gradient(to bottom, var(--rose), rgba(255, 75, 145, 0.1));
+  }
+
+  .pipeline-node {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .pipeline-node:hover {
+    background: rgba(255, 75, 145, 0.05);
+    border-color: rgba(255, 75, 145, 0.3);
+    transform: scale(1.02);
+  }
+
+  .pipeline-node-active {
+    background: rgba(255, 75, 145, 0.12);
+    border-color: var(--rose);
+    box-shadow: 0 0 15px rgba(255, 75, 145, 0.2);
+  }
+
+  .pipeline-index {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rose);
+    opacity: 0.85;
+  }
+
+  .pipeline-label {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Database Schema Cards */
+  .schema-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 1.5rem 0;
+  }
+
+  .schema-card {
+    background: rgba(255, 75, 145, 0.02);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .schema-header {
+    background: rgba(255, 75, 145, 0.08);
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding: 10px 16px;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--rose);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .schema-fields {
+    list-style: none;
+    padding: 14px 16px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .schema-fields li {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.92rem;
+  }
+
+  .field-key {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .field-type {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* API Endpoint Badges */
+  .api-endpoints-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .api-endpoint {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .method {
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: 72px;
+    text-align: center;
+  }
+
+  .method.get { background: rgba(79, 195, 247, 0.15); color: #4fc3f7; border: 1px solid rgba(79, 195, 247, 0.3); }
+  .method.post { background: rgba(129, 199, 132, 0.15); color: #81c784; border: 1px solid rgba(129, 199, 132, 0.3); }
+  .method.patch { background: rgba(255, 183, 77, 0.15); color: #ffb74d; border: 1px solid rgba(255, 183, 77, 0.3); }
+  .method.delete { background: rgba(229, 115, 115, 0.15); color: #e57373; border: 1px solid rgba(229, 115, 115, 0.3); }
+
+  .path {
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  /* SDLC Flowchart Styling */
+  .sdlc-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    padding: 1rem 0.5rem;
+  }
+
+  .sdlc-step-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sdlc-step {
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+
+  .sdlc-step:hover {
+    background: rgba(255, 75, 145, 0.12);
+    border-color: var(--rose);
+    transform: translateY(-2px);
+  }
+
+  .sdlc-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .sdlc-arrow {
+    color: var(--rose);
+    font-size: 1rem;
+    opacity: 0.6;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .question-item {
+    background: rgba(255, 255, 255, 0.01);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .question-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .question-item .remember-dot {
+    color: var(--text-muted);
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .schema-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>

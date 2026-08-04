@@ -1,0 +1,1137 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Why Every Developer Should Learn Git Beyond `git push` 🌸",
+    date: "August 31, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "When I first started using Git... my workflow looked something like this.",
+    introDesc: "git add . → git commit -m \"changes\" → git push",
+    introExtra: [
+      "That was it.",
+      "As long as my code reached GitHub, I thought I was using Git correctly.",
+      "Turns out... I was only using a tiny fraction of what Git can actually do."
+    ],
+    firstAssumption: {
+      heading: "My first misconception",
+      paragraphs: [
+        "For a long time I thought Git was simply a backup. Write code. Commit. Push. Repeat.",
+        "But Git isn't Dropbox for developers. Git is a complete version control system designed to help people build software together.",
+        "It remembers every decision. Every change. Every experiment. Every mistake. And that's incredibly powerful."
+      ]
+    },
+    gitNotGithub: {
+      heading: "Git isn't GitHub",
+      paragraphs: [
+        "One of the first things that confused me was thinking Git and GitHub were the same thing. They're not.",
+        "Git is the version control system. GitHub is a platform that hosts Git repositories.",
+        "You can use Git without GitHub. And you can use GitHub because Git exists.",
+        "Understanding that distinction makes many Git concepts much easier."
+      ]
+    },
+    everyCommit: {
+      heading: "Every commit tells a story",
+      paragraphs: [
+        "A commit shouldn't just save code. It should explain why something changed."
+      ],
+      badLabel: "Instead of meaningless commit messages:",
+      goodLabel: "Try writing descriptive messages:",
+      closing: "Months later... future you will be incredibly grateful."
+    },
+    branches: {
+      heading: "Branches are parallel universes",
+      paragraphs: [
+        "One concept I really enjoy is branching.",
+        "Imagine your project is on a single timeline (main). Now you need a new feature.",
+        "Instead of risking the production code... you create a branch. Each branch becomes an isolated workspace where you can experiment safely."
+      ]
+    },
+    conflicts: {
+      heading: "Merge conflicts aren't Git being mean",
+      paragraphs: [
+        "At first... merge conflicts felt terrifying. I thought I had broken the repository.",
+        "Usually, Git is simply saying: \"Two people changed the same piece of code. I don't know which version you want.\"",
+        "For example, if Developer A and Developer B edit the same tax variable differently, Git can't guess. So it asks you to resolve the conflict."
+      ]
+    },
+    timeTravel: {
+      heading: "Git helps you travel through time",
+      paragraphs: [
+        "One of my favorite Git features is being able to inspect history and compare changes.",
+        "Once I understood this... I stopped being afraid of making mistakes. Because most mistakes are recoverable."
+      ]
+    },
+    pullRequests: {
+      heading: "Pull Requests are conversations",
+      paragraphs: [
+        "One thing I didn't appreciate early on is that Pull Requests aren't only about merging code. They're about communication.",
+        "A good Pull Request explains what changed, why, and any risks involved. Code reviews often improve software long before users see it."
+      ]
+    },
+    teamwork: {
+      heading: "Git makes teamwork possible",
+      paragraphs: [
+        "Without version control... collaboration becomes chaos.",
+        "Git allows multiple developers to work on features, review code, track changes, and recover previous versions. Large software projects simply wouldn't be practical without it."
+      ]
+    },
+    cheatsheet: {
+      heading: "My most used Git commands",
+      paragraphs: [
+        "Over time, these have become part of my daily workflow. Notice that only one of them is git push! The rest help me understand and manage the project."
+      ]
+    },
+    takeaway: {
+      heading: "Technical takeaway 🌸",
+      paragraphs: [
+        "Git isn't just about sending code to GitHub. It's about managing change.",
+        "Good Git practices include:"
+      ],
+      items: [
+        "Small, meaningful commits",
+        "Clear commit messages",
+        "Feature branches",
+        "Pull Requests",
+        "Code reviews",
+        "Keeping main stable"
+      ],
+      closing: "Learning these habits early makes collaboration much easier."
+    },
+    personalNote: {
+      heading: "Personal note 🌷",
+      paragraphs: [
+        "One thing I enjoy about software development is realizing that every tool has layers.",
+        "At first, Git felt like a list of commands to memorize. Now... it feels more like a timeline. A record of how an idea evolved.",
+        "Every commit represents a small decision. Every branch represents an experiment. And every merge tells part of the story of the software. I think that's a beautiful way to look at version control."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "Git and GitHub are different things.",
+        "Commits should explain why, not just what.",
+        "Branches make experimentation safe.",
+        "Merge conflicts are conversations, not disasters.",
+        "Version control is one of the most important tools a developer can learn."
+      ]
+    },
+    closing: "Next entry: TypeScript Didn't Make Me Faster 🌸",
+    closingSign: "It made me more confident. Every abstraction leaks.",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Por Qué Cada Desarrollador Debería Aprender Git Más Allá de git push 🌸",
+    date: "31 de Agosto, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Cuando comencé a usar Git... mi flujo de trabajo se veía más o menos así.",
+    introDesc: "git add . → git commit -m \"changes\" → git push",
+    introExtra: [
+      "Eso era todo.",
+      "Mientras mi código llegara a GitHub, pensaba que estaba usando Git correctamente.",
+      "Resulta que... solo estaba usando una pequeña fracción de lo que Git realmente puede hacer."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Durante mucho tiempo pensé que Git era simplemente un respaldo. Escribir código. Confirmar. Subir. Repetir.",
+        "Pero Git no es Dropbox para desarrolladores. Git es un sistema de control de versiones completo diseñado para ayudar a las personas a construir software juntas.",
+        "Recuerda cada decisión. Cada cambio. Cada experimento. Cada error. Y eso es increíblemente poderoso."
+      ]
+    },
+    gitNotGithub: {
+      heading: "Git no es GitHub",
+      paragraphs: [
+        "Una de las primeras cosas que me confundió fue pensar que Git y GitHub eran lo mismo. No lo son.",
+        "Git es el sistema de control de versiones. GitHub es una plataforma que aloja repositorios de Git.",
+        "Puedes usar Git sin GitHub. Y puedes usar GitHub porque Git existe.",
+        "Entender esa distinción hace que muchos conceptos de Git sean mucho más fáciles."
+      ]
+    },
+    everyCommit: {
+      heading: "Cada commit cuenta una historia",
+      paragraphs: [
+        "Un commit no debería solo guardar código. Debería explicar por qué cambió algo."
+      ],
+      badLabel: "En lugar de mensajes de commit sin sentido:",
+      goodLabel: "Intenta escribir mensajes descriptivos:",
+      closing: "Meses después... tu yo del futuro te estará increíblemente agradecido."
+    },
+    branches: {
+      heading: "Las ramas son universos paralelos",
+      paragraphs: [
+        "Un concepto que realmente disfruto es el de las ramas (branching).",
+        "Imagina que tu proyecto está en una sola línea de tiempo (main). Ahora necesitas una nueva funcionalidad.",
+        "En lugar de arriesgar el código de producción... creas una rama. Cada rama se convierte en un espacio de trabajo aislado donde puedes experimentar de forma segura."
+      ]
+    },
+    conflicts: {
+      heading: "Los conflictos de fusión no son Git siendo malo",
+      paragraphs: [
+        "Al principio... los conflictos de fusión (merge conflicts) se sentían aterradores. Pensaba que había roto el repositorio.",
+        "Por lo general, Git simplemente está diciendo: \"Dos personas cambiaron la misma parte del código. No sé qué versión quieres.\"",
+        "Por ejemplo, si el Desarrollador A y el Desarrollador B editan la misma variable de impuestos de manera diferente, Git no puede adivinar. Así que te pide que resuelvas el conflicto."
+      ]
+    },
+    timeTravel: {
+      heading: "Git te ayuda a viajar en el tiempo",
+      paragraphs: [
+        "Una de mis características favoritas de Git es poder inspeccionar el historial y comparar cambios.",
+        "Una vez que entendí esto... dejé de tener miedo de cometer errores. Porque la mayoría de los errores son recuperables."
+      ]
+    },
+    pullRequests: {
+      heading: "Los Pull Requests son conversaciones",
+      paragraphs: [
+        "Una cosa que no aprecié al principio es que los Pull Requests no son solo para fusionar código. Se tratan de comunicación.",
+        "Un buen Pull Request explica qué cambió, por qué y cualquier riesgo involucrado. Las revisiones de código a menudo mejoran el software mucho antes de que los usuarios lo vean."
+      ]
+    },
+    teamwork: {
+      heading: "Git hace posible el trabajo en equipo",
+      paragraphs: [
+        "Sin control de versiones... la colaboración se convierte en un caos.",
+        "Git permite a múltiples desarrolladores trabajar en características, revisar código, realizar un seguimiento de los cambios y recuperar versiones anteriores. Los proyectos de software grandes simplemente no serían prácticos sin él."
+      ]
+    },
+    cheatsheet: {
+      heading: "Mis comandos de Git más utilizados",
+      paragraphs: [
+        "Con el tiempo, estos se han convertido en parte de mi flujo de trabajo diario. ¡Nota que solo uno de ellos es git push! El resto me ayuda a comprender y administrar el proyecto."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusión técnica 🌸",
+      paragraphs: [
+        "Git no se trata solo de enviar código a GitHub. Se trata de gestionar el cambio.",
+        "Las buenas prácticas de Git incluyen:"
+      ],
+      items: [
+        "Commits pequeños y significativos",
+        "Mensajes de commit claros",
+        "Ramas de funcionalidad (feature branches)",
+        "Pull Requests",
+        "Revisiones de código",
+        "Mantener main estable"
+      ],
+      closing: "Aprender estos hábitos temprano hace que la colaboración sea mucho más fácil."
+    },
+    personalNote: {
+      heading: "Nota personal 🌷",
+      paragraphs: [
+        "Una de las cosas que disfruto del desarrollo de software es darme cuenta de que cada herramienta tiene capas.",
+        "Al principio, Git se sentía como una lista de comandos para memorizar. Ahora... se siente más como una línea de tiempo. Un registro de cómo evolucionó una idea.",
+        "Cada commit representa una pequeña decisión. Cada rama representa un experimento. Y cada fusión cuenta parte de la historia del software. Creo que es una hermosa manera de ver el control de versiones."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "Git y GitHub son cosas diferentes.",
+        "Los commits deben explicar el por qué, no solo el qué.",
+        "Las ramas hacen que la experimentación sea segura.",
+        "Los conflictos de fusión son conversaciones, no desastres.",
+        "El control de versiones es una de las herramientas más importantes que un desarrollador puede aprender."
+      ]
+    },
+    closing: "Siguiente entrada: TypeScript No Me Hizo Más Rápida 🌸",
+    closingSign: "Me hizo tener más confianza. Cada abstracción tiene fugas.",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Por Que Todo Desenvolvedor Deve Aprender Git Além de git push 🌸",
+    date: "31 de Agosto, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Quando comecei a usar o Git... meu fluxo de trabalho parecia mais ou menos assim.",
+    introDesc: "git add . → git commit -m \"changes\" → git push",
+    introExtra: [
+      "Isso era tudo.",
+      "Contanto que meu código chegasse ao GitHub, eu achava que estava usando o Git corretamente.",
+      "Acontece que... eu estava usando apenas uma fração minúscula do que o Git realmente pode fazer."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Por muito tempo, pensei que o Git era simplesmente um backup. Escrever código. Commit. Push. Repetir.",
+        "Mas o Git não é o Dropbox para desenvolvedores. O Git é um sistema de controle de versão completo projetado para ajudar as pessoas a construírem software juntas.",
+        "Ele se lembra de cada decisão. Cada mudança. Cada experimento. Cada erro. E isso é incrivelmente poderoso."
+      ]
+    },
+    gitNotGithub: {
+      heading: "Git não é o GitHub",
+      paragraphs: [
+        "Uma das primeiras coisas que me confundiu foi achar que Git e GitHub eram a mesma coisa. Eles não são.",
+        "O Git é o sistema de controle de versão. O GitHub é uma plataforma que hospeda repositórios Git.",
+        "Você pode usar o Git sem o GitHub. E você pode usar o GitHub porque o Git existe.",
+        "Entender essa distinção torna muitos conceitos do Git muito mais fáceis."
+      ]
+    },
+    everyCommit: {
+      heading: "Cada commit conta uma história",
+      paragraphs: [
+        "Um commit não deve apenas salvar código. Deve explicar o porquê de algo ter mudado."
+      ],
+      badLabel: "Em vez de mensagens de commit sem sentido:",
+      goodLabel: "Tente escrever mensagens descritivas:",
+      closing: "Meses depois... seu eu do futuro ficará incrivelmente grato."
+    },
+    branches: {
+      heading: "Ramos são universos paralelos",
+      paragraphs: [
+        "Um conceito de que gosto muito é a ramificação (branching).",
+        "Imagine que seu projeto está em uma linha do tempo única (main). Agora você precisa de um novo recurso.",
+        "Em vez de arriscar o código de produção... você cria um ramo (branch). Cada branch torna-se um espaço de trabalho isolado onde você pode experimentar com segurança."
+      ]
+    },
+    conflicts: {
+      heading: "Conflitos de mesclagem não são o Git sendo chato",
+      paragraphs: [
+        "No começo... os conflitos de mesclagem (merge conflicts) pareciam assustadores. Achei que tinha quebrado o repositório.",
+        "Geralmente, o Git está simplesmente dizendo: \"Duas pessoas alteraram a mesma parte do código. Não sei qual versão você quer.\"",
+        "Por exemplo, se o Desenvolvedor A e o Desenvolvedor B editarem a mesma variável de imposto de forma diferente, o Git não pode adivinhar. Então, ele pede para você resolver o conflito."
+      ]
+    },
+    timeTravel: {
+      heading: "O Git te ajuda a viajar no tempo",
+      paragraphs: [
+        "Um dos meus recursos favoritos do Git é poder inspecionar o histórico e comparar mudanças.",
+        "Depois que entendi isso... parei de ter medo de cometer erros. Porque a maioria dos erros é recuperável."
+      ]
+    },
+    pullRequests: {
+      heading: "Pull Requests são conversas",
+      paragraphs: [
+        "Uma coisa que eu não valorizava no início é que Pull Requests não servem apenas para mesclar código. Eles são sobre comunicação.",
+        "Um bom Pull Request explica o que mudou, o porquê e quaisquer riscos envolvidos. As revisões de código geralmente melhoram o software muito antes de os usuários o verem."
+      ]
+    },
+    teamwork: {
+      heading: "O Git torna o trabalho em equipe possível",
+      paragraphs: [
+        "Sem controle de versão... a colaboração vira um caos.",
+        "O Git permite que vários desenvolvedores trabalhem em recursos, revisem códigos, acompanhem alterações e recuperem versões anteriores. Projetos de software grandes simplesmente não seriam práticos sem ele."
+      ]
+    },
+    cheatsheet: {
+      heading: "Meus comandos Git mais usados",
+      paragraphs: [
+        "Com o tempo, eles se tornaram parte do meu fluxo de trabalho diário. Note que apenas um deles é o git push! O resto me ajuda a entender e gerenciar o projeto."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusão técnica 🌸",
+      paragraphs: [
+        "O Git não serve apenas para enviar código para o GitHub. É sobre gerenciar mudanças.",
+        "Boas práticas de Git incluem:"
+      ],
+      items: [
+        "Commits pequenos e significativos",
+        "Mensagens de commit claras",
+        "Ramos de recursos (feature branches)",
+        "Pull Requests",
+        "Revisões de código",
+        "Manter a main estável"
+      ],
+      closing: "Aprender esses hábitos cedo torna a colaboração muito mais fácil."
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌷",
+      paragraphs: [
+        "Uma das coisas que gosto no desenvolvimento de software é perceber que cada ferramenta tem camadas.",
+        "No começo, o Git parecia uma lista de comandos para memorizar. Agora... parece mais uma linha do tempo. Um registro de como uma ideia evoluiu.",
+        "Cada commit representa uma pequena decisão. Cada branch representa um experimento. E cada mesclagem conta parte da história do software. Acho que é uma bela maneira de encarar o controle de versão."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "Git e GitHub são coisas diferentes.",
+        "Os commits devem explicar o porquê, não apenas o quê.",
+        "Os ramos tornam a experimentação segura.",
+        "Conflitos de mesclagem são conversas, não desastres.",
+        "O controle de versão é uma das ferramentas mais importantes que um desenvolvedor pode aprender."
+      ]
+    },
+    closing: "Próxima entrada: TypeScript Não Me Tornou Mais Rápida 🌸",
+    closingSign: "Me deu mais confiança. Cada abstração vaza.",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first misconception -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Git isn't GitHub -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.gitNotGithub.heading}</h2>
+            <div class="section-body">
+              {page.gitNotGithub.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Every commit tells a story -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.everyCommit.heading}</h2>
+            {page.everyCommit.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <div class="commit-comparator">
+              <div class="commit-side bad-side">
+                <div class="commit-header bad-header">{page.everyCommit.badLabel}</div>
+                <pre class="code-block error-code"><code>git commit -m "update"
+git commit -m "changes"
+git commit -m "fix"</code></pre>
+              </div>
+              <div class="commit-side good-side">
+                <div class="commit-header good-header">{page.everyCommit.goodLabel}</div>
+                <pre class="code-block code-block-success"><code>git commit -m "Add payment validation before checkout"
+git commit -m "Fix responsive navigation on iPad"</code></pre>
+              </div>
+            </div>
+
+            <p style="margin-top: 1.5rem;">{page.everyCommit.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Branches are parallel universes -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.branches.heading}</h2>
+            {page.branches.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Branching visualizer -->
+            <div class="branch-visualizer">
+              <div class="branch-track main-track">
+                <span class="track-name">main</span>
+                <div class="node node-main"></div>
+                <div class="node node-main"></div>
+                <div class="node node-main"></div>
+              </div>
+              <div class="branch-forks">
+                <div class="branch-track feat-track">
+                  <span class="track-name">feature/payment</span>
+                  <div class="connector-fork"></div>
+                  <div class="node node-feat"></div>
+                  <div class="node node-feat"></div>
+                </div>
+                <div class="branch-track feat-track">
+                  <span class="track-name">feature/profile</span>
+                  <div class="connector-fork"></div>
+                  <div class="node node-feat"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Merge conflicts -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.conflicts.heading}</h2>
+            {page.conflicts.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Conflict diff visualizer -->
+            <p class="code-label">{lang === 'en' ? 'Conflict representation in file:' : lang === 'pt' ? 'Representação do conflito no arquivo:' : 'Representación del conflicto en el archivo:'}</p>
+            <pre class="code-block conflict-code-block"><code>{`<<<<<<< HEAD
+const tax = 13;
+=======
+const tax = 15;
+>>>>>>> feature/tax`}</code></pre>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Time travel -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.timeTravel.heading}</h2>
+            {page.timeTravel.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Pull Requests -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.pullRequests.heading}</h2>
+            {page.pullRequests.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Teamwork -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.teamwork.heading}</h2>
+            {page.teamwork.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Cheatsheet -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.cheatsheet.heading}</h2>
+            {page.cheatsheet.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Git command cheatsheet cards -->
+            <div class="git-cheatsheet-grid">
+              {(() => {
+                const commands = [
+                  { cmd: "git status", desc: lang === 'en' ? "Show working tree status" : lang === 'pt' ? "Mostra o status do diretório de trabalho" : "Muestra el estado del árbol de trabajo" },
+                  { cmd: "git pull", desc: lang === 'en' ? "Fetch from and integrate with another repository" : lang === 'pt' ? "Busca e integra com outro repositório" : "Busca e integra con otro repositorio" },
+                  { cmd: "git add", desc: lang === 'en' ? "Add file contents to the index" : lang === 'pt' ? "Adiciona conteúdo do arquivo ao índice" : "Agrega el contenido del archivo al índice" },
+                  { cmd: "git commit", desc: lang === 'en' ? "Record changes to the repository" : lang === 'pt' ? "Grava as alterações no repositório" : "Graba los cambios en el repositorio" },
+                  { cmd: "git push", desc: lang === 'en' ? "Update remote refs along with associated objects" : lang === 'pt' ? "Atualiza chaves remotas e objetos associados" : "Actualiza las referencias remotas y objetos asociados" },
+                  { cmd: "git checkout", desc: lang === 'en' ? "Switch branches or restore working tree files" : lang === 'pt' ? "Alterna ramos ou restaura arquivos" : "Cambia de rama o restaura archivos" },
+                  { cmd: "git switch", desc: lang === 'en' ? "Switch branches easily" : lang === 'pt' ? "Alterna ramos facilmente" : "Cambia de rama fácilmente" },
+                  { cmd: "git branch", desc: lang === 'en' ? "List, create, or delete branches" : lang === 'pt' ? "Lista, cria ou deleta ramos" : "Lista, crea o elimina ramas" },
+                  { cmd: "git merge", desc: lang === 'en' ? "Join two or more development histories" : lang === 'pt' ? "Junta dois ou mais históricos" : "Une dos o más historiales de desarrollo" },
+                  { cmd: "git log", desc: lang === 'en' ? "Show commit logs" : lang === 'pt' ? "Mostra os logs de confirmação" : "Muestra los registros de commits" },
+                  { cmd: "git diff", desc: lang === 'en' ? "Show changes between commits, commit and working tree" : lang === 'pt' ? "Mostra alterações entre confirmações e diretório" : "Muestra cambios entre commits y árbol de trabajo" }
+                ];
+                return commands.map((c) => (
+                  <div class="git-cmd-card">
+                    <span class="git-cmd-name">{c.cmd}</span>
+                    <span class="git-cmd-desc">{c.desc}</span>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Takeaway -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.takeaway.heading}</h2>
+            {page.takeaway.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <ul class="remember-list" style="margin: 1.5rem 0;">
+              {page.takeaway.items.map((item) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">✔</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{page.takeaway.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal Note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* Commit comparator */
+  .commit-comparator {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 1.5rem 0;
+  }
+
+  .commit-side {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .commit-side.bad-side { border: 1px solid rgba(229, 115, 115, 0.15); }
+  .commit-side.good-side { border: 1px solid rgba(129, 199, 132, 0.15); }
+
+  .commit-header {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    letter-spacing: 0.05em;
+  }
+
+  .bad-header { background: rgba(229, 115, 115, 0.08); color: #e57373; }
+  .good-header { background: rgba(129, 199, 132, 0.08); color: #81c784; }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: none;
+    border-radius: 0;
+    padding: 1.25rem;
+    margin: 0;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .error-code { border-left: 3px solid #e57373; }
+  .code-block-success { border-left: 3px solid #81c784; }
+
+  .code-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+    font-style: italic;
+  }
+
+  /* Branching Visualizer Graphic */
+  .branch-visualizer {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 75, 145, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+  }
+
+  .branch-track {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+  }
+
+  .track-name {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    width: 130px;
+    flex-shrink: 0;
+  }
+
+  .node {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid;
+    position: relative;
+    z-index: 10;
+  }
+
+  .node-main {
+    background: var(--bg);
+    border-color: var(--rose);
+    box-shadow: 0 0 8px rgba(255, 75, 145, 0.5);
+  }
+
+  .node-feat {
+    background: var(--bg);
+    border-color: #4fc3f7;
+    box-shadow: 0 0 8px rgba(79, 195, 247, 0.5);
+  }
+
+  .main-track::after {
+    content: '';
+    position: absolute;
+    left: 146px;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    background: var(--rose);
+    opacity: 0.4;
+    z-index: 1;
+  }
+
+  .connector-fork {
+    position: absolute;
+    left: -20px;
+    top: -12px;
+    width: 20px;
+    height: 20px;
+    border-left: 2px solid rgba(79, 195, 247, 0.4);
+    border-bottom: 2px solid rgba(79, 195, 247, 0.4);
+    border-bottom-left-radius: 8px;
+    z-index: 1;
+  }
+
+  .feat-track {
+    padding-left: 28px;
+    margin-top: 8px;
+  }
+
+  .feat-track::after {
+    content: '';
+    position: absolute;
+    left: 174px;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    background: #4fc3f7;
+    opacity: 0.3;
+    z-index: 1;
+  }
+
+  /* Merge Conflict Block */
+  .conflict-code-block {
+    border-left: 3px solid #ffb74d;
+    background: rgba(255, 183, 77, 0.02) !important;
+  }
+
+  /* Git Cheatsheet Grid */
+  .git-cheatsheet-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .git-cmd-card {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .git-cmd-card:hover {
+    background: rgba(255, 75, 145, 0.04);
+    border-color: rgba(255, 75, 145, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .git-cmd-name {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--rose);
+  }
+
+  .git-cmd-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .question-item {
+    background: rgba(255, 255, 255, 0.01);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .question-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .question-item .remember-dot {
+    color: var(--text-muted);
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .commit-comparator, .git-cheatsheet-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>

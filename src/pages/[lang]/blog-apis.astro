@@ -1,0 +1,1367 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, No One Told Me APIs Were Conversations 🌸",
+    date: "August 17, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "When I first learned about APIs, they felt... mechanical.",
+    introDesc: "You send a request. You receive a response. Done.",
+    introExtra: [
+      "It sounded like a vending machine.",
+      "Insert request. Receive JSON. Move on.",
+      "But after working on real applications...",
+      "I realized APIs aren't just requests.",
+      "They're conversations between systems.",
+      "And like any good conversation... both sides need to understand each other."
+    ],
+    firstAssumption: {
+      heading: "My first misconception",
+      paragraphs: [
+        "At the beginning, I thought building an API meant creating routes like these:"
+      ],
+      paragraphsAfter: [
+        "If the endpoint returned data... I considered it finished.",
+        "Técnicamente, it worked.",
+        "But I wasn't really thinking about the developer who would consume it.",
+        "Then I realized something.",
+        "The API isn't built for me. It's built for whoever has to integrate with it.",
+        "That changes everything."
+      ]
+    },
+    apisAreContracts: {
+      heading: "APIs are contracts",
+      paragraphs: [
+        "One of the most important concepts I learned is that APIs are contracts.",
+        "If one side changes... the other side can break.",
+        "Imagine a frontend expecting this response:"
+      ],
+      afterDesc: "The API still works. The server doesn't crash. But the frontend suddenly stops working. Nothing is technically \"wrong.\" The contract was simply broken."
+    },
+    goodAnswers: {
+      heading: "A good API answers questions",
+      paragraphs: [
+        "The endpoint itself isn't the product. The response is.",
+        "A response should answer questions clearly. For example, instead of returning:"
+      ],
+      afterDesc: "The consumer immediately knows: What happened, whether it succeeded, and what to do next. That's communication."
+    },
+    methods: {
+      heading: "HTTP methods have meaning",
+      paragraphs: [
+        "One thing that helped me understand APIs better was realizing HTTP methods aren't random.",
+        "Each one represents an intention."
+      ],
+      headers: ["Method", "Purpose"],
+      rows: [
+        ["GET", "Retrieve information"],
+        ["POST", "Create resources"],
+        ["PUT", "Replace resources"],
+        ["PATCH", "Update part of a resource"],
+        ["DELETE", "Remove resources"]
+      ],
+      closing: "Using the correct method makes an API predictable. Developers shouldn't have to guess what an endpoint does."
+    },
+    statusCodes: {
+      heading: "Status codes matter",
+      paragraphs: [
+        "Returning data isn't enough. The HTTP status code tells the first part of the story."
+      ],
+      codes: [
+        { code: "200 OK", desc: "Everything worked." },
+        { code: "201 Created", desc: "A new resource was created." },
+        { code: "400 Bad Request", desc: "The client sent invalid data." },
+        { code: "401 Unauthorized", desc: "Authentication is required." },
+        { code: "404 Not Found", desc: "The resource doesn't exist." },
+        { code: "500 Internal Server Error", desc: "Something failed on the server." }
+      ],
+      closing: "A good API communicates through both its response body and its status code."
+    },
+    designing: {
+      heading: "Designing before coding",
+      paragraphs: [
+        "One habit I've started adopting is defining the endpoints before writing business logic. Something as simple as:"
+      ],
+      closing: "This helps answer questions early. How will the frontend consume this? Will the mobile app use the same endpoint? Will another service need this information later? Design first. Implement second."
+    },
+    errors: {
+      heading: "APIs should make mistakes easy to understand",
+      paragraphs: [
+        "One of the best developer experiences is receiving an error that actually explains the problem. Instead of:"
+      ],
+      closing: "Good error messages reduce debugging time. And they make integrations much smoother."
+    },
+    versioning: {
+      heading: "Versioning exists for a reason",
+      paragraphs: [
+        "Applications evolve. APIs evolve too. Sometimes changing an endpoint isn't enough.",
+        "That's where versioning becomes important."
+      ],
+      closing: "Maintaining older versions allows existing applications to continue working while newer clients adopt the updated API. It's another way of respecting the contract."
+    },
+    documentation: {
+      heading: "Documentation is part of the API",
+      paragraphs: [
+        "One lesson I didn't expect to learn: If an API isn't documented... someone will eventually read the source code to understand it.",
+        "Good documentation explains: Available endpoints, parameters, authentication, request examples, response examples, and error codes.",
+        "Tools like Postman, Swagger/OpenAPI, and Insomnia make this process much easier.",
+        "A well-documented API is often easier to integrate than a technically perfect one with no documentation."
+      ]
+    },
+    takeaway: {
+      heading: "Technical takeaway 🌸",
+      paragraphs: [
+        "A well-designed API should be:"
+      ],
+      items: [
+        "Predictable",
+        "Consistent",
+        "Versioned",
+        "Well documented",
+        "Easy to consume",
+        "Easy to debug"
+      ],
+      closing: "The goal isn't just to exchange data. It's to create a reliable conversation between systems."
+    },
+    personalNote: {
+      heading: "Personal note 🌷",
+      paragraphs: [
+        "The more backend work I've done... the less I think about endpoints. Now I think about communication.",
+        "Every response is something another developer—or another application—has to understand. That small shift completely changed how I design APIs.",
+        "Instead of asking: \"Does this endpoint work?\" I now ask: \"Would another developer enjoy integrating with it?\" And I think that's a much better question."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "APIs are conversations, not just endpoints.",
+        "HTTP methods communicate intent.",
+        "Status codes are part of the message.",
+        "Breaking a contract breaks trust.",
+        "Good documentation is a feature, not an afterthought."
+      ]
+    },
+    closing: "Next entry: Deploying Felt More Scary Than Coding 🌸",
+    closingSign: "Writing the feature was the easy part... every abstraction leaks.",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Nadie Me Dijo Que las APIs Eran Conversaciones 🌸",
+    date: "17 de Agosto, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Cuando aprendí por primera vez sobre las APIs, se sentían... mecánicas.",
+    introDesc: "Envías una solicitud. Recibes una respuesta. Listo.",
+    introExtra: [
+      "Sonaba como una máquina expendedora.",
+      "Insertas la solicitud. Recibes el JSON. Siguiente.",
+      "Pero después de trabajar en aplicaciones reales...",
+      "Me di cuenta de que las APIs no son solo solicitudes.",
+      "Son conversaciones entre sistemas.",
+      "Y como en cualquier buena conversación... ambas partes deben entenderse."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Al principio, pensé que construir una API significaba crear rutas como estas:"
+      ],
+      paragraphsAfter: [
+        "Si el endpoint devolvía datos... lo consideraba terminado.",
+        "Técnicamente, funcionaba.",
+        "Pero no estaba pensando realmente en el desarrollador que la consumiría.",
+        "Entonces me di cuenta de algo.",
+        "La API no está construida para mí. Está construida para quien tenga que integrarse con ella.",
+        "Eso lo cambia todo."
+      ]
+    },
+    apisAreContracts: {
+      heading: "Las APIs son contratos",
+      paragraphs: [
+        "Uno de los conceptos más importantes que aprendí es que las APIs son contratos.",
+        "Si un lado cambia... el otro lado puede romperse.",
+        "Imagina un frontend que espera esta respuesta:"
+      ],
+      afterDesc: "La API sigue funcionando. El servidor no se cae. Pero el frontend de repente deja de funcionar. Nada está técnicamente \"mal\". El contrato simplemente se rompió."
+    },
+    goodAnswers: {
+      heading: "Una buena API responde preguntas",
+      paragraphs: [
+        "El endpoint en sí no es el producto. La respuesta lo es.",
+        "Una respuesta debería responder preguntas claramente. Por ejemplo, en lugar de devolver:"
+      ],
+      afterDesc: "El consumidor sabe inmediatamente: Qué pasó, si tuvo éxito, qué hacer a continuación. Eso es comunicación."
+    },
+    methods: {
+      heading: "Los métodos HTTP tienen significado",
+      paragraphs: [
+        "Una cosa que me ayudó a entender mejor las APIs fue darme cuenta de que los métodos HTTP no son aleatorios.",
+        "Cada uno representa una intención."
+      ],
+      headers: ["Método", "Propósito"],
+      rows: [
+        ["GET", "Obtener información"],
+        ["POST", "Crear recursos"],
+        ["PUT", "Reemplazar recursos"],
+        ["PATCH", "Actualizar parte de un recurso"],
+        ["DELETE", "Eliminar recursos"]
+      ],
+      closing: "Usar el método correcto hace que una API sea predecible. Los desarrolladores no deberían tener que adivinar qué hace un endpoint."
+    },
+    statusCodes: {
+      heading: "Los códigos de estado importan",
+      paragraphs: [
+        "Devolver datos no es suficiente. El código de estado HTTP cuenta la primera parte de la historia."
+      ],
+      codes: [
+        { code: "200 OK", desc: "Todo funcionó." },
+        { code: "201 Created", desc: "Se creó un nuevo recurso." },
+        { code: "400 Bad Request", desc: "El cliente envió datos no válidos." },
+        { code: "401 Unauthorized", desc: "Se requiere autenticación." },
+        { code: "404 Not Found", desc: "El recurso no existe." },
+        { code: "500 Internal Server Error", desc: "Algo falló en el servidor." }
+      ],
+      closing: "Una buena API se comunica tanto a través de su cuerpo de respuesta como de su código de estado."
+    },
+    designing: {
+      heading: "Diseñar antes de programar",
+      paragraphs: [
+        "Un hábito que he comenzado a adoptar es definir los endpoints antes de escribir la lógica de negocio. Algo tan simple como:"
+      ],
+      closing: "Esto ayuda a responder preguntas temprano. ¿Cómo consumirá esto el frontend? ¿Usará la aplicación móvil el mismo endpoint? ¿Otro servicio necesitará esta información más adelante? Diseñar primero. Implementar después."
+    },
+    errors: {
+      heading: "Las APIs deberían hacer que los errores sean fáciles de entender",
+      paragraphs: [
+        "Una de las mejores experiencias para un desarrollador es recibir un error que realmente explique el problema. En lugar de:"
+      ],
+      closing: "Los buenos mensajes de error reducen el tiempo de depuración. Y hacen que las integraciones sean mucho más fluidas."
+    },
+    versioning: {
+      heading: "El control de versiones existe por una razón",
+      paragraphs: [
+        "Las aplicaciones evolucionan. Las APIs también. A veces, cambiar un endpoint no es suficiente.",
+        "Ahí es donde el control de versiones se vuelve importante."
+      ],
+      closing: "Mantener versiones anteriores permite que las aplicaciones existentes sigan funcionando mientras los nuevos clientes adoptan la API actualizada. Es otra forma de respetar el contrato."
+    },
+    documentation: {
+      heading: "La documentación es parte de la API",
+      paragraphs: [
+        "Una lección que no esperaba aprender: si una API no está documentada... alguien eventualmente leerá el código fuente para entenderla.",
+        "La buena documentación explica: Endpoints disponibles, Parámetros, Autenticación, Ejemplos de solicitudes, Ejemplos de respuestas, Códigos de error.",
+        "Herramientas como Postman, Swagger/OpenAPI e Insomnia facilitan mucho este proceso.",
+        "Una API bien documentada suele ser más fácil de integrar que una técnicamente perfecta pero sin documentación."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusión técnica 🌸",
+      paragraphs: [
+        "Una API bien diseñada debería ser:"
+      ],
+      items: [
+        "Predecible",
+        "Consistente",
+        "Versionada",
+        "Bien documentada",
+        "Fácil de consumir",
+        "Fácil de depurar"
+      ],
+      closing: "El objetivo no es solo intercambiar datos. Es crear una conversación confiable entre sistemas."
+    },
+    personalNote: {
+      heading: "Nota personal 🌷",
+      paragraphs: [
+        "Mientras más trabajo de backend he hecho... menos pienso en endpoints. Ahora pienso en comunicación.",
+        "Cada respuesta es algo que otro desarrollador —o otra aplicación— tiene que entender. Ese pequeño cambio transformó por completo cómo diseño las APIs.",
+        "En lugar de preguntar: \"¿Funciona este endpoint?\" ahora pregunto: \"¿Disfrutaría otro desarrollador integrándose con él?\" Y creo que esa es una pregunta mucho mejor."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "Las APIs son conversaciones, no solo endpoints.",
+        "Los métodos HTTP comunican la intención.",
+        "Los códigos de estado son parte del mensaje.",
+        "Romper un contrato rompe la confianza.",
+        "La buena documentación es una característica, no una ocurrencia de último momento."
+      ]
+    },
+    closing: "Siguiente entrada: Desplegar Se Sintió Más Aterrador Que Programar 🌸",
+    closingSign: "Escribir la característica fue la parte fácil... cada abstracción tiene fugas.",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Ninguém Me Disse Que APIs Eram Conversas 🌸",
+    date: "17 de Agosto, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Quando aprendi sobre APIs pela primeira vez, elas pareciam... mecânicas.",
+    introDesc: "Você envia uma requisição. Recebe uma resposta. Pronto.",
+    introExtra: [
+      "Parecia uma máquina de vendas.",
+      "Insira a requisição. Receba o JSON. Siga em frente.",
+      "Mas depois de trabalhar em aplicações reais...",
+      "Percebi que APIs não são apenas requisições.",
+      "São conversas entre sistemas.",
+      "E como qualquer boa conversa... ambos os lados precisam se entender."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "No início, achei que construir uma API significava criar rotas como estas:"
+      ],
+      paragraphsAfter: [
+        "Se o endpoint retornasse dados... eu considerava concluído.",
+        "Técnicamente, funcionava.",
+        "Mas eu não estava realmente pensando no desenvolvedor que iria consumi-la.",
+        "Então percebi uma coisa.",
+        "A API não é construída para mim. É construída para quem tiver que se integrar a ela.",
+        "Isso muda tudo."
+      ]
+    },
+    apisAreContracts: {
+      heading: "APIs são contratos",
+      paragraphs: [
+        "Um dos conceitos mais importantes que aprendi é que APIs são contratos.",
+        "Se um lado muda... o outro lado pode quebrar.",
+        "Imagine um frontend esperando esta resposta:"
+      ],
+      afterDesc: "A API ainda funciona. O servidor não cai. Mas o frontend de repente para de funcionar. Nada está tecnicamente \"errado\". O contrato foi simplesmente quebrado."
+    },
+    goodAnswers: {
+      heading: "Uma boa API responde a perguntas",
+      paragraphs: [
+        "O endpoint em si não é o produto. A resposta é.",
+        "Uma resposta deve responder a perguntas de forma clara. Por exemplo, em vez de retornar:"
+      ],
+      afterDesc: "O consumidor sabe imediatamente: O que aconteceu, Se deu certo, O que fazer a seguir. Isso é comunicação."
+    },
+    methods: {
+      heading: "Métodos HTTP têm significado",
+      paragraphs: [
+        "Uma coisa que me ajudou a entender melhor as APIs foi perceber que os métodos HTTP não são aleatórios.",
+        "Cada um representa uma intenção."
+      ],
+      headers: ["Método", "Propósito"],
+      rows: [
+        ["GET", "Recuperar informações"],
+        ["POST", "Criar recursos"],
+        ["PUT", "Substituir recursos"],
+        ["PATCH", "Atualizar parte de um recurso"],
+        ["DELETE", "Remover recursos"]
+      ],
+      closing: "Usar o método correto torna uma API previsível. Os desenvolvedores não deveriam ter que adivinhar o que um endpoint faz."
+    },
+    statusCodes: {
+      heading: "Códigos de status importam",
+      paragraphs: [
+        "Retornar dados não é suficiente. O código de status HTTP conta a primeira parte da história."
+      ],
+      codes: [
+        { code: "200 OK", desc: "Tudo funcionou." },
+        { code: "201 Created", desc: "Um novo recurso foi criado." },
+        { code: "400 Bad Request", desc: "O cliente enviou dados inválidos." },
+        { code: "401 Unauthorized", desc: "A autenticação é necessária." },
+        { code: "404 Not Found", desc: "O recurso não existe." },
+        { code: "500 Internal Server Error", desc: "Algo falhou no servidor." }
+      ],
+      closing: "Uma boa API se comunica tanto através do corpo da resposta quanto do código de status."
+    },
+    designing: {
+      heading: "Projetar antes de programar",
+      paragraphs: [
+        "Um hábito que comecei a adotar é definir os endpoints antes de escrever a lógica de negócios. Algo tão simples como:"
+      ],
+      closing: "Isso ajuda a responder a perguntas cedo. Como o frontend consumirá isso? O aplicativo móvel usará o mesmo endpoint? Outro serviço precisará dessa informação mais tarde? Projete primeiro. Implemente depois."
+    },
+    errors: {
+      heading: "APIs devem tornar erros fáceis de entender",
+      paragraphs: [
+        "Uma das melhores experiências para um desenvolvedor é receber um erro que realmente explica o problema. Em vez de:"
+      ],
+      closing: "Boas mensagens de erro reduzem o tempo de depuração. E tornam as integrações muito mais suaves."
+    },
+    versioning: {
+      heading: "O versionamento existe por uma razão",
+      paragraphs: [
+        "As aplicações evoluem. APIs evoluem também. Às vezes, alterar um endpoint não é suficiente.",
+        "É aí que o versionamento se torna importante."
+      ],
+      closing: "Manter versões anteriores permite que as aplicações existentes continuem funcionando enquanto os novos clientes adotam a API atualizada. É outra maneira de respeitar o contrato."
+    },
+    documentation: {
+      heading: "A documentação é parte da API",
+      paragraphs: [
+        "Uma lição que eu não esperava aprender: se uma API não for documentada... alguém eventualmente lerá o código-fonte para entendê-la.",
+        "Uma boa documentação explica: Endpoints disponíveis, Parâmetros, Autenticação, Exemplos de requisições, Exemplos de respostas, Códigos de erro.",
+        "Ferramentas como Postman, Swagger/OpenAPI e Insomnia tornam esse processo muito mais fácil.",
+        "Uma API bem documentada costuma ser mais fácil de integrar do que uma tecnicamente perfeita, mas sem documentação."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusão técnica 🌸",
+      paragraphs: [
+        "Uma API bem projetada deve ser:"
+      ],
+      items: [
+        "Previsível",
+        "Consistente",
+        "Versionada",
+        "Bem documentada",
+        "Fácil de consumir",
+        "Fácil de depurar"
+      ],
+      closing: "O objetivo não é apenas trocar dados. É criar uma conversa confiável entre sistemas."
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌷",
+      paragraphs: [
+        "Quanto mais trabalho de backend eu faço... menos penso em endpoints. Agora penso em comunicação.",
+        "Cada resposta é algo que outro desenvolvedor —ou outra aplicação— precisa entender. Essa pequena mudança transformou completamente como projeto APIs.",
+        "Em vez de perguntar: \"Esse endpoint funciona?\" agora pergunto: \"Outro desenvolvedor gostaria de se integrar com ele?\" E acho essa uma pergunta muito melhor."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "APIs são conversas, não apenas endpoints.",
+        "Métodos HTTP funcionam como intenções.",
+        "Códigos de status fazem parte da mensagem.",
+        "Quebrar um contrato quebra a confiança.",
+        "Uma boa documentação é um recurso, não um detalhe esquecido."
+      ]
+    },
+    closing: "Próxima entrada: Implantar Parecia Mais Assustador Do Que Programar 🌸",
+    closingSign: "Escrever o recurso foi a parte fácil... cada abstração vaza.",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first misconception -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+              
+              <!-- Styled routes list -->
+              <div class="api-endpoints-container spec-endpoints">
+                <div class="api-endpoint">
+                  <span class="method get">GET</span>
+                  <span class="path">/users</span>
+                </div>
+                <div class="api-endpoint">
+                  <span class="method post">POST</span>
+                  <span class="path">/orders</span>
+                </div>
+                <div class="api-endpoint">
+                  <span class="method delete">DELETE</span>
+                  <span class="path">/products/15</span>
+                </div>
+              </div>
+
+              {page.firstAssumption.paragraphsAfter.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- APIs are contracts -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.apisAreContracts.heading}</h2>
+            {page.apisAreContracts.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Contract Comparator -->
+            <div class="contract-comparator">
+              <div class="contract-side expect">
+                <div class="contract-header">{lang === 'en' ? 'Expected JSON' : lang === 'pt' ? 'JSON Esperado' : 'JSON Esperado'}</div>
+                <pre class="code-block"><code>{`{
+  "id": 15,
+  "name": "Jill"
+}`}</code></pre>
+              </div>
+              <div class="contract-arrow">⚡</div>
+              <div class="contract-side actual">
+                <div class="contract-header error-header">{lang === 'en' ? 'Changed Backend' : lang === 'pt' ? 'Backend Alterado' : 'Backend Modificado'}</div>
+                <pre class="code-block error-code"><code>{`{
+  "userId": 15,    // ❌ Error
+  "fullName": "Jill Hernandez"
+}`}</code></pre>
+              </div>
+            </div>
+
+            <p style="margin-top: 1.5rem;">{page.apisAreContracts.afterDesc}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- A good API answers questions -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.goodAnswers.heading}</h2>
+            {page.goodAnswers.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <div class="response-diff">
+              <div class="diff-block-bad">
+                <div class="diff-title">{lang === 'en' ? 'Vending Machine (Not helpful)' : lang === 'pt' ? 'Máquina de Vendas' : 'Máquina Expendedora'}</div>
+                <pre class="code-block"><code>{`{
+  "status": true
+}`}</code></pre>
+              </div>
+              <div class="diff-block-good">
+                <div class="diff-title success-title">{lang === 'en' ? 'Conversation (Helpful)' : lang === 'pt' ? 'Conversação' : 'Conversación'}</div>
+                <pre class="code-block code-block-success"><code>{`{
+  "success": true,
+  "message": "${lang === 'en' ? 'Invoice generated successfully.' : lang === 'pt' ? 'Fatura gerada com sucesso.' : 'Factura generada correctamente.'}",
+  "invoiceId": 2487
+}`}</code></pre>
+              </div>
+            </div>
+
+            <p style="margin-top: 1.5rem;">{page.goodAnswers.afterDesc}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- HTTP methods have meaning -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.methods.heading}</h2>
+            {page.methods.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <div class="table-container">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    {page.methods.headers.map((header) => (
+                      <th>{header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {page.methods.rows.map((row) => (
+                    <tr>
+                      <td><span class={`method-badge ${row[0].toLowerCase()}`}>{row[0]}</span></td>
+                      <td>{row[1]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            <p style="margin-top: 1.5rem;">{page.methods.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Status codes matter -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.statusCodes.heading}</h2>
+            {page.statusCodes.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <div class="status-codes-grid">
+              {page.statusCodes.codes.map((item) => {
+                const categoryClass = item.code.startsWith('2') ? 'success-status' : item.code.startsWith('4') ? 'client-error' : 'server-error';
+                return (
+                  <div class="status-card">
+                    <span class={`status-badge ${categoryClass}`}>{item.code}</span>
+                    <span class="status-desc">{item.desc}</span>
+                  </div>
+                );
+              })}
+            </div>
+            
+            <p style="margin-top: 1.5rem;">{page.statusCodes.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Designing before coding -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.designing.heading}</h2>
+            {page.designing.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <div class="api-endpoints-container design-endpoints">
+              <div class="api-endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/products</span>
+              </div>
+              <div class="api-endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/products/{`{id}`}</span>
+              </div>
+              <div class="api-endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/orders</span>
+              </div>
+              <div class="api-endpoint">
+                <span class="method patch">PATCH</span>
+                <span class="path">/orders/{`{id}`}</span>
+              </div>
+              <div class="api-endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="path">/cart/{`{id}`}</span>
+              </div>
+            </div>
+            
+            <p style="margin-top: 1.5rem;">{page.designing.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Errors -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.errors.heading}</h2>
+            {page.errors.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <div class="response-diff">
+              <div class="diff-block-bad">
+                <div class="diff-title">{lang === 'en' ? 'Generic (Frustrating)' : lang === 'pt' ? 'Genérico' : 'Genérico'}</div>
+                <pre class="code-block error-code"><code>{`{
+  "error": true
+}`}</code></pre>
+              </div>
+              <div class="diff-block-good">
+                <div class="diff-title success-title">{lang === 'en' ? 'Descriptive (Awesome)' : lang === 'pt' ? 'Descritivo' : 'Descriptivo'}</div>
+                <pre class="code-block code-block-success"><code>{`{
+  "success": false,
+  "error": "${lang === 'en' ? 'Email already exists.' : lang === 'pt' ? 'E-mail já cadastrado.' : 'El correo electrónico ya existe.'}",
+  "field": "email"
+}`}</code></pre>
+              </div>
+            </div>
+            
+            <p style="margin-top: 1.5rem;">{page.errors.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Versioning -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.versioning.heading}</h2>
+            {page.versioning.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <div class="versioning-preview">
+              <div class="version-badge">v1</div>
+              <pre class="code-block"><code>/api/v1/products</code></pre>
+              <div class="version-badge v2">v2</div>
+              <pre class="code-block code-block-success"><code>/api/v2/products</code></pre>
+            </div>
+            
+            <p style="margin-top: 1.5rem;">{page.versioning.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Documentation -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.documentation.heading}</h2>
+            <div class="section-body">
+              {page.documentation.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Takeaway -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.takeaway.heading}</h2>
+            {page.takeaway.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <ul class="remember-list" style="margin: 1.5rem 0;">
+              {page.takeaway.items.map((item) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">✔</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{page.takeaway.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal Note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* API Endpoint Badges */
+  .api-endpoints-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .api-endpoint {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .method {
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: 72px;
+    text-align: center;
+  }
+
+  .method.get { background: rgba(79, 195, 247, 0.15); color: #4fc3f7; border: 1px solid rgba(79, 195, 247, 0.3); }
+  .method.post { background: rgba(129, 199, 132, 0.15); color: #81c784; border: 1px solid rgba(129, 199, 132, 0.3); }
+  .method.patch { background: rgba(255, 183, 77, 0.15); color: #ffb74d; border: 1px solid rgba(255, 183, 77, 0.3); }
+  .method.delete { background: rgba(229, 115, 115, 0.15); color: #e57373; border: 1px solid rgba(229, 115, 115, 0.3); }
+
+  .path {
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  /* Contract Comparator & Diff Blocks */
+  .contract-comparator {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 1.5rem 0;
+  }
+
+  .contract-side {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .contract-header {
+    background: rgba(255, 75, 145, 0.08);
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding: 8px 16px;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rose);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .error-header {
+    background: rgba(229, 115, 115, 0.08);
+    border-color: rgba(229, 115, 115, 0.12);
+    color: #e57373;
+  }
+
+  .contract-arrow {
+    font-size: 1.5rem;
+    color: var(--rose);
+    opacity: 0.7;
+  }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: none;
+    border-radius: 0;
+    padding: 1.25rem;
+    margin: 0;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .error-code {
+    border-left: 3px solid #e57373;
+  }
+
+  /* Response & Error Diff Boxes */
+  .response-diff {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 1.5rem 0;
+  }
+
+  .diff-block-bad {
+    background: rgba(229, 115, 115, 0.02);
+    border: 1px solid rgba(229, 115, 115, 0.15);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .diff-block-good {
+    background: rgba(129, 199, 132, 0.02);
+    border: 1px solid rgba(129, 199, 132, 0.15);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .diff-title {
+    padding: 8px 16px;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #e57373;
+    background: rgba(229, 115, 115, 0.08);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .success-title {
+    color: #81c784;
+    background: rgba(129, 199, 132, 0.08);
+  }
+
+  .code-block-success {
+    border-left: 3px solid #81c784;
+  }
+
+  /* HTTP Method Badge within table */
+  .method-badge {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .method-badge.get { background: rgba(79, 195, 247, 0.15); color: #4fc3f7; border: 1px solid rgba(79, 195, 247, 0.3); }
+  .method-badge.post { background: rgba(129, 199, 132, 0.15); color: #81c784; border: 1px solid rgba(129, 199, 132, 0.3); }
+  .method-badge.put { background: rgba(174, 115, 237, 0.15); color: #ba68c8; border: 1px solid rgba(174, 115, 237, 0.3); }
+  .method-badge.patch { background: rgba(255, 183, 77, 0.15); color: #ffb74d; border: 1px solid rgba(255, 183, 77, 0.3); }
+  .method-badge.delete { background: rgba(229, 115, 115, 0.15); color: #e57373; border: 1px solid rgba(229, 115, 115, 0.3); }
+
+  /* Comparison Table Style */
+  .table-container {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .comparison-table th, .comparison-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .comparison-table th {
+    background: rgba(255, 75, 145, 0.08);
+    color: var(--text);
+    font-weight: 700;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table td:first-child { border-right: 1px solid rgba(255, 255, 255, 0.04); width: 140px; }
+
+  /* Status Codes Grid */
+  .status-codes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .status-card {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .status-badge {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: 90px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .status-badge.success-status { background: rgba(129, 199, 132, 0.15); color: #81c784; border: 1px solid rgba(129, 199, 132, 0.3); }
+  .status-badge.client-error { background: rgba(255, 183, 77, 0.15); color: #ffb74d; border: 1px solid rgba(255, 183, 77, 0.3); }
+  .status-badge.server-error { background: rgba(229, 115, 115, 0.15); color: #e57373; border: 1px solid rgba(229, 115, 115, 0.3); }
+
+  .status-desc {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.92rem;
+  }
+
+  /* Versioning Preview */
+  .versioning-preview {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 75, 145, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .version-badge {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 750;
+    background: rgba(255, 75, 145, 0.15);
+    color: var(--rose);
+    border: 1px solid rgba(255, 75, 145, 0.3);
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+
+  .version-badge.v2 {
+    background: rgba(129, 199, 132, 0.15);
+    color: #81c784;
+    border-color: rgba(129, 199, 132, 0.3);
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .question-item {
+    background: rgba(255, 255, 255, 0.01);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .question-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .question-item .remember-dot {
+    color: var(--text-muted);
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .contract-comparator, .response-diff, .status-codes-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .contract-arrow {
+      text-align: center;
+      transform: rotate(90deg);
+      margin: 8px 0;
+    }
+    .versioning-preview {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>

@@ -1,0 +1,1331 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Deploying Felt More Scary Than Coding 🌸",
+    date: "August 24, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "For a long time, I thought software development ended here:",
+    introDesc: "Write the code. Test it. Done.",
+    introExtra: [
+      "Then I deployed my first real application.",
+      "That's when I discovered an uncomfortable truth.",
+      "Deployment isn't the end of development.",
+      "It's the moment your code meets the real world."
+    ],
+    firstAssumption: {
+      heading: "My first misconception",
+      paragraphs: [
+        "I imagined deployment was basically this:",
+        "git push → Production → 🎉 Everyone is happy",
+        "Reality looked very different. It felt like everything had to fail before it worked."
+      ]
+    },
+    notYourComputer: {
+      heading: "Your application doesn't run on your computer",
+      paragraphs: [
+        "One lesson every developer eventually learns: \"If it works on my machine...\" doesn't mean it works anywhere else.",
+        "Production has different configuration requirements:"
+      ],
+      list: [
+        "Environment variables",
+        "Databases",
+        "Domains",
+        "API keys",
+        "Network rules",
+        "File permissions",
+        "Build processes"
+      ],
+      closing: "The application isn't changing. The environment is."
+    },
+    envVars: {
+      heading: "Environment variables matter",
+      paragraphs: [
+        "Hardcoding secrets might work during development. It should never reach production."
+      ],
+      badLabel: "Instead of hardcoding API keys:",
+      goodLabel: "Applications should rely on environment variables:",
+      closing: "Keeping configuration outside the codebase makes applications safer and easier to maintain."
+    },
+    moreThanUploading: {
+      heading: "Deployment is more than uploading files",
+      paragraphs: [
+        "Modern deployments usually involve several steps. Every stage is another opportunity to catch problems before users do."
+      ]
+    },
+    cicd: {
+      heading: "CI/CD changed everything",
+      paragraphs: [
+        "One concept that completely changed my understanding of deployment was Continuous Integration and Continuous Deployment (CI/CD).",
+        "Instead of manually copying files to a server... the pipeline handles repetitive tasks automatically. Automation reduces human error.",
+        "And humans are surprisingly creative when it comes to creating deployment problems."
+      ]
+    },
+    productionBug: {
+      heading: "The first production bug",
+      paragraphs: [
+        "Every developer remembers it. Everything looked perfect locally. Production had other plans.",
+        "Sometimes it's a missing environment variable. Sometimes a database migration. Sometimes a CORS configuration. Or a forgotten API key restriction.",
+        "Production has a way of exposing assumptions you didn't know you had."
+      ]
+    },
+    monitoring: {
+      heading: "Monitoring is part of deployment",
+      paragraphs: [
+        "Deploying isn't enough. You also need to know if everything keeps working.",
+        "Shipping software without monitoring is like flying a plane without instruments."
+      ],
+      list: [
+        "Response times",
+        "Failed requests",
+        "Server errors",
+        "CPU and memory usage",
+        "Database performance",
+        "User reports"
+      ]
+    },
+    rollbacks: {
+      heading: "Rollbacks are underrated",
+      paragraphs: [
+        "One lesson I wish more people talked about: A good deployment strategy always includes a rollback plan.",
+        "Because sometimes the safest decision isn't fixing production. It's returning to the last stable version.",
+        "Being able to recover quickly is just as important as deploying quickly."
+      ]
+    },
+    tools: {
+      heading: "My favorite deployment tools",
+      paragraphs: [
+        "Throughout different projects, I've worked with deployment platforms like Vercel, Netlify, Google Play Console, and traditional web servers for Laravel applications.",
+        "Each one solves a different problem. But they all have one thing in common: eventually... they'll teach you to respect production."
+      ]
+    },
+    takeaway: {
+      heading: "Technical takeaway 🌸",
+      paragraphs: [
+        "Deployment isn't a single action. It's an engineering process.",
+        "A reliable deployment usually includes:"
+      ],
+      items: [
+        "Version control",
+        "Environment management",
+        "Automated builds",
+        "Testing",
+        "Monitoring",
+        "Rollback strategy"
+      ],
+      closing: "The goal isn't simply getting code online. It's releasing software safely."
+    },
+    personalNote: {
+      heading: "Personal note 🌷",
+      paragraphs: [
+        "One thing I've noticed throughout my career is that the fear of deployment never completely disappears. And maybe that's a good thing.",
+        "Production affects real users. Real businesses. Real data. Feeling a little nervous before pressing Deploy means you understand the responsibility behind it.",
+        "Over time, that fear becomes confidence. Not because deployments stop failing, but because you learn how to prepare for them."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "\"Works on my machine\" isn't a deployment strategy.",
+        "Environment variables are part of the application.",
+        "CI/CD reduces repetitive mistakes.",
+        "Monitoring is just as important as deployment.",
+        "Every deployment should have a rollback plan."
+      ]
+    },
+    closing: "Next entry: Why Every Developer Should Learn Git Beyond git push 🌸",
+    closingSign: "Version control isn't just about saving code. It's about collaborating, recovering, and understanding the history of a project.",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Desplegar Se Sintió Más Aterrador Que Programar 🌸",
+    date: "24 de Agosto, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Durante mucho tiempo, pensé que el desarrollo de software terminaba aquí:",
+    introDesc: "Escribe el código. Pruébalo. Listo.",
+    introExtra: [
+      "Luego desplegué mi primera aplicación real.",
+      "Fue entonces cuando descubrí una verdad incómoda.",
+      "El despliegue no es el final del desarrollo.",
+      "Es el momento en que tu código se encuentra con el mundo real."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Imaginaba que el despliegue era básicamente esto:",
+        "git push → Producción → 🎉 Todo el mundo está feliz",
+        "La realidad se veía muy diferente. Parecía que todo tenía que fallar antes de funcionar."
+      ]
+    },
+    notYourComputer: {
+      heading: "Tu aplicación no corre en tu computadora",
+      paragraphs: [
+        "Una lección que todo desarrollador aprende eventualmente: \"Si funciona en mi máquina...\" no significa que funcione en ningún otro lugar.",
+        "Producción tiene diferentes requisitos de configuración:"
+      ],
+      list: [
+        "Variables de entorno",
+        "Bases de datos",
+        "Dominios",
+        "Claves de API",
+        "Reglas de red",
+        "Permisos de archivos",
+        "Procesos de construcción"
+      ],
+      closing: "La aplicación no cambia. El entorno sí."
+    },
+    envVars: {
+      heading: "Las variables de entorno importan",
+      paragraphs: [
+        "Escribir secretos directamente en el código puede funcionar durante el desarrollo. Nunca debería llegar a producción."
+      ],
+      badLabel: "En lugar de escribir claves de API directamente en el código:",
+      goodLabel: "Las aplicaciones deberían depender de variables de entorno:",
+      closing: "Mantener la configuración fuera del código hace que las aplicaciones sean más seguras y fáciles de mantener."
+    },
+    moreThanUploading: {
+      heading: "El despliegue es más que subir archivos",
+      paragraphs: [
+        "Los despliegues modernos suelen implicar varios pasos. Cada etapa es otra oportunidad para detectar problemas antes que los usuarios."
+      ]
+    },
+    cicd: {
+      heading: "CI/CD lo cambió todo",
+      paragraphs: [
+        "Un concepto que cambió por completo mi comprensión del despliegue fue la Integración Continua y el Despliegue Continuo (CI/CD).",
+        "En lugar de copiar archivos manualmente a un servidor... el pipeline se encarga de las tareas repetitivas de forma automática. La automatización reduce el error humano.",
+        "Y los humanos somos sorprendentemente creativos a la hora de crear problemas de despliegue."
+      ]
+    },
+    productionBug: {
+      heading: "El primer error en producción",
+      paragraphs: [
+        "Cada desarrollador lo recuerda. Todo se veía perfecto localmente. Producción tenía otros planes.",
+        "A veces es una variable de entorno faltante. A veces una migración de base de datos. A veces una configuración de CORS. O una restricción de clave de API olvidada.",
+        "Producción tiene una forma de exponer supuestos que no sabías que tenías."
+      ]
+    },
+    monitoring: {
+      heading: "El monitoreo es parte del despliegue",
+      paragraphs: [
+        "Desplegar no es suficiente. También necesitas saber si todo sigue funcionando.",
+        "Lanzar software sin monitoreo es como pilotar un avión sin instrumentos."
+      ],
+      list: [
+        "Tiempos de respuesta",
+        "Solicitudes fallidas",
+        "Errores del servidor",
+        "Uso de CPU y memoria",
+        "Rendimiento de la base de datos",
+        "Reportes de usuarios"
+      ]
+    },
+    rollbacks: {
+      heading: "Los rollbacks están subestimados",
+      paragraphs: [
+        "Una lección de la que desearía que más gente hablara: una buena estrategia de despliegue siempre incluye un plan de rollback.",
+        "Porque a veces la decisión más segura no es arreglar producción. Es volver a la última versión estable.",
+        "Ser capaz de recuperarse rápidamente es tan importante como desplegar rápidamente."
+      ]
+    },
+    tools: {
+      heading: "Mis herramientas de despliegue favoritas",
+      paragraphs: [
+        "A lo largo de diferentes proyectos, he trabajado con plataformas de despliegue como Vercel, Netlify, Google Play Console y servidores web tradicionales para aplicaciones Laravel.",
+        "Cada una resuelve un problema diferente. Pero todas tienen algo en común: eventualmente... te enseñarán a respetar producción."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusión técnica 🌸",
+      paragraphs: [
+        "El despliegue no es una sola acción. Es un proceso de ingeniería.",
+        "Un despliegue confiable suele incluir:"
+      ],
+      items: [
+        "Control de versiones",
+        "Gestión de entornos",
+        "Construcciones automatizadas",
+        "Pruebas",
+        "Monitoreo",
+        "Estrategia de rollback"
+      ],
+      closing: "El objetivo no es simplemente subir el código. Es lanzar software de forma segura."
+    },
+    personalNote: {
+      heading: "Nota personal 🌷",
+      paragraphs: [
+        "Una cosa que he notado a lo largo de mi carrera es que el miedo al despliegue nunca desaparece por completo. Y tal vez eso sea bueno.",
+        "Producción afecta a usuarios reales. Negocios reales. Datos reales. Sentir un poco de nervios antes de presionar Desplegar significa que entiendes la responsabilidad detrás de ello.",
+        "Con el tiempo, ese miedo se convierte en confianza. No porque los despliegues dejen de fallar, sino porque aprendes a prepararte para ellos."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "\"Funciona en mi máquina\" no es una estrategia de despliegue.",
+        "Las variables de entorno son parte de la aplicación.",
+        "CI/CD reduce los errores repetitivos.",
+        "El monitoreo es tan importante como el despliegue.",
+        "Cada despliegue debería tener un plan de rollback."
+      ]
+    },
+    closing: "Siguiente entrada: Por Qué Cada Desarrollador Debería Aprender Git Más Allá de git push 🌸",
+    closingSign: "El control de versiones no se trata solo de guardar código. Se trata de colaborar, recuperarse y comprender la historia de un proyecto.",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Implantar Parecia Mais Assustador Do Que Programar 🌸",
+    date: "24 de Agosto, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Por muito tempo, pensei que o desenvolvimento de software terminava aqui:",
+    introDesc: "Escreva o código. Teste. Pronto.",
+    introExtra: [
+      "Então implantei minha primeira aplicação real.",
+      "Foi aí que descobri uma verdade desconfortável.",
+      "A implantação não é o fim do desenvolvimento.",
+      "É o momento em que seu código se encontra com o mundo real."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Eu imaginava que a implantação era basicamente isso:",
+        "git push → Produção → 🎉 Todo mundo fica feliz",
+        "A realidade parecia muito diferente. Parecia que tudo precisava falhar antes de funcionar."
+      ]
+    },
+    notYourComputer: {
+      heading: "Sua aplicação não roda no seu computador",
+      paragraphs: [
+        "Uma lição que todo desenvolvedor aprende: \"Se funciona na minha máquina...\" não significa que funcione em outro lugar.",
+        "A produção tem requisitos de configuração diferentes:"
+      ],
+      list: [
+        "Variáveis de ambiente",
+        "Bancos de dados",
+        "Domínios",
+        "Chaves de API",
+        "Regras de rede",
+        "Permissões de arquivos",
+        "Processos de construção"
+      ],
+      closing: "A aplicação não muda. O ambiente sim."
+    },
+    envVars: {
+      heading: "Variáveis de ambiente importam",
+      paragraphs: [
+        "Escrever segredos diretamente no código pode funcionar durante o desenvolvimento. Nunca deve chegar à produção."
+      ],
+      badLabel: "Em vez de escrever chaves de API diretamente no código:",
+      goodLabel: "As aplicações devem depender de variáveis de ambiente:",
+      closing: "Manter a configuração fora do código torna as aplicações mais seguras e fáceis de manter."
+    },
+    moreThanUploading: {
+      heading: "A implantação é mais do que carregar arquivos",
+      paragraphs: [
+        "Implantações modernas geralmente envolvem várias etapas. Cada estágio é outra oportunidade de capturar problemas antes dos usuários."
+      ]
+    },
+    cicd: {
+      heading: "O CI/CD mudou tudo",
+      paragraphs: [
+        "Um conceito que mudou completamente minha compreensão da implantação foi a Integração Contínua e Implantação Contínua (CI/CD).",
+        "Em vez de copiar arquivos manualmente para um servidor... o pipeline cuida das tarefas repetitivas automaticamente. A automação reduz o erro humano.",
+        "E os humanos são surpreendentemente criativos ao criar problemas de implantação."
+      ]
+    },
+    productionBug: {
+      heading: "O primeiro bug em produção",
+      paragraphs: [
+        "Todo desenvolvedor lembra dele. Tudo parecia perfeito localmente. A produção tinha outros planos.",
+        "Às vezes é uma variável de ambiente ausente. Às vezes uma migração de banco de dados. Às vezes uma configuração de CORS. Ou uma restrição de chave de API esquecida.",
+        "A produção tem uma maneira de expor suposições que você não sabia que tinha."
+      ]
+    },
+    monitoring: {
+      heading: "O monitoramento faz parte da implantação",
+      paragraphs: [
+        "Implantar não é suficiente. Você também precisa saber se tudo continua funcionando.",
+        "Lançar software sem monitoramento é como pilotar um avião sem instrumentos."
+      ],
+      list: [
+        "Tempos de resposta",
+        "Requisições com falha",
+        "Erros de servidor",
+        "Uso de CPU e memória",
+        "Desempenho do banco de dados",
+        "Relatórios de usuários"
+      ]
+    },
+    rollbacks: {
+      heading: "Os rollbacks são subestimados",
+      paragraphs: [
+        "Uma lição que eu gostaria que mais pessoas comentassem: uma boa estratégia de implantação sempre inclui um plano de rollback.",
+        "Porque às vezes a decisão mais segura não é consertar a produção. É voltar para a última versão estável.",
+        "Ser capaz de se recuperar rapidamente é tão importante quanto implantar rapidamente."
+      ]
+    },
+    tools: {
+      heading: "Minhas ferramentas de implantação favoritas",
+      paragraphs: [
+        "Ao longo de diferentes projetos, trabalhei com plataformas de implantação como Vercel, Netlify, Google Play Console e servidores web tradicionais para aplicações Laravel.",
+        "Cada uma resolve um problema diferente. Mas todas têm algo em comum: eventualmente... elas te ensinarão a respeitar a produção."
+      ]
+    },
+    takeaway: {
+      heading: "Conclusão técnica 🌸",
+      paragraphs: [
+        "A implantação não é uma única ação. É um processo de engenharia.",
+        "Uma implantação confiável geralmente inclui:"
+      ],
+      items: [
+        "Controle de versões",
+        "Gerenciamento de ambientes",
+        "Construções automatizadas",
+        "Testes",
+        "Monitoramento",
+        "Estratégia de rollback"
+      ],
+      closing: "O objetivo não é simplesmente colocar o código online. É lançar software com segurança."
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌷",
+      paragraphs: [
+        "Uma coisa que notei ao longo da minha carreira é que o medo da implantação nunca desaparece completamente. E talvez isso seja bom.",
+        "A produção afeta usuários reais. Negócios reais. Dados reais. Sentir um pouco de frio na barriga antes de clicar em Implantar significa que você entende a responsabilidade por trás disso.",
+        "Com o tempo, esse medo se torna confiança. Não porque as implantações parem de falhar, mas porque você aprende a se preparar para elas."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "\"Funciona na minha máquina\" não é uma estratégia de implantação.",
+        "Variáveis de ambiente fazem parte da aplicação.",
+        "O CI/CD reduz erros repetitivos.",
+        "O monitoramento é tão importante quanto a implantação.",
+        "Cada implantação deve ter um plano de rollback."
+      ]
+    },
+    closing: "Próxima entrada: Por Que Todo Desenvolvedor Deve Aprender Git Além de git push 🌸",
+    closingSign: "O controle de versão não é apenas para salvar código. É sobre colaborar, recuperar e entender a história de um projeto.",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first misconception -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              <p>{page.firstAssumption.paragraphs[0]}</p>
+              
+              <!-- Timeline expectations vs reality -->
+              <div class="timeline-container">
+                <div class="timeline-box expect-box">
+                  <div class="timeline-title">{lang === 'en' ? 'Expectation' : lang === 'pt' ? 'Expectativa' : 'Expectativa'}</div>
+                  <ul class="timeline-steps">
+                    <li><span class="step-num">1</span> git push</li>
+                    <li><span class="step-num">2</span> Production</li>
+                    <li><span class="step-num">3</span> 🎉 {lang === 'en' ? 'Happy' : lang === 'pt' ? 'Feliz' : 'Feliz'}</li>
+                  </ul>
+                </div>
+                
+                <div class="timeline-box reality-box">
+                  <div class="timeline-title error-title">{lang === 'en' ? 'Reality' : lang === 'pt' ? 'Realidade' : 'Realidad'}</div>
+                  <ul class="timeline-steps">
+                    <li><span class="step-num">1</span> git push</li>
+                    <li><span class="step-num step-err">2</span> Build Failed</li>
+                    <li><span class="step-num">3</span> Fix Env Vars</li>
+                    <li><span class="step-num">4</span> Build Again</li>
+                    <li><span class="step-num step-err">5</span> Another Error</li>
+                    <li><span class="step-num">6</span> Fix Deps</li>
+                    <li><span class="step-num">7</span> Deploy</li>
+                    <li><span class="step-num step-err">8</span> Production Bug</li>
+                    <li><span class="step-num">9</span> Rollback</li>
+                    <li><span class="step-num">10</span> Coffee ☕</li>
+                  </ul>
+                </div>
+              </div>
+
+              <p style="margin-top: 1.5rem;">{page.firstAssumption.paragraphs[1]}</p>
+              <p>{page.firstAssumption.paragraphs[2]}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Your app doesn't run on your computer -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.notYourComputer.heading}</h2>
+            {page.notYourComputer.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <ul class="remember-list" style="margin: 1.5rem 0;">
+              {page.notYourComputer.list.map((item) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">📍</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{page.notYourComputer.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Environment variables matter -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.envVars.heading}</h2>
+            {page.envVars.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Code blocks comparator for Env variables -->
+            <div class="env-comparator">
+              <div class="env-side bad-side">
+                <div class="env-header bad-header">{page.envVars.badLabel}</div>
+                <pre class="code-block error-code"><code>{`// ❌ Hardcoded secrets (DANGEROUS)
+const apiKey = "AIzaSy********";
+const dbHost = "12.34.56.78";`}</code></pre>
+              </div>
+              <div class="env-side good-side">
+                <div class="env-header good-header">{page.envVars.goodLabel}</div>
+                <pre class="code-block code-block-success"><code>{`# env variables (SAFE & DYNAMIC)
+APP_URL=https://example.com
+DB_HOST=localhost
+DB_DATABASE=my_database
+API_KEY=********`}</code></pre>
+              </div>
+            </div>
+
+            <p style="margin-top: 1.5rem;">{page.envVars.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Deployment is more than uploading files -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.moreThanUploading.heading}</h2>
+            {page.moreThanUploading.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Horizontal Deployment Flow Chart -->
+            <div class="flow-list">
+              {(() => {
+                const flowSteps = ["Source Code", "Git", "Build", "Install Dependencies", "Run Tests", "Generate Assets", "Deploy", "Production", "Monitoring"];
+                const localizedFlowSteps = lang === 'en' ? flowSteps :
+                  lang === 'pt' ? ["Código Fonte", "Git", "Build", "Instalar Dependências", "Executar Testes", "Gerar Assets", "Implantar", "Produção", "Monitoramento"] :
+                  ["Código Fuente", "Git", "Build", "Instalar Dependencias", "Ejecutar Pruebas", "Generar Assets", "Desplegar", "Producción", "Monitoreo"];
+                
+                return localizedFlowSteps.map((step, idx) => (
+                  <div class="flow-item">
+                    {idx !== 0 ? <div class="flow-arrow">↓</div> : null}
+                    <div class="flow-pill">{step}</div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- CI/CD changed everything -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.cicd.heading}</h2>
+            {page.cicd.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- The first production bug -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.productionBug.heading}</h2>
+            {page.productionBug.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Monitoring -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.monitoring.heading}</h2>
+            {page.monitoring.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Monitoring Metrics Cards -->
+            <div class="metrics-grid">
+              {page.monitoring.list.map((metric) => (
+                <div class="metric-card">
+                  <div class="metric-icon">📊</div>
+                  <div class="metric-name">{metric}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Rollbacks -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.rollbacks.heading}</h2>
+            {page.rollbacks.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            
+            <!-- Rollbacks Graphic -->
+            <div class="rollback-container">
+              <div class="build-node node-success">Build #48 <span class="badge-success">Stable</span></div>
+              <div class="build-connector">→</div>
+              <div class="build-node node-failed">Build #49 <span class="badge-failed">Current (BUG)</span></div>
+              <div class="rollback-action">
+                <div class="rollback-arrow-graphic">↩</div>
+                <div class="rollback-label">{lang === 'en' ? 'Quick Rollback' : lang === 'pt' ? 'Reversão Rápida' : 'Reversión Rápida'}</div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Tools -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.tools.heading}</h2>
+            {page.tools.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Takeaway -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.takeaway.heading}</h2>
+            {page.takeaway.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <ul class="remember-list" style="margin: 1.5rem 0;">
+              {page.takeaway.items.map((item) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">✔</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{page.takeaway.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal Note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* Expectations vs Reality timelines */
+  .timeline-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 2rem 0;
+  }
+
+  .timeline-box {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 20px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .timeline-box.reality-box {
+    border-color: rgba(229, 115, 115, 0.2);
+  }
+
+  .timeline-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--rose);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+  }
+
+  .timeline-title.error-title {
+    color: #e57373;
+    border-color: rgba(229, 115, 115, 0.12);
+  }
+
+  .timeline-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .timeline-steps li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 550;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--rose);
+    width: 22px;
+    height: 22px;
+    background: rgba(255, 75, 145, 0.1);
+    border: 1px solid rgba(255, 75, 145, 0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-num.step-err {
+    color: #e57373;
+    background: rgba(229, 115, 115, 0.1);
+    border-color: rgba(229, 115, 115, 0.25);
+  }
+
+  /* Env variables comparator */
+  .env-comparator {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 1.5rem 0;
+  }
+
+  .env-side {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .env-side.bad-side { border: 1px solid rgba(229, 115, 115, 0.15); }
+  .env-side.good-side { border: 1px solid rgba(129, 199, 132, 0.15); }
+
+  .env-header {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    letter-spacing: 0.05em;
+  }
+
+  .bad-header { background: rgba(229, 115, 115, 0.08); color: #e57373; }
+  .good-header { background: rgba(129, 199, 132, 0.08); color: #81c784; }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: none;
+    border-radius: 0;
+    padding: 1.25rem;
+    margin: 0;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .error-code { border-left: 3px solid #e57373; }
+  .code-block-success { border-left: 3px solid #81c784; }
+
+  .code-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+    font-style: italic;
+  }
+
+  /* Horizontal pipeline / steps list */
+  .flow-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin: 1.5rem 0;
+  }
+
+  .flow-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flow-arrow {
+    color: var(--rose);
+    font-size: 1.1rem;
+    margin: 4px 0 4px 18px;
+    opacity: 0.7;
+  }
+
+  .flow-pill {
+    background: rgba(255, 75, 145, 0.08);
+    border: 1px solid rgba(255, 75, 145, 0.18);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 500;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .flow-pill:hover {
+    background: rgba(255, 75, 145, 0.14);
+    border-color: rgba(255, 75, 145, 0.35);
+  }
+
+  /* Metrics indicator blocks */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .metric-card {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .metric-card:hover {
+    background: rgba(255, 75, 145, 0.04);
+    border-color: rgba(255, 75, 145, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .metric-icon {
+    font-size: 1.25rem;
+    opacity: 0.85;
+  }
+
+  .metric-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Rollback Visualization Graphic */
+  .rollback-container {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 75, 145, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+  }
+
+  .build-node {
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid;
+    width: 140px;
+    text-align: center;
+  }
+
+  .node-success {
+    background: rgba(129, 199, 132, 0.05);
+    border-color: rgba(129, 199, 132, 0.3);
+    color: #81c784;
+  }
+
+  .node-failed {
+    background: rgba(229, 115, 115, 0.05);
+    border-color: rgba(229, 115, 115, 0.3);
+    color: #e57373;
+  }
+
+  .badge-success {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(129, 199, 132, 0.2);
+    color: #81c784;
+  }
+
+  .badge-failed {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(229, 115, 115, 0.2);
+    color: #e57373;
+  }
+
+  .build-connector {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    opacity: 0.5;
+  }
+
+  .rollback-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 2px;
+  }
+
+  .rollback-arrow-graphic {
+    font-size: 1.3rem;
+    color: var(--rose);
+    animation: bounceBack 2s infinite ease-in-out;
+  }
+
+  @keyframes bounceBack {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+  }
+
+  .rollback-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--rose);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .question-item {
+    background: rgba(255, 255, 255, 0.01);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .question-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .question-item .remember-dot {
+    color: var(--text-muted);
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .timeline-container, .env-comparator, .metrics-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .rollback-container {
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 3.5rem;
+    }
+    .build-connector {
+      transform: rotate(90deg);
+      margin: 4px 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>

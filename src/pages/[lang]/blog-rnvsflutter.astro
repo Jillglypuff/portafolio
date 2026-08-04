@@ -1,0 +1,1365 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, React Native vs Flutter 🌸",
+    date: "August 3, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "One of the questions I hear the most is:",
+    introDesc: "\"Should I learn React Native or Flutter?\"",
+    introExtra: [
+      "The answer is...",
+      "It depends.",
+      "And I know that's probably the least satisfying answer possible.",
+      "But after working with Expo (React Native) while also exploring Flutter, I realized something.",
+      "This isn't a battle.",
+      "They're simply different tools designed for different situations."
+    ],
+    firstAssumption: {
+      heading: "My first misconception",
+      paragraphs: [
+        "I used to think the comparison looked like this:",
+        "React Native 🆚 Flutter",
+        "Winner.",
+        "Loser.",
+        "Pick one.",
+        "Never look back.",
+        "The more I learned...",
+        "the more I realized that's not how software engineering works.",
+        "Frameworks solve problems.",
+        "Choosing one should always start with understanding what problem you're trying to solve."
+      ]
+    },
+    howTheyWork: {
+      heading: "How they actually work",
+      desc: "Although both frameworks let you build Android and iOS apps from a single codebase, their architectures are very different."
+    },
+    rnArchitecture: {
+      heading: "React Native",
+      desc: "React Native uses JavaScript (or TypeScript) to communicate with native components.",
+      label: "Simplified architecture:"
+    },
+    flutterArchitecture: {
+      heading: "Flutter",
+      desc: "Flutter takes a completely different approach.",
+      label: "Architecture diagram:"
+    },
+    performance: {
+      heading: "Performance",
+      paragraphs: [
+        "This is probably the biggest myth.",
+        "People often say: \"Flutter is faster.\"",
+        "Reality is more nuanced.",
+        "Both frameworks can achieve excellent performance.",
+        "Flutter has an advantage when building highly animated interfaces because it controls the rendering pipeline.",
+        "React Native benefits from using native UI components and has improved significantly with the New Architecture (Fabric, TurboModules and JSI).",
+        "In most business applications... users won't notice the difference.",
+        "Poor architecture usually hurts performance much more than the framework itself."
+      ]
+    },
+    devExperience: {
+      heading: "Developer Experience",
+      intro: "This is where personal preference starts to matter.",
+      rn: {
+        heading: "React Native",
+        prosHeading: "Pros:",
+        consHeading: "Challenges:",
+        pros: [
+          "JavaScript / TypeScript ecosystem",
+          "Easy transition for React developers",
+          "Huge npm ecosystem",
+          "Expo simplifies development dramatically",
+          "Excellent for teams already building React applications"
+        ],
+        cons: [
+          "Native modules sometimes require platform-specific knowledge.",
+          "Dependency compatibility can occasionally become frustrating."
+        ]
+      },
+      flutter: {
+        heading: "Flutter",
+        prosHeading: "Pros:",
+        consHeading: "Challenges:",
+        pros: [
+          "Consistent UI across platforms",
+          "Excellent documentation",
+          "Powerful widget system",
+          "Beautiful animations",
+          "Strong tooling"
+        ],
+        cons: [
+          "Requires learning Dart.",
+          "Smaller ecosystem compared to JavaScript.",
+          "Larger application sizes in some scenarios."
+        ]
+      }
+    },
+    expoSection: {
+      heading: "Expo deserves its own section",
+      paragraphs: [
+        "One thing that completely changed my perception of React Native was discovering Expo.",
+        "At first, I assumed React Native required configuring Android Studio, Xcode, Gradle, CocoaPods...",
+        "and spending hours fixing environment issues.",
+        "Expo abstracts much of that complexity. Some features that stand out:"
+      ],
+      features: [
+        "File-based routing (Expo Router)",
+        "OTA (Over-the-Air) Updates",
+        "Push Notifications",
+        "Camera",
+        "Location",
+        "Secure Storage",
+        "Authentication",
+        "EAS Build",
+        "Easier deployment"
+      ],
+      closing: "It allows developers to focus more on building features than configuring infrastructure."
+    },
+    comparisonTable: {
+      heading: "A quick comparison",
+      headers: ["React Native", "Flutter"],
+      rows: [
+        ["Language: JavaScript / TypeScript", "Language: Dart"],
+        ["Uses native UI components", "Draws its own UI"],
+        ["Excellent for React teams", "Excellent for highly customized interfaces"],
+        ["Massive JavaScript ecosystem", "Strong Flutter ecosystem"],
+        ["Expo simplifies development", "Flutter includes many tools out of the box"]
+      ]
+    },
+    whichOne: {
+      heading: "Which one would I choose?",
+      paragraphs: [
+        "If my project already uses React on the web... I'd probably choose React Native.",
+        "Sharing knowledge, components, and even business logic across teams can be a huge advantage.",
+        "If I were building an application with highly customized animations, complex UI, or identical interfaces across multiple platforms... Flutter would be incredibly attractive.",
+        "Neither choice is objectively better.",
+        "Architecture, team experience, deadlines, and product requirements matter much more than internet debates."
+      ]
+    },
+    technicalTakeaway: {
+      heading: "Technical takeaway 🌸",
+      paragraphs: [
+        "Choosing a framework isn't about finding the \"best\" one. It's about understanding trade-offs.",
+        "Ask questions like:"
+      ],
+      questions: [
+        "What language does the team already know?",
+        "Will we share code with a web application?",
+        "How much platform-specific functionality do we need?",
+        "Do we need highly customized UI?",
+        "What's our deployment pipeline?",
+        "Who will maintain the project in two years?"
+      ],
+      closing: "Those answers are usually more valuable than benchmark comparisons."
+    },
+    personalNote: {
+      heading: "Personal note 🌷",
+      paragraphs: [
+        "One of the things I've enjoyed most about mobile development is realizing that frameworks come and go...",
+        "but good engineering decisions last much longer.",
+        "Every project teaches something different.",
+        "Sometimes it's a new API.",
+        "Sometimes it's deployment.",
+        "Sometimes it's architecture.",
+        "And sometimes... it's learning that there isn't always a single right answer."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      items: [
+        "Every framework has trade-offs.",
+        "Architecture matters more than popularity.",
+        "Expo makes React Native much more approachable.",
+        "Flutter's rendering engine is one of its biggest strengths.",
+        "Good developers choose tools based on problems—not trends."
+      ]
+    },
+    closing: "Next entry: Architecture Before Code 🌸",
+    closingSign: "Sometimes the hardest part of software development isn't writing code. It's knowing when to throw it away and start over.",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, React Native vs Flutter 🌸",
+    date: "3 de Agosto, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Una de las preguntas que más escucho es:",
+    introDesc: "\"¿Debería aprender React Native o Flutter?\"",
+    introExtra: [
+      "La respuesta es...",
+      "Depende.",
+      "Y sé que probablemente sea la respuesta menos satisfactoria posible.",
+      "Pero después de trabajar con Expo (React Native) y al mismo tiempo explorar Flutter, me di cuenta de algo.",
+      "Esto no es una batalla.",
+      "Son simplemente herramientas diferentes diseñadas para situaciones diferentes."
+    ],
+    firstAssumption: {
+      heading: "Mi primer supuesto incorrecto",
+      paragraphs: [
+        "Solía pensar que la comparación se veía así:",
+        "React Native 🆚 Flutter",
+        "Ganador.",
+        "Perdedor.",
+        "Elige uno.",
+        "Y nunca mires atrás.",
+        "Mientras más aprendía...",
+        "más me daba cuenta de que así no es como funciona la ingeniería de software.",
+        "Los frameworks resuelven problemas.",
+        "Elegir uno siempre debería comenzar por entender qué problema estás intentando resolver."
+      ]
+    },
+    howTheyWork: {
+      heading: "Cómo funcionan realmente",
+      desc: "Aunque ambos frameworks te permiten construir aplicaciones para Android e iOS desde una sola base de código, sus arquitecturas son muy diferentes."
+    },
+    rnArchitecture: {
+      heading: "React Native",
+      desc: "React Native utiliza JavaScript (o TypeScript) para comunicarse con componentes nativos.",
+      label: "Arquitectura simplificada:"
+    },
+    flutterArchitecture: {
+      heading: "Flutter",
+      desc: "Flutter adopta un enfoque completamente diferente.",
+      label: "Diagrama de arquitectura:"
+    },
+    performance: {
+      heading: "Rendimiento",
+      paragraphs: [
+        "Este es probablemente el mito más grande.",
+        "La gente suele decir: \"Flutter es más rápido.\"",
+        "La realidad es más matizada.",
+        "Ambos frameworks pueden lograr un rendimiento excelente.",
+        "Flutter tiene ventaja cuando se construyen interfaces con muchas animaciones porque controla el flujo de renderizado.",
+        "React Native se beneficia del uso de componentes de interfaz nativos y ha mejorado significativamente con la Nueva Arquitectura (Fabric, TurboModules y JSI).",
+        "En la mayoría de las aplicaciones empresariales... los usuarios no notarán la diferencia.",
+        "Una mala arquitectura suele perjudicar el rendimiento mucho más que el framework en sí."
+      ]
+    },
+    devExperience: {
+      heading: "Experiencia de Desarrollo",
+      intro: "Aquí es donde la preferencia personal empieza a importar.",
+      rn: {
+        heading: "React Native",
+        prosHeading: "Ventajas:",
+        consHeading: "Desafíos:",
+        pros: [
+          "Ecosistema de JavaScript / TypeScript",
+          "Transición fácil para desarrolladores de React",
+          "Enorme ecosistema de npm",
+          "Expo simplifica el desarrollo drásticamente",
+          "Excelente para equipos que ya construyen aplicaciones con React"
+        ],
+        cons: [
+          "Los módulos nativos a veces requieren conocimientos específicos de la plataforma.",
+          "La compatibilidad de dependencias a veces puede resultar frustrante."
+        ]
+      },
+      flutter: {
+        heading: "Flutter",
+        prosHeading: "Ventajas:",
+        consHeading: "Desafíos:",
+        pros: [
+          "Interfaz de usuario consistente en todas las plataformas",
+          "Excelente documentación",
+          "Potente sistema de widgets",
+          "Hermosas animaciones",
+          "Herramientas de desarrollo potentes"
+        ],
+        cons: [
+          "Requiere aprender Dart.",
+          "Ecosistema más pequeño en comparación con JavaScript.",
+          "Tamaños de aplicación más grandes en algunos escenarios."
+        ]
+      }
+    },
+    expoSection: {
+      heading: "Expo merece su propia sección",
+      paragraphs: [
+        "Una cosa que cambió por completo mi percepción de React Native fue descubrir Expo.",
+        "Al principio, asumí que React Native requería configurar Android Studio, Xcode, Gradle, CocoaPods...",
+        "y pasar horas solucionando problemas de entorno.",
+        "Expo abstrae gran parte de esa complejidad. Algunas características que destacan:"
+      ],
+      features: [
+        "Enrutamiento basado en archivos (Expo Router)",
+        "Actualizaciones Over-the-Air (OTA)",
+        "Notificaciones Push",
+        "Cámara",
+        "Ubicación",
+        "Almacenamiento Seguro",
+        "Autenticación",
+        "EAS Build",
+        "Despliegue más fácil"
+      ],
+      closing: "Permite a los desarrolladores enfocarse más en construir funcionalidades que en configurar la infraestructura."
+    },
+    comparisonTable: {
+      heading: "Una comparación rápida",
+      headers: ["React Native", "Flutter"],
+      rows: [
+        ["Lenguaje: JavaScript / TypeScript", "Lenguaje: Dart"],
+        ["Usa componentes de UI nativos", "Dibuja su propia UI"],
+        ["Excelente para equipos React", "Excelente para interfaces muy personalizadas"],
+        ["Ecosistema masivo de JavaScript", "Ecosistema fuerte de Flutter"],
+        ["Expo simplifica el desarrollo", "Flutter incluye muchas herramientas listas para usar"]
+      ]
+    },
+    whichOne: {
+      heading: "¿Cuál elegiría yo?",
+      paragraphs: [
+        "Si mi proyecto ya usa React en la web... probablemente elegiría React Native.",
+        "Compartir conocimiento, componentes e incluso lógica de negocio entre equipos puede ser una gran ventaja.",
+        "Si estuviera construyendo una aplicación con animaciones muy personalizadas, UI compleja o interfaces idénticas en múltiples plataformas... Flutter sería increíblemente atractivo.",
+        "Ninguna opción es objetivamente mejor.",
+        "La arquitectura, la experiencia del equipo, los plazos de entrega y los requisitos del producto importan mucho más que los debates de internet."
+      ]
+    },
+    technicalTakeaway: {
+      heading: "Conclusión técnica 🌸",
+      paragraphs: [
+        "Elegir un framework no se trata de encontrar el \"mejor\". Se trata de entender las ventajas y desventajas.",
+        "Hazte preguntas como:"
+      ],
+      questions: [
+        "¿Qué lenguaje ya conoce el equipo?",
+        "¿Compartiremos código con una aplicación web?",
+        "¿Cuánta funcionalidad específica de la plataforma necesitamos?",
+        "¿Necesitamos una interfaz de usuario muy personalizada?",
+        "¿Cómo es nuestra cadena de despliegue?",
+        "¿Quién mantendrá el proyecto en dos años?"
+      ],
+      closing: "Esas respuestas suelen ser más valiosas que las comparaciones de rendimiento."
+    },
+    personalNote: {
+      heading: "Nota personal 🌷",
+      paragraphs: [
+        "Una de las cosas que más he disfrutado del desarrollo móvil es darme cuenta de que los frameworks van y vienen...",
+        "pero las buenas decisiones de ingeniería duran mucho más.",
+        "Cada proyecto enseña algo diferente.",
+        "A veces es una nueva API.",
+        "A veces es el despliegue.",
+        "A veces es la arquitectura.",
+        "Y a veces... es aprender que no siempre hay una única respuesta correcta."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      items: [
+        "Cada framework tiene sus ventajas y desventajas.",
+        "La arquitectura importa más que la popularidad.",
+        "Expo hace que React Native sea mucho más accesible.",
+        "El motor de renderizado de Flutter es una de sus mayores fortalezas.",
+        "Los buenos desarrolladores eligen herramientas basadas en problemas, no en tendencias."
+      ]
+    },
+    closing: "Siguiente entrada: Arquitectura Antes que Código 🌸",
+    closingSign: "A veces, la parte más difícil del desarrollo de software no es escribir código. Es saber cuándo desecharlo y empezar de nuevo.",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, React Native vs Flutter 🌸",
+    date: "3 de Agosto, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Uma das perguntas que mais ouço é:",
+    introDesc: "\"Devo aprender React Native ou Flutter?\"",
+    introExtra: [
+      "A resposta é...",
+      "Depende.",
+      "E eu sei que essa é provavelmente a resposta menos satisfatória possível.",
+      "Mas depois de trabalhar com Expo (React Native) e ao mesmo tempo explorar o Flutter, percebi uma coisa.",
+      "Isso não é uma batalha.",
+      "São simplesmente ferramentas diferentes projetadas para situações diferentes."
+    ],
+    firstAssumption: {
+      heading: "Minha primeira suposição errada",
+      paragraphs: [
+        "Eu costumava pensar que a comparação era assim:",
+        "React Native 🆚 Flutter",
+        "Vencedor.",
+        "Perdedor.",
+        "Escolha um.",
+        "E nunca olhe para trás.",
+        "Quanto mais eu aprendia...",
+        "mais percebia que não é assim que a engenharia de software funciona.",
+        "Frameworks resolvem problemas.",
+        "Escolher um deve sempre começar por entender qual problema você está tentando resolver."
+      ]
+    },
+    howTheyWork: {
+      heading: "Como eles realmente funcionam",
+      desc: "Embora ambos os frameworks permitam que você construa aplicativos Android e iOS a partir de uma única base de código, suas arquiteturas são bem diferentes."
+    },
+    rnArchitecture: {
+      heading: "React Native",
+      desc: "O React Native usa JavaScript (ou TypeScript) para se comunicar com componentes nativos.",
+      label: "Arquitetura simplificada:"
+    },
+    flutterArchitecture: {
+      heading: "Flutter",
+      desc: "O Flutter adota uma abordagem totalmente diferente.",
+      label: "Diagrama de arquitetura:"
+    },
+    performance: {
+      heading: "Performance",
+      paragraphs: [
+        "Este é provavelmente o maior mito.",
+        "As pessoas costumam dizer: \"O Flutter é mais rápido.\"",
+        "A realidade é mais complexa.",
+        "Ambos os frameworks podem alcançar um excelente desempenho.",
+        "O Flutter tem vantagem ao construir interfaces altamente animadas porque controla o fluxo de renderização.",
+        "O React Native se beneficia do uso de componentes de interface nativos e melhorou significativamente com a Nova Arquitetura (Fabric, TurboModules e JSI).",
+        "Na maioria dos aplicativos de negócios... os usuários não notarão a diferença.",
+        "Uma arquitetura ruim geralmente prejudica o desempenho muito mais do que o framework em si."
+      ]
+    },
+    devExperience: {
+      heading: "Experiência do Desenvolvedor",
+      intro: "É aqui que a preferência pessoal começa a importar.",
+      rn: {
+        heading: "React Native",
+        prosHeading: "Prós:",
+        consHeading: "Desafios:",
+        pros: [
+          "Ecossistema JavaScript / TypeScript",
+          "Transição fácil para desenvolvedores React",
+          "Enorme ecossistema npm",
+          "Expo simplifica o desenvolvimento dramaticamente",
+          "Excelente para equipes que já constroem aplicativos com React"
+        ],
+        cons: [
+          "Módulos nativos às vezes exigem conhecimento específico da plataforma.",
+          "Compatibilidade de dependências às vezes pode ser frustrante."
+        ]
+      },
+      flutter: {
+        heading: "Flutter",
+        prosHeading: "Prós:",
+        consHeading: "Desafios:",
+        pros: [
+          "UI consistente em todas as plataformas",
+          "Excelente documentação",
+          "Poderoso sistema de widgets",
+          "Animações bonitas",
+          "Ferramentas de desenvolvimento fortes"
+        ],
+        cons: [
+          "Exige aprender Dart.",
+          "Ecossistema menor em comparação com JavaScript.",
+          "Tamanhos de aplicativo maiores em alguns cenários."
+        ]
+      }
+    },
+    expoSection: {
+      heading: "Expo merece sua própria seção",
+      paragraphs: [
+        "Uma coisa que mudou completamente minha percepção do React Native foi descobrir o Expo.",
+        "No início, presumi que o React Native exigia a configuração do Android Studio, Xcode, Gradle, CocoaPods...",
+        "e passar horas corrigindo problemas de ambiente.",
+        "O Expo abstrai grande parte dessa complexidade. Alguns recursos que se destacam:"
+      ],
+      features: [
+        "Roteamento baseado em arquivos (Expo Router)",
+        "Atualizações Over-the-Air (OTA)",
+        "Notificações Push",
+        "Câmera",
+        "Localização",
+        "Armazenamento Seguro",
+        "Autenticação",
+        "EAS Build",
+        "Implantação mais fácil"
+      ],
+      closing: "Ele permite que os desenvolvedores se concentrem mais na construção de recursos do que na configuração da infraestrutura."
+    },
+    comparisonTable: {
+      heading: "Uma comparação rápida",
+      headers: ["React Native", "Flutter"],
+      rows: [
+        ["Linguagem: JavaScript / TypeScript", "Linguagem: Dart"],
+        ["Usa componentes de UI nativos", "Desenha sua própria UI"],
+        ["Excelente para equipes React", "Excelente para interfaces altamente personalizadas"],
+        ["Ecossistema massivo de JavaScript", "Forte ecossistema Flutter"],
+        ["Expo simplifica o desenvolvimento", "Flutter inclui muitas ferramentas prontas para uso"]
+      ]
+    },
+    whichOne: {
+      heading: "Qual eu escolheria?",
+      paragraphs: [
+        "Se o meu projeto já usa React na web... eu provavelmente escolheria o React Native.",
+        "Compartilhar conhecimento, componentes e até lógica de negócios entre equipes pode ser uma grande vantagem.",
+        "Se eu estivesse construindo um aplicativo com animações altamente personalizadas, UI complexa ou interfaces idênticas em várias plataformas... o Flutter seria incrivelmente atraente.",
+        "Nenhuma escolha é objetivamente melhor.",
+        "Arquitetura, experiência da equipe, prazos e requisitos do produto importam muito mais do que debates na internet."
+      ]
+    },
+    technicalTakeaway: {
+      heading: "Conclusão técnica 🌸",
+      paragraphs: [
+        "Escolher um framework não é sobre encontrar o \"melhor\". É sobre entender os compromissos.",
+        "Faça perguntas como:"
+      ],
+      questions: [
+        "Qual linguagem a equipe já conhece?",
+        "Vamos compartilhar código com um aplicativo web?",
+        "De quanta funcionalidade específica da plataforma precisamos?",
+        "Precisamos de uma UI altamente personalizada?",
+        "Como é o nosso pipeline de implantação?",
+        "Quem manterá o projeto em dois anos?"
+      ],
+      closing: "Essas respostas costumam ser mais valiosas do que comparações de benchmark."
+    },
+    personalNote: {
+      heading: "Nota pessoal 🌷",
+      paragraphs: [
+        "Uma das coisas que mais gostei no desenvolvimento móvel foi perceber que frameworks vão e vêm...",
+        "mas boas decisões de engenharia duram muito mais.",
+        "Cada projeto ensina algo diferente.",
+        "Às vezes é uma nova API.",
+        "Às vezes é a implantação.",
+        "Às vezes é a arquitetura.",
+        "E às vezes... é aprender que nem sempre existe uma única resposta certa."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      items: [
+        "Cada framework tem seus prós e contras.",
+        "A arquitetura importa mais do que a quantidade.",
+        "O Expo torna o React Native muito mais acessível.",
+        "O motor de renderização do Flutter é um dos seus maiores pontos fortes.",
+        "Bons desenvolvedores escolhem ferramentas com base em problemas — não em tendências."
+      ]
+    },
+    closing: "Próxima entrada: Arquitetura Antes do Código 🌸",
+    closingSign: "Às vezes, a parte mais difícil do desenvolvimento de software não é escrever código. É saber quando jogá-lo fora e começar de novo.",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- My first misconception -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.firstAssumption.heading}</h2>
+            <div class="section-body">
+              {page.firstAssumption.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- How they actually work -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.howTheyWork.heading}</h2>
+            <p>{page.howTheyWork.desc}</p>
+            
+            <div class="architecture-grid">
+              <div class="arch-col">
+                <h3 class="tech-note-title">{page.rnArchitecture.heading}</h3>
+                <p class="tech-note-desc">{page.rnArchitecture.desc}</p>
+                <p class="code-label">{page.rnArchitecture.label}</p>
+                <pre class="code-block"><code>{lang === "en" ? 
+`React Components
+        │
+JavaScript / TypeScript
+        │
+React Native Bridge (or JSI)
+        │
+Native Platform Components` : 
+lang === "pt" ?
+`Componentes React
+        │
+JavaScript / TypeScript
+        │
+React Native Bridge (ou JSI)
+        │
+Componentes Nativos da Plataforma` :
+`Componentes React
+        │
+JavaScript / TypeScript
+        │
+React Native Bridge (o JSI)
+        │
+Componentes Nativos de Plataforma`}</code></pre>
+                <p class="arch-note">{lang === 'en' ? "Instead of drawing every UI element itself, React Native relies on native components. That means buttons are Android/iOS buttons, making navigation feel natural." : lang === 'pt' ? "Em vez de desenhar cada elemento de UI sozinho, o React Native depende de componentes nativos. Isso significa que os botões são nativos de Android/iOS." : "En lugar de dibujar cada elemento de la UI por sí mismo, React Native depende de componentes nativos. Esto significa que los botones son de Android/iOS."}</p>
+              </div>
+              
+              <div class="arch-col">
+                <h3 class="tech-note-title">{page.flutterArchitecture.heading}</h3>
+                <p class="tech-note-desc">{page.flutterArchitecture.desc}</p>
+                <p class="code-label">{page.flutterArchitecture.label}</p>
+                <pre class="code-block code-block-flutter"><code>{`Flutter Widgets
+        │
+      Dart
+        │
+ Flutter Engine (Skia)
+        │
+   Android / iOS`}</code></pre>
+                <p class="arch-note">{lang === 'en' ? "Flutter draws pixels directly using its rendering engine, providing a highly consistent interface across different platforms." : lang === 'pt' ? "O Flutter desenha os pixels diretamente usando seu motor de renderização, garantindo uma interface extremamente consistente." : "Flutter dibuja los píxeles directamente usando su motor de renderizado, garantizando una interfaz altamente consistente."}</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Performance -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.performance.heading}</h2>
+            <div class="section-body">
+              {page.performance.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Developer Experience -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.devExperience.heading}</h2>
+            <p class="tech-intro">{page.devExperience.intro}</p>
+            
+            <div class="devex-grid">
+              <div class="devex-box">
+                <h3 class="devex-title rn-text">{page.devExperience.rn.heading}</h3>
+                
+                <div class="devex-list-section">
+                  <h4 class="devex-subtitle">{page.devExperience.rn.prosHeading}</h4>
+                  <ul class="devex-list">
+                    {page.devExperience.rn.pros.map((pro) => (
+                      <li><span class="bullet-check">✔</span> {pro}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div class="devex-list-section">
+                  <h4 class="devex-subtitle">{page.devExperience.rn.consHeading}</h4>
+                  <ul class="devex-list">
+                    {page.devExperience.rn.cons.map((con) => (
+                      <li><span class="bullet-cross">⚠</span> {con}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="devex-box">
+                <h3 class="devex-title flutter-text">{page.devExperience.flutter.heading}</h3>
+                
+                <div class="devex-list-section">
+                  <h4 class="devex-subtitle">{page.devExperience.flutter.prosHeading}</h4>
+                  <ul class="devex-list">
+                    {page.devExperience.flutter.pros.map((pro) => (
+                      <li><span class="bullet-check">✔</span> {pro}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div class="devex-list-section">
+                  <h4 class="devex-subtitle">{page.devExperience.flutter.consHeading}</h4>
+                  <ul class="devex-list">
+                    {page.devExperience.flutter.cons.map((con) => (
+                      <li><span class="bullet-cross">⚠</span> {con}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Expo -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.expoSection.heading}</h2>
+            {page.expoSection.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <div class="flow-list">
+              {page.expoSection.features.map((item, idx) => (
+                <div class="flow-item">
+                  {idx !== 0 ? <div class="flow-arrow">↓</div> : null}
+                  <div class="flow-pill">{item}</div>
+                </div>
+              ))}
+            </div>
+            <p class="tech-note-text" style="margin-top: 1.5rem;">{page.expoSection.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Comparison Table -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.comparisonTable.heading}</h2>
+            <div class="table-container">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    {page.comparisonTable.headers.map((header) => (
+                      <th>{header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {page.comparisonTable.rows.map((row) => (
+                    <tr>
+                      {row.map((cell) => (
+                        <td>{cell}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Which one would I choose? -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whichOne.heading}</h2>
+            <div class="section-body">
+              {page.whichOne.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Takeaway -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.technicalTakeaway.heading}</h2>
+            {page.technicalTakeaway.paragraphs.map((para) => (
+              <p>{para}</p>
+            ))}
+            <ul class="remember-list" style="margin-bottom: 1.5rem;">
+              {page.technicalTakeaway.questions.map((q) => (
+                <li class="remember-item question-item">
+                  <span class="remember-dot">?</span>
+                  <span>{q}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{page.technicalTakeaway.closing}</p>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal Note -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.personalNote.heading}</h2>
+            <div class="section-body">
+              {page.personalNote.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    95% { opacity: 0.7; }
+    100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section { margin-bottom: 0; }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p { margin-bottom: 1.25rem; }
+
+  /* Architecture Diagram & Grid */
+  .architecture-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 1.5rem;
+  }
+
+  .arch-col {
+    background: rgba(255, 75, 145, 0.02);
+    border: 1px solid rgba(255, 75, 145, 0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tech-note-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--rose);
+    margin: 0 0 0.75rem;
+  }
+
+  .tech-note-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem !important;
+  }
+
+  .code-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem !important;
+    font-style: italic;
+  }
+
+  .code-block {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: pre;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .code-block-flutter {
+    border-color: rgba(75, 180, 255, 0.2);
+  }
+
+  .arch-note {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin: 0 !important;
+    margin-top: auto !important;
+  }
+
+  /* Dev Experience Grid */
+  .devex-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 1.5rem;
+  }
+
+  .devex-box {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .devex-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 750;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.75rem;
+  }
+
+  .rn-text { color: var(--rose); }
+  .flutter-text { color: #4fc3f7; }
+
+  .devex-list-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .devex-subtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .devex-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .devex-list li {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .bullet-check {
+    color: #81c784;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .bullet-cross {
+    color: #e57373;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  /* Checklist list */
+  .flow-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin: 1.5rem 0;
+  }
+
+  .flow-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flow-arrow {
+    color: var(--rose);
+    font-size: 1.1rem;
+    margin: 4px 0 4px 18px;
+    opacity: 0.7;
+  }
+
+  .flow-pill {
+    background: rgba(255, 75, 145, 0.08);
+    border: 1px solid rgba(255, 75, 145, 0.18);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 500;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .flow-pill:hover {
+    background: rgba(255, 75, 145, 0.14);
+    border-color: rgba(255, 75, 145, 0.35);
+  }
+
+  /* Table Style */
+  .table-container {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .comparison-table th, .comparison-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .comparison-table th {
+    background: rgba(255, 75, 145, 0.08);
+    color: var(--text);
+    font-weight: 700;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  .comparison-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .comparison-table td:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .question-item {
+    background: rgba(255, 255, 255, 0.01);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .question-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .question-item .remember-dot {
+    color: var(--text-muted);
+  }
+
+  /* Closing Block */
+  .closing-block { text-align: center; padding: 1rem 0; }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .post-title { font-size: 2.25rem; }
+    .lead-text { font-size: 1.2rem; }
+    .architecture-grid, .devex-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>
