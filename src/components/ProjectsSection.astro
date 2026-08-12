@@ -1,104 +1,271 @@
 ---
 import { useTranslations } from '../i18n/utils';
 import ProjectsFloral from './ProjectsFloral.vue';
-import ProjectStack from './ProjectStack.vue';
+import ProjectsGrid from './ProjectsGrid.vue';
+import type { ProjectItem } from './ProjectsGrid.vue';
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 // Dynamically load images for stacks
-const allCapturas = import.meta.glob('../assets/proyectos/capturas/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
-const canvaGlob = import.meta.glob('../assets/proyectos/diseños canva/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
-const figma = Object.values(import.meta.glob('../assets/proyectos/figma/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' })).map((img: any) => img.src);
+const capturasGlob: Record<string, any> = import.meta.glob('../assets/proyectos/capturas/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
+const canvaGlob: Record<string, any> = import.meta.glob('../assets/proyectos/diseños canva/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
+const figmaGlob: Record<string, any> = import.meta.glob('../assets/proyectos/figma/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
 
-// Split Canva by aspect ratio
-const canvaSquare: string[] = [];
-const canvaPortrait: string[] = [];
-Object.entries(canvaGlob).forEach(([path, img]: [string, any]) => {
-  const fileName = path.split('/').pop() || '';
-  if (['5.png', '6.png', '7.png', '8.png', '12.png'].includes(fileName)) {
-    canvaSquare.push(img.src);
-  } else {
-    canvaPortrait.push(img.src);
+const getSrcs = (globObj: Record<string, any>, filterFn: (filename: string) => boolean) => {
+  return Object.entries(globObj)
+    .filter(([path]) => {
+      const fileName = path.split('/').pop() || '';
+      return filterFn(fileName);
+    })
+    .map(([_, img]) => (typeof img === 'string' ? img : img.src));
+};
+
+// Build structured project objects
+const projects: ProjectItem[] = [
+  // --- MOBILE APPS ---
+  {
+    id: 'arriagas',
+    title: 'Arriagas Gas LP App',
+    category: 'mobile',
+    categoryLabel: 'App Móvil',
+    oneLiner: 'Aplicación móvil para pedidos y gestión de entregas de Gas LP por litros en tiempo real.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('arriagas')),
+    aspectRatio: 'portrait',
+    technologies: ['React Native', 'Expo', 'JavaScript', 'REST API'],
+    caseStudy: {
+      problem: 'Digitalizar y optimizar la gestión de pedidos de Gas LP por volumen en litros, eliminando llamadas manuales y coordinando la logística de distribución.',
+      solution: 'Desarrollo de app móvil responsiva en React Native Expo para solicitar recargas de Gas LP por cantidad de litros con seguimiento de pedido.',
+      highlights: [
+        'Pedidos acelerados de Gas LP seleccionando cantidad exacta de litros',
+        'Optimización operativa del negocio incrementando el volumen de órdenes gestionadas',
+        'Multiplataforma iOS/Android con React Native Expo e interfaz accesible'
+      ]
+    }
+  },
+  {
+    id: 'pollo-crix',
+    title: 'Pollo Crix App',
+    category: 'mobile',
+    categoryLabel: 'App Móvil',
+    oneLiner: 'App móvil de pedidos de comida rápida integrada con logística Uber Direct.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('pollocrix')),
+    aspectRatio: 'portrait',
+    technologies: ['Flutter', 'Dart', 'Uber Direct API', 'Mobile UI'],
+    caseStudy: {
+      problem: 'Brindar un canal propio de pedidos directos sin comisiones excesivas pero manteniendo logística automatizada de despacho.',
+      solution: 'Desarrollo nativo multiplataforma en Flutter integrado con la API de Uber Direct para asignación automática de repartidores.',
+      highlights: [
+        'Integración directa con API de Uber Direct para logística y despacho automatizado',
+        'Renderizado nativo ultra fluido a 60 FPS con Flutter',
+        'Gestión dinámica de carrito y seguimiento de orden en tiempo real'
+      ]
+    }
+  },
+  {
+    id: 'bionote',
+    title: 'BioNote Veterinary',
+    category: 'mobile',
+    categoryLabel: 'App Móvil',
+    oneLiner: 'Aplicación para control y visualización de resultados de laboratorio veterinario.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('bionote')),
+    aspectRatio: 'portrait',
+    technologies: ['React Native', 'Mobile UI', 'REST API', 'JavaScript'],
+    caseStudy: {
+      problem: 'Permitir a veterinarios y clientes consultar resultados de exámenes clínicos directamente desde el móvil.',
+      solution: 'Aplicación móvil con visualización de reportes, historial de exámenes y alertas de laboratorio.',
+      highlights: ['Interfaz móvil especializada para clínicas veterinarias', 'Consulta inmediata de resultados clínicos', 'Visualización limpia de expedientes']
+    }
+  },
+
+  // --- WEB SYSTEMS & FULL-STACK ---
+  {
+    id: 'tienda-lagatacr',
+    title: 'Tienda La Gata CR',
+    category: 'web',
+    categoryLabel: 'Full-Stack E-Commerce',
+    oneLiner: 'Plataforma e-commerce completa con panel de administración e integración de pagos.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('tienda_lagatacr')),
+    aspectRatio: 'landscape',
+    technologies: ['React', 'Laravel', 'MySQL', 'REST API', 'TailwindCSS'],
+    caseStudy: {
+      problem: 'Automatizar las ventas, gestión de catálogo e inventario para una tienda de moda en Costa Rica.',
+      solution: 'Arquitectura desacoplada con Frontend SPA en React y Backend REST API en Laravel.',
+      highlights: ['Panel administrativo completo para productos y pedidos', 'Gestión de anuncios publicitarios dinámicos', 'Checkout integrado seguro']
+    }
+  },
+  {
+    id: 'skillmatch',
+    title: 'SkillMatch AI',
+    category: 'web',
+    categoryLabel: 'Plataforma Web + IA',
+    oneLiner: 'Plataforma web con Inteligencia Artificial para análisis y filtrado automatizado de CVs.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('skill')),
+    aspectRatio: 'landscape',
+    technologies: ['Python', 'AI / NLP', 'React', 'REST API'],
+    caseStudy: {
+      problem: 'Agilizar el filtrado manual de currículums en procesos de contratación masivos.',
+      solution: 'Motor de Procesamiento de Lenguaje Natural (NLP) en Python para extracción de habilidades y cálculo de compatibilidad.',
+      highlights: ['Extracción automatizada de información en documentos CV', 'Puntuación semántica de coincidencia', 'Dashboard claro de análisis']
+    }
+  },
+  {
+    id: 'pam',
+    title: 'PAM — Consulta de Multas',
+    category: 'web',
+    categoryLabel: 'Plataforma Web',
+    oneLiner: 'Portal web para la consulta y verificación rápida de multas de tránsito.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('pam')),
+    aspectRatio: 'landscape',
+    technologies: ['JavaScript', 'HTML5/CSS3', 'REST API Integration'],
+    caseStudy: {
+      problem: 'Brindar a los conductores un medio rápido y sin complicaciones para consultar el estado de infracciones.',
+      solution: 'Interfaz liviana de respuesta inmediata integrada con servicios de consulta en tiempo real.',
+      highlights: ['Tiempos de respuesta ultra reducidos', 'Diseño accesible responsivo', 'Integración limpia con APIs']
+    }
+  },
+  {
+    id: 'teji',
+    title: 'Teji Studio Landing Page',
+    category: 'web',
+    categoryLabel: 'Landing Page',
+    oneLiner: 'Sitio web corporativo para estudio de desarrollo de software.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('teji')),
+    aspectRatio: 'landscape',
+    technologies: ['React', 'CSS3', 'UX/UI Design'],
+    caseStudy: {
+      problem: 'Reflejar la capacidad técnica y propuesta de valor del estudio ante potenciales clientes.',
+      solution: 'Landing page con estética moderna, micro-interacciones suaves y estructura clara de servicios.',
+      highlights: ['Diseño moderno responsivo', 'Optimización de velocidad y SEO', 'Secciones modulares de servicios']
+    }
+  },
+  {
+    id: 'lp-lgcr',
+    title: 'Landing Page La Gata CR',
+    category: 'web',
+    categoryLabel: 'Landing Page',
+    oneLiner: 'Página de aterrizaje orientada a conversión de ventas y captación de clientes.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('lp_lgcr')),
+    aspectRatio: 'landscape',
+    technologies: ['HTML5', 'CSS3', 'JavaScript'],
+    caseStudy: {
+      problem: 'Captar leads y generar ventas durante campañas promocionales específicas.',
+      solution: 'Estructura orientada a llamados a la acción claros y carga rápida en dispositivos móviles.',
+      highlights: ['Estructura optimizada para conversión', 'Enfoque Mobile-First', 'Optimización de activos gráficos']
+    }
+  },
+  {
+    id: 'ssform',
+    title: 'SS Form UI',
+    category: 'web',
+    categoryLabel: 'Componente UI',
+    oneLiner: 'Formulario web dinámico con validaciones avanzadas y diseño personalizado.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('ssform')),
+    aspectRatio: 'landscape',
+    technologies: ['React', 'CSS Modules', 'Validation Logic'],
+    caseStudy: {
+      problem: 'Desarrollar un componente de formulario reutilizable con validación compleja de campos.',
+      solution: 'Componente React desacoplado con estados claros de error, éxito y retroalimentación accesible.',
+      highlights: ['Validación de datos en tiempo real', 'Excelente manejo de accesibilidad y foco', 'Componente modular']
+    }
+  },
+
+  // --- DESIGN UI/UX & BRANDING ---
+  {
+    id: 'ad-lagata',
+    title: 'La Gata CR — Ad Campaigns',
+    category: 'design',
+    categoryLabel: 'Diseño Gráfico & Ads',
+    oneLiner: 'Diseños publicitarios en Canva y Figma para campañas e-commerce (1200x400 y 300x250).',
+    images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ad_lagata')),
+    aspectRatio: 'landscape',
+    technologies: ['Figma', 'Canva', 'Branding', 'Meta Ads'],
+    caseStudy: {
+      problem: 'Mantener consistencia gráfica e impacto visual en pautas publicitarias de Meta Ads.',
+      solution: 'Creación de piezas publicitarias adaptadas a formatos de banners promocionales y anuncios laterales.',
+      highlights: ['Diseño para formatos de anuncios 1200x400 y 300x250', 'Coherencia cromática y tipográfica de marca']
+    }
+  },
+  {
+    id: 'ns-perfumes',
+    title: 'NS Perfumes — Instagram Branding',
+    category: 'design',
+    categoryLabel: 'Social Media & Branding',
+    oneLiner: 'Diseño de publicaciones estandarizadas para cuadrícula de Instagram en formato post.',
+    images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ns') || name.toLowerCase().includes('giftcardns')),
+    aspectRatio: 'square',
+    technologies: ['Canva', 'Figma', 'Visual Identity', 'IG Format'],
+    caseStudy: {
+      problem: 'Construir una presencia visual sofisticada y pulida en el feed de Instagram.',
+      solution: 'Diseño de publicaciones e identidades gráficas en formato post de Instagram (1:1).',
+      highlights: ['Línea gráfica elegante para perfumería', 'Formato post de Instagram estandarizado 1:1', 'Grid de diseño cohesivo']
+    }
+  },
+  {
+    id: 'post-lagatacr',
+    title: 'La Gata CR — Instagram Posts',
+    category: 'design',
+    categoryLabel: 'Diseño UI / Social Media',
+    oneLiner: 'Colección de piezas gráficas promocionales e informativas en formato post de IG.',
+    images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ig_postlagata')),
+    aspectRatio: 'square',
+    technologies: ['Figma', 'Canva', 'Content Design', 'IG Format'],
+    caseStudy: {
+      problem: 'Mantener la comunidad interactuando activamente mediante contenido de alto impacto visual.',
+      solution: 'Plantillas cuadradas para publicaciones e historias en cuadrícula adaptadas al e-commerce.',
+      highlights: ['Plantillas cuadradas 1:1 para feed de Instagram', 'Contenido gráfico enfocado en engagement']
+    }
+  },
+  {
+    id: 'figma-ui',
+    title: 'Figma UI/UX Prototypes',
+    category: 'design',
+    categoryLabel: 'UI/UX Design Figma',
+    oneLiner: 'Prototipos interactivos, wireframes y sistemas de diseño visual.',
+    images: Object.values(figmaGlob).map((img: any) => typeof img === 'string' ? img : img.src),
+    aspectRatio: 'landscape',
+    technologies: ['Figma', 'Wireframing', 'UI/UX Prototyping'],
+    caseStudy: {
+      problem: 'Diseñar arquitectura de información y prototipos navegables antes del desarrollo.',
+      solution: 'Creación de wireframes de alta fidelidad, componentes reusables y prototipos dinámicos.',
+      highlights: ['Wireframing de alta fidelidad', 'Prototipado interactivo en Figma', 'Diseño de sistemas de UI']
+    }
   }
-});
+];
 
-// Precise mapping for capturas
-const mobileCapturas: string[] = [];
-const webCapturas: string[] = [];
+const filterLabels = {
+  web: t('projects.filter.web'),
+  mobile: t('projects.filter.mobile'),
+  design: t('projects.filter.design'),
+};
 
-Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
-  const fileName = path.split('/').pop() || '';
-  const lowercaseName = fileName.toLowerCase();
-  
-  // Skip ss1, ss2, ss3 as requested
-  if (lowercaseName.startsWith('ss1') || lowercaseName.startsWith('ss2') || lowercaseName.startsWith('ss3')) {
-    return;
-  }
-
-  const mobileFiles = ['1.jpeg', '2.jpeg', '3.jpeg'];
-  
-  if (mobileFiles.includes(fileName)) {
-    mobileCapturas.push(img.src);
-  } else {
-    webCapturas.push(img.src);
-  }
-});
+const i18nLabels = {
+  caseStudy: t('projects.caseStudy'),
+  problem: t('projects.problem'),
+  solution: t('projects.solution'),
+  highlights: t('projects.highlights'),
+  stack: t('projects.stack'),
+};
 ---
 
 <section class="section" id="projects">
-  <div class="container">
-    <div class="section-label reveal">{t('nav.projects')}</div>
-    <h2 class="section-title reveal">
-      {t('projects.title')}<br />
-      <em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose); opacity: 0.9;">
-        {t('projects.subtitle')}
-      </em>
-    </h2>
-
-    <div class="projects-grid">
-      <!-- Row 1: 3 Items (Mobile, Content, Marketing) -->
-      <div class="reveal row-1-item" style="transition-delay: 0.1s">
-        <ProjectStack 
-          client:visible
-          title={t('projects.cat3')} 
-          images={mobileCapturas}
-          aspectRatio="portrait"
-        />
-      </div>
-      <div class="reveal row-1-item" style="transition-delay: 0.2s">
-        <ProjectStack 
-          client:visible
-          title={t('projects.cat2')} 
-          images={canvaSquare}
-          aspectRatio="square"
-        />
-      </div>
-      <div class="reveal row-1-item" style="transition-delay: 0.3s">
-        <ProjectStack 
-          client:visible
-          title={t('projects.cat5')} 
-          images={canvaPortrait}
-          aspectRatio="portrait"
-        />
-      </div>
-
-      <!-- Row 2: 2 Items (UI Design, Web Systems) -->
-      <div class="reveal row-2-item" style="transition-delay: 0.4s">
-        <ProjectStack 
-          client:visible
-          title={t('projects.cat1')} 
-          images={figma}
-        />
-      </div>
-      <div class="reveal row-2-item" style="transition-delay: 0.5s">
-        <ProjectStack 
-          client:visible
-          title={t('projects.cat4')} 
-          images={webCapturas}
-        />
-      </div>
+  <div class="projects-wide-wrapper">
+    <div class="projects-header-center">
+      <div class="section-label reveal">{t('nav.projects')}</div>
+      <h2 class="section-title reveal">
+        {t('projects.title')}<br />
+        <em style="font-family: var(--font-cursive); font-size: 1.1em; color: var(--rose); opacity: 0.9;">
+          {t('projects.subtitle')}
+        </em>
+      </h2>
     </div>
+
+    <ProjectsGrid 
+      client:visible
+      projects={projects}
+      filterLabels={filterLabels}
+      i18nLabels={i18nLabels}
+    />
   </div>
 
   <ProjectsFloral client:visible />
@@ -106,49 +273,26 @@ Object.entries(allCapturas).forEach(([path, img]: [string, any]) => {
 
 <style>
   #projects {
-    padding: var(--section-padding, 120px) 0;
+    padding: var(--section-padding, 90px) 0;
     min-height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 80px 40px;
-    position: relative;
-    z-index: 1;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .row-1-item {
-    grid-column: span 2;
-  }
-
-  .row-2-item {
-    grid-column: span 3;
-    max-width: 900px;
-    margin: 0 auto;
     width: 100%;
   }
 
-  @media (max-width: 1200px) {
-    .projects-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 60px 30px;
-    }
-    .row-1-item, .row-2-item {
-      grid-column: span 1;
-      max-width: 100%;
-    }
+  .projects-wide-wrapper {
+    width: 100%;
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 0 4vw;
   }
 
-  @media (max-width: 900px) {
-    .projects-grid {
-      grid-template-columns: 1fr;
-      gap: 48px;
+  .projects-header-center {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  @media (max-width: 768px) {
+    .projects-wide-wrapper {
+      padding: 0 16px;
     }
   }
 </style>
