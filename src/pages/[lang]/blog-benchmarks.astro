@@ -1,0 +1,725 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "The 9 Benchmarks Behind the Score 🌸",
+    subtitle: "Understanding what AI leaderboards are actually testing.",
+    date: "September 21, 2026",
+    back: 'Back to Home',
+    intro: "So now we know that the final number isn't a magical \"intelligence score.\"",
+    introDesc: "But there's another question: What are the models actually being tested on?",
+    introExtra: [
+      "The Artificial Analysis Intelligence Index v4.1.1 combines nine different evaluations.",
+      "And each one asks a very different question.",
+      "Think of it like a university entrance exam... except instead of one subject, the AI has to take nine completely different exams."
+    ],
+    b1: {
+      num: "1",
+      title: "GDPval-AA v2 — Can AI Actually Do Professional Work?",
+      category: "Agents / Real-world work",
+      paragraphs: [
+        "GDPval is probably one of the most interesting benchmarks because it moves away from traditional \"answer this question\" evaluations.",
+        "Instead, the model is asked to complete real-world professional tasks.",
+        "The current GDPval-AA v2 framework covers 44 occupations across 9 major industries.",
+        "The tasks can require the model to create deliverables such as:"
+      ],
+      deliverables: [
+        "Documents",
+        "Presentations",
+        "Spreadsheets",
+        "Diagrams",
+        "Other professional deliverables"
+      ],
+      paragraphsAfter: [
+        "The model can also use tools such as shell access and web browsing.",
+        "So instead of asking: \"Can the model answer this question?\", GDPval is closer to asking: \"Can the model actually complete a piece of work?\"",
+        "The results are compared using an Elo-style rating, with human expert performance anchored at 1,000.",
+        "That makes this benchmark particularly interesting for the future of AI agents. It isn't just testing knowledge. It's testing execution."
+      ]
+    },
+    b2: {
+      num: "2",
+      title: "τ³-Banking — Can AI Follow Rules and Use Tools?",
+      category: "Agents / Finance",
+      paragraphs: [
+        "This one is much more specialized.",
+        "τ³-Banking evaluates AI agents in realistic banking customer-support scenarios.",
+        "Imagine a customer says: \"I need to dispute this transaction.\"",
+        "The agent can't simply write a nice answer. It needs to:"
+      ],
+      steps: [
+        "Find the correct banking policy.",
+        "Understand the policy.",
+        "Determine what action is allowed.",
+        "Use the appropriate tools.",
+        "Complete the workflow correctly."
+      ],
+      paragraphsAfter: [
+        "The benchmark uses a large knowledge base containing roughly 700 interconnected policy documents and evaluates whether the correct state was actually reached in the backend."
+      ],
+      flow: [
+        "Customer Request",
+        "Search Knowledge Base",
+        "Understand Policy",
+        "Select Tool",
+        "Execute Action",
+        "Backend State"
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      quote: "A benchmark doesn't measure intelligence in abstract. It measures performance on specific execution tasks.",
+      items: [
+        "GDPval tests if an AI agent can deliver actual professional work.",
+        "τ³-Banking tests if an AI agent can follow strict rules and policies in tools.",
+        "Evaluating real-world execution is much harder—and much more valuable—than testing plain text memory."
+      ]
+    },
+    closing: "Next entry: Benchmarks 3 to 9 🌸",
+    closingSign: "Deep diving into coding, reasoning, scientific math, and long-context capabilities.",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Los 9 Benchmarks Detrás del Puntaje 🌸",
+    subtitle: "Comprendiendo qué están probando realmente las tablas de clasificación de IA.",
+    date: "21 de Septiembre, 2026",
+    back: 'Volver al Inicio',
+    intro: "Así que ahora sabemos que el número final no es un \"puntaje de inteligencia\" mágico.",
+    introDesc: "Pero hay otra pregunta: ¿En qué se está probando realmente a los modelos?",
+    introExtra: [
+      "El Artificial Analysis Intelligence Index v4.1.1 combina nueve evaluaciones diferentes.",
+      "Y cada una hace una pregunta muy distinta.",
+      "Piénsalo como un examen de admisión universitaria... excepto que en lugar de una materia, la IA tiene que tomar nueve exámenes completamente diferentes."
+    ],
+    b1: {
+      num: "1",
+      title: "GDPval-AA v2 — ¿Puede la IA Realmente Hacer Trabajo Profesional?",
+      category: "Agentes / Trabajo en el mundo real",
+      paragraphs: [
+        "GDPval es probablemente uno de los benchmarks más interesantes porque se aleja de las evaluaciones tradicionales de \"responde esta pregunta\".",
+        "En su lugar, se le pide al modelo que complete tareas profesionales del mundo real.",
+        "El marco actual de GDPval-AA v2 cubre 44 ocupaciones en 9 industrias principales.",
+        "Las tareas pueden requerir que el modelo cree entregables como:"
+      ],
+      deliverables: [
+        "Documentos",
+        "Presentaciones",
+        "Hojas de cálculo",
+        "Diagramas",
+        "Otros entregables profesionales"
+      ],
+      paragraphsAfter: [
+        "El modelo también puede usar herramientas como acceso a shell y navegación web.",
+        "Por lo tanto, en lugar de preguntar: \"¿Puede el modelo responder esta pregunta?\", GDPval está más cerca de preguntar: \"¿Puede el modelo realmente completar un trabajo?\"",
+        "Los resultados se comparan mediante una calificación estilo Elo, con el desempeño de expertos humanos fijado en 1,000.",
+        "Eso hace que este benchmark sea particularmente interesante para el futuro de los agentes de IA. No solo está probando conocimiento. Está probando ejecución."
+      ]
+    },
+    b2: {
+      num: "2",
+      title: "τ³-Banking — ¿Puede la IA Seguir Reglas y Usar Herramientas?",
+      category: "Agentes / Finanzas",
+      paragraphs: [
+        "Este es mucho más especializado.",
+        "τ³-Banking evalúa agentes de IA en escenarios reales de atención al cliente bancario.",
+        "Imagina que un cliente dice: \"Necesito disputar esta transacción.\"",
+        "El agente no puede simplemente escribir una respuesta bonita. Necesita:"
+      ],
+      steps: [
+        "Encontrar la política bancaria correcta.",
+        "Comprender la política.",
+        "Determinar qué acción está permitida.",
+        "Usar las herramientas adecuadas.",
+        "Completar el flujo de trabajo correctamente."
+      ],
+      paragraphsAfter: [
+        "El benchmark utiliza una gran base de conocimientos que contiene aproximadamente 700 documentos de políticas interconectados y evalúa si realmente se alcanzó el estado correcto en el backend."
+      ],
+      flow: [
+        "Solicitud del Cliente",
+        "Buscar en Base de Conocimientos",
+        "Comprender Política",
+        "Seleccionar Herramienta",
+        "Ejecutar Acción",
+        "Estado del Backend"
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      quote: "Un benchmark no mide la inteligencia en abstracto. Mide el rendimiento en tareas de ejecución específicas.",
+      items: [
+        "GDPval prueba si un agente de IA puede entregar trabajo profesional real.",
+        "τ³-Banking prueba si un agente de IA puede seguir reglas estrictas y políticas con herramientas.",
+        "Evaluar la ejecución en el mundo real es mucho más difícil —y más valioso— que probar la memoria de texto plano."
+      ]
+    },
+    closing: "Siguiente entrada: Benchmarks del 3 al 9 🌸",
+    closingSign: "Profundizando en programación, razonamiento, matemáticas científicas y capacidades de contexto largo.",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Os 9 Benchmarks Por Trás da Pontuação 🌸",
+    subtitle: "Compreendendo o que as tabelas de classificação de IA estão realmente testando.",
+    date: "21 de Setembro, 2026",
+    back: 'Voltar ao Início',
+    intro: "Então agora sabemos que o número final não é uma \"pontuação de inteligência\" mágica.",
+    introDesc: "Mas há outra pergunta: No que os modelos estão realmente sendo testados?",
+    introExtra: [
+      "O Artificial Analysis Intelligence Index v4.1.1 combina nove avaliações diferentes.",
+      "E cada uma faz uma pergunta muito diferente.",
+      "Pense nisso como um exame de admissão universitária... exceto que, em vez de uma matéria, a IA precisa fazer nove exames completamente diferentes."
+    ],
+    b1: {
+      num: "1",
+      title: "GDPval-AA v2 — A IA Pode Realmente Fazer Trabalho Profissional?",
+      category: "Agentes / Trabalho no mundo real",
+      paragraphs: [
+        "O GDPval é provavelmente um dos benchmarks mais interessantes porque se afasta das avaliações tradicionais de \"responda a esta pergunta\".",
+        "Em vez disso, o modelo deve concluir tarefas profissionais do mundo real.",
+        "A estrutura atual do GDPval-AA v2 cobre 44 ocupações em 9 grandes indústrias.",
+        "As tarefas podem exigir que o modelo crie entregáveis como:"
+      ],
+      deliverables: [
+        "Documentos",
+        "Apresentações",
+        "Planilhas",
+        "Diagramas",
+        "Outros entregáveis profissionais"
+      ],
+      paragraphsAfter: [
+        "O modelo também pode usar ferramentas como acesso a shell e navegação na web.",
+        "Portanto, em vez de perguntar: \"O modelo pode responder a esta pergunta?\", o GDPval está mais próximo de perguntar: \"O modelo pode realmente concluir um trabalho?\"",
+        "Os resultados são comparados usando uma classificação estilo Elo, com o desempenho de especialistas humanos fixado em 1.000.",
+        "Isso torna este benchmark particularmente interessante para o futuro dos agentes de IA. Não está apenas testando conhecimento. Está testando execução."
+      ]
+    },
+    b2: {
+      num: "2",
+      title: "τ³-Banking — A IA Pode Seguir Regras e Usar Ferramentas?",
+      category: "Agentes / Finanças",
+      paragraphs: [
+        "Este é muito mais especializado.",
+        "O τ³-Banking avalia agentes de IA em cenários reais de atendimento ao cliente bancário.",
+        "Imagine que um cliente diz: \"Preciso contestar esta transação.\"",
+        "O agente não pode simplesmente escrever uma resposta bonita. Ele precisa:"
+      ],
+      steps: [
+        "Encontrar a política bancária correta.",
+        "Compreender a política.",
+        "Determinar qual ação é permitida.",
+        "Usar as ferramentas apropriadas.",
+        "Concluir o fluxo de trabalho corretamente."
+      ],
+      paragraphsAfter: [
+        "O benchmark usa uma grande base de conhecimento contendo cerca de 700 documentos de políticas interconectados e avalia se o estado correto foi realmente alcançado no backend."
+      ],
+      flow: [
+        "Solicitação do Cliente",
+        "Pesquisar Base de Conhecimento",
+        "Compreender Política",
+        "Selecionar Ferramenta",
+        "Executar Ação",
+        "Estado do Backend"
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      quote: "Um benchmark não mede a inteligência em abstrato. Ele mede o desempenho em tarefas de execução específicas.",
+      items: [
+        "O GDPval testa se um agente de IA pode entregar trabalho profissional real.",
+        "O τ³-Banking testa se um agente de IA pode seguir regras e políticas rígidas com ferramentas.",
+        "Avaliar a execução no mundo real é muito mais difícil — e muito mais valioso — do que testar memória de texto simples."
+      ]
+    },
+    closing: "Próxima entrada: Benchmarks 3 a 9 🌸",
+    closingSign: "Aprofundando em programação, raciocínio, matemática científica e capacidades de contexto longo.",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro Section -->
+          <div class="intro-block">
+            <p class="lead-text">{page.intro}</p>
+            <p class="intro-highlight">{page.introDesc}</p>
+            {page.introExtra.map((paragraph) => (
+              <p class="intro-text">{paragraph}</p>
+            ))}
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- Benchmark 1: GDPval-AA v2 -->
+          <section class="content-section">
+            <div class="section-badge-row">
+              <span class="badge-num">{page.b1.num}</span>
+              <span class="badge-cat">🏷️ {page.b1.category}</span>
+            </div>
+            <h2 class="section-heading">{page.b1.title}</h2>
+            {page.b1.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="deliverables-grid">
+              {page.b1.deliverables.map((item) => (
+                <div class="deliverable-chip">
+                  <span class="chip-icon">📄</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+
+            {page.b1.paragraphsAfter.map((p) => (
+              <p>{p}</p>
+            ))}
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Benchmark 2: τ³-Banking -->
+          <section class="content-section">
+            <div class="section-badge-row">
+              <span class="badge-num">{page.b2.num}</span>
+              <span class="badge-cat">🏷️ {page.b2.category}</span>
+            </div>
+            <h2 class="section-heading">{page.b2.title}</h2>
+            {page.b2.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <ol class="steps-list">
+              {page.b2.steps.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+
+            {page.b2.paragraphsAfter.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="flow-pill-box">
+              {page.b2.flow.map((node, i) => (
+                <>
+                  <span class={i === page.b2.flow.length - 1 ? 'highlight-pill' : 'flow-pill'}>{node}</span>
+                  {i < page.b2.flow.length - 1 && <span class="flow-arrow">↓</span>}
+                </>
+              ))}
+            </div>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Remember Card -->
+          <div class="remember-card">
+            <h3 class="remember-title">{page.remember.heading}</h3>
+            <p class="remember-highlight">"{page.remember.quote}"</p>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Post Footer / Next Entry -->
+          <footer class="post-footer">
+            <div class="next-entry">
+              <p class="closing-title">{page.closing}</p>
+              <p class="closing-sign">{page.closingSign}</p>
+              <p class="signature">{page.signature}</p>
+            </div>
+          </footer>
+
+        </div>
+      </article>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.35;
+    animation: fall linear infinite;
+  }
+
+  .p-1 { left: 10%; animation-duration: 12s; animation-delay: 0s; }
+  .p-2 { left: 25%; animation-duration: 16s; animation-delay: 2s; }
+  .p-3 { left: 45%; animation-duration: 14s; animation-delay: 4s; }
+  .p-4 { left: 65%; animation-duration: 18s; animation-delay: 1s; }
+  .p-5 { left: 80%; animation-duration: 13s; animation-delay: 3s; }
+  .p-6 { left: 92%; animation-duration: 15s; animation-delay: 5s; }
+
+  @keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    position: relative;
+    z-index: 2;
+    padding: 120px 24px 80px;
+    min-height: 100vh;
+  }
+
+  .container-narrow {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .back-nav {
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  .blog-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3.5rem 3rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .post-category {
+    font-weight: 600;
+    color: var(--rose);
+  }
+
+  .post-title {
+    font-family: var(--font-heading);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text-heading);
+    margin-bottom: 1rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .post-content {
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 1.05rem;
+  }
+
+  .intro-block {
+    margin-bottom: 2rem;
+  }
+
+  .lead-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    margin-bottom: 0.75rem;
+  }
+
+  .intro-highlight {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--rose);
+    margin-bottom: 1rem;
+  }
+
+  .intro-text {
+    margin-bottom: 0.75rem;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 2.5rem 0;
+  }
+
+  .section-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+  }
+
+  .badge-num {
+    background: var(--rose);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .badge-cat {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .section-heading {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 1.25rem;
+  }
+
+  .deliverables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .deliverable-chip {
+    background: rgba(255, 182, 193, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .steps-list {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .steps-list li {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .flow-pill-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .flow-pill {
+    background: rgba(245, 194, 231, 0.12);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 20px;
+  }
+
+  .flow-arrow {
+    color: var(--rose);
+    font-weight: bold;
+  }
+
+  .highlight-pill {
+    background: var(--rose);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  /* Remember Card */
+  .remember-card {
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.15) 0%, rgba(203, 166, 247, 0.15) 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 3rem 0 2rem;
+  }
+
+  .remember-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.75rem;
+  }
+
+  .remember-highlight {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--rose);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .remember-list li {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding-left: 18px;
+  }
+
+  .remember-list li::before {
+    content: "💖";
+    position: absolute;
+    left: 0;
+    font-size: 0.8rem;
+  }
+
+  /* Post Footer */
+  .post-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--border);
+    text-align: center;
+  }
+
+  .closing-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.5rem;
+  }
+
+  .closing-sign {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .signature {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--rose);
+  }
+
+  @media (max-width: 768px) {
+    .blog-card {
+      padding: 2.5rem 1.5rem;
+      border-radius: 18px;
+    }
+    .post-title {
+      font-size: 2rem;
+    }
+  }
+</style>

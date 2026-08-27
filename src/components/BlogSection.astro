@@ -139,6 +139,22 @@ const content = {
         href: "blog-typescript",
         number: "22",
         shortTitle: "TypeScript & Confidence"
+      },
+      { 
+        title: "How to Read AI Model Rankings 🌸", 
+        desc: "Parameters, benchmarks, scores, and why the biggest model isn't necessarily the smartest.",
+        publishDate: "2026-09-14",
+        href: "blog-rankings",
+        number: "23",
+        shortTitle: "Reading AI Model Rankings"
+      },
+      { 
+        title: "The 9 Benchmarks Behind the Score 🌸", 
+        desc: "Understanding what AI leaderboards are actually testing.",
+        publishDate: "2026-09-21",
+        href: "blog-benchmarks",
+        number: "24",
+        shortTitle: "9 Benchmarks Behind the Score"
       }
     ],
     featuredPost: {
@@ -318,6 +334,22 @@ const content = {
         href: "blog-typescript",
         number: "22",
         shortTitle: "TypeScript y Confianza"
+      },
+      { 
+        title: "Cómo Leer Rankings de Modelos de IA 🌸", 
+        desc: "Parámetros, benchmarks, puntajes y por qué el modelo más grande no es necesariamente el más inteligente.",
+        publishDate: "2026-09-14",
+        href: "blog-rankings",
+        number: "23",
+        shortTitle: "Rankings de Modelos de IA"
+      },
+      { 
+        title: "Los 9 Benchmarks Detrás del Puntaje 🌸", 
+        desc: "Comprendiendo qué están probando realmente las tablas de clasificación de IA.",
+        publishDate: "2026-09-21",
+        href: "blog-benchmarks",
+        number: "24",
+        shortTitle: "9 Benchmarks Detrás del Puntaje"
       }
     ],
     featuredPost: {
@@ -497,6 +529,22 @@ const content = {
         href: "blog-typescript",
         number: "22",
         shortTitle: "TypeScript e Confiança"
+      },
+      { 
+        title: "Como Ler Rankings de Modelos de IA 🌸", 
+        desc: "Parâmetros, benchmarks, pontuações e por que o maior modelo não é necessariamente o mais inteligente.",
+        publishDate: "2026-09-14",
+        href: "blog-rankings",
+        number: "23",
+        shortTitle: "Rankings de Modelos de IA"
+      },
+      { 
+        title: "Os 9 Benchmarks Por Trás da Pontuação 🌸", 
+        desc: "Compreendendo o que as tabelas de classificação de IA estão realmente testando.",
+        publishDate: "2026-09-21",
+        href: "blog-benchmarks",
+        number: "24",
+        shortTitle: "9 Benchmarks Por Trás da Pontuação"
       }
     ],
     featuredPost: {
@@ -608,6 +656,11 @@ const page = {
               <div class="upcoming-info">
                 <h4 class="upcoming-item-title">{draft.title}</h4>
                 <p class="upcoming-item-desc">{draft.desc}</p>
+                {draft.href && (
+                  <a href={`/${lang}/${draft.href}/`} class="entry-read-link" style="margin-top: 6px; display: inline-block;">
+                    {page.readMore}
+                  </a>
+                )}
               </div>
             </div>
           ))}

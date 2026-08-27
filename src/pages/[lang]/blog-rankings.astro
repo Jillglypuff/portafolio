@@ -1,0 +1,1478 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import graficoIA from '../../assets/grafico_IA.png';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "How to Read AI Model Rankings 🌸",
+    subtitle: "Parameters, benchmarks, scores, and why the biggest model isn't necessarily the smartest.",
+    date: "September 14, 2026",
+    back: 'Back to Home',
+    intro: "Every few weeks, another AI leaderboard appears.",
+    introDesc: "A colorful chart. Dozens of models. Numbers going up and down.",
+    introExtra: [
+      "And suddenly everyone is asking: \"Which AI is the smartest?\"",
+      "But before choosing a winner, there is a more important question:",
+      "What are these numbers actually measuring?",
+      "Once I started looking more closely at AI benchmarks, I realized that reading these charts requires understanding several different concepts:",
+      "• Benchmarks",
+      "• Evaluation scores",
+      "• Parameters",
+      "• Model architecture",
+      "• Reasoning vs. non-reasoning models",
+      "• Cost",
+      "• Latency",
+      "And, most importantly, the actual use case. So let's break it down."
+    ],
+    benchmarkDef: {
+      heading: "First: What is an AI benchmark?",
+      paragraphs: [
+        "A benchmark is a standardized evaluation used to compare AI models on specific tasks.",
+        "Think of it like an exam.",
+        "But instead of one exam testing everything, there are different exams for different abilities. For example:"
+      ],
+      tree: [
+        { title: "Coding", items: ["Can the model write code?", "Can it solve complex software engineering tasks?"] },
+        { title: "Reasoning", items: ["Can it solve difficult problems?", "Can it follow multi-step reasoning?"] },
+        { title: "Science", items: ["Mathematics", "Physics", "Scientific reasoning"] },
+        { title: "Knowledge", items: ["Factual accuracy", "Hallucination resistance"] }
+      ],
+      closing: "A model can perform extremely well in one category and considerably worse in another. That's why saying \"Model A is smarter than Model B\" is usually an oversimplification. A better statement is: \"Model A performed better than Model B on this particular evaluation.\""
+    },
+    chartSection: {
+      heading: "The chart I keep seeing",
+      paragraphs: [
+        "One example is the Artificial Analysis Intelligence Index.",
+        "The current v4.1.1 index combines nine evaluations covering areas such as agentic tasks, coding, scientific reasoning, knowledge, and long-context reasoning."
+      ],
+      imageCaption: "Artificial Analysis Intelligence Index v4.1.1 — AI Model Leaderboard",
+      asciiTitle: "The result looks something like:",
+      ascii: "Model A     ████████████████████ 63\nModel B     ███████████████████  62\nModel C     ██████████████████   61\nModel D     ██████████████████   60",
+      distinction: "At first glance, it looks like 63 > 62 > 61 > 60. And that's true. But it doesn't mean 63 = 63% intelligence. That's an important distinction."
+    },
+    finalNumber: {
+      heading: "So what is that final number?",
+      paragraphs: [
+        "A composite index combines multiple evaluations into a single score.",
+        "The current Artificial Analysis Intelligence Index uses weighted categories:"
+      ],
+      weights: [
+        { label: "Agents", pct: "34%" },
+        { label: "Coding", pct: "24%" },
+        { label: "Scientific Reasoning", pct: "24%" },
+        { label: "General", pct: "18%" }
+      ],
+      closing: "The final number therefore represents aggregate benchmark performance under that methodology, not an objective measurement of intelligence.",
+      flowNote: "This is why the methodology matters. Change the tests. Change the weights. Change the graders. Change the model version. And the ranking can change."
+    },
+    parameters: {
+      heading: "But what is a parameter?",
+      paragraphs: [
+        "This is probably the most misunderstood number in AI.",
+        "You may have seen models described as 7B, 70B, 120B, or 400B parameters.",
+        "The B means billion. So 70B = approximately 70 billion parameters.",
+        "But what exactly is a parameter? A parameter is a learned numerical value inside the model. During training, the model adjusts enormous numbers of these values to improve its predictions."
+      ],
+      pipeline: "Training Data → Neural Network → Adjust Parameters → Learn Patterns → Trained Model",
+      closing: "You can think of parameters as part of the model's learned internal representation. But there's an important warning."
+    },
+    moreNotSmarter: {
+      heading: "More parameters ≠ more intelligence",
+      paragraphs: [
+        "This is where things get interesting.",
+        "It would be tempting to assume: 10B → 100B → 1T = Smarter AI. But reality isn't that simple.",
+        "Model performance also depends on:"
+      ],
+      factors: [
+        "Architecture", "Training data", "Data quality", "Training methods",
+        "Optimization", "Alignment", "Reasoning mechanisms", "Context handling", "Inference strategy"
+      ],
+      closing: "A larger model can perform worse than a smaller, better-trained model."
+    },
+    moeSection: {
+      heading: "And then there are Mixture-of-Experts models",
+      paragraphs: [
+        "Parameter count becomes even more interesting with Mixture-of-Experts (MoE) architectures.",
+        "Instead of activating the entire model for every token, an MoE model can route each token through only a subset of its experts."
+      ],
+      moeFlow: "Model → Router → [Expert 1 | Expert 2 | Expert 3] → Selected Path",
+      closing: "This means a model can have a large total parameter count while using significantly fewer active parameters for a particular inference pass.",
+      question: "So when someone says \"This model has 400B parameters\", another useful question is: How many of those parameters are actually active during inference?"
+    },
+    notBrainSize: {
+      heading: "Parameters are not a brain-size measurement",
+      formula: "Parameters + Architecture + Training Data + Training Process + Inference Strategy + Reasoning + Alignment = Model Behavior",
+      closing: "Parameters are one component. Not the entire explanation."
+    },
+    howToRead: {
+      heading: "So how should we read these charts?",
+      paragraphs: [
+        "When I see a new AI leaderboard, I try not to immediately look at the number at the top. I look at the methodology first."
+      ],
+      steps: [
+        {
+          num: "1",
+          title: "What is being measured?",
+          desc: "Is it Coding? Reasoning? Math? Knowledge? Tool use? Long context? Multimodal understanding?"
+        },
+        {
+          num: "2",
+          title: "What benchmark is being used?",
+          desc: "Different benchmarks measure different things (e.g., GDPval-AA v2, τ³-Banking, Terminal-Bench v2.1, SciCode, Humanity's Last Exam, GPQA Diamond, CritPt, AA-Omniscience, AA-LCR). Comparing two models using only the final score can hide important differences."
+        },
+        {
+          num: "3",
+          title: "Is the model reasoning or non-reasoning?",
+          desc: "This matters. Some models use additional inference-time computation to work through difficult problems. A leaderboard may therefore distinguish between Reasoning Models (💡) and Non-Reasoning Models."
+        },
+        {
+          num: "4",
+          title: "What does the score actually represent?",
+          desc: "Always check whether the number is Accuracy, Percentage, Elo, Normalized score, Weighted index, or Pass rate. A \"90\" in one benchmark doesn't necessarily mean the same thing as a \"90\" somewhere else."
+        },
+        {
+          num: "5",
+          title: "What does it cost?",
+          desc: "Intelligence isn't the only engineering consideration. For an application, quality, latency, cost, context window, reliability, and tool support all matter. Artificial Analysis also tracks metrics such as cost and time per task alongside intelligence scores."
+        }
+      ]
+    },
+    fitOverWinner: {
+      heading: "The benchmark can be right and still not matter to you",
+      exampleA: "Model A: Coding 95 | Reasoning 90 | Math 92",
+      exampleB: "Model B: Coding 82 | Reasoning 95 | Math 96",
+      closing: "If I'm building a coding assistant, Model A might be more useful. If I'm building a mathematical reasoning application, Model B might be the better choice. There isn't always a universal winner. There is only a better fit for a particular problem."
+    },
+    limitations: {
+      heading: "Benchmarks have limitations",
+      paragraphs: [
+        "Benchmarks are incredibly useful. But they're not perfect. They can be affected by:"
+      ],
+      items: [
+        "Dataset selection", "Evaluation methodology", "Grading models", "Data contamination",
+        "Prompting strategy", "Number of attempts", "Tool access", "Benchmark saturation"
+      ],
+      augustNote: "And methodologies change. For example, Artificial Analysis version 4.1.1 updated some of its evaluations and graders in August 2026. That means scores should always be interpreted within the version and methodology that produced them.",
+      snapshot: "A leaderboard is a snapshot of performance under specific conditions. Not an eternal ranking of intelligence."
+    },
+    devDecision: {
+      heading: "What should developers actually look at?",
+      flowchart: "What does my application need? → Which capability matters? → Which benchmarks measure it? → Which models perform well? → What are their costs? → How fast are they? → How reliable are they? → Test them in my actual application.",
+      takeaway: "Your own evaluation can be more valuable than a leaderboard."
+    },
+    takeaway: {
+      heading: "Technical takeaway 🌸",
+      items: [
+        "Parameters are learned numerical values inside a model.",
+        "More parameters don't automatically mean better performance.",
+        "Benchmarks measure specific capabilities.",
+        "A composite score combines multiple evaluations according to a methodology.",
+        "Different benchmarks can produce very different rankings.",
+        "Model size, architecture, training, reasoning, cost, and latency all matter.",
+        "The \"best\" model depends on the problem you're trying to solve."
+      ]
+    },
+    questionAskNow: {
+      heading: "The question I ask now",
+      quote: "When I see: Model X — 63, I don't immediately think: \"That's the smartest AI.\" I think: 63 according to what? And honestly... that's a much more useful question."
+    },
+    remember: {
+      heading: "Things I Want To Remember 💖",
+      quote: "Benchmarks help us compare. Understanding helps us choose.",
+      items: [
+        "Numbers are useful. Context is better.",
+        "Knowing what a number actually represents is often more valuable than knowing which number is the biggest."
+      ]
+    },
+    closing: "Next entry: The 9 Benchmarks Behind the Score 🌸",
+    closingSign: "So now we know that the final number isn't a magical \"intelligence score.\"",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Cómo Leer Rankings de Modelos de IA 🌸",
+    subtitle: "Parámetros, benchmarks, puntajes y por qué el modelo más grande no es necesariamente el más inteligente.",
+    date: "14 de Septiembre, 2026",
+    back: 'Volver al Inicio',
+    intro: "Cada pocas semanas aparece una nueva tabla de clasificación de IA.",
+    introDesc: "Un gráfico colorido. Decenas de modelos. Números subiendo y bajando.",
+    introExtra: [
+      "Y de repente todo el mundo se pregunta: \"¿Cuál IA es la más inteligente?\"",
+      "Pero antes de elegir un ganador, hay una pregunta más importante:",
+      "¿Qué están midiendo realmente estos números?",
+      "Una vez que comencé a observar más de cerca los benchmarks de IA, me di cuenta de que leer estos gráficos requiere comprender varios conceptos diferentes:",
+      "• Benchmarks",
+      "• Puntajes de evaluación",
+      "• Parámetros",
+      "• Arquitectura del modelo",
+      "• Modelos de razonamiento vs. sin razonamiento",
+      "• Costo",
+      "• Latencia",
+      "Y, lo más importante, el caso de uso real. Así que vamos a desglosarlo."
+    ],
+    benchmarkDef: {
+      heading: "Primero: ¿Qué es un benchmark de IA?",
+      paragraphs: [
+        "Un benchmark es una evaluación estandarizada utilizada para comparar modelos de IA en tareas específicas.",
+        "Piénsalo como un examen.",
+        "Pero en lugar de un solo examen que evalúa todo, hay diferentes exámenes para diferentes habilidades. Por ejemplo:"
+      ],
+      tree: [
+        { title: "Programación", items: ["¿Puede el modelo escribir código?", "¿Puede resolver tareas complejas de ingeniería de software?"] },
+        { title: "Razonamiento", items: ["¿Puede resolver problemas difíciles?", "¿Puede seguir un razonamiento de múltiples pasos?"] },
+        { title: "Ciencia", items: ["Matemáticas", "Física", "Razonamiento científico"] },
+        { title: "Conocimiento", items: ["Precisión fáctica", "Resistencia a las alucinaciones"] }
+      ],
+      closing: "Un modelo puede desempeñarse extremadamente bien en una categoría y considerablemente peor en otra. Es por eso que decir \"El Modelo A es más inteligente que el Modelo B\" suele ser una simplificación excesiva. Una mejor afirmación es: \"El Modelo A se desempeñó mejor que el Modelo B en esta evaluación en particular.\""
+    },
+    chartSection: {
+      heading: "El gráfico que sigo viendo",
+      paragraphs: [
+        "Un ejemplo es el Artificial Analysis Intelligence Index.",
+        "El índice v4.1.1 actual combina nueve evaluaciones que cubren áreas como tareas agénticas, programación, razonamiento científico, conocimiento y razonamiento de contexto largo."
+      ],
+      imageCaption: "Artificial Analysis Intelligence Index v4.1.1 — Tabla de Clasificación de Modelos de IA",
+      asciiTitle: "El resultado se ve algo así como:",
+      ascii: "Modelo A     ████████████████████ 63\nModelo B     ███████████████████  62\nModelo C     ██████████████████   61\nModelo D     ██████████████████   60",
+      distinction: "A primera vista parece: 63 > 62 > 61 > 60. Y es verdad. Pero no significa que 63 = 63% de inteligencia. Esa es una distinción importante."
+    },
+    finalNumber: {
+      heading: "Entonces, ¿qué es ese número final?",
+      paragraphs: [
+        "Un índice compuesto combina múltiples evaluaciones en un solo puntaje.",
+        "El Artificial Analysis Intelligence Index actual utiliza categorías ponderadas:"
+      ],
+      weights: [
+        { label: "Agentes", pct: "34%" },
+        { label: "Programación", pct: "24%" },
+        { label: "Razonamiento Científico", pct: "24%" },
+        { label: "General", pct: "18%" }
+      ],
+      closing: "Por lo tanto, el número final representa el rendimiento agregado de los benchmarks bajo esa metodología, no una medida objetiva de inteligencia.",
+      flowNote: "Es por esto que la metodología importa. Cambia las pruebas. Cambia los pesos. Cambia los evaluadores. Cambia la versión del modelo. Y el ranking puede cambiar."
+    },
+    parameters: {
+      heading: "Pero, ¿qué es un parámetro?",
+      paragraphs: [
+        "Este es probablemente el número más incomprendido en la IA.",
+        "Es posible que hayas visto modelos descritos como 7B, 70B, 120B o 400B parámetros.",
+        "La B significa billones (en inglés, mil millones). Así que 70B = aproximadamente 70 mil millones de parámetros.",
+        "Pero, ¿qué es exactamente un parámetro? Un parámetro es un valor numérico aprendido dentro del modelo. Durante el entrenamiento, el modelo ajusta enormes cantidades de estos valores para mejorar sus predicciones."
+      ],
+      pipeline: "Datos de Entrenamiento → Red Neuronal → Ajustar Parámetros → Aprender Patrones → Modelo Entrenado",
+      closing: "Puedes pensar en los parámetros como parte de la representación interna aprendida del modelo. Pero hay una advertencia importante."
+    },
+    moreNotSmarter: {
+      heading: "Más parámetros ≠ más inteligencia",
+      paragraphs: [
+        "Aquí es donde las cosas se ponen interesantes.",
+        "Sería tentador asumir: 10B → 100B → 1T = IA más inteligente. Pero la realidad no es tan simple.",
+        "El rendimiento del modelo también depende de:"
+      ],
+      factors: [
+        "Arquitectura", "Datos de entrenamiento", "Calidad de datos", "Métodos de entrenamiento",
+        "Optimización", "Alineación", "Mecanismos de razonamiento", "Manejo del contexto", "Estrategia de inferencia"
+      ],
+      closing: "Un modelo más grande puede desempeñarse peor que un modelo más pequeño y mejor entrenado."
+    },
+    moeSection: {
+      heading: "Y luego están los modelos Mixture-of-Experts",
+      paragraphs: [
+        "El recuento de parámetros se vuelve aún más interesante con arquitecturas Mixture-of-Experts (MoE).",
+        "En lugar de activar todo el modelo para cada token, un modelo MoE puede enrutar cada token a través de solo un subconjunto de sus expertos."
+      ],
+      moeFlow: "Modelo → Enrutador → [Experto 1 | Experto 2 | Experto 3] → Ruta Seleccionada",
+      closing: "Esto significa que un modelo puede tener un gran recuento total de parámetros mientras usa significativamente menos parámetros activos para una pasada de inferencia particular.",
+      question: "Así que cuando alguien dice \"Este modelo tiene 400B parámetros\", otra pregunta útil es: ¿Cuántos de esos parámetros están realmente activos durante la inferencia?"
+    },
+    notBrainSize: {
+      heading: "Los parámetros no son una medida del tamaño del cerebro",
+      formula: "Parámetros + Arquitectura + Datos de Entrenamiento + Proceso de Entrenamiento + Estrategia de Inferencia + Razonamiento + Alineación = Comportamiento del Modelo",
+      closing: "Los parámetros son un componente. No la explicación completa."
+    },
+    howToRead: {
+      heading: "Entonces, ¿cómo deberíamos leer estos gráficos?",
+      paragraphs: [
+        "Cuando veo una nueva tabla de clasificación de IA, trato de no mirar inmediatamente el número de arriba. Primero miro la metodología."
+      ],
+      steps: [
+        {
+          num: "1",
+          title: "¿Qué se está midiendo?",
+          desc: "¿Es Programación? ¿Razonamiento? ¿Matemáticas? ¿Conocimiento? ¿Uso de herramientas? ¿Contexto largo? ¿Comprensión multimodal?"
+        },
+        {
+          num: "2",
+          title: "¿Qué benchmark se está utilizando?",
+          desc: "Diferentes benchmarks miden diferentes cosas (ej. GDPval-AA v2, τ³-Banking, Terminal-Bench v2.1, SciCode, Humanity's Last Exam, GPQA Diamond, CritPt, AA-Omniscience, AA-LCR). Comparar dos modelos usando solo el puntaje final puede ocultar diferencias importantes."
+        },
+        {
+          num: "3",
+          title: "¿El modelo es de razonamiento o sin razonamiento?",
+          desc: "Esto importa. Algunos modelos utilizan cómputo adicional en tiempo de inferencia para resolver problemas difíciles. Por lo tanto, una tabla puede distinguir entre Modelos de Razonamiento (💡) y Modelos sin Razonamiento."
+        },
+        {
+          num: "4",
+          title: "¿Qué representa realmente el puntaje?",
+          desc: "Siempre verifica si el número es Precisión, Porcentaje, Elo, Puntaje normalizado, Índice ponderado o Tasa de aprobación. Un \"90\" en un benchmark no significa necesariamente lo mismo que un \"90\" en otro lugar."
+        },
+        {
+          num: "5",
+          title: "¿Cuánto cuesta?",
+          desc: "La inteligencia no es la única consideración de ingeniería. Para una aplicación, la calidad, la latencia, el costo, la ventana de contexto, la confiabilidad y el soporte de herramientas importan. Artificial Analysis también rastrea métricas como el costo y el tiempo por tarea junto con los puntajes de inteligencia."
+        }
+      ]
+    },
+    fitOverWinner: {
+      heading: "El benchmark puede ser correcto y aún así no importarte",
+      exampleA: "Modelo A: Programación 95 | Razonamiento 90 | Matemáticas 92",
+      exampleB: "Modelo B: Programación 82 | Razonamiento 95 | Matemáticas 96",
+      closing: "Si estoy construyendo un asistente de código, el Modelo A podría ser más útil. Si estoy construyendo una aplicación de razonamiento matemático, el Modelo B podría ser la mejor opción. No siempre hay un ganador universal. Solo hay un mejor ajuste para un problema particular."
+    },
+    limitations: {
+      heading: "Los benchmarks tienen limitaciones",
+      paragraphs: [
+        "Los benchmarks son increíblemente útiles. Pero no son perfectos. Pueden verse afectados por:"
+      ],
+      items: [
+        "Selección del conjunto de datos", "Metodología de evaluación", "Modelos clasificadores", "Contaminación de datos",
+        "Estrategia de prompting", "Número de intentos", "Acceso a herramientas", "Saturación del benchmark"
+      ],
+      augustNote: "Y las metodologías cambian. Por ejemplo, la versión 4.1.1 de Artificial Analysis actualizó algunas de sus evaluaciones y evaluadores en agosto de 2026. Eso significa que los puntajes siempre deben interpretarse dentro de la versión y metodología que los produjo.",
+      snapshot: "Una tabla de clasificación es una instantánea del rendimiento bajo condiciones específicas. No una clasificación eterna de inteligencia."
+    },
+    devDecision: {
+      heading: "¿Qué deberían mirar realmente los desarrolladores?",
+      flowchart: "¿Qué necesita mi aplicación? → ¿Qué capacidad importa? → ¿Qué benchmarks la miden? → ¿Qué modelos se desempeñan bien? → ¿Cuáles son sus costos? → ¿Qué tan rápidos son? → ¿Qué tan confiables son? → Pruébalos en tu aplicación real.",
+      takeaway: "Tu propia evaluación puede ser más valiosa que una tabla de clasificación."
+    },
+    takeaway: {
+      heading: "Conclusión técnica 🌸",
+      items: [
+        "Los parámetros son valores numéricos aprendidos dentro de un modelo.",
+        "Más parámetros no significan automáticamente un mejor rendimiento.",
+        "Los benchmarks miden capacidades específicas.",
+        "Un puntaje compuesto combina múltiples evaluaciones según una metodología.",
+        "Diferentes benchmarks pueden producir clasificaciones muy diferentes.",
+        "El tamaño del modelo, arquitectura, entrenamiento, razonamiento, costo y latencia importan.",
+        "El \"mejor\" modelo depende del problema que estés intentando resolver."
+      ]
+    },
+    questionAskNow: {
+      heading: "La pregunta que hago ahora",
+      quote: "Cuando veo: Modelo X — 63, no pienso inmediatamente: \"Es la IA más inteligente.\" Pienso: ¿63 de acuerdo a qué? Y honestamente... esa es una pregunta mucho más útil."
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 💖",
+      quote: "Los benchmarks nos ayudan a comparar. La comprensión nos ayuda a elegir.",
+      items: [
+        "Los números son útiles. El contexto es mejor.",
+        "Saber qué representa realmente un número es a menudo más valioso que saber cuál número es el más grande."
+      ]
+    },
+    closing: "Siguiente entrada: Los 9 Benchmarks Detrás del Puntaje 🌸",
+    closingSign: "Así que ahora sabemos que el número final no es un \"puntaje de inteligencia\" mágico.",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Como Ler Rankings de Modelos de IA 🌸",
+    subtitle: "Parâmetros, benchmarks, pontuações e por que o maior modelo não é necessariamente o mais inteligente.",
+    date: "14 de Setembro, 2026",
+    back: 'Voltar ao Início',
+    intro: "A cada poucas semanas, outra tabela de classificação de IA aparece.",
+    introDesc: "Um gráfico colorido. Dezenas de modelos. Números subindo e descendo.",
+    introExtra: [
+      "E de repente todo mundo se pergunta: \"Qual IA é a mais inteligente?\"",
+      "Mas antes de escolher um vencedor, há uma pergunta mais importante:",
+      "O que esses números estão realmente medindo?",
+      "Assim que comecei a olhar mais de perto para os benchmarks de IA, percebi que ler esses gráficos requer entender vários conceitos diferentes:",
+      "• Benchmarks",
+      "• Pontuações de avaliação",
+      "• Parâmetros",
+      "• Arquitetura do modelo",
+      "• Modelos de raciocínio vs. sem raciocínio",
+      "• Custo",
+      "• Latência",
+      "E, o mais importante, o caso de uso real. Então vamos desdobrar isso."
+    ],
+    benchmarkDef: {
+      heading: "Primeiro: O que é um benchmark de IA?",
+      paragraphs: [
+        "Um benchmark é uma avaliação padronizada usada para comparar modelos de IA em tarefas específicas.",
+        "Pense nisso como um exame.",
+        "Mas em vez de um único exame testando tudo, existem exames diferentes para habilidades diferentes. Por exemplo:"
+      ],
+      tree: [
+        { title: "Programação", items: ["O modelo consegue escrever código?", "Consegue resolver tarefas complexas de engenharia de software?"] },
+        { title: "Raciocínio", items: ["Consegue resolver problemas difíceis?", "Consegue seguir um raciocínio de várias etapas?"] },
+        { title: "Ciência", items: ["Matemática", "Física", "Raciocínio científico"] },
+        { title: "Conhecimento", items: ["Precisão factual", "Resistência a alucinações"] }
+      ],
+      closing: "Um modelo pode ter um desempenho extremamente alto em uma categoria e consideravelmente pior em outra. É por isso que dizer \"Modelo A é mais inteligente que o Modelo B\" geralmente é uma simplificação excessiva. Uma afirmação melhor é: \"O Modelo A teve melhor desempenho que o Modelo B nesta avaliação específica.\""
+    },
+    chartSection: {
+      heading: "O gráfico que continuo vendo",
+      paragraphs: [
+        "Um exemplo é o Artificial Analysis Intelligence Index.",
+        "O índice v4.1.1 atual combina nove avaliações cobrindo áreas como tarefas agênticas, programação, raciocínio científico, conhecimento e raciocínio de contexto longo."
+      ],
+      imageCaption: "Artificial Analysis Intelligence Index v4.1.1 — Tabela de Classificação de Modelos de IA",
+      asciiTitle: "O resultado se parece com algo assim:",
+      ascii: "Modelo A     ████████████████████ 63\nModelo B     ███████████████████  62\nModelo C     ██████████████████   61\nModelo D     ██████████████████   60",
+      distinction: "À primeira vista, parece 63 > 62 > 61 > 60. E é verdade. Mas não significa 63 = 63% de inteligência. Essa é uma distinção importante."
+    },
+    finalNumber: {
+      heading: "Então, o que é esse número final?",
+      paragraphs: [
+        "Um índice composto combina múltiplas avaliações em uma única pontuação.",
+        "O Artificial Analysis Intelligence Index atual usa categorias ponderadas:"
+      ],
+      weights: [
+        { label: "Agentes", pct: "34%" },
+        { label: "Programação", pct: "24%" },
+        { label: "Raciocínio Científico", pct: "24%" },
+        { label: "Geral", pct: "18%" }
+      ],
+      closing: "O número final representa, portanto, o desempenho agregado do benchmark sob essa metodologia, não uma medição objetiva de inteligência.",
+      flowNote: "É por isso que a metodologia importa. Mude os testes. Mude os pesos. Mude os avaliadores. Mude a versão do modelo. E a classificação pode mudar."
+    },
+    parameters: {
+      heading: "Mas o que é um parâmetro?",
+      paragraphs: [
+        "Este é provavelmente o número mais mal compreendido em IA.",
+        "Você pode ter visto modelos descritos como 7B, 70B, 120B ou 400B parâmetros.",
+        "O B significa bilhões. Então 70B = aproximadamente 70 bilhões de parâmetros.",
+        "Mas o que exatamente é um parâmetro? Um parâmetro é um valor numérico aprendido dentro do modelo. Durante o treinamento, o modelo ajusta enormes quantidades desses valores para melhorar suas previsões."
+      ],
+      pipeline: "Dados de Treinamento → Rede Neural → Ajustar Parâmetros → Aprender Padrões → Modelo Treinado",
+      closing: "Você pode pensar nos parâmetros como parte da representação interna aprendida do modelo. Mas há um aviso importante."
+    },
+    moreNotSmarter: {
+      heading: "Mais parâmetros ≠ mais inteligência",
+      paragraphs: [
+        "É aqui que as coisas ficam interessantes.",
+        "Seria tentador assumir: 10B → 100B → 1T = IA mais inteligente. Mas a realidade não é tão simples.",
+        "O desempenho do modelo também depende de:"
+      ],
+      factors: [
+        "Arquitetura", "Dados de treinamento", "Qualidade dos dados", "Métodos de treinamento",
+        "Otimização", "Alinhamento", "Mecanismos de raciocínio", "Manipulação de contexto", "Estratégia de inferência"
+      ],
+      closing: "Um modelo maior pode ter um desempenho pior do que um modelo menor e mais bem treinado."
+    },
+    moeSection: {
+      heading: "E então existem os modelos Mixture-of-Experts",
+      paragraphs: [
+        "A contagem de parâmetros fica ainda mais interessante com arquiteturas Mixture-of-Experts (MoE).",
+        "Em vez de ativar todo o modelo para cada token, um modelo MoE pode rotear cada token através de apenas um subconjunto de seus especialistas."
+      ],
+      moeFlow: "Modelo → Roteador → [Especialista 1 | Especialista 2 | Especialista 3] → Caminho Selecionado",
+      closing: "Isso significa que um modelo pode ter uma grande contagem total de parâmetros enquanto usa significativamente menos parâmetros ativos para uma passagem de inferência específica.",
+      question: "Portanto, quando alguém diz \"Este modelo tem 400B de parâmetros\", outra pergunta útil é: Quantos desses parâmetros estão realmente ativos durante a inferência?"
+    },
+    notBrainSize: {
+      heading: "Parâmetros não são uma medição do tamanho do cérebro",
+      formula: "Parâmetros + Arquitetura + Dados de Treinamento + Processo de Treinamento + Estratégia de Inferência + Raciocínio + Alinhamento = Comportamento do Modelo",
+      closing: "Os parâmetros são um componente. Não a explicação inteira."
+    },
+    howToRead: {
+      heading: "Então, como devemos ler esses gráficos?",
+      paragraphs: [
+        "Quando vejo uma nova tabela de classificação de IA, tento não olhar imediatamente para o número no topo. Olho primeiro para a metodologia."
+      ],
+      steps: [
+        {
+          num: "1",
+          title: "O que está sendo medido?",
+          desc: "É Programação? Raciocínio? Matemática? Conhecimento? Uso de ferramentas? Contexto longo? Compreensão multimodal?"
+        },
+        {
+          num: "2",
+          title: "Qual benchmark está sendo usado?",
+          desc: "Benchmarks diferentes medem coisas diferentes (ex: GDPval-AA v2, τ³-Banking, Terminal-Bench v2.1, SciCode, Humanity's Last Exam, GPQA Diamond, CritPt, AA-Omniscience, AA-LCR). Comparar dois modelos usando apenas a pontuação final pode ocultar diferenças importantes."
+        },
+        {
+          num: "3",
+          title: "O modelo é de raciocínio ou sem raciocínio?",
+          desc: "Isso importa. Alguns modelos usam computação adicional em tempo de inferência para resolver problemas difíceis. Uma classificação pode, portanto, distinguir entre Modelos de Raciocínio (💡) e Modelos sem Raciocínio."
+        },
+        {
+          num: "4",
+          title: "O que a pontuação realmente representa?",
+          desc: "Sempre verifique se o número é Precisão, Porcentagem, Elo, Pontuação normalizada, Índice ponderado ou Taxa de aprovação. Um \"90\" em um benchmark não significa necessariamente a mesma coisa que um \"90\" em outro lugar."
+        },
+        {
+          num: "5",
+          title: "Quanto custa?",
+          desc: "Inteligência não é a única consideração de engenharia. Para uma aplicação, qualidade, latência, custo, janela de contexto, confiabilidade e suporte a ferramentas são importantes. A Artificial Analysis também rastreia métricas como custo e tempo por tarefa ao lado de pontuações de inteligência."
+        }
+      ]
+    },
+    fitOverWinner: {
+      heading: "O benchmark pode estar certo e ainda assim não importar para você",
+      exampleA: "Modelo A: Programação 95 | Raciocínio 90 | Matemática 92",
+      exampleB: "Modelo B: Programação 82 | Raciocínio 95 | Matemática 96",
+      closing: "Se estou construindo um assistente de código, o Modelo A pode ser mais útil. Se estou construindo um aplicativo de raciocínio matemático, o Modelo B pode ser a melhor escolha. Nem sempre há um vencedor universal. Existe apenas uma escolha melhor para um problema específico."
+    },
+    limitations: {
+      heading: "Benchmarks têm limitações",
+      paragraphs: [
+        "Benchmarks são incrivelmente úteis. Mas não são perfeitos. Podem ser afetados por:"
+      ],
+      items: [
+        "Seleção do conjunto de dados", "Metodologia de avaliação", "Modelos de avaliação", "Contaminação de dados",
+        "Estratégia de prompting", "Número de tentativas", "Acesso a ferramentas", "Saturação do benchmark"
+      ],
+      augustNote: "E as metodologias mudam. Por exemplo, a versão 4.1.1 da Artificial Analysis atualizou algumas de suas avaliações e avaliadores em agosto de 2026. Isso significa que as pontuações devem sempre ser interpretadas dentro da versão e metodologia que as produziu.",
+      snapshot: "Uma tabela de classificação é um instantâneo do desempenho sob condições específicas. Não um ranking eterno de inteligência."
+    },
+    devDecision: {
+      heading: "O que os desenvolvedores devem realmente observar?",
+      flowchart: "Do que meu aplicativo precisa? → Qual capacidade importa? → Quais benchmarks a medem? → Quais modelos se destacam? → Quais são seus custos? → Quão rápidos são? → Quão confiáveis são? → Teste-os em seu aplicativo real.",
+      takeaway: "Sua própria avaliação pode ser mais valiosa do que uma tabela de classificação."
+    },
+    takeaway: {
+      heading: "Resumo técnico 🌸",
+      items: [
+        "Parâmetros são valores numéricos aprendidos dentro de um modelo.",
+        "Mais parâmetros não significam automaticamente melhor desempenho.",
+        "Benchmarks medem capacidades específicas.",
+        "Uma pontuação composta combina múltiplas avaliações de acordo com uma metodologia.",
+        "Benchmarks diferentes podem produzir classificações muito diferentes.",
+        "Tamanho do modelo, arquitetura, treinamento, raciocínio, custo e latência importam.",
+        "O \"melhor\" modelo depende do problema que você está tentando resolver."
+      ]
+    },
+    questionAskNow: {
+      heading: "A pergunta que faço agora",
+      quote: "Quando vejo: Modelo X — 63, não penso imediatamente: \"É a IA mais inteligente.\" Penso: 63 de acordo com o quê? E sinceramente... essa é uma pergunta muito mais útil."
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 💖",
+      quote: "Benchmarks nos ajudam a comparar. A compreensão nos ajuda a escolher.",
+      items: [
+        "Números são úteis. Contexto é melhor.",
+        "Saber o que um número realmente representa é muitas vezes mais valioso do que saber qual número é o maior."
+      ]
+    },
+    closing: "Próxima entrada: Os 9 Benchmarks Por Trás da Pontuação 🌸",
+    closingSign: "Então agora sabemos que o número final não é uma \"pontuação de inteligência\" mágica.",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro Section -->
+          <div class="intro-block">
+            <p class="lead-text">{page.intro}</p>
+            <p class="intro-highlight">{page.introDesc}</p>
+            {page.introExtra.map((paragraph) => (
+              <p class="intro-text">{paragraph}</p>
+            ))}
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- Section 1: Benchmark Definition -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.benchmarkDef.heading}</h2>
+            {page.benchmarkDef.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+            
+            <div class="benchmark-grid">
+              {page.benchmarkDef.tree.map((node) => (
+                <div class="benchmark-card">
+                  <h3 class="tree-cat-title">✨ {node.title}</h3>
+                  <ul>
+                    {node.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <p class="section-closing">{page.benchmarkDef.closing}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 2: Artificial Analysis Chart -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.chartSection.heading}</h2>
+            {page.chartSection.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <figure class="blog-figure">
+              <img src={graficoIA.src} alt={page.chartSection.imageCaption} loading="lazy" />
+              <figcaption>{page.chartSection.imageCaption}</figcaption>
+            </figure>
+
+            <div class="code-block-box">
+              <span class="code-box-title">{page.chartSection.asciiTitle}</span>
+              <pre class="ascii-chart"><code>{page.chartSection.ascii}</code></pre>
+            </div>
+
+            <p class="callout-note">{page.chartSection.distinction}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 3: Final Number & Composite Index -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.finalNumber.heading}</h2>
+            {page.finalNumber.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="weights-grid">
+              {page.finalNumber.weights.map((w) => (
+                <div class="weight-card">
+                  <span class="weight-pct">{w.pct}</span>
+                  <span class="weight-label">{w.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <p>{page.finalNumber.closing}</p>
+
+            <div class="flow-pill-box">
+              <span>Benchmark Results (Agents, Coding, Science, General)</span>
+              <span class="flow-arrow">↓</span>
+              <span>Weighted Calculation</span>
+              <span class="flow-arrow">↓</span>
+              <span class="highlight-pill">Composite Score</span>
+            </div>
+
+            <p class="section-closing">{page.finalNumber.flowNote}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 4: Parameters Definition -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.parameters.heading}</h2>
+            {page.parameters.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="pipeline-card">
+              <code class="pipeline-text">{page.parameters.pipeline}</code>
+            </div>
+
+            <p class="section-closing">{page.parameters.closing}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 5: More Parameters ≠ More Intelligence -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.moreNotSmarter.heading}</h2>
+            {page.moreNotSmarter.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="factors-grid">
+              {page.moreNotSmarter.factors.map((factor) => (
+                <span class="factor-tag">🌸 {factor}</span>
+              ))}
+            </div>
+
+            <p class="section-closing">{page.moreNotSmarter.closing}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 6: Mixture of Experts (MoE) -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.moeSection.heading}</h2>
+            {page.moeSection.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="moe-card">
+              <span class="moe-diagram">{page.moeSection.moeFlow}</span>
+            </div>
+
+            <p>{page.moeSection.closing}</p>
+
+            <div class="question-callout">
+              <span class="question-icon">❓</span>
+              <p><strong>{page.moeSection.question}</strong></p>
+            </div>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 7: Mental Model Formula -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.notBrainSize.heading}</h2>
+            <div class="formula-card">
+              <p class="formula-text">{page.notBrainSize.formula}</p>
+            </div>
+            <p class="section-closing">{page.notBrainSize.closing}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 8: How to Read Charts (5 Steps) -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.howToRead.heading}</h2>
+            {page.howToRead.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="steps-container">
+              {page.howToRead.steps.map((step) => (
+                <div class="step-card">
+                  <div class="step-badge">{step.num}</div>
+                  <div class="step-body">
+                    <h3>{step.title}</h3>
+                    <p>{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 9: Fit over Winner -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.fitOverWinner.heading}</h2>
+            <div class="comparison-card">
+              <div class="comp-col">
+                <strong>{page.fitOverWinner.exampleA}</strong>
+              </div>
+              <div class="comp-col">
+                <strong>{page.fitOverWinner.exampleB}</strong>
+              </div>
+            </div>
+            <p class="section-closing">{page.fitOverWinner.closing}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 10: Limitations -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.limitations.heading}</h2>
+            {page.limitations.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+
+            <div class="limitations-grid">
+              {page.limitations.items.map((item) => (
+                <span class="limit-tag">⚠️ {item}</span>
+              ))}
+            </div>
+
+            <p class="callout-note">{page.limitations.augustNote}</p>
+            <p class="section-closing">{page.limitations.snapshot}</p>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 11: Developer Decision Flowchart -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.devDecision.heading}</h2>
+            <div class="flowchart-box">
+              <p>{page.devDecision.flowchart}</p>
+            </div>
+            <div class="highlight-banner">
+              <p><strong>✨ {page.devDecision.takeaway}</strong></p>
+            </div>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 12: Technical Takeaway -->
+          <section class="content-section takeaway-section">
+            <h2 class="section-heading">{page.takeaway.heading}</h2>
+            <ul class="takeaway-list">
+              {page.takeaway.items.map((item) => (
+                <li>🌸 {item}</li>
+              ))}
+            </ul>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Section 13: Question I ask now -->
+          <section class="content-section">
+            <h2 class="section-heading">{page.questionAskNow.heading}</h2>
+            <div class="quote-card">
+              <p class="quote-text">"{page.questionAskNow.quote}"</p>
+            </div>
+          </section>
+
+          <hr class="section-divider" />
+
+          <!-- Remember Card -->
+          <div class="remember-card">
+            <h3 class="remember-title">{page.remember.heading}</h3>
+            <p class="remember-highlight">"{page.remember.quote}"</p>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Post Footer / Next Entry -->
+          <footer class="post-footer">
+            <div class="next-entry">
+              <p class="closing-title">{page.closing}</p>
+              <p class="closing-sign">{page.closingSign}</p>
+              <p class="signature">{page.signature}</p>
+            </div>
+          </footer>
+
+        </div>
+      </article>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.35;
+    animation: fall linear infinite;
+  }
+
+  .p-1 { left: 10%; animation-duration: 12s; animation-delay: 0s; }
+  .p-2 { left: 25%; animation-duration: 16s; animation-delay: 2s; }
+  .p-3 { left: 45%; animation-duration: 14s; animation-delay: 4s; }
+  .p-4 { left: 65%; animation-duration: 18s; animation-delay: 1s; }
+  .p-5 { left: 80%; animation-duration: 13s; animation-delay: 3s; }
+  .p-6 { left: 92%; animation-duration: 15s; animation-delay: 5s; }
+
+  @keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    position: relative;
+    z-index: 2;
+    padding: 120px 24px 80px;
+    min-height: 100vh;
+  }
+
+  .container-narrow {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .back-nav {
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  .blog-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3.5rem 3rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .post-category {
+    font-weight: 600;
+    color: var(--rose);
+  }
+
+  .post-title {
+    font-family: var(--font-heading);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text-heading);
+    margin-bottom: 1rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .post-content {
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 1.05rem;
+  }
+
+  .intro-block {
+    margin-bottom: 2rem;
+  }
+
+  .lead-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    margin-bottom: 0.75rem;
+  }
+
+  .intro-highlight {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--rose);
+    margin-bottom: 1rem;
+  }
+
+  .intro-text {
+    margin-bottom: 0.75rem;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 2.5rem 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 1.25rem;
+  }
+
+  .section-closing {
+    margin-top: 1.25rem;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* Benchmark Tree Grid */
+  .benchmark-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .benchmark-card {
+    background: rgba(255, 182, 193, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+  }
+
+  .tree-cat-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--rose);
+    margin-bottom: 0.75rem;
+  }
+
+  .benchmark-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .benchmark-card li {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    position: relative;
+    padding-left: 14px;
+  }
+
+  .benchmark-card li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--rose);
+  }
+
+  /* Figure / Chart Image */
+  .blog-figure {
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .blog-figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .blog-figure figcaption {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* ASCII Code Block Box */
+  .code-block-box {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    font-family: monospace;
+  }
+
+  .code-box-title {
+    display: block;
+    font-size: 0.85rem;
+    color: #a6adc8;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .ascii-chart {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    color: #f5c2e7;
+  }
+
+  .callout-note {
+    background: rgba(137, 180, 250, 0.1);
+    border-left: 4px solid var(--rose);
+    padding: 1rem 1.25rem;
+    border-radius: 0 12px 12px 0;
+    font-size: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  /* Weights Grid */
+  .weights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .weight-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .weight-pct {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--rose);
+  }
+
+  .weight-label {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  /* Flow pill box */
+  .flow-pill-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .flow-arrow {
+    color: var(--rose);
+    font-weight: bold;
+  }
+
+  .highlight-pill {
+    background: var(--rose);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  /* Pipeline card */
+  .pipeline-card {
+    background: #181825;
+    color: #a6e3a1;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-family: monospace;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  /* Factor tags */
+  .factors-grid, .limitations-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 1.5rem 0;
+  }
+
+  .factor-tag, .limit-tag {
+    background: rgba(245, 194, 231, 0.15);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-heading);
+  }
+
+  .limit-tag {
+    background: rgba(249, 226, 175, 0.15);
+  }
+
+  /* MoE & Formula */
+  .moe-card, .formula-card {
+    background: rgba(203, 166, 247, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+
+  .moe-diagram, .formula-text {
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--rose);
+  }
+
+  .question-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(250, 179, 135, 0.12);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+  }
+
+  .question-icon {
+    font-size: 1.5rem;
+  }
+
+  /* Steps container */
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .step-card {
+    display: flex;
+    gap: 16px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .step-badge {
+    background: var(--rose);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-body h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.35rem;
+  }
+
+  .step-body p {
+    font-size: 0.98rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* Comparison Card */
+  .comparison-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .comp-col {
+    background: rgba(166, 227, 161, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  /* Flowchart box */
+  .flowchart-box {
+    background: #11111b;
+    color: #89b4fa;
+    border-radius: 14px;
+    padding: 1.25rem;
+    font-family: monospace;
+    font-size: 0.95rem;
+    text-align: center;
+    line-height: 1.8;
+    margin: 1.5rem 0;
+  }
+
+  .highlight-banner {
+    background: rgba(245, 194, 231, 0.2);
+    border: 1px solid var(--rose);
+    border-radius: 14px;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-heading);
+  }
+
+  /* Takeaway list */
+  .takeaway-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+  }
+
+  .takeaway-list li {
+    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-heading);
+    font-weight: 500;
+  }
+
+  /* Quote card */
+  .quote-card {
+    background: rgba(255, 182, 193, 0.12);
+    border-left: 4px solid var(--rose);
+    border-radius: 0 16px 16px 0;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .quote-text {
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--text-heading);
+    margin: 0;
+  }
+
+  /* Remember Card */
+  .remember-card {
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.15) 0%, rgba(203, 166, 247, 0.15) 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 3rem 0 2rem;
+  }
+
+  .remember-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.75rem;
+  }
+
+  .remember-highlight {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--rose);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .remember-list li {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding-left: 18px;
+  }
+
+  .remember-list li::before {
+    content: "💖";
+    position: absolute;
+    left: 0;
+    font-size: 0.8rem;
+  }
+
+  /* Post Footer */
+  .post-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--border);
+    text-align: center;
+  }
+
+  .closing-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.5rem;
+  }
+
+  .closing-sign {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .signature {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--rose);
+  }
+
+  @media (max-width: 768px) {
+    .blog-card {
+      padding: 2.5rem 1.5rem;
+      border-radius: 18px;
+    }
+    .post-title {
+      font-size: 2rem;
+    }
+    .comparison-card {
+      grid-template-columns: 1fr;
+    }
+    .step-card {
+      flex-direction: column;
+    }
+  }
+</style>
