@@ -1,0 +1,1139 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "GPT-6 Astra 🌸 — When AI Stops Just Answering and Starts Doing",
+    subtitle: "Reasoning + Computer Use + Tools + Verification + Autonomy",
+    date: "September 28, 2026",
+    back: 'Back to Home',
+    intro: "There is a big difference between an AI that tells you how to do something and an AI that can actually do it for you.",
+    introDesc: "That is what makes GPT-6 Astra particularly interesting.",
+    introExtra: [
+      "It is not simply another model that got better at answering questions or writing code.",
+      "Astra is designed to work with computers, browsers, applications, files, and tools to complete multi-step tasks.",
+      "And honestly? This is where AI starts becoming much more interesting from a developer's perspective✨"
+    ],
+    whatIsAstra: {
+      heading: "🌷 First: What is GPT-6 Astra?",
+      paragraphs: [
+        "GPT-6 Astra is OpenAI's newest model generation, designed for tasks that require more than generating text.",
+        "It can:"
+      ],
+      capabilities: [
+        "Navigate websites and computer interfaces",
+        "Fill out online forms",
+        "Update CRM records",
+        "Organize calendars",
+        "Research information online",
+        "Create documents, spreadsheets and presentations",
+        "Analyze scientific data",
+        "Generate charts",
+        "Create websites",
+        "Test websites through the browser",
+        "Install and test software",
+        "Troubleshoot problems on screen",
+        "Write, test and debug code"
+      ],
+      paragraphsAfter: [
+        "In other words, the model is not limited to: \"Here's the answer.\"",
+        "It can move toward: \"Here's the answer, and I've already done the task.\" 🌸",
+        "OpenAI describes Astra as a model focused heavily on computer use, software engineering, professional workflows, science and browsing.",
+        "But what does \"computer use\" actually mean?",
+        "This is probably the most important concept to understand.",
+        "When we normally use an AI chatbot, the interaction looks something like this:",
+        "You → AI → Text response",
+        "For example: \"Create a summary of this document.\" The AI reads the information and gives you text.",
+        "With computer-use capabilities, the architecture can look more like:",
+        "You → AI → Computer → Applications → Result",
+        "Now imagine saying: \"Find three apartments under $1,500, compare them in a spreadsheet, and organize the information.\"",
+        "Instead of only explaining how you could do it, an agent can potentially: Open a browser → Search websites → Read information → Compare options → Open spreadsheet → Enter information → Organize data → Return finished result.",
+        "That's a very different interaction model."
+      ]
+    },
+    workflows: {
+      heading: "🌸 From prompts to workflows",
+      paragraphs: [
+        "This is the part I find especially interesting as a developer.",
+        "We've spent years learning how to write better prompts: Prompt → Response",
+        "Then AI applications evolved into: Prompt → Model → Tool",
+        "Now we're increasingly moving toward: Goal → Planning → Tools → Execution → Verification → Result",
+        "The difference is subtle, but technically huge.",
+        "A model doesn't just need to understand language anymore. It needs to understand:"
+      ],
+      requirements: [
+        "What the user wants",
+        "What information it needs",
+        "Which tool to use",
+        "What action to perform",
+        "What happened after that action",
+        "Whether the result is correct",
+        "What to do if something fails"
+      ],
+      paragraphsAfter: [
+        "That is much closer to building a software system than simply building a chatbot."
+      ]
+    },
+    isAgent: {
+      heading: "So... is Astra an AI agent?",
+      paragraphs: [
+        "Not exactly. And this distinction is important.",
+        "A model is the intelligence that reasons about the task.",
+        "An agent is the system built around that model that gives it tools, memory, permissions, context and the ability to take actions.",
+        "Think about it like this:",
+        "• The model: \"I need to update this customer's address.\"",
+        "• The agent: \"I have access to the CRM. I'll open the customer record, locate the address field and update it.\"",
+        "• The environment: The CRM actually changes.",
+        "So when we talk about increasingly capable AI agents, we're not just talking about smarter models.",
+        "We're talking about models + software architecture."
+      ]
+    },
+    components: {
+      heading: "🧩 What does an AI agent need?",
+      paragraphs: [
+        "A useful agent usually needs several components working together:"
+      ],
+      items: [
+        { title: "1. Model", desc: "The reasoning engine. It interprets the request and decides what should happen next." },
+        { title: "2. Tools", desc: "These give the model the ability to interact with the world: Browser, Database, APIs, File system, Calendar, CRM, Terminal, Code execution." },
+        { title: "3. State", desc: "The system needs to remember what has already happened and maintain enough context." },
+        { title: "4. Permissions", desc: "Extremely important. Controlling whether the AI can read a DB, modify a customer, send an email, delete a file, make a purchase, or deploy code." },
+        { title: "5. Verification", desc: "The agent needs to check its own work. Create website → Open website → Test buttons → Detect error → Fix → Test again." }
+      ]
+    },
+    verification: {
+      heading: "🎀 Why verification matters so much",
+      paragraphs: [
+        "This is one of my favorite parts of this evolution.",
+        "Generating something isn't the same as knowing that something works.",
+        "Imagine an AI creates a login page.",
+        "A traditional workflow might be: AI → generates code → done",
+        "An agentic workflow can become: AI → generates code → runs application → opens browser → tests login → finds error → modifies code → tests again",
+        "That's a completely different development loop.",
+        "And this is particularly interesting for software development because testing becomes part of the AI workflow itself.",
+        "OpenAI says Astra can create websites and run frontend QA checks to verify that features work."
+      ]
+    },
+    softwareDev: {
+      heading: "🌷 This changes software development",
+      paragraphs: [
+        "For developers, I don't think the important question is: \"Will AI replace programmers?\" That's too simplistic.",
+        "A more interesting question is: \"What happens when software can participate in the development process itself?\"",
+        "A developer might increasingly move from manually performing every individual action to designing the system that allows AI to perform those actions safely.",
+        "That means understanding things like: APIs, Authentication, Permissions, Databases, Tool calling, State management, Error handling, Testing, Observability, Security, Human approval.",
+        "In other words... The AI may write more of the code, but someone still has to design the system around it. 🌸"
+      ]
+    },
+    security: {
+      heading: "And then we have the uncomfortable part: security",
+      paragraphs: [
+        "More autonomy also means more responsibility.",
+        "An AI that can read information is one thing. An AI that can change information is another. And an AI that can interact with an entire computer is another level entirely.",
+        "OpenAI reports that Astra represents a significant increase in cybersecurity capabilities and has reached its \"Critical\" threshold under its Preparedness Framework. Because of that, the deployment includes additional safeguards and monitoring.",
+        "This illustrates something important: The more capable the AI becomes, the more important the surrounding architecture becomes.",
+        "We need to think about: What can it access? What can it change? What happens when it makes a mistake? Can a human stop it? Can we see what it did? Can we undo the action?",
+        "These aren't just AI questions. They're software engineering questions."
+      ]
+    },
+    biggerPicture: {
+      heading: "💗 The bigger picture",
+      paragraphs: [
+        "For years, the main interface to AI was essentially: Ask → Receive",
+        "Now we're moving toward: Ask → Plan → Act → Check → Adapt → Complete",
+        "That's a huge shift.",
+        "And it doesn't mean that every task should become autonomous. Sometimes the best system is still: AI suggests → Human approves → System executes",
+        "Especially when money, personal information, production systems or sensitive data are involved.",
+        "The goal isn't necessarily to remove humans from the loop. It's to make the loop smarter and more efficient."
+      ]
+    },
+    whyInteresting: {
+      heading: "🌸 So what makes Astra interesting?",
+      paragraphs: [
+        "Not simply that it is \"smarter.\"",
+        "What makes it interesting is the combination of: Reasoning + Computer Use + Tools + Coding + Verification + Autonomy",
+        "That combination moves AI closer to something we can think of as a digital worker inside a software environment.",
+        "And that changes what developers need to build.",
+        "We're moving from applications where AI generates content... to applications where AI can participate in workflows.",
+        "And honestly? I think that's where things are about to get really interesting. 🎀"
+      ]
+    },
+    remember: {
+      heading: "✨ A tiny mental model to remember",
+      items: [
+        { label: "Traditional AI", desc: "💬 \"Tell me how to do it.\"" },
+        { label: "AI with tools", desc: "🛠️ \"I'll help you do it.\"" },
+        { label: "Agentic AI", desc: "🌸 \"Give me the goal. I'll work through the steps, use the tools, check the result, and ask you when I need permission.\"" }
+      ]
+    },
+    closing: "That is the shift. And GPT-6 Astra is a pretty good example of where that direction is heading.",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "GPT-6 Astra 🌸 — Cuando la IA Deja de Responder y Empieza a Hacer",
+    subtitle: "Razonamiento + Uso de Computadora + Herramientas + Verificación + Autonomía",
+    date: "28 de Septiembre, 2026",
+    back: 'Volver al Inicio',
+    intro: "Hay una gran diferencia entre una IA que te dice cómo hacer algo y una IA que realmente puede hacerlo por ti.",
+    introDesc: "Eso es lo que hace que GPT-6 Astra sea particularmente interesante.",
+    introExtra: [
+      "No es simplemente otro modelo que mejoró respondiendo preguntas o escribiendo código.",
+      "Astra está diseñado para trabajar con computadoras, navegadores, aplicaciones, archivos y herramientas para completar tareas de múltiples pasos.",
+      "Y honestamente, ¿sabes qué? Aquí es donde la IA comienza a volverse mucho más interesante desde la perspectiva de una desarrolladora ✨"
+    ],
+    whatIsAstra: {
+      heading: "🌷 Primero: ¿Qué es GPT-6 Astra?",
+      paragraphs: [
+        "GPT-6 Astra es la generación de modelos más nueva de OpenAI, diseñada para tareas que requieren más que generar texto.",
+        "Puede:"
+      ],
+      capabilities: [
+        "Navegar sitios web e interfaces de computadora",
+        "Llenar formularios en línea",
+        "Actualizar registros de CRM",
+        "Organizar calendarios",
+        "Investigar información en línea",
+        "Crear documentos, hojas de cálculo y presentaciones",
+        "Analizar datos científicos",
+        "Generar gráficos",
+        "Crear sitios web",
+        "Probar sitios web a través del navegador",
+        "Instalar y probar software",
+        "Solucionar problemas en pantalla",
+        "Escribir, probar y depurar código"
+      ],
+      paragraphsAfter: [
+        "En otras palabras, el modelo no se limita a: \"Aquí está la respuesta.\"",
+        "Puede avanzar hacia: \"Aquí está la respuesta, y ya he completado la tarea.\" 🌸",
+        "OpenAI describe a Astra como un modelo enfocado fuertemente en uso de computadora, ingeniería de software, flujos de trabajo profesionales, ciencia y navegación.",
+        "Pero, ¿qué significa realmente \"uso de computadora\"?",
+        "Este es probablemente el concepto más importante de entender.",
+        "Cuando usamos normalmente un chatbot de IA, la interacción se ve así:",
+        "Tú → IA → Respuesta de texto",
+        "Por ejemplo: \"Crea un resumen de este documento.\" La IA lee la información y te da texto.",
+        "Con capacidades de uso de computadora, la arquitectura se ve más como:",
+        "Tú → IA → Computadora → Aplicaciones → Resultado",
+        "Ahora imagina decir: \"Encuentra tres apartamentos por menos de $1,500, compáralos en una hoja de cálculo y organiza la información.\"",
+        "En lugar de solo explicarte cómo podrías hacerlo, un agente potencialmente puede: Abrir navegador → Buscar en sitios web → Leer información → Comparar opciones → Abrir hoja de cálculo → Ingresar datos → Organizar información → Entregar el resultado terminado.",
+        "Ese es un modelo de interacción muy diferente."
+      ]
+    },
+    workflows: {
+      heading: "🌸 De prompts a flujos de trabajo",
+      paragraphs: [
+        "Esta es la parte que me parece especialmente interesante como desarrolladora.",
+        "Hemos pasado años aprendiendo a escribir mejores prompts: Prompt → Respuesta",
+        "Luego las aplicaciones de IA evolucionaron a: Prompt → Modelo → Herramienta",
+        "Ahora nos movemos cada vez más hacia: Objetivo → Planificación → Herramientas → Ejecución → Verificación → Resultado",
+        "La diferencia es sutil, pero técnicamente enorme.",
+        "Un modelo ya no solo necesita entender lenguaje. Necesita entender:"
+      ],
+      requirements: [
+        "Qué quiere el usuario",
+        "Qué información necesita",
+        "Qué herramienta usar",
+        "Qué acción realizar",
+        "Qué sucedió después de esa acción",
+        "Si el resultado es correcto",
+        "Qué hacer si algo falla"
+      ],
+      paragraphsAfter: [
+        "Eso está mucho más cerca de construir un sistema de software que de simplemente construir un chatbot."
+      ]
+    },
+    isAgent: {
+      heading: "Entonces... ¿Astra es un agente de IA?",
+      paragraphs: [
+        "No exactamente. Y esta distinción es importante.",
+        "Un modelo es la inteligencia que razona sobre la tarea.",
+        "Un agente es el sistema construido alrededor de ese modelo que le otorga herramientas, memoria, permisos, contexto y la capacidad de tomar acciones.",
+        "Piénsalo de esta manera:",
+        "• El modelo: \"Necesito actualizar la dirección de este cliente.\"",
+        "• El agente: \"Tengo acceso al CRM. Abriré el registro del cliente, ubicaré el campo de dirección y lo actualizaré.\"",
+        "• El entorno: El CRM realmente cambia.",
+        "Así que cuando hablamos de agentes de IA cada vez más capaces, no solo hablamos de modelos más inteligentes.",
+        "Hablamos de modelos + arquitectura de software."
+      ]
+    },
+    components: {
+      heading: "🧩 ¿Qué necesita un agente de IA?",
+      paragraphs: [
+        "Un agente útil generalmente necesita varios componentes trabajando juntos:"
+      ],
+      items: [
+        { title: "1. Modelo", desc: "El motor de razonamiento. Interpreta la solicitud y decide qué debería pasar después." },
+        { title: "2. Herramientas", desc: "Le dan al modelo la capacidad de interactuar con el mundo: Navegador, Base de Datos, APIs, Sistema de Archivos, Calendario, CRM, Terminal, Ejecución de Código." },
+        { title: "3. Estado", desc: "El sistema necesita recordar lo que ya ha sucedido y mantener suficiente contexto." },
+        { title: "4. Permisos", desc: "Extremadamente importante. Controlar si la IA puede leer una BD, modificar un cliente, enviar un correo, borrar un archivo, comprar o desplegar código." },
+        { title: "5. Verificación", desc: "El agente necesita comprobar su propio trabajo. Crear sitio web → Abrir sitio web → Probar botones → Detectar error → Arreglar → Probar de nuevo." }
+      ]
+    },
+    verification: {
+      heading: "🎀 Por qué la verificación importa tanto",
+      paragraphs: [
+        "Esta es una de mis partes favoritas de esta evolución.",
+        "Generar algo no es lo mismo que saber que algo funciona.",
+        "Imagina que una IA crea una página de inicio de sesión.",
+        "Un flujo de trabajo tradicional sería: IA → genera código → listo",
+        "Un flujo de trabajo agéntico puede convertirse en: IA → genera código → ejecuta aplicación → abre navegador → prueba login → encuentra error → modifica código → prueba de nuevo",
+        "Ese es un ciclo de desarrollo completamente diferente.",
+        "Y esto es particularmente interesante para el desarrollo de software porque las pruebas se convierten en parte del propio flujo de trabajo de la IA.",
+        "OpenAI señala que Astra puede crear sitios web y ejecutar pruebas QA frontend para verificar que las funciones marchan bien."
+      ]
+    },
+    softwareDev: {
+      heading: "🌷 Esto cambia el desarrollo de software",
+      paragraphs: [
+        "Para los desarrolladores, no creo que la pregunta importante sea: \"¿La IA reemplazará a los programadores?\" Eso es demasiado simplista.",
+        "Una pregunta más interesante es: \"¿Qué sucede cuando el software puede participar en el proceso de desarrollo mismo?\"",
+        "Un desarrollador pasará cada vez más de realizar manualmente cada acción individual a diseñar el sistema que permita a la IA realizar esas acciones de forma segura.",
+        "Eso significa entender cosas como: APIs, Autenticación, Permisos, Bases de datos, Llamada a herramientas, Gestión de estado, Manejo de errores, Pruebas, Observabilidad, Seguridad, Aprobación humana.",
+        "En otras palabras... Puede que la IA escriba más código, pero alguien todavía tiene que diseñar el sistema a su alrededor. 🌸"
+      ]
+    },
+    security: {
+      heading: "Y luego tenemos la parte incómoda: la seguridad",
+      paragraphs: [
+        "Más autonomía también significa más responsabilidad.",
+        "Una IA que puede leer información es una cosa. Una IA que puede cambiar información es otra. Y una IA que puede interactuar con toda una computadora está en un nivel totalmente diferente.",
+        "OpenAI informa que Astra representa un aumento significativo en las capacidades de ciberseguridad y ha alcanzado su umbral \"Crítico\" bajo su Marco de Preparación. Por eso, el despliegue incluye salvaguardas y monitoreo adicionales.",
+        "Esto ilustra algo importante: Cuanto más capaz se vuelve la IA, más importante se vuelve la arquitectura que la rodea.",
+        "Necesitamos pensar en: ¿A qué puede acceder? ¿Qué puede cambiar? ¿Qué pasa cuando comete un error? ¿Puede un humano detenerla? ¿Podemos ver lo que hizo? ¿Podemos deshacer la acción?",
+        "Estas no son solo preguntas de IA. Son preguntas de ingeniería de software."
+      ]
+    },
+    biggerPicture: {
+      heading: "💗 El panorama general",
+      paragraphs: [
+        "Durante años, la interfaz principal de la IA fue esencialmente: Preguntar → Recibir",
+        "Ahora nos movemos hacia: Preguntar → Planear → Actuar → Verificar → Adaptar → Completar",
+        "Ese es un cambio enorme.",
+        "Y no significa que cada tarea deba volverse autónoma. A veces el mejor sistema sigue siendo: La IA sugiere → El humano aprueba → El sistema ejecuta",
+        "Especialmente cuando hay dinero, información personal, sistemas de producción o datos sensibles involucrados.",
+        "El objetivo no es necesariamente eliminar a los humanos del bucle. Es hacer el bucle más inteligente y eficiente."
+      ]
+    },
+    whyInteresting: {
+      heading: "🌸 ¿Qué hace que Astra sea interesante?",
+      paragraphs: [
+        "No simplemente que sea \"más inteligente\".",
+        "Lo que lo hace interesante es la combinación de: Razonamiento + Uso de Computadora + Herramientas + Programación + Verificación + Autonomía",
+        "Esa combinación acerca a la IA a algo que podemos pensar como un trabajador digital dentro de un entorno de software.",
+        "Y eso cambia lo que los desarrolladores necesitan construir.",
+        "Estamos pasando de aplicaciones donde la IA genera contenido... a aplicaciones donde la IA puede participar en flujos de trabajo.",
+        "Y honestamente, creo que ahí es donde las cosas están a punto de volverse realmente interesantes. 🎀"
+      ]
+    },
+    remember: {
+      heading: "✨ Un pequeño modelo mental para recordar",
+      items: [
+        { label: "IA Tradicional", desc: "💬 \"Dime cómo hacerlo.\"" },
+        { label: "IA con herramientas", desc: "🛠️ \"Te ayudaré a hacerlo.\"" },
+        { label: "IA Agéntica", desc: "🌸 \"Dame el objetivo. Trabajaré a través de los pasos, usaré las herramientas, verificaré el resultado y te pediré permiso cuando lo necesite.\"" }
+      ]
+    },
+    closing: "Ese es el cambio. Y GPT-6 Astra es un muy buen ejemplo de hacia dónde se dirige esa dirección.",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "GPT-6 Astra 🌸 — Quando a IA Deixa de Responder e Começa a Fazer",
+    subtitle: "Raciocínio + Uso do Computador + Ferramentas + Verificação + Autonomia",
+    date: "28 de Setembro, 2026",
+    back: 'Voltar ao Início',
+    intro: "Existe uma grande diferença entre uma IA que diz como fazer algo e uma IA que pode realmente fazer por você.",
+    introDesc: "É isso que torna o GPT-6 Astra particularmente interessante.",
+    introExtra: [
+      "Não é simplesmente mais um modelo que ficou melhor em responder perguntas ou escrever código.",
+      "O Astra foi projetado para trabalhar com computadores, navegadores, aplicativos, arquivos e ferramentas para concluir tarefas de várias etapas.",
+      "E honestamente? É aqui que a IA começa a se tornar muito mais interessante sob a perspectiva de desenvolvedora✨"
+    ],
+    whatIsAstra: {
+      heading: "🌷 Primeiro: O que é o GPT-6 Astra?",
+      paragraphs: [
+        "GPT-6 Astra é a geração mais recente de modelos da OpenAI, projetada para tarefas que exigem mais do que gerar texto.",
+        "Ele pode:"
+      ],
+      capabilities: [
+        "Navegar em sites e interfaces de computador",
+        "Preencher formulários online",
+        "Atualizar registros de CRM",
+        "Organizar calendários",
+        "Pesquisar informações online",
+        "Criar documentos, planilhas e apresentações",
+        "Analisar dados científicos",
+        "Gerar gráficos",
+        "Criar sites",
+        "Testar sites através do navegador",
+        "Instalar e testar software",
+        "Diagnosticar problemas na tela",
+        "Escrever, testar e depurar código"
+      ],
+      paragraphsAfter: [
+        "Em outras palavras, o modelo não se limita a: \"Aqui está a resposta.\"",
+        "Ele pode ir além: \"Aqui está a resposta, e eu já concluí a tarefa.\" 🌸",
+        "A OpenAI descreve o Astra como um modelo fortemente focado em uso de computador, engenharia de software, fluxos de trabalho profissionais, ciência e navegação.",
+        "Mas o que \"uso de computador\" realmente significa?",
+        "Este é provavelmente o conceito mais importante para entender.",
+        "Quando normalmente usamos um chatbot de IA, a interação é assim:",
+        "Você → IA → Resposta em texto",
+        "Por exemplo: \"Crie um resumo deste documento.\" A IA lê as informações e retorna o texto.",
+        "Com capacidades de uso de computador, a arquitetura se parece mais com:",
+        "Você → IA → Computador → Aplicativos → Resultado",
+        "Agora imagine dizer: \"Encontre três apartamentos por menos de $1,500, compare em uma planilha e organize as informações.\"",
+        "Em vez de apenas explicar como fazer, um agente pode potencialmente: Abrir navegador → Pesquisar sites → Ler informações → Comparar opções → Abrir planilha → Inserir dados → Organizar dados → Entregar o resultado.",
+        "Esse é um modelo de interação muito diferente."
+      ]
+    },
+    workflows: {
+      heading: "🌸 De prompts a fluxos de trabalho",
+      paragraphs: [
+        "Esta é a parte que acho especialmente interessante como desenvolvedora.",
+        "Passamos anos aprendendo a escrever prompts melhores: Prompt → Resposta",
+        "Depois as aplicações de IA evoluíram para: Prompt → Modelo → Ferramenta",
+        "Agora estamos nos movendo para: Objetivo → Planejamento → Ferramentas → Execução → Verificação → Resultado",
+        "A diferença é sutil, mas tecnicamente enorme.",
+        "Um modelo não precisa apenas entender a linguagem. Ele precisa entender:"
+      ],
+      requirements: [
+        "O que o usuário quer",
+        "Quais informações são necessárias",
+        "Qual ferramenta usar",
+        "Qual ação executar",
+        "O que aconteceu após a ação",
+        "Se o resultado está correto",
+        "O que fazer em caso de falha"
+      ],
+      paragraphsAfter: [
+        "Isso está muito mais próximo de construir um sistema de software do que simplesmente criar um chatbot."
+      ]
+    },
+    isAgent: {
+      heading: "Então... o Astra é um agente de IA?",
+      paragraphs: [
+        "Não exatamente. E essa distinção é importante.",
+        "Um modelo é a inteligência que raciocina sobre a tarefa.",
+        "Um agente é o sistema construído ao redor desse modelo que lhe dá ferramentas, memória, permissões, contexto e a capacidade de agir.",
+        "Pense assim:",
+        "• O modelo: \"Preciso atualizar o endereço deste cliente.\"",
+        "• O agente: \"Tenho acesso ao CRM. Vou abrir o registro do cliente, localizar o campo de endereço e atualizar.\"",
+        "• O ambiente: O CRM realmente muda.",
+        "Portanto, quando falamos sobre agentes de IA cada vez mais capazes, não estamos falando apenas de modelos mais inteligentes.",
+        "Estamos falando de modelos + arquitetura de software."
+      ]
+    },
+    components: {
+      heading: "🧩 O que um agente de IA precisa?",
+      paragraphs: [
+        "Um agente útil geralmente precisa de vários componentes trabalhando juntos:"
+      ],
+      items: [
+        { title: "1. Modelo", desc: "O motor de raciocínio. Interpreta a solicitação e decide o próximo passo." },
+        { title: "2. Ferramentas", desc: "Dão ao modelo a capacidade de interagir com o mundo: Navegador, Banco de Dados, APIs, Sistema de Arquivos, Calendário, CRM, Terminal, Execução de Código." },
+        { title: "3. Estado", desc: "O sistema precisa lembrar do que aconteceu e manter contexto suficiente." },
+        { title: "4. Permissões", desc: "Extremamente importante. Controlar se a IA pode ler BD, alterar cliente, enviar e-mail, deletar arquivo, comprar ou fazer deploy." },
+        { title: "5. Verificação", desc: "O agente precisa testar o próprio trabalho. Criar site → Abrir site → Testar botões → Detectar erro → Corrigir → Testar novamente." }
+      ]
+    },
+    verification: {
+      heading: "🎀 Por que a verificação importa tanto",
+      paragraphs: [
+        "Esta é uma das minhas partes favoritas desta evolução.",
+        "Gerar algo não é o mesmo que saber que algo funciona.",
+        "Imagine que uma IA cria uma página de login.",
+        "Um fluxo tradicional seria: IA → gera código → pronto",
+        "Um fluxo agêntico se torna: IA → gera código → executa app → abre navegador → testa login → encontra erro → altera código → testa novamente",
+        "Esse é um ciclo de desenvolvimento completamente diferente.",
+        "E isso é particularmente interessante para o desenvolvimento de software porque os testes se tornam parte do próprio fluxo da IA.",
+        "A OpenAI afirma que o Astra pode criar sites e executar testes de QA no frontend para verificar se as funcionalidades funcionam."
+      ]
+    },
+    softwareDev: {
+      heading: "🌷 Isso muda o desenvolvimento de software",
+      paragraphs: [
+        "Para desenvolvedores, a pergunta não é: \"A IA vai substituir os programadores?\" Isso é simplista demais.",
+        "Uma pergunta mais interessante é: \"O que acontece quando o software pode participar do próprio processo de desenvolvimento?\"",
+        "Um desenvolvedor passará de executar manualmente cada ação individual para projetar o sistema que permite à IA executar essas ações com segurança.",
+        "Isso significa entender: APIs, Autenticação, Permissões, Bancos de Dados, Chamadas de Ferramentas, Gestão de Estado, Tratamento de Erros, Testes, Observabilidade, Segurança, Aprovação Humana.",
+        "Em outras palavras... A IA pode escrever mais código, mas alguém ainda precisa projetar o sistema ao redor. 🌸"
+      ]
+    },
+    security: {
+      heading: "E então temos a parte desconfortável: segurança",
+      paragraphs: [
+        "Mais autonomia também significa mais responsabilidade.",
+        "Uma IA que pode ler informações é uma coisa. Uma IA que pode alterar informações é outra. E uma IA que pode interagir com um computador inteiro está em outro nível.",
+        "A OpenAI relata que o Astra representa um aumento significativo nas capacidades de cibersegurança e atingiu o limite \"Crítico\" sob sua Estrutura de Preparação. Por isso, a implantação inclui salvaguardas e monitoramento adicionais.",
+        "Isso ilustra algo importante: Quanto mais capaz a IA se torna, mais importante se torna a arquitetura ao seu redor.",
+        "Precisamos pensar: Ao que ela pode acessar? O que pode alterar? O que acontece se errar? Um humano pode parar? Podemos ver o que fez? Podemos desfazer?",
+        "Essas não são apenas perguntas de IA. São perguntas de engenharia de software."
+      ]
+    },
+    biggerPicture: {
+      heading: "💗 O panorama geral",
+      paragraphs: [
+        "Por anos, a interface principal da IA era: Perguntar → Receber",
+        "Agora estamos nos movendo para: Perguntar → Planejar → Agir → Verificar → Adaptar → Concluir",
+        "Essa é uma mudança enorme.",
+        "E não significa que toda tarefa deva se tornar autônoma. Às vezes o melhor sistema ainda é: IA sugere → Humano aprova → Sistema executa",
+        "Especialmente quando dinheiro, dados pessoais, sistemas de produção ou informações sensíveis estão envolvidos.",
+        "O objetivo não é necessariamente remover humanos do processo. É tornar o processo mais inteligente e eficiente."
+      ]
+    },
+    whyInteresting: {
+      heading: "🌸 O que torna o Astra interessante?",
+      paragraphs: [
+        "Não apenas o fato de ser \"mais inteligente\".",
+        "O que o torna interessante é a combinação de: Raciocínio + Uso do Computador + Ferramentas + Programação + Verificação + Autonomia",
+        "Essa combinação aproxima a IA de algo que podemos pensar como um trabalhador digital dentro de um ambiente de software.",
+        "E isso muda o que os desenvolvedores precisam construir.",
+        "Estamos passando de aplicações onde a IA gera conteúdo... para aplicações onde a IA pode participar de fluxos de trabalho.",
+        "E honestamente? Acho que é aí que as coisas vão ficar realmente interessantes. 🎀"
+      ]
+    },
+    remember: {
+      heading: "✨ Um pequeno modelo mental para lembrar",
+      items: [
+        { label: "IA Tradicional", desc: "💬 \"Diga-me como fazer.\"" },
+        { label: "IA com ferramentas", desc: "🛠️ \"Vou te ajudar a fazer.\"" },
+        { label: "IA Agêntica", desc: "🌸 \"Dê-me o objetivo. Trabalharei nas etapas, usarei as ferramentas, verificarei o resultado e pedirei permissão quando necessário.\"" }
+      ]
+    },
+    closing: "Essa é a mudança. E o GPT-6 Astra é um ótimo exemplo de para onde essa direção está indo.",
+    closingSign: "Nos vemos na próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <div class="intro-block">
+            <p class="lead-text">{page.intro}</p>
+            <p class="lead-desc">{page.introDesc}</p>
+            {page.introExtra.map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- What is GPT-6 Astra -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whatIsAstra.heading}</h2>
+            <div class="section-body">
+              {page.whatIsAstra.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+
+              <div class="capabilities-grid">
+                {page.whatIsAstra.capabilities.map((cap) => (
+                  <div class="capability-chip">
+                    <span class="chip-icon">✨</span>
+                    <span>{cap}</span>
+                  </div>
+                ))}
+              </div>
+
+              {page.whatIsAstra.paragraphsAfter.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Workflows -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.workflows.heading}</h2>
+            <div class="section-body">
+              {page.workflows.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+
+              <ul class="requirements-list">
+                {page.workflows.requirements.map((req) => (
+                  <li>
+                    <span class="req-dot">✦</span>
+                    <span>{req}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {page.workflows.paragraphsAfter.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Is Astra an AI Agent -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.isAgent.heading}</h2>
+            <div class="section-body">
+              {page.isAgent.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Components of an AI Agent -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.components.heading}</h2>
+            <div class="section-body">
+              {page.components.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+
+              <div class="components-stack">
+                {page.components.items.map((item) => (
+                  <div class="component-card">
+                    <h3 class="component-title">{item.title}</h3>
+                    <p class="component-desc">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Verification -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.verification.heading}</h2>
+            <div class="section-body">
+              {page.verification.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Software Dev Shift -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.softwareDev.heading}</h2>
+            <div class="section-body">
+              {page.softwareDev.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Security -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.security.heading}</h2>
+            <div class="section-body">
+              {page.security.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Bigger Picture -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.biggerPicture.heading}</h2>
+            <div class="section-body">
+              {page.biggerPicture.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Why Astra is Interesting -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whyInteresting.heading}</h2>
+            <div class="section-body">
+              {page.whyInteresting.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Mental Model -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <div class="mental-model-cards">
+              {page.remember.items.map((item) => (
+                <div class="mm-card">
+                  <div class="mm-label">{item.label}</div>
+                  <div class="mm-desc">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    95% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--rose);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  /* Capabilities Grid */
+  .capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 1.75rem 0;
+  }
+
+  .capability-chip {
+    background: rgba(255, 75, 145, 0.06);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .capability-chip:hover {
+    background: rgba(255, 75, 145, 0.12);
+    border-color: rgba(255, 75, 145, 0.3);
+  }
+
+  .chip-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  /* Requirements list */
+  .requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .requirements-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+  }
+
+  .req-dot {
+    color: var(--rose);
+    font-size: 0.85rem;
+  }
+
+  /* Components Stack */
+  .components-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 1.5rem 0;
+  }
+
+  .component-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 16px;
+    padding: 18px 22px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .component-card:hover {
+    transform: translateX(4px);
+    border-color: rgba(255, 75, 145, 0.35);
+  }
+
+  .component-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--rose);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .component-desc {
+    margin: 0 !important;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Mental model cards */
+  .mental-model-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 1.5rem;
+  }
+
+  .mm-card {
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 16px;
+    padding: 20px 24px;
+  }
+
+  .mm-label {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--rose);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .mm-desc {
+    font-size: 1.05rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.1rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+    .capabilities-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>
