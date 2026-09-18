@@ -1,0 +1,2044 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "What Is AGI? 🌸 — Artificial General Intelligence Without the Sci-Fi",
+    subtitle: "AGI is one of the most talked-about concepts in artificial intelligence, but what does it actually mean? Let's understand it without the hype.",
+    date: "October 5, 2026",
+    back: 'Back to Home',
+    tags: ["Artificial Intelligence", "AGI", "AI Engineering", "Machine Learning", "Technology"],
+    intro: "AI. Generative AI. Agents. AGI. ASI.",
+    introDesc: "At this point, artificial intelligence has collected enough acronyms to make everything sound much more complicated than it needs to be. 🎀",
+    introExtra: [
+      "One of the biggest ones is AGI: Artificial General Intelligence.",
+      "You'll see phrases like:",
+      "\"We're getting closer to AGI.\"",
+      "or:",
+      "\"This model could be the beginning of AGI.\"",
+      "But what would actually make an AI general?",
+      "And are systems like ChatGPT, Gemini or Claude already AGI?",
+      "Short answer: there isn't even a universally accepted definition or test for AGI yet.",
+      "So let's unpack the longer answer. 🌸"
+    ],
+    whatIsAgi: {
+      heading: "First: What Is AGI?",
+      definition: "AGI stands for Artificial General Intelligence.",
+      desc: "Broadly, it describes a hypothetical AI system capable of learning, reasoning, adapting and solving problems across a wide range of domains at a level comparable to human general intelligence.",
+      importantPre: "The important word here isn't artificial.",
+      importantWord: "General.",
+      capabilityIntro: "Today's AI can be incredibly capable. A model might:",
+      capabilities: [
+        "Write code",
+        "Analyze documents",
+        "Generate images",
+        "Translate languages",
+        "Solve mathematical problems",
+        "Explain scientific concepts",
+        "Analyze data",
+        "Interact with software"
+      ],
+      capabilityOutro: "But being able to perform many tasks doesn't automatically prove that a system possesses general intelligence.",
+      deeperQuote: "The ability to apply intelligence flexibly across many different situations, including unfamiliar ones.",
+      deeperOutro: "And that's where things get complicated."
+    },
+    narrowVsGeneral: {
+      heading: "Narrow AI vs. General AI",
+      intro: "The easiest way to understand AGI is by comparing it with Narrow AI.",
+      narrowDesc: "Narrow AI is designed or trained to perform specific types of tasks.",
+      examples: [
+        { label: "Spam filter", input: "Email", output: "Spam / Not Spam" },
+        { label: "Recommendation system", input: "User behavior", analysis: "Analysis", output: "Recommended products" },
+        { label: "Image classifier", input: "Image", model: "Model", output: "Cat / Dog" }
+      ],
+      paragraphs: [
+        "These systems can be extremely good at their jobs. Sometimes even better than humans.",
+        "But their intelligence doesn't necessarily transfer somewhere else.",
+        "A chess AI that can defeat the world's best players doesn't suddenly know how to prepare a tax return.",
+        "That's the difference."
+      ]
+    },
+    agiDifferent: {
+      heading: "🌷 AGI Would Be Different",
+      intro: "Imagine giving the same AI completely different problems.",
+      scenarios: [
+        "Today: \"Build this application.\"",
+        "Tomorrow: \"Analyze this scientific experiment.\"",
+        "Then: \"Learn how this unfamiliar accounting system works.\"",
+        "Then: \"Create a marketing strategy using these business reports.\"",
+        "Then: \"You've never seen this problem before. Figure it out.\""
+      ],
+      conclusion: "An AGI should theoretically be able to transfer knowledge, learn and adapt instead of requiring a completely separate specialized system for every domain.",
+      narrowModel: "Narrow AI:",
+      narrowFlow: ["Task A → Model A", "Task B → Model B", "Task C → Model C"],
+      agiModel: "AGI:",
+      agiFlow: {
+        tasks: ["Task A", "Task B", "Task C", "Unknown Task"],
+        core: "General Intelligence",
+        output: "Solution"
+      },
+      unknownTaskNotice: "The last one is especially important: Unknown Task.",
+      unknownTaskDesc: "Intelligence isn't only about remembering things we've already seen. It's also about figuring out what to do when we haven't seen the problem before."
+    },
+    whatAgiNeeds: {
+      heading: "What Would AGI Actually Need?",
+      intro: "There isn't a universally accepted checklist for AGI. Different researchers define it differently. But several capabilities frequently appear in discussions about general intelligence.",
+      items: [
+        {
+          num: "1",
+          title: "1. Reasoning",
+          desc: "The system would need to reason about problems instead of simply retrieving information.",
+          quote: "A store's sales increased 20%, but its profit decreased 10%. Why?",
+          pointsIntro: "There isn't necessarily one memorized answer. The system might need to investigate:",
+          points: ["Operating costs", "Product margins", "Discounts", "Advertising expenses", "Shipping", "Taxes", "Inventory costs"],
+          outro: "And connect those pieces logically."
+        },
+        {
+          num: "2",
+          title: "2. Learning",
+          desc: "Humans don't need to be completely retrained every time we encounter something new. We learn continuously.",
+          flow: ["New Experience", "↓", "Learn", "↓", "Update Understanding", "↓", "Apply Knowledge Later"],
+          outro: "This is different from simply having a huge amount of information inside a training dataset."
+        },
+        {
+          num: "3",
+          title: "3. Adaptation",
+          desc: "Real environments change. An intelligent system needs to respond when assumptions or tools fail.",
+          triggers: ["A tool stops working", "Information is missing", "An assumption was incorrect", "The environment changes", "A previous solution fails"],
+          oldWay: "Error → Stop",
+          newWay: "Error → Understand → Adapt → Try another strategy",
+          outro: "🌸 That's a much harder problem."
+        },
+        {
+          num: "4",
+          title: "🔗 4. Knowledge Transfer",
+          desc: "This is one of the most interesting parts. Humans constantly transfer knowledge between domains.",
+          example: "If you learn debugging as a developer, you aren't only learning \"How to fix JavaScript.\" You're practicing:",
+          points: ["Breaking large problems into smaller ones", "Testing assumptions", "Looking for patterns", "Eliminating possibilities", "Verifying results"],
+          outro: "Those strategies can help solve completely different problems later. General intelligence should be able to do something similar."
+        },
+        {
+          num: "5",
+          title: "5. Generalization",
+          desc: "This might be the most important word in the entire AGI conversation.",
+          definition: "Generalization means applying what was learned to situations that weren't exactly part of the original examples.",
+          analogyText: "Imagine teaching someone: \"This is how you use a hammer.\"",
+          memorization: "Memorization: \"I know how to hit this exact nail.\"",
+          generalization: "Generalization: \"I understand what this tool does, so I can probably figure out how to use it in a slightly different situation.\"",
+          outro: "AGI is fundamentally connected to this idea."
+        }
+      ]
+    },
+    currentAi: {
+      heading: "But Current AI Can Already Do Many Things",
+      paragraphs: [
+        "Exactly. And this is where the conversation becomes interesting.",
+        "Modern foundation models are much more general than traditional narrow AI systems.",
+        "One model can potentially: Program, Translate, Analyze images, Write, Reason about mathematics, Research, Work with documents, Generate interfaces, Use tools.",
+        "That looks surprisingly general. So why don't we simply declare: 🎉 AGI achieved!?",
+        "Because breadth of capability isn't the only question.",
+        "Reliability matters. Adaptability matters. Learning matters. Generalization matters. Real-world understanding matters.",
+        "And researchers don't agree on exactly how much of each capability would be necessary before something deserves the label AGI.",
+        "That's why there is currently no universally accepted AGI test."
+      ]
+    },
+    isChatGptAgi: {
+      heading: "🌸 Is ChatGPT AGI?",
+      paragraphs: [
+        "This is where we need to be careful.",
+        "There is genuine disagreement about how close modern AI systems are to AGI and even about what should count as AGI in the first place.",
+        "Some definitions focus on:"
+      ],
+      points: [
+        "Human-level cognitive performance",
+        "Ability to learn new tasks",
+        "Economic usefulness",
+        "Generality across domains",
+        "Autonomy",
+        "Flexible problem solving"
+      ],
+      paragraphsAfter: [
+        "And those definitions can produce very different conclusions.",
+        "So there isn't currently a magical test where we can say: AGI Score: 97% ✨ and officially declare that we've reached it.",
+        "That's also why impressive benchmark results don't automatically equal AGI."
+      ]
+    },
+    benchmarksNotAgi: {
+      heading: "Benchmarks ≠ AGI",
+      paragraphs: [
+        "I've talked before about AI benchmarks because they're incredibly useful.",
+        "We can test models on Coding (95%), Mathematics (92%), Science (97%).",
+        "Those scores tell us something valuable about its performance. They don't automatically answer: \"Does this system possess general intelligence?\"",
+        "Because intelligence is multidimensional.",
+        "A model could perform extremely well on established tests while struggling with a genuinely unfamiliar situation.",
+        "This is one of the reasons AGI is so difficult to measure."
+      ]
+    },
+    agiVsAgentic: {
+      heading: "🎀 AGI Is NOT the Same as Agentic AI",
+      paragraphs: [
+        "This distinction is becoming increasingly important.",
+        "An AI agent can: Plan → Use tools → Perform actions → Observe results → Continue toward a goal.",
+        "For example: \"Research these companies and create a spreadsheet.\"",
+        "An agent might: 1. Search web 2. Visit sites 3. Extract info 4. Open spreadsheet 5. Organize data 6. Verify result.",
+        "That sounds intelligent. But autonomy doesn't automatically equal general intelligence.",
+        "An agent can be extremely capable while still operating inside a defined environment with specific tools and limitations."
+      ],
+      keyDistinction: [
+        { label: "Agentic AI", desc: "Primarily about acting toward goals." },
+        { label: "AGI", desc: "About general intelligence and adaptability across domains." }
+      ],
+      outro: "They're related concepts. They're not synonyms. 🌷"
+    },
+    agiVsConsciousness: {
+      heading: "AGI Is Also NOT the Same as Consciousness",
+      paragraphs: [
+        "Here's where things become slightly philosophical.",
+        "Does an AGI need to be conscious? Does it need emotions? Does it need self-awareness? Does it need to experience the world like humans do?",
+        "We don't know.",
+        "More importantly: Researchers don't agree that consciousness is necessary for AGI.",
+        "One definition might focus entirely on capabilities: \"Can the system perform intellectual tasks at a human level?\"",
+        "Another might argue that true intelligence requires deeper understanding or consciousness.",
+        "And suddenly we're no longer discussing only computer science. We're discussing neuroscience, psychology and philosophy too.",
+        "Which is exactly why defining AGI is so difficult. 🌸"
+      ]
+    },
+    asi: {
+      heading: "And What About ASI?",
+      paragraphs: [
+        "There's another acronym worth knowing: ASI — Artificial Superintelligence.",
+        "AGI and ASI aren't the same thing.",
+        "A simplified way of thinking about the concepts is:"
+      ],
+      tiers: [
+        { title: "Narrow AI", desc: "Specialized intelligence." },
+        { title: "AGI", desc: "General intelligence comparable to humans across many domains." },
+        { title: "ASI", desc: "Intelligence substantially beyond human capabilities across many domains." }
+      ],
+      outro: "An AGI wouldn't necessarily need to be smarter than every human. Under many definitions, reaching broadly human-level general intelligence would already qualify. ASI would go much further."
+    },
+    devPerspective: {
+      heading: "Why Does AGI Matter for Developers?",
+      paragraphs: [
+        "This is the part that fascinates me the most.",
+        "Traditional software usually looks something like: Human defines logic → Software executes logic → Result.",
+        "Machine learning introduced: Data → Model learns patterns → Prediction.",
+        "Generative AI added: Prompt → Model → Generated Output.",
+        "Agentic AI is moving toward: Goal → Reasoning → Tools → Actions → Verification → Result.",
+        "And AGI would theoretically push this even further: Goal → Understand → Learn → Reason → Adapt → Solve unfamiliar problems.",
+        "That changes the role software could play.",
+        "Instead of programming every possible path:"
+      ],
+      paradigms: [
+        { label: "Traditional software", flow: "Human defines logic → Software executes logic → Result" },
+        { label: "Machine learning", flow: "Data → Model learns patterns → Prediction" },
+        { label: "Generative AI", flow: "Prompt → Model → Generated Output" },
+        { label: "Agentic AI", flow: "Goal → Reasoning → Tools → Actions → Verification → Result" },
+        { label: "AGI (Theoretically)", flow: "Goal → Understand → Learn → Reason → Adapt → Solve unfamiliar problems" }
+      ],
+      codeSnippet: `IF this happens:
+    do this
+ELSE IF that happens:
+    do that
+ELSE:
+    error`,
+      codeOutro: "Software shifts from static conditional branching to dynamic, adaptive general problem solving."
+    },
+    closing: "AGI is less about sci-fi robots and more about the quest for flexible, adaptable, general problem-solving intelligence.",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "¿Qué es AGI? 🌸 — Inteligencia Artificial General Sin la Ciencia Ficción",
+    subtitle: "La AGI es uno de los conceptos más debatidos en IA, pero ¿qué significa realmente? Entendámoslo sin exageraciones.",
+    date: "5 de Octubre, 2026",
+    back: "Volver al Inicio",
+    tags: ["Inteligencia Artificial", "AGI", "Ingeniería de IA", "Machine Learning", "Tecnología"],
+    intro: "IA. IA Generativa. Agentes. AGI. ASI.",
+    introDesc: "A estas alturas, la inteligencia artificial ha acumulado suficientes siglas como para hacer que todo suene mucho más complicado de lo necesario. 🎀",
+    introExtra: [
+      "Una de las principales es AGI: Inteligencia Artificial General.",
+      "Verás frases como:",
+      "\"Nos estamos acercando a la AGI.\"",
+      "o:",
+      "\"Este modelo podría ser el comienzo de la AGI.\"",
+      "Pero ¿qué haría que una IA fuera realmente general?",
+      "¿Y son sistemas como ChatGPT, Gemini o Claude ya AGI?",
+      "Respuesta corta: ni siquiera existe una definición o prueba universalmente aceptada para la AGI.",
+      "Así que desglosemos la respuesta larga. 🌸"
+    ],
+    whatIsAgi: {
+      heading: "Primero: ¿Qué es la AGI?",
+      definition: "AGI significa Inteligencia Artificial General.",
+      desc: "En términos generales, describe un sistema hipotético de IA capaz de aprender, razonar, adaptarse y resolver problemas en una amplia variedad de dominios a un nivel comparable con la inteligencia general humana.",
+      importantPre: "La palabra importante aquí no es artificial.",
+      importantWord: "General.",
+      capabilityIntro: "La IA actual puede ser increíblemente capaz. Un modelo puede:",
+      capabilities: [
+        "Escribir código",
+        "Analizar documentos",
+        "Generar imágenes",
+        "Traducir idiomas",
+        "Resolver problemas matemáticos",
+        "Explicar conceptos científicos",
+        "Analizar datos",
+        "Interactuar con software"
+      ],
+      capabilityOutro: "Pero ser capaz de realizar muchas tareas no demuestra automáticamente que un sistema posea inteligencia general.",
+      deeperQuote: "La habilidad de aplicar la inteligencia de forma flexible en muchas situaciones diferentes, incluidas las no familiares.",
+      deeperOutro: "Y ahí es donde las cosas se complican."
+    },
+    narrowVsGeneral: {
+      heading: "IA Específica vs. IA General",
+      intro: "La forma más fácil de entender la AGI es comparándola con la IA Específica (Narrow AI).",
+      narrowDesc: "La IA Específica está diseñada o entrenada para realizar tipos concretos de tareas.",
+      examples: [
+        { label: "Filtro de spam", input: "Email", output: "Spam / No Spam" },
+        { label: "Sistema de recomendación", input: "Comportamiento", analysis: "Análisis", output: "Productos recomendados" },
+        { label: "Clasificador de imágenes", input: "Imagen", model: "Modelo", output: "Gato / Perro" }
+      ],
+      paragraphs: [
+        "Estos sistemas pueden ser extremadamente buenos en su trabajo. A veces incluso mejores que los humanos.",
+        "Pero su inteligencia no se transfiere necesariamente a otro lugar.",
+        "Una IA de ajedrez que vence al mejor jugador del mundo no sabe de repente cómo preparar una declaración de impuestos.",
+        "Esa es la diferencia."
+      ]
+    },
+    agiDifferent: {
+      heading: "🌷 La AGI Sería Diferente",
+      intro: "Imagina darle a la misma IA problemas completamente diferentes.",
+      scenarios: [
+        "Hoy: \"Construye esta aplicación.\"",
+        "Mañana: \"Analiza este experimento científico.\"",
+        "Luego: \"Aprende cómo funciona este sistema contable desconocido.\"",
+        "Luego: \"Crea una estrategia de marketing usando estos reportes.\"",
+        "Luego: \"Nunca has visto este problema antes. Resuélvelo.\""
+      ],
+      conclusion: "Una AGI debería ser teóricamente capaz de transferir conocimiento, aprender y adaptarse en lugar de requerir un sistema especializado completamente independiente para cada dominio.",
+      narrowModel: "IA Específica (Narrow):",
+      narrowFlow: ["Tarea A → Modelo A", "Tarea B → Modelo B", "Tarea C → Modelo C"],
+      agiModel: "AGI:",
+      agiFlow: {
+        tasks: ["Tarea A", "Tarea B", "Tarea C", "Tarea Desconocida"],
+        core: "Inteligencia General",
+        output: "Solución"
+      },
+      unknownTaskNotice: "La última es especialmente importante: Tarea Desconocida.",
+      unknownTaskDesc: "La inteligencia no es solo recordar cosas que ya hemos visto. También es resolver qué hacer cuando no hemos visto el problema antes."
+    },
+    whatAgiNeeds: {
+      heading: "¿Qué Necesitaría Realmente una AGI?",
+      intro: "No existe una lista de verificación aceptada universalmente para la AGI. Diferentes investigadores la definen de forma distinta. Pero varias capacidades aparecen con frecuencia en las discusiones.",
+      items: [
+        {
+          num: "1",
+          title: "1. Razonamiento",
+          desc: "El sistema necesitaría razonar sobre problemas en lugar de simplemente recuperar información.",
+          quote: "Las ventas de una tienda aumentaron 20%, pero su ganancia disminuyó 10%. ¿Por qué?",
+          pointsIntro: "No hay necesariamente una sola respuesta memorizada. El sistema necesitaría investigar:",
+          points: ["Costos operativos", "Márgenes de producto", "Descuentos", "Gastos publicitarios", "Envíos", "Impuestos", "Costos de inventario"],
+          outro: "Y conectar esas piezas de forma lógica."
+        },
+        {
+          num: "2",
+          title: "2. Aprendizaje",
+          desc: "Los humanos no necesitamos reentrenarnos por completo cada vez que encontramos algo nuevo. Aprendemos continuamente.",
+          flow: ["Nueva Experiencia", "↓", "Aprender", "↓", "Actualizar Entendimiento", "↓", "Aplicar Conocimiento Después"],
+          outro: "Esto es diferente de simplemente tener una enorme cantidad de información dentro de un conjunto de datos de entrenamiento."
+        },
+        {
+          num: "3",
+          title: "3. Adaptación",
+          desc: "Los entornos reales cambian. Un sistema inteligente necesita responder cuando las suposiciones o herramientas fallan.",
+          triggers: ["Una herramienta deja de funcionar", "Falta información", "Una suposición era incorrecta", "El entorno cambia", "Una solución previa falla"],
+          oldWay: "Error → Detenerse",
+          newWay: "Error → Entender → Adaptar → Probar otra estrategia",
+          outro: "🌸 Ese es un problema mucho más difícil."
+        },
+        {
+          num: "4",
+          title: "🔗 4. Transferencia de Conocimiento",
+          desc: "Esta es una de las partes más interesantes. Los humanos transferimos conocimiento continuamente entre dominios.",
+          example: "Si aprendes depuración como desarrollador, no solo estás aprendiendo \"Cómo arreglar JavaScript\". Estás practicando:",
+          points: ["Dividir grandes problemas en partes pequeñas", "Probar suposiciones", "Buscar patrones", "Eliminar posibilidades", "Verificar resultados"],
+          outro: "Esas estrategias pueden ayudar a resolver problemas completamente diferentes más adelante. La inteligencia general debería hacer algo similar."
+        },
+        {
+          num: "5",
+          title: "5. Generalización",
+          desc: "Esta podría ser la palabra más importante en toda la conversación sobre AGI.",
+          definition: "Generalización significa aplicar lo aprendido a situaciones que no formaban parte exacta de los ejemplos originales.",
+          analogyText: "Imagina enseñarle a alguien: \"Así se usa un martillo.\"",
+          memorization: "Memorización: \"Sé cómo golpear este clavo exacto.\"",
+          generalization: "Generalización: \"Entiendo qué hace esta herramienta, así que probablemente puedo usarla en una situación ligeramente diferente.\"",
+          outro: "La AGI está fundamentalmente conectada a esta idea."
+        }
+      ]
+    },
+    currentAi: {
+      heading: "Pero la IA Actual Ya Puede Hacer Muchas Cosas",
+      paragraphs: [
+        "Exacto. Y aquí es donde la conversación se vuelve interesante.",
+        "Los modelos base modernos son mucho más generales que los sistemas tradicionales de IA específica.",
+        "Un solo modelo puede potencialmente: Programar, Traducir, Analizar imágenes, Escribir, Razonar sobre matemáticas, Investigar, Trabajar con documentos, Generar interfaces, Usar herramientas.",
+        "Eso parece sorprendentemente general. ¿Por qué no declaramos simplemente: 🎉 ¡AGI alcanzada!?",
+        "Porque la amplitud de capacidades no es la única cuestión.",
+        "La confiabilidad importa. La adaptabilidad importa. El aprendizaje importa. La generalización importa. La comprensión del mundo real importa.",
+        "Y los investigadores no concuerdan en qué cantidad de cada capacidad es necesaria antes de merecer la etiqueta AGI.",
+        "Por eso actualmente no hay ninguna prueba de AGI aceptada universalmente."
+      ]
+    },
+    isChatGptAgi: {
+      heading: "🌸 ¿Es ChatGPT AGI?",
+      paragraphs: [
+        "Aquí es donde debemos ser cuidadosos.",
+        "Existe un desacuerdo real sobre qué tan cerca están los sistemas actuales de IA de la AGI e incluso sobre qué debería contar como AGI en primer lugar.",
+        "Algunas definiciones se centran en:"
+      ],
+      points: [
+        "Rendimiento cognitivo a nivel humano",
+        "Capacidad de aprender nuevas tareas",
+        "Utilidad económica",
+        "Generalidad en múltiples dominios",
+        "Autonomía",
+        "Resolución flexible de problemas"
+      ],
+      paragraphsAfter: [
+        "Y esas definiciones pueden producir conclusiones muy diferentes.",
+        "Por lo tanto, no hay actualmente una prueba mágica donde digamos: Puntaje AGI: 97% ✨ y declaremos oficialmente que hemos llegado.",
+        "Por eso también los resultados impresionantes en benchmarks no equivalen automáticamente a AGI."
+      ]
+    },
+    benchmarksNotAgi: {
+      heading: "Benchmarks ≠ AGI",
+      paragraphs: [
+        "He hablado antes sobre benchmarks de IA porque son increíblemente útiles.",
+        "Podemos probar modelos en Código (95%), Matemáticas (92%), Ciencia (97%).",
+        "Esos puntajes nos dicen algo valioso sobre el rendimiento en pruebas establecidas. No responden automáticamente: \"¿Posee este sistema inteligencia general?\"",
+        "Porque la inteligencia es multidimensional.",
+        "Un modelo podría desempeñarse extremadamente bien en pruebas establecidas mientras lucha con una situación verdaderamente no familiar.",
+        "Esta es una de las razones por las que la AGI es tan difícil de medir."
+      ]
+    },
+    agiVsAgentic: {
+      heading: "🎀 La AGI NO es lo Mismo que la IA Agéntica",
+      paragraphs: [
+        "Esta distinción se está volviendo cada vez más importante.",
+        "Un agente de IA puede: Planificar → Usar herramientas → Realizar acciones → Observar resultados → Continuar hacia la meta.",
+        "Por ejemplo: \"Investiga estas empresas y crea una hoja de cálculo.\"",
+        "Un agente podría: 1. Buscar en la web 2. Visitar sitios 3. Extraer información 4. Abrir hoja de cálculo 5. Organizar datos 6. Verificar el resultado.",
+        "Eso suena inteligente. Pero la autonomía no equivale automáticamente a inteligencia general.",
+        "Un agente puede ser extremadamente capaz mientras opera dentro de un entorno definido con herramientas y limitaciones específicas."
+      ],
+      keyDistinction: [
+        { label: "IA Agéntica", desc: "Principalmente sobre actuar hacia metas." },
+        { label: "AGI", desc: "Sobre inteligencia general y adaptabilidad a través de dominios." }
+      ],
+      outro: "Son conceptos relacionados. No son sinónimos. 🌷"
+    },
+    agiVsConsciousness: {
+      heading: "La AGI Tampoco es lo Mismo que la Conciencia",
+      paragraphs: [
+        "Aquí es donde las cosas se vuelven un poco filosóficas.",
+        "¿Necesita una AGI ser consciente? ¿Necesita emociones? ¿Necesita autoconciencia? ¿Necesita experimentar el mundo como los humanos?",
+        "No lo sabemos.",
+        "Lo que es más importante: Los investigadores no coinciden en que la conciencia sea necesaria para la AGI.",
+        "Una definición podría centrarse puramente en capacidades: \"¿Puede el sistema realizar tareas intelectuales a nivel humano?\"",
+        "Otra podría argumentar que la verdadera inteligencia requiere una comprensión más profunda o conciencia.",
+        "Y de repente ya no estamos discutiendo solo informática. Estamos discutiendo neurociencia, psicología y filosofía también.",
+        "Lo cual es exactamente por qué definir la AGI es tan difícil. 🌸"
+      ]
+    },
+    asi: {
+      heading: "¿Y Qué Hay de la ASI?",
+      paragraphs: [
+        "Hay otra sigla que vale la pena conocer: ASI — Superinteligencia Artificial.",
+        "AGI y ASI no son lo mismo.",
+        "Una forma simplificada de pensar en los conceptos es:"
+      ],
+      tiers: [
+        { title: "IA Específica (Narrow)", desc: "Inteligencia especializada." },
+        { title: "AGI", desc: "Inteligencia general comparable a los humanos en muchos dominios." },
+        { title: "ASI", desc: "Inteligencia sustancialmente superior a las capacidades humanas en muchos dominios." }
+      ],
+      outro: "Una AGI no necesitaría ser más inteligente que todos los humanos. Bajo muchas definiciones, alcanzar un nivel de inteligencia general amplio equivalente al humano ya calificaría. La ASI iría mucho más allá."
+    },
+    devPerspective: {
+      heading: "¿Por Qué la AGI Importa para los Desarrolladores?",
+      paragraphs: [
+        "Esta es la parte que más me fascina.",
+        "El software tradicional suele ser: El humano define la lógica → El software ejecuta la lógica → Resultado.",
+        "El machine learning introdujo: Datos → El modelo aprende patrones → Predicción.",
+        "La IA generativa añadió: Prompt → Modelo → Salida generada.",
+        "La IA agéntica se mueve hacia: Meta → Razonamiento → Herramientas → Acciones → Verificación → Resultado.",
+        "Y la AGI llevaría esto aún más lejos: Meta → Entender → Aprender → Razonar → Adaptar → Resolver problemas no familiares.",
+        "Eso cambia el rol que puede jugar el software.",
+        "En lugar de programar cada camino posible:"
+      ],
+      codeSnippet: `SI ocurre esto:
+    hacer esto
+SI NO, SI ocurre aquello:
+    hacer aquello
+SI NO:
+    error`,
+      codeOutro: "El software pasa de condicionales estáticos a una resolución de problemas general, dinámica y adaptativa."
+    },
+    closing: "La AGI es menos sobre robots de ciencia ficción y más sobre la búsqueda de una inteligencia de resolución de problemas general, flexible y adaptable.",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "O que é AGI? 🌸 — Inteligência Artificial Geral Sem Ficção Científica",
+    subtitle: "AGI é um dos conceitos mais comentados em inteligência artificial, mas o que realmente significa? Vamos entender sem o hype.",
+    date: "5 de Outubro, 2026",
+    back: "Voltar ao Início",
+    tags: ["Inteligência Artificial", "AGI", "Engenharia de IA", "Machine Learning", "Tecnologia"],
+    intro: "IA. IA Generativa. Agentes. AGI. ASI.",
+    introDesc: "A esta altura, a inteligência artificial acumulou acrônimos suficientes para fazer tudo soar muito mais complicado do que precisa ser. 🎀",
+    introExtra: [
+      "Um dos maiores é AGI: Inteligência Artificial Geral.",
+      "Você verá frases como:",
+      "\"Estamos nos aproximando da AGI.\"",
+      "ou:",
+      "\"Este modelo pode ser o começo da AGI.\"",
+      "Mas o que tornaria uma IA realmente geral?",
+      "E sistemas como ChatGPT, Gemini ou Claude já são AGI?",
+      "Resposta curta: nem sequer existe uma definição ou teste universalmente aceito para AGI ainda.",
+      "Então vamos desempacotar a resposta longa. 🌸"
+    ],
+    whatIsAgi: {
+      heading: "Primeiro: O que é AGI?",
+      definition: "AGI significa Inteligência Artificial Geral.",
+      desc: "Em termos amplos, descreve um sistema hipotético de IA capaz de aprender, raciocinar, adaptar-se e resolver problemas em uma grande variedade de domínios em um nível comparável à inteligência geral humana.",
+      importantPre: "A palavra importante aqui não é artificial.",
+      importantWord: "Geral.",
+      capabilityIntro: "A IA de hoje pode ser incrivelmente capaz. Um modelo pode:",
+      capabilities: [
+        "Escrever código",
+        "Analisar documentos",
+        "Gerar imagens",
+        "Traduzir idiomas",
+        "Resolver problemas matemáticos",
+        "Explicar conceitos científicos",
+        "Analisar dados",
+        "Interagir com software"
+      ],
+      capabilityOutro: "Mas ser capaz de realizar muitas tarefas não prova automaticamente que um sistema possui inteligência geral.",
+      deeperQuote: "A capacidade de aplicar inteligência de forma flexível em muitas situações diferentes, incluindo aquelas não familiares.",
+      deeperOutro: "E é aí que as coisas ficam complicadas."
+    },
+    narrowVsGeneral: {
+      heading: "IA Específica vs. IA Geral",
+      intro: "A forma mais fácil de entender AGI é comparando-a com a IA Específica (Narrow AI).",
+      narrowDesc: "A IA Específica é projetada ou treinada para realizar tipos específicos de tarefas.",
+      examples: [
+        { label: "Filtro de spam", input: "Email", output: "Spam / Não Spam" },
+        { label: "Sistema de recomendação", input: "Comportamento", analysis: "Análise", output: "Produtos recomendados" },
+        { label: "Classificador de imagem", input: "Imagem", model: "Modelo", output: "Gato / Cachorro" }
+      ],
+      paragraphs: [
+        "Esses sistemas podem ser extremamente bons em seus trabalhos. Às vezes até melhores que os humanos.",
+        "Mas sua inteligência não se transfere necessariamente para outro lugar.",
+        "Uma IA de xadrez que vence o melhor jogador do mundo não sabe de repente como preparar uma declaração de imposto de renda.",
+        "Essa é a diferença."
+      ]
+    },
+    agiDifferent: {
+      heading: "🌷 A AGI Seria Diferente",
+      intro: "Imagine dar à mesma IA problemas completamente diferentes.",
+      scenarios: [
+        "Hoje: \"Construa este aplicativo.\"",
+        "Amanhã: \"Analise este experimento científico.\"",
+        "Depois: \"Aprenda como funciona este sistema de contabilidade desconhecido.\"",
+        "Depois: \"Crie uma estratégia de marketing usando estes relatórios.\"",
+        "Depois: \"Você nunca viu este problema antes. Resolva-o.\""
+      ],
+      conclusion: "Uma AGI deveria teoricamente ser capaz de transferir conhecimento, aprender e se adaptar em vez de exigir um sistema especializado completamente separado para cada domínio.",
+      narrowModel: "IA Específica (Narrow):",
+      narrowFlow: ["Tarefa A → Modelo A", "Tarefa B → Modelo B", "Tarefa C → Modelo C"],
+      agiModel: "AGI:",
+      agiFlow: {
+        tasks: ["Tarefa A", "Tarefa B", "Tarefa C", "Tarefa Desconhecida"],
+        core: "Inteligência Geral",
+        output: "Solução"
+      },
+      unknownTaskNotice: "A última é especialmente importante: Tarefa Desconhecida.",
+      unknownTaskDesc: "Inteligência não é apenas lembrar de coisas que já vimos. É também descobrir o que fazer quando não vimos o problema antes."
+    },
+    whatAgiNeeds: {
+      heading: "O que a AGI Realmente Precisaria?",
+      intro: "Não existe uma lista de verificação aceita universalmente para AGI. Diferentes pesquisadores a definem de maneira diferente. Mas várias capacidades aparecem frequentemente nas discussões.",
+      items: [
+        {
+          num: "1",
+          title: "1. Raciocínio",
+          desc: "O sistema precisaria raciocinar sobre problemas em vez de simplesmente recuperar informações.",
+          quote: "As vendas de uma loja aumentaram 20%, mas seu lucro diminuiu 10%. Por quê?",
+          pointsIntro: "Não há necessariamente uma única resposta memorizada. O sistema precisaria investigar:",
+          points: ["Custos operacionais", "Margens de produtos", "Descontos", "Despesas de publicidade", "Frete", "Impostos", "Custos de estoque"],
+          outro: "E conectar essas peças de forma lógica."
+        },
+        {
+          num: "2",
+          title: "2. Aprendizado",
+          desc: "Os humanos não precisam ser completamente retreinados a cada novo encontro. Aprendemos continuamente.",
+          flow: ["Nova Experiência", "↓", "Aprender", "↓", "Atualizar Entendimento", "↓", "Aplicar Conhecimento Depois"],
+          outro: "Isso é diferente de simplesmente ter uma quantidade enorme de informações dentro de um conjunto de dados de treinamento."
+        },
+        {
+          num: "3",
+          title: "3. Adaptação",
+          desc: "Ambientes reais mudam. Um sistema inteligente precisa responder quando suposições ou ferramentas falham.",
+          triggers: ["Uma ferramenta para de funcionar", "Informações estão faltando", "Uma suposição estava incorreta", "O ambiente muda", "Uma solução anterior falha"],
+          oldWay: "Erro → Parar",
+          newWay: "Erro → Entender → Adaptar → Tentar outra estratégia",
+          outro: "🌸 Esse é um problema muito mais difícil."
+        },
+        {
+          num: "4",
+          title: "🔗 4. Transferência de Conhecimento",
+          desc: "Esta é uma das partes mais interessantes. Os humanos transferem conhecimento constantemente entre domínios.",
+          example: "Se você aprende depuração como desenvolvedor, não está apenas aprendendo \"Como corrigir JavaScript\". Está praticando:",
+          points: ["Dividir grandes problemas em partes menores", "Testar suposições", "Procurar padrões", "Eliminar possibilidades", "Verificar resultados"],
+          outro: "Essas estratégias podem ajudar a resolver problemas completamente diferentes mais tarde. A inteligência geral deveria ser capaz de fazer algo semelhante."
+        },
+        {
+          num: "5",
+          title: "5. Generalização",
+          desc: "Esta pode ser a palavra mais importante em toda a conversa sobre AGI.",
+          definition: "Generalização significa aplicar o que foi aprendido a situações que não faziam parte exata dos exemplos originais.",
+          analogyText: "Imagine ensinar a alguém: \"É assim que se usa um martelo.\"",
+          memorization: "Memorização: \"Eu sei como bater neste prego exato.\"",
+          generalization: "Generalização: \"Eu entendo o que esta ferramenta faz, então provavelmente posso usá-la em uma situação ligeiramente diferente.\"",
+          outro: "A AGI está fundamentalmente conectada a essa ideia."
+        }
+      ]
+    },
+    currentAi: {
+      heading: "Mas a IA Atual Já Pode Fazer Muitas Coisas",
+      paragraphs: [
+        "Exatamente. E é aqui que a conversa fica interessante.",
+        "Os modelos base modernos são muito mais gerais do que os sistemas tradicionais de IA específica.",
+        "Um único modelo pode potencialmente: Programar, Traduzir, Analisar imagens, Escrever, Raciocinar sobre matemática, Pesquisar, Trabalhar com documentos, Gerar interfaces, Usar ferramentas.",
+        "Isso parece surpreendentemente geral. Então por que não declaramos simplesmente: 🎉 AGI alcançada!?",
+        "Porque a amplitude de capacidades não é a única questão.",
+        "Confiabilidade importa. Adaptabilidade importa. Aprendizado importa. Generalização importa. Compreensão do mundo real importa.",
+        "E os pesquisadores não concordam sobre exatamente quanta capacidade é necessária antes que algo mereça o rótulo AGI.",
+        "É por isso que atualmente não há nenhum teste de AGI universalmente aceito."
+      ]
+    },
+    isChatGptAgi: {
+      heading: "🌸 O ChatGPT é AGI?",
+      paragraphs: [
+        "É aqui que precisamos ter cuidado.",
+        "Existe um desacordo real sobre o quão próximos os sistemas atuais de IA estão da AGI e até sobre o que deveria contar como AGI em primeiro lugar.",
+        "Algumas definições se concentram em:"
+      ],
+      points: [
+        "Desempenho cognitivo em nível humano",
+        "Capacidade de aprender novas tarefas",
+        "Utilidade econômica",
+        "Generalidade em vários domínios",
+        "Autonomia",
+        "Resolução flexível de problemas"
+      ],
+      paragraphsAfter: [
+        "E essas definições podem produzir conclusões muito diferentes.",
+        "Portanto, atualmente não há um teste mágico onde possamos dizer: Pontuação AGI: 97% ✨ e declarar oficialmente que a alcançamos.",
+        "É por isso também que resultados impressionantes em benchmarks não equivalem automaticamente à AGI."
+      ]
+    },
+    benchmarksNotAgi: {
+      heading: "Benchmarks ≠ AGI",
+      paragraphs: [
+        "Já falei antes sobre benchmarks de IA porque eles são incrivelmente úteis.",
+        "Podemos testar modelos em Programação (95%), Matemática (92%), Ciência (97%).",
+        "Essas pontuações nos dizem algo valioso sobre o desempenho em testes estabelecidos. Elas não respondem automaticamente: \"Este sistema possui inteligência geral?\"",
+        "Porque a inteligência é multidimensional.",
+        "Um modelo pode se sair extremamente bem em testes estabelecidos enquanto luta com uma situação verdadeiramente não familiar.",
+        "Esta é uma das razões pelas quais a AGI é tão difícil de medir."
+      ]
+    },
+    agiVsAgentic: {
+      heading: "🎀 AGI NÃO é o Mesmo que IA Agêntica",
+      paragraphs: [
+        "Esta distinção está se tornando cada vez mais importante.",
+        "Um agente de IA pode: Planejar → Usar ferramentas → Executar ações → Observar resultados → Continuar em direção ao objetivo.",
+        "Por exemplo: \"Pesquise estas empresas e crie uma planilha.\"",
+        "Um agente pode: 1. Pesquisar na web 2. Visitar sites 3. Extrair informações 4. Abrir planilha 5. Organizar dados 6. Verificar o resultado.",
+        "Isso soa inteligente. Mas autonomia não equivale automaticamente à inteligência geral.",
+        "Um agente pode ser extremamente capaz enquanto ainda opera dentro de um ambiente definido com ferramentas e limitações específicas."
+      ],
+      keyDistinction: [
+        { label: "IA Agêntica", desc: "Principalmente sobre agir em direção a objetivos." },
+        { label: "AGI", desc: "Sobre inteligência geral e adaptabilidade através de domínios." }
+      ],
+      outro: "São conceitos relacionados. Não são sinônimos. 🌷"
+    },
+    agiVsConsciousness: {
+      heading: "AGI Também NÃO é o Mesmo que Consciência",
+      paragraphs: [
+        "Aqui é onde as coisas se tornam um pouco filosóficas.",
+        "Uma AGI precisa ser consciente? Precisa de emoções? Precisa de autoconsciência? Precisa experimentar o mundo como os humanos?",
+        "Não sabemos.",
+        "O que é mais importante: Os pesquisadores não concordam que a consciência seja necessária para a AGI.",
+        "Uma definição pode se concentrar puramente em capacidades: \"O sistema pode realizar tarefas intelectuais em nível humano?\"",
+        "Outra pode argumentar que a verdadeira inteligência requer uma compreensão mais profunda ou consciência.",
+        "E de repente não estamos mais discutindo apenas ciência da computação. Estamos discutindo neurociência, psicologia e filosofia também.",
+        "O que é exatamente o motivo pelo qual definir AGI é tão difícil. 🌸"
+      ]
+    },
+    asi: {
+      heading: "E Quanto à ASI?",
+      paragraphs: [
+        "Há outro acrônimo que vale a pena conhecer: ASI — Superinteligência Artificial.",
+        "AGI e ASI não são a mesma coisa.",
+        "Uma maneira simplificada de pensar sobre os conceitos é:"
+      ],
+      tiers: [
+        { title: "IA Específica (Narrow)", desc: "Inteligência especializada." },
+        { title: "AGI", desc: "Inteligência geral comparável aos humanos em muitos dominios." },
+        { title: "ASI", desc: "Inteligência substancialmente além das capacidades humanas em muitos dominios." }
+      ],
+      outro: "Uma AGI não precisaria necessariamente ser mais inteligente do que todos os humanos. Sob muitas definições, atingir uma inteligência geral amplamente em nível humano já qualificaria. A ASI iria muito além."
+    },
+    devPerspective: {
+      heading: "Por Que a AGI Importa para Desenvolvedores?",
+      paragraphs: [
+        "Esta é a parte que mais me fascina.",
+        "O software tradicional geralmente é: Humano define lógica → Software executa lógica → Resultado.",
+        "O machine learning introduziu: Dados → Modelo aprende padrões → Predição.",
+        "A IA generativa adicionou: Prompt → Modelo → Saída gerada.",
+        "A IA agêntica está se movendo para: Objetivo → Raciocínio → Ferramentas → Ações → Verificação → Resultado.",
+        "E a AGI teoricamente levaria isso ainda mais longe: Objetivo → Entender → Aprender → Raciocinar → Adaptar → Resolver problemas desconhecidos.",
+        "Isso muda o papel que o software pode desempenhar.",
+        "Em vez de programar cada caminho possível:"
+      ],
+      codeSnippet: `SE isso acontecer:
+    faça isso
+SENÃO SE aquilo acontecer:
+    faça aquilo
+SENÃO:
+    erro`,
+      codeOutro: "O software passa de condicionais estáticos para uma resolução de problemas geral, dinâmica e adaptativa."
+    },
+    closing: "A AGI é menos sobre robôs de ficção científica e mais sobre a busca por uma inteligência de resolução de problemas geral, flexível e adaptável.",
+    closingSign: "Nos vemos na próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.en;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="header-text-side">
+            <div class="post-meta">
+              <span class="post-category">🌷 {lang === 'en' ? 'AI Engineering' : lang === 'pt' ? 'Engenharia de IA' : 'Ingeniería de IA'}</span>
+              <span class="post-dot">•</span>
+              <span class="post-date">{page.date}</span>
+            </div>
+            <h1 class="post-title">{page.title}</h1>
+            <p class="post-subtitle">{page.subtitle}</p>
+            
+            <div class="tags-row">
+              {page.tags.map((tag) => (
+                <span class="post-tag">#{tag}</span>
+              ))}
+            </div>
+          </div>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+          <!-- Intro acronym list -->
+          <div class="acronym-banner">
+            <span class="acronym-item">AI</span>
+            <span class="acronym-sep">•</span>
+            <span class="acronym-item">Generative AI</span>
+            <span class="acronym-sep">•</span>
+            <span class="acronym-item">Agents</span>
+            <span class="acronym-sep">•</span>
+            <span class="acronym-highlight">AGI</span>
+            <span class="acronym-sep">•</span>
+            <span class="acronym-item">ASI</span>
+          </div>
+
+          <p class="lead-desc">{page.introDesc}</p>
+          
+          <div class="intro-extra-box">
+            {page.introExtra.map((line) => (
+              <p>{line}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 1: What is AGI? -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whatIsAgi.heading}</h2>
+            <div class="section-body">
+              <div class="definition-card">
+                <span class="def-badge">Definition</span>
+                <h3 class="def-title">{page.whatIsAgi.definition}</h3>
+                <p>{page.whatIsAgi.desc}</p>
+              </div>
+
+              <p class="important-word-line">
+                {page.whatIsAgi.importantPre}
+                <span class="highlight-word">{page.whatIsAgi.importantWord}</span>
+              </p>
+
+              <p>{page.whatIsAgi.capabilityIntro}</p>
+
+              <ul class="capabilities-grid">
+                {page.whatIsAgi.capabilities.map((cap) => (
+                  <li class="capability-item">
+                    <span class="cap-check">✦</span>
+                    <span>{cap}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <p>{page.whatIsAgi.capabilityOutro}</p>
+
+              <blockquote class="quote-card">
+                <p>"{page.whatIsAgi.deeperQuote}"</p>
+              </blockquote>
+
+              <p>{page.whatIsAgi.deeperOutro}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 2: Narrow AI vs General AI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.narrowVsGeneral.heading}</h2>
+            <div class="section-body">
+              <p>{page.narrowVsGeneral.intro}</p>
+              <p class="narrow-desc-box">{page.narrowVsGeneral.narrowDesc}</p>
+
+              <div class="examples-stack">
+                {page.narrowVsGeneral.examples.map((ex) => (
+                  <div class="example-card">
+                    <div class="ex-label">{ex.label}</div>
+                    <div class="ex-flow">
+                      <span class="flow-pill">{ex.input}</span>
+                      <span class="flow-arrow">→</span>
+                      {ex.analysis && (
+                        <>
+                          <span class="flow-pill flow-mid">{ex.analysis}</span>
+                          <span class="flow-arrow">→</span>
+                        </>
+                      )}
+                      {ex.model && (
+                        <>
+                          <span class="flow-pill flow-mid">{ex.model}</span>
+                          <span class="flow-arrow">→</span>
+                        </>
+                      )}
+                      <span class="flow-pill flow-out">{ex.output}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {page.narrowVsGeneral.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 3: AGI Would Be Different -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.agiDifferent.heading}</h2>
+            <div class="section-body">
+              <p>{page.agiDifferent.intro}</p>
+
+              <div class="scenarios-list">
+                {page.agiDifferent.scenarios.map((sc) => (
+                  <div class="scenario-bubble">
+                    <span>{sc}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p>{page.agiDifferent.conclusion}</p>
+
+              <!-- Comparison Flow Visual -->
+              <div class="model-comparison-grid">
+                <div class="comp-box narrow-box">
+                  <h4 class="comp-title">{page.agiDifferent.narrowModel}</h4>
+                  {page.agiDifferent.narrowFlow.map((flowLine) => (
+                    <div class="narrow-flow-item">{flowLine}</div>
+                  ))}
+                </div>
+
+                <div class="comp-box agi-box">
+                  <h4 class="comp-title">{page.agiDifferent.agiModel}</h4>
+                  <div class="agi-diagram">
+                    <div class="agi-inputs">
+                      {page.agiDifferent.agiFlow.tasks.map((task) => (
+                        <span class={`agi-task-pill ${task.includes('Unknown') || task.includes('Desconocida') || task.includes('Desconhecida') ? 'unknown-pill' : ''}`}>{task}</span>
+                      ))}
+                    </div>
+                    <div class="agi-core-arrow">↘ ⬇ ↙</div>
+                    <div class="agi-core">{page.agiDifferent.agiFlow.core}</div>
+                    <div class="agi-out-arrow">↓</div>
+                    <div class="agi-output">{page.agiDifferent.agiFlow.output}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="unknown-highlight-card">
+                <h4 class="uh-title">✨ {page.agiDifferent.unknownTaskNotice}</h4>
+                <p>{page.agiDifferent.unknownTaskDesc}</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 4: What Would AGI Actually Need? -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whatAgiNeeds.heading}</h2>
+            <div class="section-body">
+              <p>{page.whatAgiNeeds.intro}</p>
+
+              <div class="capabilities-deep-list">
+                {page.whatAgiNeeds.items.map((item) => (
+                  <div class="deep-cap-card">
+                    <h3 class="deep-cap-title">{item.title}</h3>
+                    <p class="deep-cap-desc">{item.desc}</p>
+
+                    {item.quote && (
+                      <div class="cap-quote">
+                        <p>{item.quote}</p>
+                      </div>
+                    )}
+
+                    {item.points && (
+                      <div class="cap-points">
+                        {item.pointsIntro && <p class="points-intro">{item.pointsIntro}</p>}
+                        <div class="points-tags">
+                          {item.points.map((pt) => (
+                            <span class="pt-tag">{pt}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {item.flow && (
+                      <div class="cap-flow-row">
+                        {item.flow.map((step) => (
+                          <span class={step === '↓' ? 'flow-sep' : 'flow-step'}>{step}</span>
+                        ))}
+                      </div>
+                    )}
+
+                    {item.triggers && (
+                      <div class="triggers-list">
+                        {item.triggers.map((trig) => (
+                          <div class="trig-item">{trig}</div>
+                        ))}
+                      </div>
+                    )}
+
+                    {item.oldWay && (
+                      <div class="adaptation-comp">
+                        <div class="old-way">❌ {item.oldWay}</div>
+                        <div class="new-way">✅ {item.newWay}</div>
+                      </div>
+                    )}
+
+                    {item.analogyText && (
+                      <div class="generalization-box">
+                        <p class="g-intro">{item.analogyText}</p>
+                        <div class="g-split">
+                          <div class="g-memo">
+                            <strong>Memorization:</strong>
+                            <span>{item.memorization}</span>
+                          </div>
+                          <div class="g-gen">
+                            <strong>Generalization:</strong>
+                            <span>{item.generalization}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {item.outro && <p class="cap-outro">{item.outro}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 5: Current AI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.currentAi.heading}</h2>
+            <div class="section-body">
+              {page.currentAi.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 6: Is ChatGPT AGI? -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.isChatGptAgi.heading}</h2>
+            <div class="section-body">
+              {page.isChatGptAgi.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+
+              <ul class="criteria-list">
+                {page.isChatGptAgi.points.map((pt) => (
+                  <li class="criteria-item">
+                    <span class="crit-bullet">🌸</span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {page.isChatGptAgi.paragraphsAfter.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 7: Benchmarks != AGI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.benchmarksNotAgi.heading}</h2>
+            <div class="section-body">
+              {page.benchmarksNotAgi.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 8: AGI vs Agentic AI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.agiVsAgentic.heading}</h2>
+            <div class="section-body">
+              {page.agiVsAgentic.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+
+              <div class="distinction-grid">
+                {page.agiVsAgentic.keyDistinction.map((kd) => (
+                  <div class="dist-card">
+                    <h4 class="dist-label">{kd.label}</h4>
+                    <p class="dist-desc">{kd.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <p class="dist-outro">{page.agiVsAgentic.outro}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 9: AGI vs Consciousness -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.agiVsConsciousness.heading}</h2>
+            <div class="section-body">
+              {page.agiVsConsciousness.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 10: ASI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.asi.heading}</h2>
+            <div class="section-body">
+              {page.asi.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+
+              <div class="tiers-stack">
+                {page.asi.tiers.map((tier, idx) => (
+                  <div class={`tier-card tier-${idx}`}>
+                    <div class="tier-header">
+                      <span class="tier-num">0{idx + 1}</span>
+                      <h4 class="tier-title">{tier.title}</h4>
+                    </div>
+                    <p class="tier-desc">{tier.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <p>{page.asi.outro}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section 11: Developer Perspective -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.devPerspective.heading}</h2>
+            <div class="section-body">
+              {page.devPerspective.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+
+              {page.devPerspective.paradigms && (
+                <div class="paradigms-list">
+                  {page.devPerspective.paradigms.map((p) => (
+                    <div class="paradigm-row">
+                      <div class="paradigm-label">{p.label}</div>
+                      <div class="paradigm-flow">{p.flow}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div class="code-compare-box">
+                <pre class="code-block"><code>{page.devPerspective.codeSnippet}</code></pre>
+              </div>
+
+              <p>{page.devPerspective.codeOutro}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing Block -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+
+  .post-tag {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(255, 75, 145, 0.08);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    color: var(--rose);
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .acronym-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-radius: 16px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px dashed rgba(255, 75, 145, 0.25);
+    margin-bottom: 2rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .acronym-item {
+    color: var(--text-muted);
+  }
+
+  .acronym-sep {
+    color: rgba(255, 75, 145, 0.3);
+  }
+
+  .acronym-highlight {
+    color: var(--rose);
+    font-size: 1.25rem;
+    text-shadow: 0 0 12px rgba(255, 75, 145, 0.4);
+  }
+
+  .lead-desc {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .intro-extra-box {
+    background: rgba(255, 255, 255, 0.015);
+    border-left: 3px solid var(--rose);
+    padding: 16px 20px;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 2rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  /* Definition Card */
+  .definition-card {
+    background: radial-gradient(circle at top right, rgba(255, 75, 145, 0.1), rgba(20, 20, 30, 0.6));
+    border: 1px solid rgba(255, 75, 145, 0.3);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .def-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--rose);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+  }
+
+  .def-title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: var(--rose);
+    margin-bottom: 8px;
+  }
+
+  .important-word-line {
+    font-size: 1.3rem;
+    text-align: center;
+    margin: 2rem 0 !important;
+  }
+
+  .highlight-word {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--rose);
+    margin-left: 8px;
+    text-decoration: underline underline-offset-4 decoration-thickness-2;
+  }
+
+  .capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .capability-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .capability-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 75, 145, 0.3);
+  }
+
+  .cap-check {
+    color: var(--rose);
+    font-size: 0.9rem;
+  }
+
+  .quote-card {
+    border-left: 3px solid var(--rose);
+    background: rgba(255, 75, 145, 0.04);
+    padding: 20px 24px;
+    border-radius: 0 16px 16px 0;
+    margin: 2rem 0;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #fff;
+  }
+
+  /* Narrow vs General AI */
+  .narrow-desc-box {
+    font-weight: 600;
+    color: var(--rose);
+  }
+
+  .examples-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .example-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .ex-label {
+    font-weight: 700;
+    color: var(--text);
+    min-width: 180px;
+  }
+
+  .ex-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .flow-pill {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .flow-mid {
+    background: rgba(100, 150, 255, 0.1);
+    color: #88bbff;
+  }
+
+  .flow-out {
+    background: rgba(255, 75, 145, 0.15);
+    color: var(--rose);
+    font-weight: 600;
+  }
+
+  .flow-arrow {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Scenarios */
+  .scenarios-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .scenario-bubble {
+    background: rgba(255, 75, 145, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 14px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+  }
+
+  /* Diagrams */
+  .model-comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 2rem 0;
+  }
+
+  .comp-box {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .comp-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+    color: var(--rose);
+  }
+
+  .narrow-flow-item {
+    background: rgba(255, 255, 255, 0.04);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-family: monospace;
+  }
+
+  .agi-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .agi-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .agi-task-pill {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+  }
+
+  .unknown-pill {
+    background: rgba(255, 75, 145, 0.2);
+    border: 1px solid var(--rose);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .agi-core-arrow, .agi-out-arrow {
+    color: var(--rose);
+    font-size: 0.9rem;
+  }
+
+  .agi-core {
+    background: var(--rose);
+    color: #fff;
+    font-weight: 800;
+    padding: 10px 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(255, 75, 145, 0.4);
+    font-size: 0.95rem;
+  }
+
+  .agi-output {
+    background: rgba(100, 220, 150, 0.15);
+    color: #77eeaa;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .unknown-highlight-card {
+    background: radial-gradient(circle at center, rgba(255, 75, 145, 0.12), rgba(0, 0, 0, 0.3));
+    border: 1px solid rgba(255, 75, 145, 0.3);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-top: 1.5rem;
+  }
+
+  .uh-title {
+    font-family: var(--font-display);
+    color: var(--rose);
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+
+  /* Deep Capabilities Stack */
+  .capabilities-deep-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 1.5rem;
+  }
+
+  .deep-cap-card {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 24px;
+  }
+
+  .deep-cap-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .deep-cap-desc {
+    margin-bottom: 12px !important;
+  }
+
+  .cap-quote {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  .points-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .pt-tag {
+    background: rgba(255, 75, 145, 0.1);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .cap-flow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    font-weight: 600;
+  }
+
+  .flow-step {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .flow-sep {
+    color: var(--rose);
+  }
+
+  .triggers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .trig-item {
+    background: rgba(255, 150, 50, 0.08);
+    border: 1px solid rgba(255, 150, 50, 0.2);
+    color: #ffbb77;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .adaptation-comp {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .old-way {
+    background: rgba(255, 50, 50, 0.1);
+    color: #ff8888;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .new-way {
+    background: rgba(50, 220, 100, 0.1);
+    color: #88ffaa;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .generalization-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+  }
+
+  .g-split {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+  }
+
+  .g-memo strong, .g-gen strong {
+    color: var(--rose);
+    margin-right: 6px;
+  }
+
+  .cap-outro {
+    font-weight: 500;
+    color: var(--rose);
+    margin-top: 12px !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Criteria List */
+  .criteria-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .criteria-item {
+    background: rgba(255, 75, 145, 0.04);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+  }
+
+  .crit-bullet {
+    font-size: 0.9rem;
+  }
+
+  /* Distinction Grid */
+  .distinction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .dist-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .dist-label {
+    font-family: var(--font-display);
+    color: var(--rose);
+    margin-bottom: 6px;
+  }
+
+  .dist-desc {
+    font-size: 0.9rem;
+    margin-bottom: 0 !important;
+  }
+
+  .dist-outro {
+    font-weight: 700;
+    color: var(--rose);
+  }
+
+  /* Tiers Stack */
+  .tiers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .tier-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 16px 20px;
+  }
+
+  .tier-0 { border-left: 4px solid #88bbff; }
+  .tier-1 { border-left: 4px solid var(--rose); }
+  .tier-2 { border-left: 4px solid #ffaa44; }
+
+  .tier-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .tier-num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .tier-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+
+  .tier-desc {
+    margin-bottom: 0 !important;
+    font-size: 0.95rem;
+  }
+
+  /* Paradigms */
+  .paradigms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 1.5rem 0;
+  }
+
+  .paradigm-row {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+
+  .paradigm-label {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--rose);
+    margin-bottom: 4px;
+  }
+
+  .paradigm-flow {
+    font-size: 0.88rem;
+    font-family: monospace;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .code-compare-box {
+    margin: 1.5rem 0;
+    background: #0d0d15;
+    border-radius: 14px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255, 75, 145, 0.2);
+  }
+
+  .code-block {
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    color: #ff99cc;
+  }
+
+  /* Closing */
+  .closing-block {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .closing-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px !important;
+  }
+
+  .closing-sign {
+    color: var(--rose);
+    font-size: 1.1rem;
+    margin-bottom: 12px !important;
+  }
+
+  .signature {
+    font-family: var(--font-cursive);
+    font-size: 1.8rem;
+    color: var(--rose);
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.1rem;
+    }
+    .lead-desc {
+      font-size: 1.1rem;
+    }
+    .model-comparison-grid, .distinction-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>

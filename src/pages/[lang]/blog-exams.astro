@@ -1,0 +1,1469 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "How Do You Give an AI an Exam? 🌸 — Inside the Benchmarks That Test AI Models",
+    subtitle: "GDPval-AA, τ³-Banking, Terminal-Bench, SciCode, Humanity's Last Exam... AI benchmarks have strange names, but what are they actually testing? Let's open the exam.",
+    date: "October 12, 2026",
+    back: 'Back to Home',
+    tags: ["Artificial Intelligence", "AI Benchmarks", "LLM", "AI Engineering", "Machine Learning"],
+    intro: "In another article, I talked about AI benchmarks and how those beautiful leaderboards full of numbers are supposed to help us compare models.",
+    introDesc: "And then I realized something.",
+    introExtra: [
+      "I had casually mentioned names like GDPval-AA v2, τ³-Banking, Terminal-Bench v2.1, SciCode, Humanity's Last Exam, GPQA Diamond, CritPt, AA-Omniscience, AA-LCR... as if those names explained absolutely anything. 🎀",
+      "They don't.",
+      "So this time, instead of looking at the final score, I want to open the exam.",
+      "What is the AI actually being asked to do?",
+      "Because saying: \"Model A scored higher than Model B\" isn't nearly as interesting as understanding what they were tested on."
+    ],
+    whatIsBenchmark: {
+      heading: "🌷 First: What Is a Benchmark?",
+      paragraphs: [
+        "A benchmark is basically a standardized evaluation.",
+        "We give different AI models the same or comparable problems and measure how successfully they solve them.",
+        "Very simplified: Input → AI Model → Task → Evaluation → Score.",
+        "But there is a problem: Intelligence isn't one single skill.",
+        "A model might be excellent at coding but weaker at scientific reasoning. Another might know an enormous amount of information but hallucinate frequently. Another might solve difficult academic questions but struggle to complete a realistic workflow inside software.",
+        "So instead of asking: \"How intelligent is this AI?\", benchmarks let us ask smaller, more useful questions:"
+      ],
+      questions: [
+        "Can it code?",
+        "Can it reason?",
+        "Can it use tools?",
+        "Can it follow instructions?",
+        "Can it work with huge documents?",
+        "Can it complete professional work?",
+        "Does it know when it doesn't know something?"
+      ],
+      outro: "That is why an AI intelligence index usually combines multiple benchmarks. Think of it like a university transcript. You don't receive one mysterious exam called INTELLIGENCE — 100 points 🌸. You take different subjects (Programming, Science, Math, Research) and your overall performance tells a much richer story."
+    },
+    benchmarks: [
+      {
+        num: "1",
+        title: "1. GDPval-AA v2",
+        subtitle: "Can AI actually do professional work?",
+        desc: "GDPval-AA v2 evaluates models using professional tasks based on OpenAI's GDPval dataset.",
+        intro: "Instead of asking \"What is the capital of France?\", the model might need to produce an actual work deliverable across 44 occupations in 9 major industries.",
+        deliverablesIntro: "Models may need to create things such as:",
+        deliverables: ["Documents", "Spreadsheets", "Presentations", "Diagrams", "Professional analyses"],
+        agenticFlow: ["Web", "Shell", "Files", "Reasoning", "Final deliverable"],
+        paragraphs: [
+          "The Artificial Analysis evaluation uses 220 tasks in an agentic environment.",
+          "Suddenly we're testing something much closer to: \"Can this AI actually complete work?\" rather than \"Does this AI know the answer?\""
+        ],
+        gradingHeading: "🌸 How is it graded?",
+        grading: "GDPval-AA v2 uses anonymized comparisons between outputs that contribute to an Elo rating. Human expert performance is anchored at 1000 Elo.",
+        testingNotice: "What is this really testing? Real-world professional usefulness."
+      },
+      {
+        num: "2",
+        title: "2. τ³-Banking",
+        subtitle: "Can the AI follow complicated rules AND take the correct action?",
+        desc: "Yes, that symbol is the Greek letter tau. τ³-Banking simulates fintech customer support.",
+        quote: "\"There's a transaction I don't recognize and I need to dispute it.\"",
+        paragraphs: [
+          "Not easy! The agent needs to know which policy applies, whether the customer qualifies, what info is required, which account is involved, and which tools to call in what order.",
+          "The knowledge base contains roughly 700 interconnected policy documents (~195,000 tokens) across 21 product categories."
+        ],
+        workflow: ["Customer request", "Find relevant policy", "Understand policy", "Reason about situation", "Use tools", "Modify system correctly"],
+        backendNotice: "🎀 Being nice doesn't get you the point. The benchmark evaluates the backend state. Perfectly written response + wrong system action = ❌."
+      },
+      {
+        num: "3",
+        title: "3. Terminal-Bench v2.1",
+        subtitle: "Put the AI in a terminal and see what happens",
+        desc: "Terminal-Bench evaluates whether an AI agent can complete tasks inside a real terminal environment.",
+        tasksInfo: "Version 2.1 contained 89 curated tasks involving Software engineering, System administration, Data processing, Model training, and Security.",
+        flow: ["Task", "Terminal", "Commands", "Files / Processes", "Working result"],
+        codeSnippet: `works_on_my_machine.sh\n🌸✨`,
+        paragraphs: [
+          "Knowing what command SHOULD work isn't the same as successfully using it.",
+          "The benchmark verifies whether the environment ends in the expected state using automated tests.",
+          "Testing a mixture of: Coding + Tool Use + Reasoning + Execution."
+        ]
+      },
+      {
+        num: "4",
+        title: "4. SciCode",
+        subtitle: "Can AI write code for scientific problems?",
+        desc: "SciCode asks: Can you use programming to solve actual scientific problems?",
+        subproblems: "Contains 288 test subproblems derived from research problems spanning 16 scientific disciplines.",
+        flow: ["Scientific Context", "Python Implementation", "Code Execution", "Unit Tests"],
+        formula: "Beautiful explanation + Broken Python = ❌",
+        paragraphs: [
+          "The benchmark doesn't care that the model sounded like it understood the science. The implementation needs to work.",
+          "Testing the intersection between Scientific understanding and Programming ability."
+        ]
+      },
+      {
+        num: "5",
+        title: "5. Humanity's Last Exam",
+        subtitle: "The name is dramatic. The questions are worse.",
+        desc: "Humanity's Last Exam (HLE) was designed because older academic benchmarks were becoming too easy for frontier models.",
+        fields: ["Mathematics", "Physics", "Biology", "Computer Science", "Engineering", "Humanities", "Social Sciences"],
+        paragraphs: [
+          "Experts contributed extremely challenging questions requiring specialized, expert-level knowledge and reasoning.",
+          "This avoids benchmark saturation where models all score 98-99%.",
+          "Testing how well frontier AI handles extremely difficult expert-level reasoning."
+        ]
+      },
+      {
+        num: "6",
+        title: "6. GPQA Diamond",
+        subtitle: "Questions where even very smart humans struggle",
+        desc: "GPQA stands for Graduate-Level Google-Proof Q&A.",
+        fields: ["Biology", "Physics", "Chemistry"],
+        details: "GPQA Diamond is the particularly difficult subset of 198 questions designed to require deep domain knowledge and reasoning that cannot be solved by a quick Google search.",
+        insight: "Domain experts performed substantially better than skilled non-experts with internet access. Finding information isn't enough; you need knowledge to understand it."
+      },
+      {
+        num: "7",
+        title: "7. CritPt",
+        subtitle: "Welcome to research-level physics",
+        desc: "CritPt focuses on research-level physics reasoning with 198 challenging problems.",
+        outputs: ["Python functions", "Symbolic mathematical expressions", "Numerical answers"],
+        flow: ["Question", "Mathematical reasoning", "Equation", "Computation", "Precise numerical result"],
+        paragraphs: ["Testing whether the model can reason through difficult physics problems to precise mathematical results."]
+      },
+      {
+        num: "8",
+        title: "8. AA-Omniscience",
+        subtitle: "Does the AI know what it knows?",
+        desc: "AA-Omniscience evaluates both knowledge and hallucination behavior.",
+        quote: "\"Who won the Nobel Prize in Computer Science in 2025?\" (There is no Nobel Prize in CS!).",
+        metrics: ["Accuracy", "Non-Hallucination Rate"],
+        comparison: "Model A (70/90 correct, invents answers when unsure) vs Model B (70/75 correct, expresses uncertainty when unsure). Model B is much more reliable.",
+        outro: "🌷 Does the model know when it doesn't know?"
+      },
+      {
+        num: "9",
+        title: "9. AA-LCR",
+        subtitle: "Can the AI actually understand a huge context?",
+        desc: "LCR stands for Long Context Reasoning across 10K–100K token documents.",
+        flow: ["Find", "Connect", "Reason", "Synthesize", "Answer"],
+        paragraphs: ["Receiving 100,000 tokens isn't the same as reasoning correctly across them. Large context window ≠ perfect long-context reasoning."]
+      }
+    ],
+    tableSection: {
+      heading: "🌸 Now Look at the Whole Exam",
+      intro: "This is where everything starts making sense. These benchmarks weren't randomly thrown together; they measure different dimensions.",
+      tableHeaders: ["Benchmark", "Basically asks..."],
+      rows: [
+        { name: "GDPval-AA v2", ask: "Can you do professional work?" },
+        { name: "τ³-Banking", ask: "Can you follow policies and correctly use tools?" },
+        { name: "Terminal-Bench v2.1", ask: "Can you actually work in a terminal?" },
+        { name: "SciCode", ask: "Can you code scientific solutions that work?" },
+        { name: "Humanity's Last Exam", ask: "Can you solve extremely difficult expert questions?" },
+        { name: "GPQA Diamond", ask: "Can you reason through graduate-level science?" },
+        { name: "CritPt", ask: "Can you solve research-level physics problems?" },
+        { name: "AA-Omniscience", ask: "Do you know things without making things up?" },
+        { name: "AA-LCR", ask: "Can you reason across huge amounts of context?" }
+      ],
+      outro: "An AI Intelligence Score isn't a single IQ number. It's a composite of Professional Work + Tool Use + Coding + Scientific Reasoning + Knowledge + Reliability + Long-Context Reasoning. 🌷"
+    },
+    plotTwist: {
+      heading: "🎀 Plot Twist: The Exam Already Changed",
+      intro: "The benchmark list above belonged to Artificial Analysis Intelligence Index v4.1.1. AI moves ridiculously fast. By September 2026, indices had already updated.",
+      changes: [
+        "Terminal-Bench 2.1 was replaced by Terminal-Bench 4.0.",
+        "τ³-Banking was replaced by AutomationBench-AA.",
+        "GPQA Diamond was removed from the index.",
+        "New evaluations like AA-Briefcase and GDP.pdf were introduced."
+      ],
+      saturationTitle: "Benchmark Saturation",
+      saturationDesc: "As models improve and score 98-99%, benchmarks lose their ability to distinguish top performers. Researchers constantly create harder tasks, private test sets, and new realistic environments. The exam has to evolve because the students keep getting better. 🌸"
+    },
+    whichMatters: {
+      heading: "💗 So Which Benchmark Is the Most Important?",
+      intro: "There isn't one! And that's probably the biggest lesson here.",
+      scenarios: [
+        { need: "Software Development", focus: "Terminal-Bench + Coding evaluations" },
+        { need: "Document Analysis", focus: "Long-Context Reasoning (LCR)" },
+        { need: "Customer Support Automation", focus: "Tool use + Instruction following + Non-hallucination" },
+        { need: "Scientific Research", focus: "SciCode + Scientific reasoning benchmarks" }
+      ],
+      betterQuestion: "The question shouldn't simply be: \"Which AI has the highest score?\" A much better question is: \"Which evaluation measures the capability I actually need?\""
+    },
+    finalThoughts: {
+      heading: "🌷 Final Thoughts",
+      paragraphs: [
+        "Before learning about benchmarks, AI leaderboards look like: 53, 51, 47, 42. And we think 53 is smarter.",
+        "Now we can look underneath that number. One model is exceptional at coding, another is better at agentic workflows, another hallucinates less, another handles long documents better.",
+        "So the next time you see AI Model — Intelligence Index: 53, don't stop at the number. Click the benchmarks. Look at the tasks. Look at how they're graded.",
+        "Because sometimes the most interesting part isn't who passed the exam. It's understanding what was on the exam in the first place. 🌸"
+      ]
+    },
+    closing: "Next time you see a score, remember: look at the exam, not just the grade.",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill"
+  },
+  es: {
+    title: "¿Cómo se le hace un examen a una IA? 🌸 — Por dentro de los Benchmarks que Prueban los Modelos de IA",
+    subtitle: "GDPval-AA, τ³-Banking, Terminal-Bench, SciCode, Humanity's Last Exam... Los benchmarks tienen nombres extraños, pero ¿qué prueban realmente? Abramos el examen.",
+    date: "12 de Octubre, 2026",
+    back: "Volver al Inicio",
+    tags: ["Inteligencia Artificial", "Benchmarks de IA", "LLM", "Ingeniería de IA", "Machine Learning"],
+    intro: "En otro artículo hablé sobre los benchmarks de IA y cómo esas hermosas tablas llenas de números nos ayudan a comparar modelos.",
+    introDesc: "Y luego me di cuenta de algo.",
+    introExtra: [
+      "Había mencionado casualmente nombres como GDPval-AA v2, τ³-Banking, Terminal-Bench v2.1, SciCode, Humanity's Last Exam, GPQA Diamond, CritPt, AA-Omniscience, AA-LCR... como si esos nombres explicaran absolutamente algo. 🎀",
+      "No lo hacen.",
+      "Así que esta vez, en lugar de mirar el puntaje final, quiero abrir el examen.",
+      "¿Qué se le pide realmente a la IA que haga?",
+      "Porque decir: \"El Modelo A obtuvo un puntaje más alto que el Modelo B\" no es tan interesante como entender en qué fueron probados."
+    ],
+    whatIsBenchmark: {
+      heading: "🌷 Primero: ¿Qué es un Benchmark?",
+      paragraphs: [
+        "Un benchmark es básicamente una evaluación estandarizada.",
+        "Le damos a diferentes modelos de IA los mismos problemas y medimos qué tan exitosamente los resuelven.",
+        "Muy simplificado: Entrada → Modelo de IA → Tarea → Evaluación → Puntaje.",
+        "Pero hay un problema: La inteligencia no es una sola habilidad.",
+        "Un modelo puede ser excelente programando pero débil en razonamiento científico. Otro puede conocer una cantidad enorme de información pero alucinar con frecuencia. Otro puede resolver preguntas académicas difíciles pero luchar para completar un flujo de trabajo dentro de un software.",
+        "Así que en lugar de preguntar: \"¿Qué tan inteligente es esta IA?\", los benchmarks nos permiten hacer preguntas más pequeñas y útiles:"
+      ],
+      questions: [
+        "¿Puede programar?",
+        "¿Puede razonar?",
+        "¿Puede usar herramientas?",
+        "¿Puede seguir instrucciones?",
+        "¿Puede trabajar con documentos enormes?",
+        "¿Puede completar trabajo profesional?",
+        "¿Sabe cuándo no sabe algo?"
+      ],
+      outro: "Es por eso que un índice de inteligencia de IA combina múltiples benchmarks. Piensa en ello como un expediente universitario. No recibes un único examen misterioso llamado INTELIGENCIA — 100 puntos 🌸. Tomas diferentes materias (Programación, Ciencia, Matemáticas, Investigación) y tu rendimiento general cuenta una historia mucho más rica."
+    },
+    benchmarks: [
+      {
+        num: "1",
+        title: "1. GDPval-AA v2",
+        subtitle: "¿Realmente puede la IA realizar trabajo profesional?",
+        desc: "GDPval-AA v2 evalúa modelos usando tareas profesionales basadas en el dataset GDPval de OpenAI.",
+        intro: "En lugar de preguntar \"¿Cuál es la capital de Francia?\", el modelo debe producir un entregable de trabajo real en 44 ocupaciones a través de 9 industrias principales.",
+        deliverablesIntro: "Los modelos pueden necesitar crear cosas como:",
+        deliverables: ["Documentos", "Hojas de cálculo", "Presentaciones", "Diagramas", "Análisis profesionales"],
+        agenticFlow: ["Web", "Terminal", "Archivos", "Razonamiento", "Entregable final"],
+        paragraphs: [
+          "La evaluación de Artificial Analysis utiliza 220 tareas en un entorno agéntico.",
+          "De repente estamos probando algo mucho más cercano a: \"¿Puede esta IA completar un trabajo?\" en lugar de \"¿Sabe esta IA la respuesta?\""
+        ],
+        gradingHeading: "🌸 ¿Cómo se califica?",
+        grading: "GDPval-AA v2 utiliza comparaciones anonimizadas entre entregables que contribuyen a una clasificación Elo. El rendimiento de un experto humano se fija en 1000 Elo.",
+        testingNotice: "Lo que realmente prueba: Utilidad profesional en el mundo real."
+      },
+      {
+        num: "2",
+        title: "2. τ³-Banking",
+        subtitle: "¿Puede la IA seguir reglas complicadas Y tomar la acción correcta?",
+        desc: "Sí, ese símbolo es la letra griega tau. τ³-Banking simula soporte al cliente fintech.",
+        quote: "\"Hay una transacción que no reconozco y necesito disputarla.\"",
+        paragraphs: [
+          "¿Fácil? Para nada. El agente necesita saber qué política se aplica, si el cliente califica, qué información se requiere, qué cuenta está involucrada y qué herramientas llamar en qué orden.",
+          "La base de conocimientos contiene aproximadamente 700 documentos de políticas interconectados (~195,000 tokens) en 21 categorías de productos."
+        ],
+        workflow: ["Solicitud del cliente", "Buscar política", "Entender política", "Razonar situación", "Usar herramientas", "Modificar sistema correctamente"],
+        backendNotice: "🎀 Ser amable no te da el punto. El benchmark evalúa el estado del backend. Respuesta perfectamente escrita + acción incorrecta en el sistema = ❌."
+      },
+      {
+        num: "3",
+        title: "3. Terminal-Bench v2.1",
+        subtitle: "Pon a la IA en una terminal y mira qué pasa",
+        desc: "Terminal-Bench evalúa si un agente de IA puede completar tareas dentro de un entorno de terminal real.",
+        tasksInfo: "La versión 2.1 contiene 89 tareas curadas en Ingeniería de software, Administración de sistemas, Procesamiento de datos, Entrenamiento de modelos y Seguridad.",
+        flow: ["Tarea", "Terminal", "Comandos", "Archivos / Procesos", "Resultado funcional"],
+        codeSnippet: `works_on_my_machine.sh\n🌸✨`,
+        paragraphs: [
+          "Saber qué comando DEBERÍA funcionar no es lo mismo que usarlo con éxito.",
+          "El benchmark verifica si el entorno termina en el estado esperado mediante pruebas automatizadas.",
+          "Prueba una mezcla de: Código + Uso de herramientas + Razonamiento + Ejecución."
+        ]
+      },
+      {
+        num: "4",
+        title: "4. SciCode",
+        subtitle: "¿Puede la IA escribir código para problemas científicos?",
+        desc: "SciCode pregunta: ¿Puedes usar programación para resolver problemas científicos reales?",
+        subproblems: "Contiene 288 subtareas derivadas de problemas de investigación en 16 disciplinas científicas.",
+        flow: ["Contexto Científico", "Implementación en Python", "Ejecución de Código", "Pruebas Unitarias"],
+        formula: "Explicación hermosa + Python roto = ❌",
+        paragraphs: [
+          "Al benchmark no le importa si el modelo sonaba como si entendiera la ciencia. La implementación necesita funcionar.",
+          "Prueba la intersección entre Comprensión científica y Habilidad de programación."
+        ]
+      },
+      {
+        num: "5",
+        title: "5. Humanity's Last Exam",
+        subtitle: "El nombre es dramático. Las preguntas son peores.",
+        desc: "Humanity's Last Exam (HLE) se diseñó porque los benchmarks académicos antiguos se estaban volviendo demasiado fáciles.",
+        fields: ["Matemáticas", "Física", "Biología", "Ciencias de la Computación", "Ingeniería", "Humanidades", "Ciencias Sociales"],
+        paragraphs: [
+          "Expertos contribuyeron con preguntas extremadamente desafiantes que requieren conocimiento y razonamiento especializado de nivel experto.",
+          "Esto evita la saturación del benchmark donde todos los modelos obtienen 98-99%.",
+          "Evalúa qué tan bien la IA de frontera maneja el razonamiento experto extremadamente difícil."
+        ]
+      },
+      {
+        num: "6",
+        title: "6. GPQA Diamond",
+        subtitle: "Preguntas donde incluso humanos muy inteligentes luchan",
+        desc: "GPQA significa Graduate-Level Google-Proof Q&A.",
+        fields: ["Biología", "Física", "Química"],
+        details: "GPQA Diamond es el subconjunto particularmente difícil de 198 preguntas diseñadas para requerir un profundo conocimiento del dominio y razonamiento que no se resuelve buscando en Google.",
+        insight: "Los expertos del dominio se desempeñaron sustancialmente mejor que los no expertos calificados con acceso a internet. Encontrar información no es suficiente; necesitas conocimiento para entenderla."
+      },
+      {
+        num: "7",
+        title: "7. CritPt",
+        subtitle: "Bienvenido a la física de nivel de investigación",
+        desc: "CritPt se centra en el razonamiento en física a nivel de investigación con 198 problemas complejos.",
+        outputs: ["Funciones de Python", "Expresiones matemáticas simbólicas", "Respuestas numéricas"],
+        flow: ["Pregunta", "Razonamiento matemático", "Ecuación", "Cómputo", "Resultado numérico preciso"],
+        paragraphs: ["Evalúa si el modelo puede navegar el proceso de razonamiento físico hasta resultados matemáticos precisos."]
+      },
+      {
+        num: "8",
+        title: "8. AA-Omniscience",
+        subtitle: "¿Sabe la IA lo que sabe?",
+        desc: "AA-Omniscience evalúa tanto el conocimiento como el comportamiento de alucinación.",
+        quote: "\"¿Quién ganó el Premio Nobel de Computación en 2025?\" (¡No existe tal Premio Nobel!).",
+        metrics: ["Precisión", "Tasa de No-Alucinación"],
+        comparison: "Modelo A (70/90 correctas, inventa respuestas cuando no sabe) vs Modelo B (70/75 correctas, expresa incertidumbre cuando no sabe). El Modelo B es mucho más confiable.",
+        outro: "🌷 ¿Sabe el modelo cuándo no sabe?"
+      },
+      {
+        num: "9",
+        title: "9. AA-LCR",
+        subtitle: "¿Realmente puede la IA entender un contexto enorme?",
+        desc: "LCR significa Long Context Reasoning (Razonamiento en Contexto Largo) en documentos de 10K a 100K tokens.",
+        flow: ["Buscar", "Conectar", "Razonar", "Sintetizar", "Responder"],
+        paragraphs: ["Recibir 100,000 tokens no es lo mismo que razonar correctamente sobre ellos. Ventana de contexto grande ≠ razonamiento perfecto en contexto largo."]
+      }
+    ],
+    tableSection: {
+      heading: "🌸 Ahora Mira Todo el Examen",
+      intro: "Aquí es donde todo empieza a tener sentido. Estos benchmarks no se eligieron al azar; miden diferentes dimensiones.",
+      tableHeaders: ["Benchmark", "Básicamente pregunta..."],
+      rows: [
+        { name: "GDPval-AA v2", ask: "¿Puedes hacer trabajo profesional?" },
+        { name: "τ³-Banking", ask: "¿Puedes seguir políticas y usar herramientas correctamente?" },
+        { name: "Terminal-Bench v2.1", ask: "¿Puedes trabajar realmente en una terminal?" },
+        { name: "SciCode", ask: "¿Puedes codificar soluciones científicas que funcionen?" },
+        { name: "Humanity's Last Exam", ask: "¿Puedes resolver preguntas de expertos extremadamente difíciles?" },
+        { name: "GPQA Diamond", ask: "¿Puedes razonar en ciencia de nivel de posgrado?" },
+        { name: "CritPt", ask: "¿Puedes resolver problemas de física de nivel de investigación?" },
+        { name: "AA-Omniscience", ask: "¿Sabes cosas sin inventar respuestas?" },
+        { name: "AA-LCR", ask: "¿Puedes razonar a través de enormes cantidades de contexto?" }
+      ],
+      outro: "Un Puntaje de Inteligencia de IA no es un solo número de CI. Es una composición de Trabajo Profesional + Uso de Herramientas + Código + Razonamiento Científico + Conocimiento + Confiabilidad + Contexto Largo. 🌷"
+    },
+    plotTwist: {
+      heading: "🎀 Giro Inesperado: El Examen Ya Cambió",
+      intro: "La lista de benchmarks anterior pertenecía al Índice de Inteligencia v4.1.1 de Artificial Analysis. La IA avanza ridículamente rápido. Para septiembre de 2026, los índices ya se habían actualizado.",
+      changes: [
+        "Terminal-Bench 2.1 fue reemplazado por Terminal-Bench 4.0.",
+        "τ³-Banking fue reemplazado por AutomationBench-AA.",
+        "GPQA Diamond fue retirado del índice.",
+        "Nuevas evaluaciones como AA-Briefcase y GDP.pdf fueron introducidas."
+      ],
+      saturationTitle: "Saturación del Benchmark",
+      saturationDesc: "A medida que los modelos mejoran y obtienen 98-99%, los benchmarks pierden la capacidad de distinguir a los mejores. Los investigadores crean tareas más difíciles, pruebas privadas y nuevos entornos realistas. El examen evoluciona porque los estudiantes son cada vez mejores. 🌸"
+    },
+    whichMatters: {
+      heading: "💗 Entonces, ¿Cuál Benchmark es el Más Importante?",
+      intro: "¡No hay uno solo! Y esa es probablemente la lección más grande aquí.",
+      scenarios: [
+        { need: "Desarrollo de Software", focus: "Terminal-Bench + evaluaciones de código" },
+        { need: "Análisis de Documentos", focus: "Long-Context Reasoning (LCR)" },
+        { need: "Automatización de Soporte", focus: "Uso de herramientas + Seguimiento de instrucciones + No-alucinación" },
+        { need: "Investigación Científica", focus: "SciCode + benchmarks de razonamiento científico" }
+      ],
+      betterQuestion: "La pregunta no debería ser simplemente: \"¿Qué IA tiene el puntaje más alto?\" Una pregunta mucho mejor es: \"¿Qué evaluación mide la capacidad que realmente necesito?\""
+    },
+    finalThoughts: {
+      heading: "🌷 Reflexiones Finales",
+      paragraphs: [
+        "Antes de conocer los benchmarks, las clasificaciones parecen: 53, 51, 47, 42. Y pensamos que 53 es más inteligente.",
+        "Ahora podemos mirar debajo de ese número. Un modelo es excepcional en código, otro en flujos agénticos, otro alucina menos, otro maneja mejor documentos largos.",
+        "La próxima vez que veas Modelo de IA — Índice de Inteligencia: 53, no te detengas en el número. Haz clic en los benchmarks. Mira las tareas. Mira cómo se califican.",
+        "Porque a veces la parte más interesante no es quién aprobó el examen. Es entender qué había en el examen en primer lugar. 🌸"
+      ]
+    },
+    closing: "La próxima vez que veas un puntaje, recuerda: mira el examen, no solo la nota.",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Como Dar uma Prova a uma IA? 🌸 — Por Dentro dos Benchmarks que Testam os Modelos de IA",
+    subtitle: "GDPval-AA, τ³-Banking, Terminal-Bench, SciCode, Humanity's Last Exam... Os benchmarks têm nomes estranhos, mas o que realmente testam? Vamos abrir a prova.",
+    date: "12 de Outubro, 2026",
+    back: "Voltar ao Início",
+    tags: ["Inteligência Artificial", "Benchmarks de IA", "LLM", "Engenharia de IA", "Machine Learning"],
+    intro: "Em outro artigo, falei sobre benchmarks de IA e como aquelas belas tabelas cheias de números nos ajudam a comparar modelos.",
+    introDesc: "E então percebi uma coisa.",
+    introExtra: [
+      "Eu havia mencionado casualmente nomes como GDPval-AA v2, τ³-Banking, Terminal-Bench v2.1, SciCode, Humanity's Last Exam, GPQA Diamond, CritPt, AA-Omniscience, AA-LCR... como se esses nomes explicassem absolutamente tudo. 🎀",
+      "Eles não explicam.",
+      "Então, desta vez, em vez de olhar apenas para a pontuação final, quero abrir a prova.",
+      "O que a IA realmente está sendo solicitada a fazer?",
+      "Porque dizer: \"O Modelo A obteve uma pontuação maior que o Modelo B\" não é tão interessante quanto entender no que eles foram testados."
+    ],
+    whatIsBenchmark: {
+      heading: "🌷 Primeiro: O que é um Benchmark?",
+      paragraphs: [
+        "Um benchmark é basicamente uma avaliação padronizada.",
+        "Damos aos diferentes modelos de IA os mesmos problemas e medimos o quão bem eles os resolvem.",
+        "Muito simplificado: Entrada → Modelo de IA → Tarefa → Avaliação → Pontuação.",
+        "Mas há um problema: A inteligência não é uma única habilidade.",
+        "Um modelo pode ser excelente em programação, mas fraco em raciocínio científico. Outro pode saber uma quantidade enorme de informações, mas alucinar com frequência. Outro pode resolver questões acadêmicas difíceis, mas ter dificuldade para concluir um fluxo de trabalho dentro de um software.",
+        "Então, em vez de perguntar: \"Quão inteligente é esta IA?\", os benchmarks nos permitem fazer perguntas menores e mais úteis:"
+      ],
+      questions: [
+        "Pode programar?",
+        "Pode raciocinar?",
+        "Pode usar ferramentas?",
+        "Pode seguir instruções?",
+        "Pode trabalhar com documentos enormes?",
+        "Pode concluir trabalho profissional?",
+        "Sabe quando não sabe algo?"
+      ],
+      outro: "É por isso que um índice de inteligência de IA combina múltiplos benchmarks. Pense nisso como um histórico universitário. Você não recebe um único exame misterioso chamado INTELIGÊNCIA — 100 pontos 🌸. Você cursa matérias diferentes (Programação, Ciência, Matemática, Pesquisa) e seu desempenho geral conta uma história muito mais rica."
+    },
+    benchmarks: [
+      {
+        num: "1",
+        title: "1. GDPval-AA v2",
+        subtitle: "A IA realmente consegue fazer trabalho profissional?",
+        desc: "O GDPval-AA v2 avalia modelos usando tarefas profissionais baseadas no conjunto de dados GDPval da OpenAI.",
+        intro: "Em vez de perguntar \"Qual é a capital da França?\", o modelo precisa produzir um entregável de trabalho real em 44 ocupações em 9 setores principais.",
+        deliverablesIntro: "Os modelos podem precisar criar coisas como:",
+        deliverables: ["Documentos", "Planilhas", "Apresentações", "Diagramas", "Análises profissionais"],
+        agenticFlow: ["Web", "Terminal", "Arquivos", "Raciocínio", "Entregável final"],
+        paragraphs: [
+          "A avaliação da Artificial Analysis utiliza 220 tarefas em um ambiente agêntico.",
+          "De repente estamos testando algo muito mais próximo de: \"Esta IA realmente consegue concluir o trabalho?\" em vez de \"Esta IA sabe a resposta?\""
+        ],
+        gradingHeading: "🌸 Como é avaliado?",
+        grading: "O GDPval-AA v2 usa comparações anonimizadas entre entregáveis que contribuem para uma classificação Elo. O desempenho de um especialista humano é fixado em 1000 Elo.",
+        testingNotice: "O que está realmente testando: Utilidade profissional no mundo real."
+      },
+      {
+        num: "2",
+        title: "2. τ³-Banking",
+        subtitle: "A IA consegue seguir regras complicadas E tomar a ação correta?",
+        desc: "Sim, esse símbolo é a letra grega tau. O τ³-Banking simula atendimento ao cliente fintech.",
+        quote: "\"Há uma transação que não reconheço e preciso contestá-la.\"",
+        paragraphs: [
+          "Fácil? De forma alguma. O agente precisa saber qual política se aplica, se o cliente se qualifica, quais informações são necessárias, qual conta está envolvida e quais ferramentas chamar em qual ordem.",
+          "A base de conhecimento contém cerca de 700 documentos de políticas interconectados (~195.000 tokens) em 21 categorias de produtos."
+        ],
+        workflow: ["Solicitação do cliente", "Buscar política", "Entender política", "Raciocinar sobre situação", "Usar ferramentas", "Modificar sistema corretamente"],
+        backendNotice: "🎀 Ser educado não garante o ponto. O benchmark avalia o estado do backend. Resposta perfeitamente escrita + ação incorreta no sistema = ❌."
+      },
+      {
+        num: "3",
+        title: "3. Terminal-Bench v2.1",
+        subtitle: "Coloque a IA em um terminal e veja o que acontece",
+        desc: "O Terminal-Bench avalia se um agente de IA consegue concluir tarefas dentro de um ambiente de terminal real.",
+        tasksInfo: "A versão 2.1 contém 89 tarefas selecionadas em Engenharia de software, Administração de sistemas, Processamento de dados, Treinamento de modelos e Segurança.",
+        flow: ["Tarefa", "Terminal", "Comandos", "Arquivos / Processos", "Resultado funcional"],
+        codeSnippet: `works_on_my_machine.sh\n🌸✨`,
+        paragraphs: [
+          "Saber qual comando DEVERIA funcionar não é o mesmo que usá-lo com sucesso.",
+          "O benchmark verifica se o ambiente termina no estado esperado por meio de testes automatizados.",
+          "Testando uma mistura de: Programação + Uso de ferramentas + Raciocínio + Execução."
+        ]
+      },
+      {
+        num: "4",
+        title: "4. SciCode",
+        subtitle: "A IA consegue escrever código para problemas científicos?",
+        desc: "O SciCode pergunta: Você consegue usar programação para resolver problemas científicos reais?",
+        subproblems: "Contém 288 subtarefas derivadas de problemas de pesquisa em 16 disciplinas científicas.",
+        flow: ["Contexto Científico", "Implementação em Python", "Execução de Código", "Testes Unitários"],
+        formula: "Explicação bonita + Python quebrado = ❌",
+        paragraphs: [
+          "O benchmark não se importa se o modelo parecia entender a ciência. A implementação precisa funcionar.",
+          "Testando a interseção entre Compreensão científica e Habilidade de programação."
+        ]
+      },
+      {
+        num: "5",
+        title: "5. Humanity's Last Exam",
+        subtitle: "O nome é dramático. As perguntas são piores.",
+        desc: "O Humanity's Last Exam (HLE) foi projetado porque benchmarks acadêmicos antigos estavam se tornando muito fáceis.",
+        fields: ["Matemática", "Física", "Biologia", "Ciência da Computação", "Engenharia", "Humanidades", "Ciências Sociais"],
+        paragraphs: [
+          "Especialistas contribuíram com perguntas extremamente desafiadoras que exigem conhecimento e raciocínio de nível especialista.",
+          "Isso evita a saturação do benchmark onde todos os modelos pontuam 98-99%.",
+          "Avalia o quão bem a IA de ponta lida com raciocínio de nível especialista extremamente difícil."
+        ]
+      },
+      {
+        num: "6",
+        title: "6. GPQA Diamond",
+        subtitle: "Perguntas onde até humanos muito inteligentes têm dificuldade",
+        desc: "GPQA significa Graduate-Level Google-Proof Q&A.",
+        fields: ["Biologia", "Física", "Química"],
+        details: "O GPQA Diamond é o subconjunto particularmente difícil de 198 perguntas projetadas para exigir conhecimento profundo do domínio e raciocínio que não pode ser resolvido pesquisando no Google.",
+        insight: "Especialistas do domínio se saíram substancialmente melhor do que não-especialistas qualificados com acesso à internet. Encontrar informações não é suficiente; você precisa de conhecimento para entendê-las."
+      },
+      {
+        num: "7",
+        title: "7. CritPt",
+        subtitle: "Bem-vindo à física em nível de pesquisa",
+        desc: "O CritPt se concentra no raciocínio em física em nível de pesquisa com 198 problemas complexos.",
+        outputs: ["Funções em Python", "Expressões matemáticas simbólicas", "Respostas numéricas"],
+        flow: ["Pergunta", "Raciocínio matemático", "Equação", "Cálculo", "Resultado numérico preciso"],
+        paragraphs: ["Avalia se o modelo consegue navegar pelo processo de raciocínio físico até resultados matemáticos precisos."]
+      },
+      {
+        num: "8",
+        title: "8. AA-Omniscience",
+        subtitle: "A IA sabe o que sabe?",
+        desc: "O AA-Omniscience avalia tanto o conhecimento quanto o comportamento de alucinação.",
+        quote: "\"Quem ganhou o Prêmio Nobel de Computação em 2025?\" (Não existe esse Prêmio Nobel!).",
+        metrics: ["Precisão", "Taxa de Não-Alucinação"],
+        comparison: "Modelo A (70/90 corretas, inventa respostas quando não sabe) vs Modelo B (70/75 corretas, expressa incerteza quando não sabe). O Modelo B é muito mais confiável.",
+        outro: "🌷 O modelo sabe quando não sabe?"
+      },
+      {
+        num: "9",
+        title: "9. AA-LCR",
+        subtitle: "A IA consegue realmente entender um contexto enorme?",
+        desc: "LCR significa Long Context Reasoning (Raciocínio em Contexto Longo) em documentos de 10K a 100K tokens.",
+        flow: ["Buscar", "Conectar", "Raciocinar", "Sintetizar", "Responder"],
+        paragraphs: ["Receber 100.000 tokens não é o mesmo que raciocinar corretamente sobre eles. Janela de contexto grande ≠ raciocínio perfeito em contexto longo."]
+      }
+    ],
+    tableSection: {
+      heading: "🌸 Agora Olhe para a Prova Inteira",
+      intro: "É aqui que tudo começa a fazer sentido. Esses benchmarks não foram escolhidos ao acaso; eles medem dimensões diferentes.",
+      tableHeaders: ["Benchmark", "Basicamente pergunta..."],
+      rows: [
+        { name: "GDPval-AA v2", ask: "Você consegue fazer trabalho profissional?" },
+        { name: "τ³-Banking", ask: "Você consegue seguir políticas e usar ferramentas corretamente?" },
+        { name: "Terminal-Bench v2.1", ask: "Você consegue realmente trabalhar em um terminal?" },
+        { name: "SciCode", ask: "Você consegue programar soluções científicas que funcionam?" },
+        { name: "Humanity's Last Exam", ask: "Você consegue resolver perguntas de especialistas extremamente difíceis?" },
+        { name: "GPQA Diamond", ask: "Você consegue raciocinar em ciência de nível de pós-graduação?" },
+        { name: "CritPt", ask: "Você consegue resolver problemas de física em nível de pesquisa?" },
+        { name: "AA-Omniscience", ask: "Você sabe as coisas sem inventar respostas?" },
+        { name: "AA-LCR", ask: "Você consegue raciocinar através de enormes quantidades de contexto?" }
+      ],
+      outro: "Uma Pontuação de Inteligência de IA não é um único número de QI. É uma composição de Trabalho Profissional + Uso de Ferramentas + Código + Raciocínio Científico + Conhecimento + Confiabilidade + Contexto Longo. 🌷"
+    },
+    plotTwist: {
+      heading: "🎀 Reviravolta: A Prova Já Mudou",
+      intro: "A lista de benchmarks acima pertencia ao Índice de Inteligência v4.1.1 da Artificial Analysis. A IA avança ridiculamente rápido. Em setembro de 2026, os índices já haviam mudado.",
+      changes: [
+        "O Terminal-Bench 2.1 foi substituído pelo Terminal-Bench 4.0.",
+        "O τ³-Banking foi substituído pelo AutomationBench-AA.",
+        "O GPQA Diamond foi removido do índice.",
+        "Novas avaliações como AA-Briefcase e GDP.pdf foram introduzidas."
+      ],
+      saturationTitle: "Saturação do Benchmark",
+      saturationDesc: "Conforme os modelos melhoram e pontuam 98-99%, os benchmarks perdem a capacidade de distinguir os melhores. Os pesquisadores criam tarefas mais difíceis, testes privados e novos ambientes realistas. A prova precisa evoluir porque os alunos continuam ficando melhores. 🌸"
+    },
+    whichMatters: {
+      heading: "💗 Então, Qual Benchmark é o Mais Importante?",
+      intro: "Não existe um só! E essa é provavelmente a maior lição aqui.",
+      scenarios: [
+        { need: "Desenvolvimento de Software", focus: "Terminal-Bench + avaliações de código" },
+        { need: "Análise de Documentos", focus: "Long-Context Reasoning (LCR)" },
+        { need: "Automação de Suporte", focus: "Uso de ferramentas + Seguimento de instruções + Não-alucinação" },
+        { need: "Pesquisa Científica", focus: "SciCode + benchmarks de raciocínio científico" }
+      ],
+      betterQuestion: "A pergunta não deveria ser simplesmente: \"Qual IA tem a pontuação mais alta?\" Uma pergunta muito melhor é: \"Qual avaliação mede a capacidade que eu realmente preciso?\""
+    },
+    finalThoughts: {
+      heading: "🌷 Considerações Finais",
+      paragraphs: [
+        "Antes de conhecer os benchmarks, os rankings parecem: 53, 51, 47, 42. E pensamos que 53 é mais inteligente.",
+        "Agora podemos olhar por baixo desse número. Um modelo é excepcional em código, outro em fluxos agênticos, outro alucina menos, outro lida melhor com documentos longos.",
+        "Da próxima vez que vir Modelo de IA — Índice de Inteligência: 53, não pare no número. Clique nos benchmarks. Olhe para as tarefas. Veja como são avaliadas.",
+        "Porque às vezes a parte mais interessante não é quem passou na prova. É entender o que estava na prova em primeiro lugar. 🌸"
+      ]
+    },
+    closing: "Da próxima vez que vir uma pontuação, lembre-se: olhe para a prova, não apenas para a nota.",
+    closingSign: "Nos vemos na próxima entrada ✨",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.en;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="header-text-side">
+            <div class="post-meta">
+              <span class="post-category">🌷 {lang === 'en' ? 'AI Benchmarks' : lang === 'pt' ? 'Benchmarks de IA' : 'Benchmarks de IA'}</span>
+              <span class="post-dot">•</span>
+              <span class="post-date">{page.date}</span>
+            </div>
+            <h1 class="post-title">{page.title}</h1>
+            <p class="post-subtitle">{page.subtitle}</p>
+            
+            <div class="tags-row">
+              {page.tags.map((tag) => (
+                <span class="post-tag">#{tag}</span>
+              ))}
+            </div>
+          </div>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+          <p class="lead-desc">{page.intro}</p>
+          <p class="lead-sub">{page.introDesc}</p>
+
+          <div class="intro-extra-box">
+            {page.introExtra.map((line) => (
+              <p>{line}</p>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Section: What is a Benchmark? -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whatIsBenchmark.heading}</h2>
+            <div class="section-body">
+              {page.whatIsBenchmark.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+
+              <ul class="benchmark-questions-list">
+                {page.whatIsBenchmark.questions.map((q) => (
+                  <li class="bq-item">
+                    <span class="bq-icon">❓</span>
+                    <span>{q}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <p>{page.whatIsBenchmark.outro}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Benchmarks List -->
+          <div class="post-section">
+            <h2 class="section-heading">📑 The 9 Benchmarks Examined</h2>
+            <div class="benchmarks-stack">
+              {page.benchmarks.map((bm) => (
+                <div class="bm-card">
+                  <div class="bm-header">
+                    <h3 class="bm-title">{bm.title}</h3>
+                    <p class="bm-subtitle">{bm.subtitle}</p>
+                  </div>
+                  <p class="bm-desc">{bm.desc}</p>
+
+                  {bm.quote && (
+                    <div class="bm-quote">
+                      <span>💬</span>
+                      <p>{bm.quote}</p>
+                    </div>
+                  )}
+
+                  {bm.deliverables && (
+                    <div class="bm-deliverables-box">
+                      <p><strong>{bm.deliverablesIntro}</strong></p>
+                      <div class="tags-row">
+                        {bm.deliverables.map((d) => (
+                          <span class="pt-tag">{d}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {bm.agenticFlow && (
+                    <div class="cap-flow-row">
+                      {bm.agenticFlow.map((step, idx) => (
+                        <>
+                          <span class="flow-step">{step}</span>
+                          {idx < bm.agenticFlow.length - 1 && <span class="flow-sep">→</span>}
+                        </>
+                      ))}
+                    </div>
+                  )}
+
+                  {bm.workflow && (
+                    <div class="cap-flow-row">
+                      {bm.workflow.map((step, idx) => (
+                        <>
+                          <span class="flow-step">{step}</span>
+                          {idx < bm.workflow.length - 1 && <span class="flow-sep">→</span>}
+                        </>
+                      ))}
+                    </div>
+                  )}
+
+                  {bm.flow && (
+                    <div class="cap-flow-row">
+                      {bm.flow.map((step, idx) => (
+                        <>
+                          <span class="flow-step">{step}</span>
+                          {idx < bm.flow.length - 1 && <span class="flow-sep">→</span>}
+                        </>
+                      ))}
+                    </div>
+                  )}
+
+                  {bm.codeSnippet && (
+                    <div class="code-compare-box">
+                      <pre class="code-block"><code>{bm.codeSnippet}</code></pre>
+                    </div>
+                  )}
+
+                  {bm.paragraphs && bm.paragraphs.map((p) => (
+                    <p>{p}</p>
+                  ))}
+
+                  {bm.gradingHeading && (
+                    <div class="grading-box">
+                      <h4>{bm.gradingHeading}</h4>
+                      <p>{bm.grading}</p>
+                    </div>
+                  )}
+
+                  {bm.backendNotice && <p class="notice-text">{bm.backendNotice}</p>}
+                  {bm.testingNotice && <p class="notice-text">{bm.testingNotice}</p>}
+                  {bm.formula && <p class="formula-box">{bm.formula}</p>}
+                  {bm.fields && (
+                    <div class="fields-tags">
+                      {bm.fields.map((f) => (
+                        <span class="pt-tag">🎓 {f}</span>
+                      ))}
+                    </div>
+                  )}
+                  {bm.details && <p>{bm.details}</p>}
+                  {bm.insight && <p class="insight-box">{bm.insight}</p>}
+                  {bm.comparison && <p class="comp-notice">{bm.comparison}</p>}
+                  {bm.outro && <p class="bm-outro">{bm.outro}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Whole Exam Summary Table -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.tableSection.heading}</h2>
+            <div class="section-body">
+              <p>{page.tableSection.intro}</p>
+
+              <div class="table-container">
+                <table class="bm-table">
+                  <thead>
+                    <tr>
+                      {page.tableSection.tableHeaders.map((th) => (
+                        <th>{th}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {page.tableSection.rows.map((row) => (
+                      <tr>
+                        <td class="bm-name-cell">{row.name}</td>
+                        <td class="bm-ask-cell">{row.ask}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="table-outro">{page.tableSection.outro}</p>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Plot Twist: Exam Changed -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.plotTwist.heading}</h2>
+            <div class="section-body">
+              <p>{page.plotTwist.intro}</p>
+
+              <div class="changes-list">
+                {page.plotTwist.changes.map((ch) => (
+                  <div class="change-item">🔄 {ch}</div>
+                ))}
+              </div>
+
+              <div class="saturation-box">
+                <h4 class="sat-title">⚡ {page.plotTwist.saturationTitle}</h4>
+                <p>{page.plotTwist.saturationDesc}</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Which Benchmark Matters Most? -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whichMatters.heading}</h2>
+            <div class="section-body">
+              <p>{page.whichMatters.intro}</p>
+
+              <div class="scenarios-grid">
+                {page.whichMatters.scenarios.map((sc) => (
+                  <div class="scenario-card">
+                    <h4 class="sc-need">🎯 {sc.need}</h4>
+                    <p class="sc-focus">{sc.focus}</p>
+                  </div>
+                ))}
+              </div>
+
+              <blockquote class="quote-card">
+                <p>{page.whichMatters.betterQuestion}</p>
+              </blockquote>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Final Thoughts -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.finalThoughts.heading}</h2>
+            <div class="section-body">
+              {page.finalThoughts.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing Block -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+
+  .post-tag {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(255, 75, 145, 0.08);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    color: var(--rose);
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-desc {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .lead-sub {
+    font-size: 1.15rem;
+    color: var(--rose);
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-extra-box {
+    background: rgba(255, 255, 255, 0.015);
+    border-left: 3px solid var(--rose);
+    padding: 16px 20px;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 2rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  /* Benchmark Questions List */
+  .benchmark-questions-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .bq-item {
+    background: rgba(255, 75, 145, 0.04);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  /* Benchmarks Stack */
+  .benchmarks-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .bm-card {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 20px;
+    padding: 24px 28px;
+  }
+
+  .bm-header {
+    margin-bottom: 12px;
+  }
+
+  .bm-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--rose);
+    margin-bottom: 4px;
+  }
+
+  .bm-subtitle {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .bm-desc {
+    margin-bottom: 12px !important;
+  }
+
+  .bm-quote {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255, 75, 145, 0.06);
+    border-left: 3px solid var(--rose);
+    padding: 12px 16px;
+    border-radius: 0 12px 12px 0;
+    margin: 12px 0;
+    font-style: italic;
+  }
+
+  .cap-flow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    font-weight: 600;
+  }
+
+  .flow-step {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .flow-sep {
+    color: var(--rose);
+  }
+
+  .code-compare-box {
+    margin: 1.2rem 0;
+    background: #0d0d15;
+    border-radius: 14px;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 75, 145, 0.2);
+  }
+
+  .code-block {
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    color: #ff99cc;
+  }
+
+  .grading-box {
+    background: rgba(100, 150, 255, 0.06);
+    border: 1px solid rgba(100, 150, 255, 0.2);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 12px 0;
+  }
+
+  .grading-box h4 {
+    color: #88bbff;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .notice-text {
+    font-weight: 600;
+    color: var(--rose);
+    margin-top: 10px !important;
+  }
+
+  .formula-box {
+    background: rgba(255, 50, 50, 0.08);
+    border: 1px solid rgba(255, 50, 50, 0.2);
+    color: #ff8888;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  .fields-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .pt-tag {
+    background: rgba(255, 75, 145, 0.1);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .insight-box {
+    background: rgba(255, 200, 100, 0.08);
+    border-left: 3px solid #ffcc66;
+    padding: 10px 14px;
+    border-radius: 0 10px 10px 0;
+    margin: 10px 0;
+  }
+
+  .comp-notice {
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* Table Styling */
+  .table-container {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 75, 145, 0.2);
+  }
+
+  .bm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .bm-table th {
+    background: rgba(255, 75, 145, 0.12);
+    color: var(--rose);
+    padding: 14px 18px;
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .bm-table td {
+    padding: 12px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .bm-name-cell {
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .bm-ask-cell {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .table-outro {
+    font-weight: 600;
+    color: var(--rose);
+    margin-top: 1rem;
+  }
+
+  /* Changes & Saturation */
+  .changes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 1.2rem 0;
+  }
+
+  .change-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+
+  .saturation-box {
+    background: rgba(255, 75, 145, 0.06);
+    border: 1px solid rgba(255, 75, 145, 0.25);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 1.5rem;
+  }
+
+  .sat-title {
+    font-family: var(--font-display);
+    color: var(--rose);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  /* Scenarios Grid */
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .scenario-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .sc-need {
+    font-family: var(--font-display);
+    color: var(--rose);
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .sc-focus {
+    font-size: 0.9rem;
+    margin-bottom: 0 !important;
+  }
+
+  .quote-card {
+    border-left: 3px solid var(--rose);
+    background: rgba(255, 75, 145, 0.04);
+    padding: 20px 24px;
+    border-radius: 0 16px 16px 0;
+    margin: 2rem 0;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #fff;
+  }
+
+  /* Closing */
+  .closing-block {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .closing-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px !important;
+  }
+
+  .closing-sign {
+    color: var(--rose);
+    font-size: 1.1rem;
+    margin-bottom: 12px !important;
+  }
+
+  .signature {
+    font-family: var(--font-cursive);
+    font-size: 1.8rem;
+    color: var(--rose);
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.1rem;
+    }
+    .lead-desc {
+      font-size: 1.1rem;
+    }
+    .scenarios-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>

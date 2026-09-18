@@ -163,6 +163,22 @@ const content = {
         href: "blog-astra",
         number: "25",
         shortTitle: "GPT-6 Astra & Agentic AI"
+      },
+      { 
+        title: "What Is AGI? 🌸 — Artificial General Intelligence Without the Sci-Fi", 
+        desc: "AGI is one of the most talked-about concepts in artificial intelligence, but what does it actually mean? Let's understand it without the hype.",
+        publishDate: "2026-10-05",
+        href: "blog-agi",
+        number: "26",
+        shortTitle: "What Is AGI?"
+      },
+      { 
+        title: "How Do You Give an AI an Exam? 🌸 — Inside the Benchmarks That Test AI Models", 
+        desc: "GDPval-AA, τ³-Banking, Terminal-Bench, SciCode, Humanity's Last Exam... AI benchmarks have strange names, but what are they actually testing? Let's open the exam.",
+        publishDate: "2026-10-12",
+        href: "blog-exams",
+        number: "27",
+        shortTitle: "How Do You Give an AI an Exam?"
       }
     ],
     featuredPost: {
@@ -366,6 +382,22 @@ const content = {
         href: "blog-astra",
         number: "25",
         shortTitle: "GPT-6 Astra y Agentes de IA"
+      },
+      { 
+        title: "¿Qué es AGI? 🌸 — Inteligencia Artificial General Sin la Ciencia Ficción", 
+        desc: "La AGI es uno de los conceptos más debatidos en IA, pero ¿qué significa realmente? Entendámoslo sin exageraciones.",
+        publishDate: "2026-10-05",
+        href: "blog-agi",
+        number: "26",
+        shortTitle: "¿Qué es AGI?"
+      },
+      { 
+        title: "¿Cómo se le hace un examen a una IA? 🌸 — Por dentro de los Benchmarks que Prueban los Modelos de IA", 
+        desc: "GDPval-AA, τ³-Banking, Terminal-Bench, SciCode, Humanity's Last Exam... Los benchmarks tienen nombres extraños, pero ¿qué prueban realmente? Abramos el examen.",
+        publishDate: "2026-10-12",
+        href: "blog-exams",
+        number: "27",
+        shortTitle: "¿Cómo se le hace un examen a una IA?"
       }
     ],
     featuredPost: {
@@ -569,6 +601,22 @@ const content = {
         href: "blog-astra",
         number: "25",
         shortTitle: "GPT-6 Astra e Agentes de IA"
+      },
+      { 
+        title: "O que é AGI? 🌸 — Inteligência Artificial Geral Sem Ficção Científica", 
+        desc: "AGI é um dos conceitos mais comentados em inteligência artificial, mas o que realmente significa? Vamos entender sem o hype.",
+        publishDate: "2026-10-05",
+        href: "blog-agi",
+        number: "26",
+        shortTitle: "O que é AGI?"
+      },
+      { 
+        title: "Como Dar uma Prova a uma IA? 🌸 — Por Dentro dos Benchmarks que Testam os Modelos de IA", 
+        desc: "GDPval-AA, τ³-Banking, Terminal-Bench, SciCode, Humanity's Last Exam... Os benchmarks têm nomes estranhos, mas o que realmente testam? Vamos abrir a prova.",
+        publishDate: "2026-10-12",
+        href: "blog-exams",
+        number: "27",
+        shortTitle: "Como Dar uma Prova a uma IA?"
       }
     ],
     featuredPost: {
@@ -635,6 +683,12 @@ const page = {
   entries: [...publishedDrafts, ...rawPage.entries].sort((a, b) => parseInt(b.number, 10) - parseInt(a.number, 10)),
   drafts: rawPage.drafts.filter(d => !d.publishDate || d.publishDate > todayStr)
 };
+
+function truncateText(str, maxLen = 80) {
+  if (!str) return '';
+  if (str.length <= maxLen) return str;
+  return str.slice(0, maxLen).trim() + '...';
+}
 ---
 
 <section class="section section-tinted" id="blog">
@@ -679,7 +733,7 @@ const page = {
               <div class="upcoming-bullet"></div>
               <div class="upcoming-info">
                 <h4 class="upcoming-item-title">{draft.title}</h4>
-                <p class="upcoming-item-desc">{draft.desc}</p>
+                <p class="upcoming-item-desc">{truncateText(draft.desc, 80)}</p>
               </div>
             </div>
           ))}
@@ -903,10 +957,15 @@ const page = {
   }
 
   .upcoming-item-desc {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.45;
     margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* ── Col 3: Entries card (carousel) ── */
