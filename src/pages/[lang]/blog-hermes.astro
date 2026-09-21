@@ -1,0 +1,665 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Hermes Agent and the Power of Local AI 🌸 — Privacy, Security, and Running LLMs Locally",
+    date: "September 28, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "For a long time, using AI in software development meant one thing: sending your data to someone else's server.",
+    introDesc: "Hermes Agent and the local AI revolution changed everything for me.",
+    introExtra: [
+      "While cloud LLM APIs are powerful, they come with trade-offs that software engineers face every day: data privacy risks, compliance restrictions, API rate limits, unpredictable latency, and token billing.",
+      "What if you could run a state-of-the-art agentic AI model locally on your own machine — with zero external data sharing and 100% privacy?",
+      "That's exactly why I dove deep into Hermes Agent and local LLM execution. Here is everything I learned about how it works under the hood."
+    ],
+    whyLocal: {
+      heading: "Why Local AI Is Becoming Mandatory for Enterprise Software",
+      paragraphs: [
+        "In production environments, sending sensitive user data, private source code, database credentials, or proprietary business logic to third-party cloud APIs poses significant security and compliance risks.",
+        "Local AI solves this problem at the architectural level. By executing open-weights models on local GPUs or private infrastructure:",
+        "• Zero Outbound Packets: Data never leaves your hardware boundary.",
+        "• GDPR / HIPAA Compliance: Complete data sovereignty without complex vendor agreements.",
+        "• Unlimited Throughput: No token rate limits (429 HTTP status codes) or monthly API bill surprises.",
+        "• Deterministic Latency: Fixed hardware execution time independent of cloud queue congestion."
+      ]
+    },
+    hermesDeepDive: {
+      heading: "What Is Hermes Agent & Why Does It Excel at Tool Use?",
+      paragraphs: [
+        "Developed by Nous Research, Hermes Agent (built upon Hermes 3 and Llama 3 architectures) is an open-weights model specifically fine-tuned for agentic workflows.",
+        "Standard chat LLMs often struggle when asked to execute function calls or produce structured JSON schemas. They might output invalid syntax, hallucinate function arguments, or miss tool definitions.",
+        "Hermes Agent was trained explicitly on multi-step reasoning, JSON Schema validation, and tool-call orchestration. When presented with custom function definitions, Hermes accurately generates structured `<tool_call>` outputs that can be parsed and executed in local sandboxes."
+      ]
+    },
+    techNotes: {
+      heading: "Technical Deep Dive: Under the Hood of Local Execution",
+      intro: "Architectural components that make local AI agents fast, secure, and reliable.",
+      notes: [
+        {
+          title: "1. Quantization & Hardware Memory Math (GGUF & AWQ)",
+          before: "Full 16-bit Float (FP16):  70B parameters ≈ 140 GB VRAM (Requires datacenter GPU)\n4-bit Quantized (Q4_K_M):  70B parameters ≈ 40 GB VRAM  (Fits on dual RTX 3090/4090)\n4-bit Quantized (Q4_K_M):  8B parameters  ≈ 5.5 GB VRAM (Runs easily on standard laptop)",
+          beforeLabel: "VRAM requirements by quantization precision:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Quantization techniques like GGUF compress weight precision from 16-bit floats to 4-bit integers with minimal accuracy loss. This allows developers to run 8B to 70B parameter models on consumer hardware."
+        },
+        {
+          title: "2. The Agentic Tool-Use Execution Loop",
+          before: "User Prompt → Hermes System Prompt (<tools> JSON Schema )\n                  ↓\n   Model generates <tool_call> {\"name\": \"query_db\", \"args\": {...}} </tool_call>\n                  ↓\n   Local Runtime intercepts & executes function in local sandbox\n                  ↓\n   Tool Result fed back into context → Hermes generates final response",
+          beforeLabel: "Hermes Agent tool-execution orchestration sequence:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Because the execution loop runs locally, the tool execution has direct access to local Vector Databases (ChromaDB, Qdrant), local filesystems, or internal microservices securely."
+        },
+        {
+          title: "3. Local OpenAI-Compatible Server Implementation",
+          before: "// Local Node.js / Full Stack fetch pointing to local Ollama / vLLM endpoint\nconst response = await fetch('http://localhost:11434/v1/chat/completions', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    model: 'hermes3:8b',\n    messages: [\n      { role: 'system', content: 'You are a secure local Full Stack assistant.' },\n      { role: 'user', content: 'Analyze local system telemetry.' }\n    ],\n    tools: [{\n      type: 'function',\n      function: {\n        name: 'get_system_metrics',\n        description: 'Fetch local CPU and memory usage',\n        parameters: { type: 'object', properties: {} }\n      }\n    }],\n    temperature: 0.2\n  })\n});\nconst data = await response.json();",
+          beforeLabel: "Connecting Full Stack applications to local Hermes endpoints:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Local inference engines (Ollama, llama.cpp, vLLM) expose identical REST API interfaces to cloud providers, making switching between cloud and local inference seamless."
+        }
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember",
+      items: [
+        "Local AI ensures 100% data privacy — confidential client data never leaves local hardware.",
+        "Hermes Agent is specifically fine-tuned for structured JSON tool calls and agentic reasoning.",
+        "Quantization (GGUF/AWQ) enables powerful 8B-70B models to run on developer workstations.",
+        "Zero API token costs and zero rate-limiting mean predictable, reliable software operations.",
+        "Owning your AI stack provides true technical independence and security."
+      ]
+    },
+    closing: "Next entry: Exploring Advanced RAG and Local Vector Search! 🌸",
+    closingDesc: "I'll keep sharing technical deep-dives into full stack development, AI architecture, and engineering notes.",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario, Hermes Agent y el Poder de las IAs Locales 🌸 — Privacidad, Seguridad y Ejecución en Tu Propia Máquina",
+    date: "28 de Septiembre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Durante mucho tiempo, usar IA en el desarrollo de software significaba una sola cosa: enviar tus datos a los servidores de alguien más.",
+    introDesc: "Hermes Agent y la revolución de la IA local cambiaron todo para mí.",
+    introExtra: [
+      "Aunque las APIs de LLMs en la nube son potentes, conllevan importantes compromisos que los ingenieros de software enfrentamos diariamente: riesgos de privacidad de datos, restricciones regulatorias, límites de tarifa de API, latencias impredecibles y cobros por tokens.",
+      "¿Qué pasaría si pudieras ejecutar un modelo de IA de clase agente de última generación localmente en tu propia máquina, sin compartir datos con externos y con un 100% de privacidad?",
+      "Por eso me sumergí a fondo en Hermes Agent y la ejecución local de LLMs. Aquí está todo lo que aprendí sobre cómo funciona bajo el capó."
+    ],
+    whyLocal: {
+      heading: "Por Qué la IA Local Es Cada Vez Más Obligatoria en Software Empresarial",
+      paragraphs: [
+        "En entornos de producción, enviar datos sensibles de usuarios, código fuente privado, credenciales de bases de datos o lógica de negocio propietaria a APIs de nube externas genera grandes riesgos de seguridad y cumplimiento normativo.",
+        "La IA local resuelve este problema directamente a nivel de arquitectura. Al ejecutar modelos de pesos abiertos en GPUs locales o infraestructura privada:",
+        "• Cero Paquetes Salientes: Los datos nunca salen de los límites de tu hardware.",
+        "• Cumplimiento GDPR / HIPAA: Soberanía total de los datos sin contratos complejos de proveedores.",
+        "• Rendimiento Ilimitado: Sin límites de tarifa (errores HTTP 429) ni sorpresas en las facturas mensuales de API.",
+        "• Latencia Determinista: Tiempos de ejecución fijos e independientes de la congestión en servidores remotos."
+      ]
+    },
+    hermesDeepDive: {
+      heading: "¿Qué Es Hermes Agent y Por Qué Destaca en el Uso de Herramientas?",
+      paragraphs: [
+        "Desarrollado por Nous Research, Hermes Agent (construido sobre las arquitecturas Hermes 3 y Llama 3) es un modelo de pesos abiertos ajustado específicamente para flujos de trabajo de agentes.",
+        "Los LLMs de chat tradicionales suelen fallar cuando se les solicita ejecutar llamadas a funciones o generar esquemas JSON estructurados: producen sintaxis inválida, alucinan argumentos de funciones o ignoran definiciones de herramientas.",
+        "Hermes Agent fue entrenado explícitamente en razonamiento multipaso, validación de JSON Schema y orquestación de llamadas a herramientas. Al recibir definiciones de funciones personalizadas, Hermes genera con precisión salidas `<tool_call>` que pueden ser interpretadas y ejecutadas de forma segura en entornos locales."
+      ]
+    },
+    techNotes: {
+      heading: "Inmersión Técnica: Bajo el Capó de la Ejecución Local",
+      intro: "Componentes de arquitectura que hacen que los agentes de IA locales sean rápidos, seguros y confiables.",
+      notes: [
+        {
+          title: "1. Cuantización y Memoria de Hardware (GGUF y AWQ)",
+          before: "Flotante de 16 bits (FP16):   70B parámetros ≈ 140 GB VRAM (Requiere GPU de datacenter)\nCuantizado de 4 bits (Q4_K_M): 70B parámetros ≈ 40 GB VRAM  (Funciona en GPUs RTX 3090/4090)\nCuantizado de 4 bits (Q4_K_M): 8B parámetros  ≈ 5.5 GB VRAM (Ejecuta en laptops estándar)",
+          beforeLabel: "Requerimientos de memoria VRAM según precisión de cuantización:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Las técnicas de cuantización como GGUF comprimen la precisión de los pesos de números flotantes de 16 bits a enteros de 4 bits con una pérdida de precisión mínima, permitiendo ejecutar modelos de 8B a 70B en hardware de consumo."
+        },
+        {
+          title: "2. El Bucle de Ejecución del Agente y Uso de Herramientas",
+          before: "Prompt de Usuario → Prompt de Sistema Hermes (Esquema JSON <tools>)\n                         ↓\n  Modelo genera <tool_call> {\"name\": \"query_db\", \"args\": {...}} </tool_call>\n                         ↓\n  Runtime local intercepta y ejecuta la función en entorno seguro\n                         ↓\n  Resultado fed back al contexto → Hermes genera respuesta final",
+          beforeLabel: "Secuencia de orquestación de herramientas con Hermes Agent:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Como el bucle de ejecución se procesa localmente, el agente tiene acceso directo a bases de datos vectoriales locales (ChromaDB, Qdrant), archivos locales y microservicios internos de forma 100% privada."
+        },
+        {
+          title: "3. Implementación de Servidor Local Compatible con OpenAI",
+          before: "// Fetch en Node.js / Full Stack apuntando a endpoints locales de Ollama / vLLM\nconst response = await fetch('http://localhost:11434/v1/chat/completions', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    model: 'hermes3:8b',\n    messages: [\n      { role: 'system', content: 'Eres un asistente Full Stack local seguro.' },\n      { role: 'user', content: 'Analiza la telemetría local del sistema.' }\n    ],\n    tools: [{\n      type: 'function',\n      function: {\n        name: 'get_system_metrics',\n        description: 'Obtener uso de CPU y memoria local',\n        parameters: { type: 'object', properties: {} }\n      }\n    }],\n    temperature: 0.2\n  })\n});\nconst data = await response.json();",
+          beforeLabel: "Conectando aplicaciones Full Stack a endpoints locales de Hermes:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Los motores de inferencia locales (Ollama, llama.cpp, vLLM) exponen interfaces REST idénticas a los proveedores de nube, facilitando alternar entre inferencia local y remota sin modificar el código de la aplicación."
+        }
+      ]
+    },
+    remember: {
+      heading: "Lo Que Quiero Recordar",
+      items: [
+        "La IA local garantiza un 100% de privacidad de datos: la información confidencial nunca sale de tu equipo.",
+        "Hermes Agent está afinado específicamente para llamadas a herramientas JSON estructuradas y razonamiento de agentes.",
+        "La cuantización (GGUF/AWQ) permite ejecutar modelos potentes de 8B a 70B en estaciones de trabajo de desarrolladores.",
+        "Cero costos por token de API y cero límites de tarifa significan operaciones de software predecibles y confiables.",
+        "Poseer tu propio stack de IA otorga independencia técnica y seguridad absoluta."
+      ]
+    },
+    closing: "Próxima entrada: ¡Explorando RAG Avanzado y Búsqueda Vectorial Local! 🌸",
+    closingDesc: "Seguiré compartiendo análisis técnicos profundos de desarrollo Full Stack, arquitectura de IA y notas de ingeniería.",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário, Hermes Agent e o Poder das IAs Locais 🌸 — Privacidade, Segurança e Execução Local",
+    date: "28 de Setembro, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Durante muito tempo, usar IA no desenvolvimento de software significava uma coisa: enviar seus dados para servidores externos.",
+    introDesc: "Hermes Agent e a revolução das IAs locais mudaram tudo para mim.",
+    introExtra: [
+      "Embora as APIs de LLMs na nuvem sejam poderosas, elas trazem compromissos que os engenheiros de software enfrentam diariamente: riscos de privacidade, restrições regulatórias, limites de requisições de API e custos de tokens.",
+      "E se você pudesse executar um modelo de IA de agente de ponta localmente na sua própria máquina, sem compartilhamento externo e com 100% de privacidade?",
+      "Por isso mergulhei fundo no Hermes Agent e na execução local de LLMs. Aqui está tudo o que aprendi sobre como funciona por baixo do capô."
+    ],
+    whyLocal: {
+      heading: "Por Que a IA Local É Cada Vez Mais Obrigatória em Software Empresarial",
+      paragraphs: [
+        "Em ambientes de produção, enviar dados sensíveis, código-fonte privado, credenciais de banco de dados ou lógica de negócios para APIs na nuvem gera grandes riscos de segurança.",
+        "A IA local resolve esse problema no nível da arquitetura. Ao executar modelos abertos em GPUs locais ou infraestrutura privada:",
+        "• Zero Pacotes Saídos: Os dados nunca saem dos limites do seu hardware.",
+        "• Conformidade GDPR / HIPAA: Soberania total de dados sem contratos complexos.",
+        "• Desempenho Ilimitado: Sem limites de requisições (erros HTTP 429) nem surpresas nas faturas da API.",
+        "• Latência Determinística: Tempos de execução fixos e independentes do tráfego na nuvem."
+      ]
+    },
+    hermesDeepDive: {
+      heading: "O Que É Hermes Agent e Por Que Ele Se Destaca no Uso de Ferramentas?",
+      paragraphs: [
+        "Desenvolvido pela Nous Research, Hermes Agent (construído sobre as arquiteturas Hermes 3 e Llama 3) é um modelo aberto ajustado especificamente para fluxos de trabalho com agentes.",
+        "LLMs tradicionais costumam falhar ao executar chamadas de função ou gerar JSON estruturado: produzem sintaxe inválida, alucinam argumentos ou ignoram ferramentas.",
+        "Hermes Agent foi treinado explicitamente em raciocínio de múltiplas etapas, validação de JSON Schema e orquestração de chamadas de ferramentas. Ao receber definições de funções, Hermes gera com precisão saídas `<tool_call>` prontas para execução segura em ambientes locais."
+      ]
+    },
+    techNotes: {
+      heading: "Mergulho Técnico: Por Baixo do Capô da Execução Local",
+      intro: "Componentes de arquitetura que tornam os agentes de IA locais rápidos, seguros e confiáveis.",
+      notes: [
+        {
+          title: "1. Quantização e Memória de Hardware (GGUF e AWQ)",
+          before: "Ponto Flutuante 16-bit (FP16):  70B parâmetros ≈ 140 GB VRAM (Requer GPU de datacenter)\nQuantizado 4-bit (Q4_K_M):      70B parâmetros ≈ 40 GB VRAM  (Roda em GPUs RTX 3090/4090)\nQuantizado 4-bit (Q4_K_M):      8B parâmetros  ≈ 5.5 GB VRAM (Roda em laptops padrão)",
+          beforeLabel: "Requisitos de memória VRAM segundo precisão de quantização:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Técnicas de quantização como GGUF comprimem a precisão dos pesos de 16-bit para 4-bit com perda mínima de precisão, permitindo executar modelos de 8B a 70B em hardware de consumo."
+        },
+        {
+          title: "2. O Loop de Execução de Ferramentas do Agente",
+          before: "Prompt de Usuário → Prompt de Sistema Hermes (Esquema JSON <tools>)\n                         ↓\n  Modelo gera <tool_call> {\"name\": \"query_db\", \"args\": {...}} </tool_call>\n                         ↓\n  Runtime local intercepta e executa a função em ambiente seguro\n                         ↓\n  Resultado fed back ao contexto → Hermes gera resposta final",
+          beforeLabel: "Sequência de orquestração de ferramentas com Hermes Agent:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Como o loop de execução roda localmente, o agente tem acesso direto a bancos de dados vetoriais locais (ChromaDB, Qdrant), arquivos locais e microsserviços de forma 100% privada."
+        },
+        {
+          title: "3. Implementação de Servidor Local Compatível com OpenAI",
+          before: "// Fetch em Node.js / Full Stack apontando para endpoints locais do Ollama / vLLM\nconst response = await fetch('http://localhost:11434/v1/chat/completions', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    model: 'hermes3:8b',\n    messages: [\n      { role: 'system', content: 'Você é um assistente Full Stack local seguro.' },\n      { role: 'user', content: 'Analise a telemetria local do sistema.' }\n    ],\n    tools: [{\n      type: 'function',\n      function: {\n        name: 'get_system_metrics',\n        description: 'Obter uso de CPU e memória local',\n        parameters: { type: 'object', properties: {} }\n      }\n    }],\n    temperature: 0.2\n  })\n});\nconst data = await response.json();",
+          beforeLabel: "Conectando aplicações Full Stack a endpoints locais do Hermes:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Mecanismos de inferência locais (Ollama, llama.cpp, vLLM) expõem interfaces REST idênticas aos provedores na nuvem, facilitando alternar entre inferência local e remota."
+        }
+      ]
+    },
+    remember: {
+      heading: "O Que Quero Lembrar",
+      items: [
+        "IA local garante 100% de privacidade: dados confidenciais nunca saem do seu equipamento.",
+        "Hermes Agent é ajustado especificamente para chamadas de ferramentas JSON e raciocínio de agentes.",
+        "A quantização (GGUF/AWQ) permite executar modelos potentes de 8B a 70B em estações de trabalho.",
+        "Zero custos por token de API e zero limites de requisição garantem operações previsíveis.",
+        "Possuir seu próprio stack de IA proporciona independência técnica e segurança total."
+      ]
+    },
+    closing: "Próxima entrada: Explorando RAG Avançado e Busca Vetorial Local! 🌸",
+    closingDesc: "Continuarei compartilhando análises técnicas profundas sobre desenvolvimento Full Stack, arquitetura de IA e notas de engenharia.",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill 🌸"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- Why Local AI -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whyLocal.heading}</h2>
+            <div class="section-body">
+              {page.whyLocal.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Hermes Agent Deep Dive -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.hermesDeepDive.heading}</h2>
+            <div class="section-body">
+              {page.hermesDeepDive.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Notes -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.techNotes.heading}</h2>
+            <p class="tech-intro">{page.techNotes.intro}</p>
+
+            {page.techNotes.notes.map((note) => (
+              <div class="tech-note-block">
+                <h3 class="tech-note-title">{note.title}</h3>
+
+                {note.before ? (
+                  <div>
+                    {note.beforeLabel ? <p class="code-label">{note.beforeLabel}</p> : null}
+                    <pre class="code-block"><code>{note.before}</code></pre>
+                  </div>
+                ) : null}
+
+                <p class="tech-note-body">{note.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-desc">{page.closingDesc}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="author-signature">{page.signature}</p>
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    animation: floatPetal 14s infinite linear;
+  }
+
+  .p-1 { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+  .p-2 { left: 25%; animation-delay: 3s; animation-duration: 16s; }
+  .p-3 { left: 45%; animation-delay: 1s; animation-duration: 14s; }
+  .p-4 { left: 65%; animation-delay: 5s; animation-duration: 11s; }
+  .p-5 { left: 80%; animation-delay: 2s; animation-duration: 15s; }
+  .p-6 { left: 92%; animation-delay: 4s; animation-duration: 13s; }
+
+  @keyframes floatPetal {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.6; }
+    100% { top: 110%; transform: translateX(80px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.2rem;
+    color: var(--rose);
+    font-weight: 500;
+    margin-bottom: 2rem !important;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 75, 145, 0.2), transparent);
+    margin: 3rem 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Tech Notes */
+  .tech-intro {
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 2rem !important;
+  }
+
+  .tech-note-block {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--rose);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tech-note-title {
+    font-size: 1.2rem;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+  }
+
+  .code-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .code-block {
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875rem;
+    color: #e6edf3;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+  }
+
+  .tech-note-body {
+    margin-bottom: 0 !important;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Remember List */
+  .remember-section {
+    background: rgba(255, 75, 145, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+
+  /* Closing */
+  .closing-block {
+    text-align: center;
+    padding-top: 1rem;
+  }
+
+  .closing-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .closing-desc {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem !important;
+  }
+
+  .closing-sign {
+    color: var(--rose);
+    font-weight: 600;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .author-signature {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--text);
+  }
+
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>
