@@ -6,7 +6,6 @@ import Animations from '../../components/Animations.vue';
 import wcWp2026 from '../../assets/WC_WP_2026.jpg';
 import carlosImg from '../../assets/carlos.jpeg';
 import matiasImg from '../../assets/matias.jpeg';
-import wpLogo from '../../assets/wp.jpg';
 
 export function getStaticPaths() {
   return [
@@ -46,7 +45,7 @@ const content = {
         "Beyond the tech sessions, what completely stole my heart was the warmth and energy during the breaks! 🌸💖",
         "Some attendees approached me to talk about my experience as a Full Stack developer: asking about project architecture, my tech stack, and how I am able to manage everything as a full-stack developer (spoiler: a healthy mix of curiosity, passion, and occasionally arguing with CSS flexbox alignment! 😂).",
         "Another highlight was reconnecting with friends and attendees I had met at last year's WordCamp! It was so heartwarming to greet them again, and I was so happy that they remembered me — we caught up, talked about what we've been building since, and shared a moment together. 🌷",
-        "What touched me deeply was that people older than me, with extensive experience, approached me with genuine curiosity and respect to listen to my perspective and ask for tips.",
+        "What touched me deeply was that people older than me, with extensive experience in the industry, approached me with genuine curiosity and respect to listen to my perspective and ask for tips and advice.",
         "It reminded me that tech isn't about competition or egos. It's about curiosity, building together, and lifting each other up across every generation! 🌷"
       ]
     },
@@ -83,7 +82,7 @@ const content = {
         "Matías Ventura's inspiring session on Gutenberg's future, upcoming updates, AI agents, and MCPs.",
         "Carlos Longarela's talk as a Certified Expert WordPress Developer on Hermes Agent & local AI security.",
         "Reconnecting with friends from last year's WordCamp and making new meaningful connections. 🌷",
-        "Engaging in heartwarming Full Stack discussions with developers and creators of all ages. 💖",
+        "Older and highly experienced developers approaching me to ask for advice and share ideas. 💖",
         "Curiosity and learning have no age limit — software is a shared, beautiful journey."
       ]
     },
@@ -118,7 +117,7 @@ const content = {
         "Más allá de las sesiones técnicas, lo que verdaderamente me robó el corazón en esta WordCamp fueron las hermosas conversaciones entre charlas. 🌸",
         "Varias personas se me acercaron a platicar y hacerme preguntas sobre mi experiencia como desarrolladora Full Stack: desde cómo estructuro mis proyectos y mi stack técnico, hasta cómo logro gestionar absolutamente todo siendo Full Stack (spoiler: ¡una mezcla saludable de curiosidad, pasión y alguna discusión existencial con el alineado de CSS! 😂).",
         "¡Fue además un gusto enorme reencontrarme con personas que había conocido en el WordCamp del año pasado! Fue súper lindo saludarlos de nuevo y me dio muchísima alegría que se acordaran de mí; logramos conversar un ratito, ponernos al día sobre lo que hemos estado construyendo y compartir un momento hermoso juntos. 🌷",
-        "Algo que me impactó profundamente fue que personas mayores que yo, con mucha trayectoria y experiencia, se acercaran con auténtica curiosidad, cariño y respeto a escuchar mi perspectiva y pedirme consejos.",
+        "Algo que me impactó y me conmovió profundamente fue que personas mayores que yo, con mucha trayectoria y años de experiencia en la industria, se me acercaran con auténtica curiosidad, cariño y respeto a escuchar mi perspectiva y pedirme consejos.",
         "Ese sentido de comunidad sin egos, donde la curiosidad une a personas de todas las edades y antecedentes, me llenó el corazón de alegría. ¡Estar allí me confirmó que lo más hermoso del software es la comunidad que construimos juntos! 🌷"
       ]
     },
@@ -155,7 +154,7 @@ const content = {
         "La inspiradora charla de Matías Ventura sobre el futuro de WordPress, actualizaciones, agentes de IA y MCPs.",
         "La charla de Carlos Longarela como Certified Expert WordPress Developer sobre el agente Hermes y modelos de IA locales.",
         "Reencontrarme con amig@s y conocidos del WordCamp del año pasado y ponernos al día. 🌷",
-        "Compartir hermosas conversaciones Full Stack con desarrolladores y creadores de todas las edades. 💖",
+        "Personas mayores y con gran trayectoria en la industria que se acercaron a pedirme consejos. 💖",
         "El conocimiento no tiene edad: aprender y enseñar es un camino de doble vía lleno de cariño. ✨"
       ]
     },
@@ -190,7 +189,7 @@ const content = {
         "Além das sessões técnicas, o que realmente conquistou meu coração foram as conversas nos intervalos! 🌸",
         "Algumas pessoas incríveis se aproximaram para conversar sobre minha jornada Full Stack: perguntando sobre arquitetura de projetos, minha stack e como consigo gerenciar tudo como desenvolvedora full-stack (spoiler: uma mistura saudável de curiosidade, paixão e algumas discussões com alinhamento CSS! 😂).",
         "Foi extremamente gratificante reencontrar pessoas que conheci no WordCamp do ano passado! Foi maravilhoso cumprimentá-los novamente e fiquei radiante por se lembrarem de mim — conversamos, colocamos o papo em dia e compartilhamos um momento lindo juntos! 🌷",
-        "Um dos momentos mais especiais foi ver pessoas com mais bagagem profissional se aproximando com carinho, curiosidade e respeito para ouvir minhas experiências e trocar dicas.",
+        "Um dos momentos que mais me emocionou foi ver pessoas com mais bagagem profissional e mais velhas que eu se aproximando com carinho, curiosidade e respeito para ouvir minhas experiências e pedir conselhos.",
         "Esse sentimento de comunidade sem egos encheu meu coração de alegria. Estar no WordCamp confirmou que a melhor parte do desenvolvimento de software são as pessoas incríveis com quem construímos juntas! 🌷"
       ]
     },
@@ -329,11 +328,6 @@ const page = content[lang] || content.es;
                 <p>{para}</p>
               ))}
             </div>
-
-            <figure class="blog-figure logo-figure">
-              <img src={wpLogo.src} alt="WordPress Ecosystem" loading="lazy" />
-              <figcaption>WordPress Community — {lang === 'en' ? 'Building the web together' : lang === 'pt' ? 'Construindo a web juntos' : 'Construyendo la web juntos'}</figcaption>
-            </figure>
           </div>
 
           <hr class="post-divider" />
