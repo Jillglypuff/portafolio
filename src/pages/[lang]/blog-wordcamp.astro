@@ -1,0 +1,713 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import wcWp2026 from '../../assets/WC_WP_2026.jpg';
+import carlosImg from '../../assets/carlos.jpeg';
+import matiasImg from '../../assets/matias.jpeg';
+import wpLogo from '../../assets/wp.jpg';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, My Experience at WordCamp 2026: Community, Code, and Connections 🌸",
+    date: "September 21, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "There are events you attend expecting to hear about tech... and you end up leaving with something far more meaningful.",
+    introDesc: "That was exactly my experience at WordCamp WordPress 2026.",
+    introExtra: [
+      "Attending this edition of WordCamp reminded me why the open source community is so special.",
+      "It wasn't just about slides, code snippets, or tools. It was about the people who make this ecosystem thrive.",
+      "I had the incredible opportunity to listen to inspiring talks and, above all, to connect with developers, creators, and enthusiasts who share a genuine passion for the web."
+    ],
+    speakersSection: {
+      heading: "Keynotes & Industry Leaders: Carlos Longarela & Matías Ventura",
+      paragraphs: [
+        "One of the biggest highlights of the event was having a front-row seat to listen to two key leaders in the WordPress universe: 🌸",
+        "• Matías Ventura — Creator and Lead Architect of the Gutenberg block editor. Listening to his vision on modern content editing, block architecture, and the future of Wordpress was truly inspiring! 🌷",
+        "• Carlos Longarela — Certified Expert WordPress Developer, WordPress employee, and active content creator who builds popular plugins and technical resources for the community. His talk was an eye-opener on the Hermes Agent and the power of running local AI models on your own machine! He explained how local AI models protect privacy, guarantee data security, and keep sensitive client data safe without sending it off to third-party cloud models."
+      ]
+    },
+    communitySection: {
+      heading: "The True Highlight: Human Connections",
+      paragraphs: [
+        "Beyond the tech sessions, what completely stole my heart was the warmth and energy during the breaks! 🌸💖",
+        "Some attendees approached me to talk about my experience as a Full Stack developer: asking about project architecture, my tech stack, and how I am able to manage everything as a full-stack developer (spoiler: a healthy mix of curiosity, passion, and occasionally arguing with CSS flexbox alignment! 😂).",
+        "Another highlight was reconnecting with friends and attendees I had met at last year's WordCamp! It was so heartwarming to greet them again, and I was so happy that they remembered me — we caught up, talked about what we've been building since, and shared a moment together. 🌷",
+        "What touched me deeply was that people older than me, with extensive experience, approached me with genuine curiosity and respect to listen to my perspective and ask for tips.",
+        "It reminded me that tech isn't about competition or egos. It's about curiosity, building together, and lifting each other up across every generation! 🌷"
+      ]
+    },
+    techNotes: {
+      heading: "Technical Notes",
+      intro: "Key technical takeaways and takeaways gathered during WordCamp 2026. 🌸",
+      notes: [
+        {
+          title: "1. The Future of WordPress: AI Agents, MCPs & Gutenberg",
+          before: "// Model Context Protocol (MCP) & AI Agents in WordPress\nimport { registerBlockType } from '@wordpress/blocks';\n\n// Gutenberg evolving towards agentic workflows & structured context\nconsole.log('WordPress + MCP + Agentic Workflows ✨');",
+          beforeLabel: "Matías Ventura's vision for upcoming WordPress updates & AI integration:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "WordPress is transforming into an intelligent component ecosystem where AI agents and MCPs assist content creators and developers directly inside the block editor."
+        },
+        {
+          title: "2. Hermes Agent & Local AI Models for Maximum Privacy",
+          before: "Sensitive Local Data → Local LLM / Hermes Agent → Private Response ✨\n          [ ✖ NO External Data Exposure / NO Cloud Risk ]",
+          beforeLabel: "Carlos Longarela's privacy-first local AI architecture:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Carlos Longarela highlighted how Certified Expert WordPress Developers can leverage tools like Hermes Agent and local AI models to keep client data 100% private and secure locally."
+        }
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember",
+      items: [
+        "WordCamp 2026 was a sweet reminder that behind every line of code are wonderful human connections. 🌸",
+        "Matías Ventura's inspiring session on Gutenberg's future, upcoming updates, AI agents, and MCPs.",
+        "Carlos Longarela's talk as a Certified Expert WordPress Developer on Hermes Agent & local AI security.",
+        "Reconnecting with friends from last year's WordCamp and making new meaningful connections. 🌷",
+        "Engaging in heartwarming Full Stack discussions with developers and creators of all ages. 💖",
+        "Curiosity and learning have no age limit — software is a shared, beautiful journey."
+      ]
+    },
+    closing: "Next entry: The next tech adventure! 🌸",
+    closingDesc: "I'll keep sharing learnings, side projects, and developer insights.",
+    closingSign: "See you in the next entry ✨",
+    signature: "— Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario: Mi Experiencia en WordCamp 2026: Comunidad, Código y Conexiones 🌸",
+    date: "21 de Septiembre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Hay eventos a los que vas esperando escuchar sobre tecnología... y terminas llevándote algo mucho más valioso y especial. 🌸✨",
+    introDesc: "Eso fue exactamente lo que viví en WordCamp WordPress 2026.",
+    introExtra: [
+      "Participar en esta edición de WordCamp me recordó por qué la comunidad de software abierto es tan cálida y especial.",
+      "No se trató solamente de diapositivas, código o nuevas herramientas. Se trató de las personas que hacen posible este hermoso ecosistema.",
+      "Tuve la enorme oportunidad de presenciar charlas inspiradoras y, sobre todo, de conectar con desarrolladores, creadores y entusiastas que comparten la misma pasión por crear en la web.💖"
+    ],
+    speakersSection: {
+      heading: "Grandes Referentes: Carlos Longarela y Matías Ventura",
+      paragraphs: [
+        "Uno de los momentos más emocionantes del evento fue poder estar presente en las charlas de dos grandes referentes de la comunidad WordPress: 🌸",
+        "• Matías Ventura — Creador y arquitecto principal del editor de bloques Gutenberg. Ver y escuchar su visión sobre la edición moderna de contenido, la arquitectura de bloques y el futuro de WordPress fue simplemente inspirador. 🌷",
+        "• Carlos Longarela — Certified Expert WordPress Developer, empleado de WordPress y un prolífico creador de contenido que desarrolla plugins y recursos técnicos para la comunidad. Su charla fue súper reveladora sobre el agente Hermes y el valor de ejecutar modelos de IA locales para proteger la privacidad y la seguridad de los datos de clientes sin depender de servicios de nube externos."
+      ]
+    },
+    communitySection: {
+      heading: "El Verdadero Valor: Las Conexiones Humanas",
+      paragraphs: [
+        "Más allá de las sesiones técnicas, lo que verdaderamente me robó el corazón en esta WordCamp fueron las hermosas conversaciones entre charlas. 🌸",
+        "Varias personas se me acercaron a platicar y hacerme preguntas sobre mi experiencia como desarrolladora Full Stack: desde cómo estructuro mis proyectos y mi stack técnico, hasta cómo logro gestionar absolutamente todo siendo Full Stack (spoiler: ¡una mezcla saludable de curiosidad, pasión y alguna discusión existencial con el alineado de CSS! 😂).",
+        "¡Fue además un gusto enorme reencontrarme con personas que había conocido en el WordCamp del año pasado! Fue súper lindo saludarlos de nuevo y me dio muchísima alegría que se acordaran de mí; logramos conversar un ratito, ponernos al día sobre lo que hemos estado construyendo y compartir un momento hermoso juntos. 🌷",
+        "Algo que me impactó profundamente fue que personas mayores que yo, con mucha trayectoria y experiencia, se acercaran con auténtica curiosidad, cariño y respeto a escuchar mi perspectiva y pedirme consejos.",
+        "Ese sentido de comunidad sin egos, donde la curiosidad une a personas de todas las edades y antecedentes, me llenó el corazón de alegría. ¡Estar allí me confirmó que lo más hermoso del software es la comunidad que construimos juntos! 🌷"
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas",
+      intro: "Reflexiones e ideas técnicas recopiladas durante WordCamp 2026. 🌸",
+      notes: [
+        {
+          title: "1. El Futuro de WordPress: Agentes de IA, MCPs y Gutenberg",
+          before: "// Ejemplo: Integración del Model Context Protocol (MCP) y Agentes de IA en WordPress\nimport { registerBlockType } from '@wordpress/blocks';\n\n// Gutenberg evolucionando hacia flujos de trabajo con agentes e integración contextual\nconsole.log('WordPress + MCP + Agentes de IA ✨');",
+          beforeLabel: "La visión de Matías Ventura sobre las próximas actualizaciones de WordPress e IA:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "WordPress está evolucionando hacia un ecosistema declarativo e inteligente donde los agentes de IA y los MCPs ayudan a los creadores a potenciar sus contenidos directamente en el editor de bloques."
+        },
+        {
+          title: "2. Agente Hermes y Modelos de IA Locales para Seguridad",
+          before: "Datos Locales Sensibles → LLM Local / Agente Hermes → Respuesta Privada ✨\n             [ ✖ SIN Envío a Servidores Externos / SIN Riesgo en la Nube ]",
+          beforeLabel: "La arquitectura de seguridad y privacidad explicada por Carlos Longarela:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Carlos Longarela destacó cómo los desarrolladores expertos pueden aprovechar el agente Hermes y los modelos de IA locales para mantener los datos de los proyectos 100% seguros y privados en la infraestructura propia."
+        }
+      ]
+    },
+    remember: {
+      heading: "Lo Que Quiero Recordar",
+      items: [
+        "WordCamp 2026 fue un dulce recordatorio de que detrás de cada línea de código hay personas maravillosas. 🌸",
+        "La inspiradora charla de Matías Ventura sobre el futuro de WordPress, actualizaciones, agentes de IA y MCPs.",
+        "La charla de Carlos Longarela como Certified Expert WordPress Developer sobre el agente Hermes y modelos de IA locales.",
+        "Reencontrarme con amig@s y conocidos del WordCamp del año pasado y ponernos al día. 🌷",
+        "Compartir hermosas conversaciones Full Stack con desarrolladores y creadores de todas las edades. 💖",
+        "El conocimiento no tiene edad: aprender y enseñar es un camino de doble vía lleno de cariño. ✨"
+      ]
+    },
+    closing: "Próxima entrada: ¡Siguiente aventura tecnológica! 🌸",
+    closingDesc: "Seguiré compartiendo aprendizajes, proyectos y reflexiones de desarrollo.",
+    closingSign: "Nos vemos en la próxima entrada ✨",
+    signature: "— Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário: Minha Experiência no WordCamp 2026: Comunidade, Código e Conexões 🌸",
+    date: "21 de Setembro, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: 'Voltar ao Início',
+    intro: "Existem eventos que você frequenta esperando ouvir sobre tecnologia... e acaba saindo com algo muito mais valioso e especial. 🌸✨",
+    introDesc: "Essa foi exatamente minha experiência no WordCamp WordPress 2026.",
+    introExtra: [
+      "Participar desta edição do WordCamp me lembrou por que a comunidade de código aberto é tão acolhedora e especial.",
+      "Não foi apenas sobre slides, código ou ferramentas. Foi sobre as pessoas que fazem este ecossistema prosperar.",
+      "Tive a oportunidade incrível de assistir a palestras inspiradoras e, acima de tudo, me conectar com desenvolvedores, criadores e entusiastas que compartilham a mesma paixão por criar na web. "
+    ],
+    speakersSection: {
+      heading: "Palestrantes de Destaque: Carlos Longarela e Matías Ventura",
+      paragraphs: [
+        "Um dos momentos mais marcantes do evento foi assistir às palestras de duas grandes referências no ecossistema WordPress: 🌸✨",
+        "• Matías Ventura — Criador e arquiteto principal do editor Gutenberg. Ouvir sua visão sobre a edição moderna de conteúdo, arquitetura de blocos e o futuro do WordPress foi super inspirador! 🌷",
+        "• Carlos Longarela — Certified Expert WordPress Developer, funcionário do WordPress e criador de conteúdo que desenvolve plugins e recursos técnicos para a comunidade. Sua palestra sobre o agente Hermes e modelos de IA locais explicou como proteger a privacidade e a segurança dos dados."
+      ]
+    },
+    communitySection: {
+      heading: "O Verdadeiro Destaque: Conexões Humanas",
+      paragraphs: [
+        "Além das sessões técnicas, o que realmente conquistou meu coração foram as conversas nos intervalos! 🌸",
+        "Algumas pessoas incríveis se aproximaram para conversar sobre minha jornada Full Stack: perguntando sobre arquitetura de projetos, minha stack e como consigo gerenciar tudo como desenvolvedora full-stack (spoiler: uma mistura saudável de curiosidade, paixão e algumas discussões com alinhamento CSS! 😂).",
+        "Foi extremamente gratificante reencontrar pessoas que conheci no WordCamp do ano passado! Foi maravilhoso cumprimentá-los novamente e fiquei radiante por se lembrarem de mim — conversamos, colocamos o papo em dia e compartilhamos um momento lindo juntos! 🌷",
+        "Um dos momentos mais especiais foi ver pessoas com mais bagagem profissional se aproximando com carinho, curiosidade e respeito para ouvir minhas experiências e trocar dicas.",
+        "Esse sentimento de comunidade sem egos encheu meu coração de alegria. Estar no WordCamp confirmou que a melhor parte do desenvolvimento de software são as pessoas incríveis com quem construímos juntas! 🌷"
+      ]
+    },
+    techNotes: {
+      heading: "Notas Técnicas",
+      intro: "Principais aprendizados técnicos do WordCamp 2026. 🌸",
+      notes: [
+        {
+          title: "1. O Futuro do WordPress: Agentes de IA, MCPs e Gutenberg",
+          before: "// Exemplo: Integração do Model Context Protocol (MCP) e Agentes de IA no WordPress\nimport { registerBlockType } from '@wordpress/blocks';\n\n// Gutenberg evoluindo para fluxos inteligentes com agentes de IA\nconsole.log('WordPress + MCP + Agentes de IA ✨');",
+          beforeLabel: "A visão de Matías Ventura sobre as futuras atualizações do WordPress:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "O WordPress está evoluindo para um ecossistema declarativo inteligente onde agentes de IA e MCPs auxiliam os criadores diretamente no editor de blocos."
+        },
+        {
+          title: "2. Agente Hermes e Modelos de IA Locales para Segurança",
+          before: "Dados Locais Sensibles → LLM Local / Agente Hermes → Resposta Privada ✨\n             [ ✖ SEM Envio para Servidores Externos / SEM Risco na Nuvem ]",
+          beforeLabel: "A arquitetura de segurança e privacidade por Carlos Longarela:",
+          after: null,
+          afterLabel: null,
+          extraCode: null,
+          extraLabel: null,
+          note: "Carlos Longarela destacou como desenvolvedores especialistas podem usar o agente Hermes e modelos de IA locais para manter os dados 100% seguros e privados."
+        }
+      ]
+    },
+    remember: {
+      heading: "O Que Quero Lembrar",
+      items: [
+        "O WordCamp 2026 me lembrou que a tecnologia é feita por e para pessoas incríveis. 🌸",
+        "A palestra inspiradora de Matías Ventura sobre o futuro do WordPress, atualizações, agentes de IA e MCPs.",
+        "A palestra de Carlos Longarela como Certified Expert WordPress Developer sobre o agente Hermes e IA local.",
+        "Reencontrar amig@s do WordCamp do ano passado e colocar o papo em dia. 🌷",
+        "Trocas enriquecedoras e carinhosas sobre Full Stack com criadores de todas as idades. 💖",
+        "Aprender e ensinar não tem limite de idade: a curiosidade nos conecta com muito afeto. ✨"
+      ]
+    },
+    closing: "Próxima entrada: A próxima aventura tecnológica! 🌸",
+    closingDesc: "Continuarei compartilhando aprendizados, projetos e ideias.",
+    closingSign: "Até a próxima entrada ✨",
+    signature: "— Jill 🌸"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <!-- Main Event Banner Photo -->
+          <figure class="blog-figure">
+            <img src={wcWp2026.src} alt="WordCamp WordPress 2026" loading="lazy" />
+            <figcaption>WordCamp WordPress 2026 — {lang === 'en' ? 'Community & Tech Gathering' : lang === 'pt' ? 'Encontro de Comunidade e Tecnologia' : 'Encuentro de Comunidad y Tecnología'}</figcaption>
+          </figure>
+
+          <hr class="post-divider" />
+
+          <!-- Speakers Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.speakersSection.heading}</h2>
+            <div class="section-body">
+              {page.speakersSection.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+
+            <!-- Speaker Photos Grid -->
+            <div class="speakers-grid">
+              <figure class="blog-figure speaker-figure">
+                <img src={carlosImg.src} alt="Carlos Longarela — WordPress Contributor" loading="lazy" />
+                <figcaption>Carlos Longarela — {lang === 'en' ? 'WordPress Core & Open Source' : lang === 'pt' ? 'WordPress Core e Open Source' : 'WordPress Core y Open Source'}</figcaption>
+              </figure>
+              <figure class="blog-figure speaker-figure">
+                <img src={matiasImg.src} alt="Matías Ventura — Creator of Gutenberg" loading="lazy" />
+                <figcaption>Matías Ventura — {lang === 'en' ? 'Gutenberg Creator & Lead' : lang === 'pt' ? 'Criador do Gutenberg' : 'Creador de Gutenberg'}</figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Community Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.communitySection.heading}</h2>
+            <div class="section-body">
+              {page.communitySection.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </div>
+
+            <figure class="blog-figure logo-figure">
+              <img src={wpLogo.src} alt="WordPress Ecosystem" loading="lazy" />
+              <figcaption>WordPress Community — {lang === 'en' ? 'Building the web together' : lang === 'pt' ? 'Construindo a web juntos' : 'Construyendo la web juntos'}</figcaption>
+            </figure>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Technical Notes -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.techNotes.heading}</h2>
+            <p class="tech-intro">{page.techNotes.intro}</p>
+
+            {page.techNotes.notes.map((note) => (
+              <div class="tech-note-block">
+                <h3 class="tech-note-title">{note.title}</h3>
+
+                {note.before ? (
+                  <div>
+                    {note.beforeLabel ? <p class="code-label">{note.beforeLabel}</p> : null}
+                    <pre class="code-block"><code>{note.before}</code></pre>
+                  </div>
+                ) : null}
+
+                <p class="tech-note-body">{note.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Things I Want To Remember -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">✦</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-desc">{page.closingDesc}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="author-signature">{page.signature}</p>
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    animation: floatPetal 14s infinite linear;
+  }
+
+  .p-1 { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+  .p-2 { left: 25%; animation-delay: 3s; animation-duration: 16s; }
+  .p-3 { left: 45%; animation-delay: 1s; animation-duration: 14s; }
+  .p-4 { left: 65%; animation-delay: 5s; animation-duration: 11s; }
+  .p-5 { left: 80%; animation-delay: 2s; animation-duration: 15s; }
+  .p-6 { left: 92%; animation-delay: 4s; animation-duration: 13s; }
+
+  @keyframes floatPetal {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.6; }
+    100% { top: 110%; transform: translateX(80px) rotate(360deg); opacity: 0; }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav { margin-bottom: 24px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot { color: var(--text-muted); opacity: 0.5; }
+  .post-date { color: var(--text-muted); }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p { margin-bottom: 1.5rem; }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.2rem;
+    color: var(--rose);
+    font-weight: 500;
+    margin-bottom: 2rem !important;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 75, 145, 0.2), transparent);
+    margin: 3rem 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Speakers Grid */
+  .speakers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 2rem;
+  }
+
+  /* Figures */
+  .blog-figure {
+    margin: 2rem 0;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .blog-figure img {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .blog-figure:hover img {
+    transform: scale(1.02);
+  }
+
+  .speaker-figure img {
+    height: 280px;
+    object-fit: cover;
+  }
+
+  .logo-figure img {
+    max-height: 320px;
+    object-fit: cover;
+  }
+
+  .blog-figure figcaption {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    background: rgba(15, 15, 25, 0.8);
+    border-top: 1px solid rgba(255, 75, 145, 0.1);
+  }
+
+  /* Tech Notes */
+  .tech-intro {
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 2rem !important;
+  }
+
+  .tech-note-block {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--rose);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tech-note-title {
+    font-size: 1.2rem;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+  }
+
+  .code-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .code-block {
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875rem;
+    color: #e6edf3;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+  }
+
+  .tech-note-body {
+    margin-bottom: 0 !important;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Remember List */
+  .remember-section {
+    background: rgba(255, 75, 145, 0.03);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+
+  /* Closing */
+  .closing-block {
+    text-align: center;
+    padding-top: 1rem;
+  }
+
+  .closing-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .closing-desc {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem !important;
+  }
+
+  .closing-sign {
+    color: var(--rose);
+    font-weight: 600;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .author-signature {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--text);
+  }
+
+  @media (max-width: 768px) {
+    .blog-view { padding: 100px 16px 60px; }
+    .blog-card { padding: 2.5rem 2rem; border-radius: 20px; }
+    .speakers-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card { padding: 2rem 1.25rem; }
+  }
+</style>
