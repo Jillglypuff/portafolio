@@ -1,0 +1,608 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Why I Discarded WordPress for My Portfolio 🌸",
+    date: "September 27, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "When I started planning this developer diary, my first thought was: 'Why not just install WordPress and a nice theme?'",
+    introDesc: "It sounded simple. But it quickly turned into one of my biggest tech dilemmas 🌸",
+    introExtra: [
+      "WordPress powers over 40% of the web. It has plugins for everything, ready-made comment forms, and an admin dashboard.",
+      "So I tried it. I spent hours setting up plugins, configuring themes, and trying to make it feel like *my* space.",
+      "And then I ran into the wall that changed everything: GSAP animations."
+    ],
+    illusion: {
+      heading: "The Illusion of the Traditional CMS 🌷",
+      paragraphs: [
+        "At first, traditional CMS tools feel like a gift. You get a database, user authentication, and rich text editors right out of the box.",
+        "I thought: 'This is going to save me weeks of development time!'",
+        "But as soon as I tried to customize the front-end to match the exact aesthetic I envisioned—fluid animations, glassmorphism, floating petals, and smooth scroll transitions—things started breaking.",
+        "Page builders introduced heavy scripts, inline CSS overrides, and layout shifts that completely ruined the experience."
+      ]
+    },
+    conflict: {
+      heading: "The Conflict With GSAP & Performance 🌺",
+      paragraphs: [
+        "If you've seen my portfolio, you know how much I care about movement and micro-interactions.",
+        "GSAP (GreenSock) allows me to create organic, 60fps animations that make a website feel alive.",
+        "Trying to inject GSAP timelines and Vue hydration into a WordPress theme felt like fighting against the platform.",
+        "Instead of clean, responsive animations, I had script conflicts, delayed renders, and bloated page load times.",
+        "That's when I realized: I was compromising my vision just to fit inside a traditional CMS template."
+      ]
+    },
+    discovery: {
+      heading: "The Discovery: Astro + Supabase + MCP 🌼",
+      paragraphs: [
+        "So I made a bold choice: I deleted the WordPress setup entirely and built my own modern stack from scratch.",
+        "🌸 **Astro** gives me lightning-fast performance, static pre-rendering, and seamless integration with Vue components.",
+        "🌸 **GSAP** handles all falling petals, hover effects, and smooth layout reveals without any overhead.",
+        "🌸 **Supabase + MCP** acts as my intelligent Headless CMS: I don't need a heavy admin UI because I can manage comments and publish articles directly through conversational AI!",
+        "It gave me total creative freedom without sacrificing speed or developer experience."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌸",
+      items: [
+        "Don't compromise your design vision just to fit inside a pre-made template",
+        "Astro + GSAP delivers unmatched 60fps performance and fluidity",
+        "An AI assistant + MCP server can act as the ultimate custom CMS",
+        "Building custom solutions teaches lessons no plugin could ever offer"
+      ]
+    },
+    closing: "Sometimes starting from scratch is the best decision you can make 🌸",
+    closingSign: "See you in the next entry 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Por Qué Descarté WordPress para mi Portafolio 🌸",
+    date: "27 de Septiembre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Cuando empecé a planear este diario de desarrolladora, mi primer pensamiento fue: '¿Por qué no simplemente instalo WordPress con un tema bonito?'",
+    introDesc: "Sonaba muy sencillo. Pero rápidamente se convirtió en uno de mis mayores dilemas técnicos 🌸",
+    introExtra: [
+      "WordPress impulsa más del 40% de la web. Tiene plugins para todo, formularios de comentarios listos y un panel de administración completo.",
+      "Así que lo intenté. Pasé horas instalando plugins, configurando temas e intentando que se sintiera como *mi* espacio.",
+      "Y entonces me topé con la pared que lo cambió todo: las animaciones con GSAP."
+    ],
+    illusion: {
+      heading: "La Ilusión del CMS Tradicional 🌷",
+      paragraphs: [
+        "Al principio, un CMS tradicional parece un regalo. Tienes base de datos, autenticación y editores de texto listos desde el primer minuto.",
+        "Pensé: '¡Esto me va a ahorrar semanas de trabajo de desarrollo!'",
+        "Pero tan pronto como intenté personalizar el diseño para lograr la estética que imaginaba —animaciones fluidas, glassmorphism, pétalos flotantes y transiciones suaves— todo empezó a fallar.",
+        "Los maquetadores inyectaban scripts pesados, estilos en línea imposibles de sobreescribir y saltos de diseño que arruinaban la experiencia."
+      ]
+    },
+    conflict: {
+      heading: "El Conflicto con GSAP y el Rendimiento 🌺",
+      paragraphs: [
+        "Quienes conocen mi portafolio saben cuánto me importa el movimiento y las microinteracciones.",
+        "GSAP (GreenSock) me permite crear animaciones orgánicas a 60fps que hacen que un sitio web cobre vida.",
+        "Intentar inyectar líneas de tiempo de GSAP e hidratación de Vue dentro de un tema de WordPress se sintió como pelear constantemente contra la plataforma.",
+        "En lugar de animaciones limpias, tenía conflictos de scripts, renderizados lentos y páginas pesadas.",
+        "Ahí fue cuando me di cuenta: estaba sacrificando mi visión de diseño solo por encajar en una plantilla prefabricada."
+      ]
+    },
+    discovery: {
+      heading: "El Descubrimiento: Astro + Supabase + MCP 🌼",
+      paragraphs: [
+        "Así que tomé una decisión drástica: borré la instalación de WordPress por completo y construí mi propio stack moderno desde cero.",
+        "🌸 **Astro** me da un rendimiento ultra rápido, pre-renderizado estático y una integración perfecta con Vue.",
+        "🌸 **GSAP** maneja todos los pétalos, efectos hover y revelados suaves sin ninguna sobrecarga.",
+        "🌸 **Supabase + MCP** funciona como mi CMS Inteligente: no necesito un panel pesado porque puedo moderar comentarios y publicar entradas conversando con mi asistente de IA.",
+        "Me dio libertad creativa absoluta sin perder velocidad ni la experiencia de desarrollo."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌸",
+      items: [
+        "No me conformaré con plantillas cuando mi diseño exige animaciones únicas",
+        "Astro + GSAP ofrece un rendimiento de 60fps que ningun CMS tradicional iguala",
+        "Un servidor MCP + IA funciona como el CMS conversacional perfecto",
+        "Construir soluciones personalizadas enseña lecciones que ningún plugin puede dar"
+      ]
+    },
+    closing: "A veces, empezar desde cero es la mejor decisión que puedes tomar 🌸",
+    closingSign: "Nos vemos en la próxima entrada 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Por Que Descartei o WordPress para o Meu Portfólio 🌸",
+    date: "27 de Setembro, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Quando comecei a planejar este diário de desenvolvedora, meu primeiro pensamento foi: 'Por que não instalar o WordPress com um tema bonito?'",
+    introDesc: "Parecia simples. Mas rapidamente se tornou um dos meus maiores dilemas técnicos 🌸",
+    introExtra: [
+      "O WordPress alimenta mais de 40% da web. Tem plugins para tudo, formulários de comentários prontos e um painel de administração.",
+      "Então eu tentei. Passei horas configurando plugins, temas e tentando fazer com que parecesse o *meu* espaço.",
+      "E então encontrei o obstáculo que mudou tudo: as animações com GSAP."
+    ],
+    illusion: {
+      heading: "A Ilusão do CMS Tradicional 🌷",
+      paragraphs: [
+        "No início, um CMS tradicional parece um presente. Você ganha banco de dados, autenticação e editores prontos.",
+        "Pensei: 'Isso vai me economizar semanas de desenvolvimento!'",
+        "Mas assim que tentei personalizar a interface para corresponder à estética que imaginei — animações fluidas, glassmorphism, pétalas caindo — as coisas começaram a quebrar.",
+        "Os construtores de página introduziram scripts pesados e sobreposições de CSS que estragaram a experiência."
+      ]
+    },
+    conflict: {
+      heading: "O Conflito com o GSAP e o Desempenho 🌺",
+      paragraphs: [
+        "Quem conhece meu portfólio sabe o quanto me importo com movimento e microinterações.",
+        "O GSAP (GreenSock) me permite criar animações orgânicas a 60fps que fazem o site ganhar vida.",
+        "Tentar injetar cronogramas do GSAP dentro de um tema do WordPress foi como lutar contra a plataforma.",
+        "Em vez de animações limpas, eu tinha conflitos de script, renderização lenta e páginas pesadas.",
+        "Foi quando percebi: eu estava sacrificando minha visão apenas para caber em um modelo pronto."
+      ]
+    },
+    discovery: {
+      heading: "A Descoberta: Astro + Supabase + MCP 🌼",
+      paragraphs: [
+        "Então tomei uma decisão corajosa: apaguei a instalação do WordPress e criei minha própria estrutura moderna do zero.",
+        "🌸 **Astro** me dá um desempenho incrível, pré-renderização estática e integração com componentes Vue.",
+        "🌸 **GSAP** cuida de todas as pétalas, efeitos hover e revelações suaves sem peso adicional.",
+        "🌸 **Supabase + MCP** funciona como meu Headless CMS inteligente: não preciso de um painel pesado porque gerencio tudo conversando com meu assistente de IA!",
+        "Isso me deu liberdade criativa total sem comprometer a velocidade."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌸",
+      items: [
+        "Não comprometa sua visão de design apenas para caber em um modelo pronto",
+        "Astro + GSAP oferece desempenho e fluidez incomparáveis de 60fps",
+        "Um assistente de IA + servidor MCP funciona como o CMS personalizado definitivo",
+        "Construir soluções próprias ensina lições que nenhum plugin poderia oferecer"
+      ]
+    },
+    closing: "Às vezes, começar do zero é a melhor decisão que você pode tomar 🌸",
+    closingSign: "Nos vemos na próxima entrada 🌸",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- Illusion Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.illusion.heading}</h2>
+            <div class="section-body">
+              {page.illusion.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Conflict Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.conflict.heading}</h2>
+            <div class="section-body">
+              {page.conflict.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Discovery Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.discovery.heading}</h2>
+            <div class="section-body">
+              {page.discovery.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Remember Section -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing Block -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+          <!-- Comments Section -->
+          <CommentsSection slug="blog-wordpress" lang={lang} client:load />
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>

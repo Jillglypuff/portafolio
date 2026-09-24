@@ -1,0 +1,800 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Step-by-Step: How I Built an MCP Server to Moderate Blog Comments 🌸",
+    date: "September 25, 2026",
+    subtitle: "A technical guide by Jill",
+    back: 'Back to Home',
+    intro: "After adding comments to my developer diary, I wanted a clean, automated way to manage and moderate them directly from my AI assistant.",
+    introDesc: "Here is the exact step-by-step guide on how I built a custom MCP server with Supabase 🌸",
+    introExtra: [
+      "MCP (Model Context Protocol) allows AI models to safely execute tools and interact with external services.",
+      "Instead of building a heavy traditional admin dashboard, I created a lightweight MCP server in Node.js.",
+      "Now I can list pending comments, approve them, or filter spam simply by chatting with my assistant!"
+    ],
+    step1: {
+      heading: "Step 1: Setting Up the Supabase Database 🌷",
+      paragraphs: [
+        "First, I created a `comments` table in Supabase to hold all visitor feedback along with a moderation status (`pending`, `approved`, `rejected`).",
+        "Here is the SQL schema I executed in the Supabase SQL Editor:"
+      ],
+      codeLabel: "supabase/schema.sql",
+      code: `CREATE TABLE IF NOT EXISTS comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_slug TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  content TEXT NOT NULL,
+  status TEXT DEFAULT 'pending', -- 'pending' | 'approved' | 'rejected'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);`
+    },
+    step2: {
+      heading: "Step 2: Initializing the MCP Server with Node.js 🌺",
+      paragraphs: [
+        "Next, I initialized an MCP server using `@modelcontextprotocol/sdk` and `@supabase/supabase-js`.",
+        "I registered tools like `list_pending_comments`, `approve_comment`, `reject_comment`, and `publish_blog_post`."
+      ],
+      codeLabel: "mcp-server/index.mjs",
+      code: `import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+const server = new Server({
+  name: 'portfolio-blog-mcp',
+  version: '1.0.0',
+}, { capabilities: { tools: {} } });`
+    },
+    step3: {
+      heading: "Step 3: Handling Tool Requests for Moderation 🌼",
+      paragraphs: [
+        "Each tool maps directly to a Supabase query. For instance, when I ask to approve a comment by ID, the tool updates the `status` column to `'approved'`:"
+      ],
+      codeLabel: "approve_comment handler snippet",
+      code: `case 'approve_comment': {
+  const { comment_id } = args;
+  const { data, error } = await supabase
+    .from('comments')
+    .update({ status: 'approved' })
+    .eq('id', comment_id)
+    .select();
+
+  if (error) throw error;
+  return {
+    content: [{ type: 'text', text: \`✅ Comment from "\${data[0].author_name}" APPROVED.\` }]
+  };
+}`
+    },
+    step4: {
+      heading: "Step 4: Connecting MCP to Claude / Cursor / Antigravity 🌸",
+      paragraphs: [
+        "Finally, I added the server configuration to my MCP settings file so the AI assistant loads it automatically upon startup:"
+      ],
+      codeLabel: "mcp_config.json",
+      code: `{
+  "mcpServers": {
+    "portfolio-blog": {
+      "command": "node",
+      "args": ["/path/to/portafolio/mcp-server/index.mjs"],
+      "env": {
+        "PUBLIC_SUPABASE_URL": "https://your-project.supabase.co",
+        "SUPABASE_SERVICE_ROLE_KEY": "your-service-role-key"
+      }
+    }
+  }
+}`
+    },
+    remember: {
+      heading: "Key Takeaways I Want To Remember 🌸",
+      items: [
+        "MCP transforms your AI assistant into an intelligent CMS 🌸",
+        "Supabase Service Role Key allows secure server-side updates 🌷",
+        "You don't need heavy admin UIs when conversational tools exist 🌺",
+        "Automating comment moderation saves hours of manual work 🌼"
+      ]
+    },
+    closing: "I hope this step-by-step technical guide helps you build your own MCP workflows 🌸",
+    closingSign: "Happy coding 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Paso a Paso: Cómo Implementé un MCP Server para Moderar Comentarios en mi Blog 🌸",
+    date: "25 de Septiembre, 2026",
+    subtitle: "Una guía técnica por Jill",
+    back: "Volver al Inicio",
+    intro: "Tras agregar comentarios a mi diario de desarrolladora, quería una forma limpia y automatizada de gestionarlos y moderarlos directamente con mi asistente de IA.",
+    introDesc: "Esta es la guía paso a paso de cómo construí un servidor MCP personalizado con Supabase 🌸",
+    introExtra: [
+      "MCP (Model Context Protocol) permite a los modelos de IA ejecutar herramientas y conectarse con servicios externos de manera segura.",
+      "En lugar de construir un panel de administración tradicional y pesado, creé un servidor MCP ligero en Node.js.",
+      "¡Ahora puedo listar comentarios pendientes, aprobarlos o filtrar spam simplemente conversando con mi asistente!"
+    ],
+    step1: {
+      heading: "Paso 1: Configurar la Base de Datos en Supabase 🌷",
+      paragraphs: [
+        "Primero, creé la tabla `comments` en Supabase para almacenar todos los comentarios recibidos junto con su estado de moderación (`pending`, `approved`, `rejected`).",
+        "Este es el esquema SQL que ejecuté en el Editor SQL de Supabase:"
+      ],
+      codeLabel: "supabase/schema.sql",
+      code: `CREATE TABLE IF NOT EXISTS comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_slug TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  content TEXT NOT NULL,
+  status TEXT DEFAULT 'pending', -- 'pending' | 'approved' | 'rejected'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);`
+    },
+    step2: {
+      heading: "Paso 2: Inicializar el Servidor MCP con Node.js 🌺",
+      paragraphs: [
+        "Luego, inicialicé el servidor MCP utilizando `@modelcontextprotocol/sdk` y `@supabase/supabase-js`.",
+        "Registré herramientas como `list_pending_comments`, `approve_comment`, `reject_comment` y `publish_blog_post`."
+      ],
+      codeLabel: "mcp-server/index.mjs",
+      code: `import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+const server = new Server({
+  name: 'portfolio-blog-mcp',
+  version: '1.0.0',
+}, { capabilities: { tools: {} } });`
+    },
+    step3: {
+      heading: "Paso 3: Manejar las Peticiones de Moderación 🌼",
+      paragraphs: [
+        "Cada herramienta se conecta directamente con la API de Supabase. Por ejemplo, al aprobar un comentario por ID, el servidor actualiza la columna `status` a `'approved'`:"
+      ],
+      codeLabel: "Manejador approve_comment",
+      code: `case 'approve_comment': {
+  const { comment_id } = args;
+  const { data, error } = await supabase
+    .from('comments')
+    .update({ status: 'approved' })
+    .eq('id', comment_id)
+    .select();
+
+  if (error) throw error;
+  return {
+    content: [{ type: 'text', text: \`✅ Comentario de "\${data[0].author_name}" APROBADO.\` }]
+  };
+}`
+    },
+    step4: {
+      heading: "Paso 4: Conectar MCP a Claude / Cursor / Antigravity 🌸",
+      paragraphs: [
+        "Por último, agregué la configuración del servidor a mi archivo de ajustes MCP para que la IA lo reconozca automáticamente:"
+      ],
+      codeLabel: "mcp_config.json",
+      code: `{
+  "mcpServers": {
+    "portfolio-blog": {
+      "command": "node",
+      "args": ["/path/to/portafolio/mcp-server/index.mjs"],
+      "env": {
+        "PUBLIC_SUPABASE_URL": "https://tu-proyecto.supabase.co",
+        "SUPABASE_SERVICE_ROLE_KEY": "tu-service-role-key"
+      }
+    }
+  }
+}`
+    },
+    remember: {
+      heading: "Lecciones Clave Que Quiero Recordar 🌸",
+      items: [
+        "MCP convierte a tu asistente de IA en un CMS conversacional 🌸",
+        "La llave Service Role de Supabase permite actualizaciones seguras desde el servidor 🌷",
+        "No necesitas paneles pesados cuando cuentas con herramientas conversacionales 🌺",
+        "Automatizar la moderación ahorra horas de trabajo manual 🌼"
+      ]
+    },
+    closing: "Espero que esta guía técnica paso a paso te inspire a crear tus propios flujos con MCP 🌸",
+    closingSign: "¡Feliz desarrollo! 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Passo a Passo: Como Criei um MCP Server para Moderar Comentários no Meu Blog 🌸",
+    date: "25 de Setembro, 2026",
+    subtitle: "Um guia técnico por Jill",
+    back: "Voltar ao Início",
+    intro: "Após adicionar comentários ao meu diário de desenvolvedora, eu queria uma maneira automatizada e limpa de gerenciar e moderar tudo diretamente com meu assistente de IA.",
+    introDesc: "Este é o guia passo a passo de como construí um servidor MCP com Supabase 🌸",
+    introExtra: [
+      "O MCP (Model Context Protocol) permite que modelos de IA executem ferramentas e se conectem a serviços externos com segurança.",
+      "Em vez de construir um painel de administração tradicional, criei um servidor MCP leve em Node.js.",
+      "Agora posso listar comentários pendentes, aprová-los ou filtrar spam simplesmente conversando com meu assistente!"
+    ],
+    step1: {
+      heading: "Passo 1: Configurar o Banco de Dados no Supabase 🌷",
+      paragraphs: [
+        "Primeiro, criei a tabela `comments` no Supabase para armazenar todos os comentários com o status de moderação (`pending`, `approved`, `rejected`).",
+        "Aqui está o esquema SQL que executei:"
+      ],
+      codeLabel: "supabase/schema.sql",
+      code: `CREATE TABLE IF NOT EXISTS comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_slug TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  content TEXT NOT NULL,
+  status TEXT DEFAULT 'pending', -- 'pending' | 'approved' | 'rejected'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);`
+    },
+    step2: {
+      heading: "Passo 2: Inicializar o Servidor MCP em Node.js 🌺",
+      paragraphs: [
+        "Em seguida, inicializei o servidor MCP usando `@modelcontextprotocol/sdk` e `@supabase/supabase-js`.",
+        "Registrei ferramentas como `list_pending_comments`, `approve_comment`, `reject_comment` e `publish_blog_post`."
+      ],
+      codeLabel: "mcp-server/index.mjs",
+      code: `import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+const server = new Server({
+  name: 'portfolio-blog-mcp',
+  version: '1.0.0',
+}, { capabilities: { tools: {} } });`
+    },
+    step3: {
+      heading: "Passo 3: Manipular as Requisições de Moderação 🌼",
+      paragraphs: [
+        "Cada ferramenta se conecta diretamente à API do Supabase. Por exemplo, ao aprovar um comentário por ID, o servidor atualiza o status para `'approved'`:"
+      ],
+      codeLabel: "Manipulador approve_comment",
+      code: `case 'approve_comment': {
+  const { comment_id } = args;
+  const { data, error } = await supabase
+    .from('comments')
+    .update({ status: 'approved' })
+    .eq('id', comment_id)
+    .select();
+
+  if (error) throw error;
+  return {
+    content: [{ type: 'text', text: \`✅ Comentário de "\${data[0].author_name}" APROVADO.\` }]
+  };
+}`
+    },
+    step4: {
+      heading: "Passo 4: Conectar o MCP ao Claude / Cursor / Antigravity 🌸",
+      paragraphs: [
+        "Por fim, adicionei a configuração do servidor ao meu arquivo de ajustes MCP para carregar automaticamente:"
+      ],
+      codeLabel: "mcp_config.json",
+      code: `{
+  "mcpServers": {
+    "portfolio-blog": {
+      "command": "node",
+      "args": ["/path/to/portafolio/mcp-server/index.mjs"],
+      "env": {
+        "PUBLIC_SUPABASE_URL": "https://seu-projeto.supabase.co",
+        "SUPABASE_SERVICE_ROLE_KEY": "sua-chave-service-role"
+      }
+    }
+  }
+}`
+    },
+    remember: {
+      heading: "Lições Que Quero Lembrar 🌸",
+      items: [
+        "O MCP transforma seu assistente de IA em um CMS conversacional 🌸",
+        "A chave Service Role do Supabase garante atualizações seguras no servidor 🌷",
+        "Não são necessários painéis pesados quando temos ferramentas conversacionais 🌺",
+        "Automatizar a moderação economiza horas de trabalho manual 🌼"
+      ]
+    },
+    closing: "Espero que este guia técnico passo a passo inspire você a criar seus próprios fluxos com MCP 🌸",
+    closingSign: "Bons códigos! 🌸",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- Step 1 -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.step1.heading}</h2>
+            <div class="section-body">
+              {page.step1.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+              <div class="code-container">
+                <p class="code-label">{page.step1.codeLabel}</p>
+                <pre class="code-block"><code>{page.step1.code}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Step 2 -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.step2.heading}</h2>
+            <div class="section-body">
+              {page.step2.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+              <div class="code-container">
+                <p class="code-label">{page.step2.codeLabel}</p>
+                <pre class="code-block"><code>{page.step2.code}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Step 3 -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.step3.heading}</h2>
+            <div class="section-body">
+              {page.step3.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+              <div class="code-container">
+                <p class="code-label">{page.step3.codeLabel}</p>
+                <pre class="code-block"><code>{page.step3.code}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Step 4 -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.step4.heading}</h2>
+            <div class="section-body">
+              {page.step4.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+              <div class="code-container">
+                <p class="code-label">{page.step4.codeLabel}</p>
+                <pre class="code-block"><code>{page.step4.code}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Remember Section -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing Block -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+          <!-- Comments Section -->
+          <CommentsSection slug="blog-mcp-guide" lang={lang} client:load />
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Code Container Styles */
+  .code-container {
+    margin: 1.5rem 0 2rem;
+  }
+
+  .code-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rose);
+    margin-bottom: 6px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .code-block {
+    background: rgba(15, 15, 26, 0.8);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #f8f8f2;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .code-block code {
+    white-space: pre;
+    font-family: inherit;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>
