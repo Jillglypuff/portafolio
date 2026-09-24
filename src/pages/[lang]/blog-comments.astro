@@ -1,0 +1,600 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, Now We Can Chat in the Blog 🌸",
+    date: "September 24, 2026",
+    subtitle: "A developer diary by Jill",
+    back: 'Back to Home',
+    intro: "Building things is wonderful, but sharing them and hearing what others think is where the real magic happens.",
+    introDesc: "That's why I added comments to my developer diary",
+    introExtra: [
+      "For a long time, this blog was a one-way street: I wrote my notes, published them, and hoped they were helpful.",
+      "But technology is all about connection. Now, visitors can leave comments right here on each article!",
+      "I'm so excited to finally open up this space for conversation."
+    ],
+    sharing: {
+      heading: "Sharing Points of View 🌷",
+      paragraphs: [
+        "One of my favorite things about development is seeing how many different ways people can solve the exact same problem.",
+        "Everyone brings a unique background and perspective. When we share our ideas, we all grow faster.",
+        "I wanted this blog to be a place where we can exchange knowledge, learn from each other's experiences, and build a welcoming community."
+      ]
+    },
+    curiosity: {
+      heading: "Curiosity in My Veins & Healthy Debate 🌺",
+      paragraphs: [
+        "If you know me even a little bit, you know that curiosity is literally in my veins (I can't help opening fifteen browser tabs to investigate a single detail!).",
+        "I love asking 'why' and diving into how things work behind the scenes.",
+        "That curiosity naturally leads to healthy, respectful debate. Questioning ideas, discussing trade-offs, and comparing approaches always makes us better developers.",
+        "Whether you want to start a thoughtful technical discussion, or simply leave a sweet note saying 'thanks for the information', every voice is welcome here!"
+      ]
+    },
+    mcpUpdate: {
+      heading: "Powered by MCP & Moderation 🌼",
+      paragraphs: [
+        "Behind the scenes, we built a dedicated MCP (Model Context Protocol) server to manage and moderate comments smoothly.",
+        "This allows me to keep the blog safe, friendly, and respectful, while making it super easy to stay in touch with readers.",
+        "It's amazing how a small protocol update can transform a static reading space into a living dialogue."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember",
+      items: [
+        "Exchanging information always teaches us something new",
+        "Curiosity drives continuous growth and discovery",
+        "Healthy, respectful debate enriches our whole community",
+        "Even a simple 'thanks for the info' can brighten someone's day"
+      ]
+    },
+    closing: "I can't wait to read your thoughts, questions, and ideas below",
+    closingSign: "See you in the comments 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Ahora Podemos Conversar en el Blog 🌸",
+    date: "24 de Septiembre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Construir cosas es maravilloso, pero compartirlas y conocer lo que otros piensan es donde sucede la verdadera magia.",
+    introDesc: "Por eso agregué una sección de comentarios a mi diario de desarrolladora",
+    introExtra: [
+      "Durante mucho tiempo, este blog fue un espacio unidireccional: escribía mis notas, las publicaba y esperaba que fueran de utilidad.",
+      "Pero la tecnología se trata de conectar personas. ¡Ahora, con la nueva actualización e integración MCP, los visitantes pueden dejar comentarios directamente en cada artículo!",
+      "Me entusiasma muchísimo abrir finalmente este espacio para conversar."
+    ],
+    sharing: {
+      heading: "Compartir Puntos de Vista 🌷",
+      paragraphs: [
+        "Una de las cosas que más me apasionan del desarrollo es ver cuántas formas distintas existen para resolver exactamente el mismo problema.",
+        "Cada persona aporta una perspectiva única y una experiencia diferente. Cuando compartimos nuestras ideas, todos aprendemos más rápido.",
+        "Quería que este blog fuera un punto de encuentro para intercambiar conocimientos y aprender de las experiencias de los demás."
+      ]
+    },
+    curiosity: {
+      heading: "La Curiosidad en las Venas y el Debate Sano 🌺",
+      paragraphs: [
+        "Quienes me conocen saben que la curiosidad está literalmente en mis venas (¡no puedo evitar abrir quince pestañas para investigar un solo detalle técnico!).",
+        "Me fascina hacerme preguntas y descubrir cómo funcionan las cosas por dentro.",
+        "Esa curiosidad me lleva de manera natural al debate sano y respetuoso. Cuestionar ideas, sopesar alternativas y comparar enfoques nos convierte en mejores profesionales.",
+        "Ya sea que quieras iniciar una discusión técnica enriquecedora, o simplemente dejar un lindo comentario diciendo 'gracias por la información', ¡todas las aportaciones son super bienvenidas!"
+      ]
+    },
+    mcpUpdate: {
+      heading: "Conectado mediante MCP y Moderación 🌼",
+      paragraphs: [
+        "Detrás de escena, creamos un servidor MCP (Model Context Protocol) dedicado para gestionar y moderar los comentarios con fluidez.",
+        "Esto nos permite mantener un espacio seguro, amable y constructivo, mientras facilita la interacción directa con la comunidad.",
+        "Es increíble cómo una pequeña actualización de protocolo puede transformar un blog estático en una conversación viva."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌸",
+      items: [
+        "Intercambiar información siempre nos enseña algo nuevo",
+        "La curiosidad es el motor del aprendizaje continuo",
+        "El debate sano y respetuoso enriquece a toda la comunidad",
+        "Un simple 'gracias por la información' puede alegrar el día de alguien"
+      ]
+    },
+    closing: "Estoy muy ansiosa por leer tus opiniones, dudas e ideas en los comentarios",
+    closingSign: "Nos vemos en los comentarios 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Agora Podemos Conversar no Blog 🌸",
+    date: "24 de Setembro, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Construir cosas é incrível, mas compartilhar e ouvir o que os outros pensam é onde a verdadeira magia acontece.",
+    introDesc: "Por isso adicionei uma seção de comentários ao meu diário de desenvolvedora",
+    introExtra: [
+      "Por muito tempo, este blog foi um caminho de mão única: eu escrevia minhas notas, publicava e torcia para serem úteis.",
+      "Mas a tecnologia é sobre conexão. Agora, com a nova atualização e integração MCP, os leitores podem deixar comentários em cada artigo!",
+      "Estou muito animada para abrir este espaço para conversas."
+    ],
+    sharing: {
+      heading: "Compartilhar Pontos de Vista 🌷",
+      paragraphs: [
+        "Uma das coisas que mais amo no desenvolvimento é ver quantas maneiras diferentes existem para resolver o mesmo problema.",
+        "Cada pessoa traz uma bagagem e uma perspectiva única. Quando compartilhamos nossas ideias, todos evoluímos mais rápido.",
+        "Eu queria que este blog fosse um lugar para trocar conhecimento e aprender com as experiências de todos."
+      ]
+    },
+    curiosity: {
+      heading: "A Curiosidade nas Veias e o Debate Saudável 🌺",
+      paragraphs: [
+        "Quem me conhece sabe que a curiosidade está literalmente nas minhas veias (não consigo evitar abrir quinze abas para investigar um único detalhe!).",
+        "Adoro perguntar 'por quê' e entender como as coisas funcionam nos bastidores.",
+        "Essa curiosidade me leva naturalmente a um debate saudável e respeitoso. Discutir ideias e comparar abordagens sempre nos torna melhores desenvolvedores.",
+        "Seja para começar uma conversa técnica bacana ou apenas deixar uma mensagem carinhosa dizendo 'obrigada pela informação', todos são super bem-vindos!"
+      ]
+    },
+    mcpUpdate: {
+      heading: "Conectado via MCP e Moderação 🌼",
+      paragraphs: [
+        "Nos bastidores, construímos um servidor MCP (Model Context Protocol) dedicado para gerenciar e moderar os comentários com facilidade.",
+        "Isso permite manter um ambiente seguro, acolhedor e respeitoso para todos os leitores.",
+        "É incrível como uma atualização de protocolo pode transformar um blog estático em um diálogo vivo."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌸",
+      items: [
+        "Trocar informações sempre nos ensina algo novo",
+        "A curiosidade move o aprendizado contínuo",
+        "O debate saudável e respeitoso enriquece a comunidade",
+        "Até um simples 'obrigado pela informação' ilumina o dia de alguém"
+      ]
+    },
+    closing: "Estou ansiosa para ler seus pensamentos e opiniões aqui embaixo",
+    closingSign: "Nos vemos nos comentários 🌸",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- Sharing Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.sharing.heading}</h2>
+            <div class="section-body">
+              {page.sharing.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Curiosity Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.curiosity.heading}</h2>
+            <div class="section-body">
+              {page.curiosity.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- MCP Update Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.mcpUpdate.heading}</h2>
+            <div class="section-body">
+              {page.mcpUpdate.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Remember Section -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing Block -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+          <!-- Comments Section -->
+          <CommentsSection slug="blog-comments" lang={lang} client:load />
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  .section-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>

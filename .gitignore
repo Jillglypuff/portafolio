@@ -1,7 +1,10 @@
 dist/
 node_modules/
 .astro/
+.vercel/
+scratch/
 .env
 .env.*
 !.env.example
 .DS_Store
+
