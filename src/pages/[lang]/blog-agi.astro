@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
 
 export function getStaticPaths() {
   return [
@@ -1167,6 +1168,8 @@ const page = content[lang] || content.en;
             <p class="signature">{page.signature}</p>
           </div>
 
+          <!-- Comments Section -->
+          <CommentsSection slug="blog-agi" lang={lang} client:load />
         </div>
       </article>
 

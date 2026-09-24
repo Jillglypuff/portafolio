@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
 import graficoIA from '../../assets/grafico_IA.png';
 
 export function getStaticPaths() {
@@ -885,6 +886,8 @@ const page = content[lang] || content.es;
             </div>
           </footer>
 
+          <!-- Comments Section -->
+          <CommentsSection slug="blog-rankings" lang={lang} client:load />
         </div>
       </article>
 
