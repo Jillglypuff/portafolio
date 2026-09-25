@@ -1,0 +1,605 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, What Tools I Code With & My Antigravity Setup 🌸",
+    date: "September 26, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Lately, quite a few people have reached out to ask me: 'Jill, what tools and AI setup do you actually use for programming?'",
+    introDesc: "So I wanted to write a quick, honest, and human entry to share my exact setup 🌸",
+    introExtra: [
+      "There are so many AI tools and IDE extensions popping up every week that choosing a setup can feel overwhelming.",
+      "For me, programming isn't about using the flashiest tool—it's about stability, efficiency, and having an ecosystem that genuinely supports my workflow.",
+      "Here is a look inside what I use every day."
+    ],
+    assistant: {
+      heading: "My Coding Assistant: Antigravity & Gemini 3.6 🌷",
+      paragraphs: [
+        "My primary AI coding environment is **Antigravity**.",
+        "When it comes to models, I personally stick with **Gemini 3.6 Flash**. I find it remarkably stable, reliable, and perfectly balanced for Full Stack development.",
+        "I've tested larger models like 3.8, and while they feel slightly faster, they consume way too many tokens unnecessarily without offering a real advantage for complex tasks.",
+        "For me, Gemini 3.6 Flash gives me the consistency I need without burning through tokens."
+      ]
+    },
+    ecosystem: {
+      heading: "The Google AI Ecosystem & Business Creation 🌺",
+      paragraphs: [
+        "One of the biggest advantages of being in the Google AI / Antigravity suite is the connected ecosystem of creative tools.",
+        "Besides coding, I create content for my business projects, and having seamless access to tools like **NotebookLM** and **Nano Banana** has been a game-changer.",
+        "🌸 **NotebookLM** allows me to ground technical documentation, organize notes, and plan project architectures cleanly.",
+        "🌸 **Nano Banana** helps me generate AI video content for my business marketing effortlessly.",
+        "Having all these tools tied together maximizes the value I get out of my setup every day."
+      ]
+    },
+    perk: {
+      heading: "An Unexpected Perk: YouTube Lite 🌼",
+      paragraphs: [
+        "Just today, I opened my inbox and saw an email from Google announcing a new perk: Antigravity subscribers are getting access to **YouTube Lite**!",
+        "As a Full Stack developer, a massive portion of my continuous learning comes from developer talks, framework tutorials, and live coding videos.",
+        "Having a streamlined, ad-free YouTube experience without interruptions means faster learning and zero distractions when I'm researching technical solutions.",
+        "It's a small detail, but for someone who spends hours learning through video, it makes a huge difference in my daily productivity as a developer."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌸",
+      items: [
+        "Stability and token efficiency matter more than just raw speed",
+        "Gemini 3.6 Flash provides the ideal balance for my Full Stack workflow",
+        "Connected AI tools like NotebookLM and Nano Banana supercharge business content creation",
+        "Ad-free tech video learning with YouTube Lite is a huge productivity booster"
+      ]
+    },
+    closing: "What tools are in your daily coding setup? Let me know in the comments below 🌸",
+    closingSign: "See you in the next entry 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Con Qué Programo y el Ecosistema de Antigravity 🌸",
+    date: "26 de Septiembre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Últimamente varias personas se han acercado a preguntarme: 'Jill, ¿con qué herramientas y qué entorno de IA programas tus proyectos?'",
+    introDesc: "Por eso quería escribir una entrada cortita, humana y transparente para contarte exactamente cuál es mi setup diario 🌸",
+    introExtra: [
+      "Hay tantas herramientas de IA e integraciones saliendo cada semana que elegir una configuración puede sentirse abrumador.",
+      "Para mí, programar no se trata de usar la herramienta más extravagante, sino de tener estabilidad, eficiencia y un ecosistema que realmente impulse mi trabajo diario.",
+      "Aquí te comparto un vistazo de lo que uso todos los días."
+    ],
+    assistant: {
+      heading: "Mi Asistente de Código: Antigravity y Gemini 3.6 🌷",
+      paragraphs: [
+        "Mi entorno principal de desarrollo con IA es **Antigravity**.",
+        "En cuanto al modelo de lenguaje, en lo personal me mantengo con **Gemini 3.6 Flash**. Me parece un modelo sumamente estable, confiable y equilibrado para desarrollo Full Stack.",
+        "He probado modelos superiores como 3.8, y aunque se sienten un toque más rápidos, gastan demasiados tokens de forma innecesaria sin ofrecer una diferencia real en tareas complejas.",
+        "Para mí, Gemini 3.6 Flash ofrece la consistencia exacta que necesito sin malgastar tokens."
+      ]
+    },
+    ecosystem: {
+      heading: "El Ecosistema de Google y Creación de Contenido 🌺",
+      paragraphs: [
+        "Una de las mayores ventajas de estar dentro del entorno de Antigravity / Google AI es el acceso a su ecosistema de herramientas creativas.",
+        "Además de programar, creo contenido para mis proyectos de negocios, y contar con herramientas como **NotebookLM** y **Nano Banana** me ha facilitado muchísimo la vida.",
+        "🌸 **NotebookLM** me permite estructurar documentación técnica, organizar notas y planificar arquitecturas de forma limpia.",
+        "🌸 **Nano Banana** me ayuda a generar contenido en video con IA para el marketing de mis emprendimientos.",
+        "Tener todas estas herramientas conectadas me permite sacarle el máximo provecho a mi suscripción todos los días."
+      ]
+    },
+    perk: {
+      heading: "Una Novedad Inesperada: YouTube Lite 🌼",
+      paragraphs: [
+        "Hoy mismo abrí mi correo electrónico y me llegó una gran noticia: ¡Google está regalando acceso a **YouTube Lite** para los suscriptores de Antigravity!",
+        "Como desarrolladora Full Stack, gran parte de mi aprendizaje continuo proviene de charlas técnicas, tutoriales de arquitectura y videos de código.",
+        "Contar con una experiencia de YouTube fluida y sin anuncios significa aprender más rápido y sin distracciones mientras investigo soluciones técnicas.",
+        "Es un detalle genial que impacta positivamente mi productividad diaria al aprender mediante video."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌸",
+      items: [
+        "La estabilidad y la eficiencia de tokens importan más que la velocidad pura",
+        "Gemini 3.6 Flash me ofrece el equilibrio perfecto para mi trabajo Full Stack",
+        "Herramientas conectadas como NotebookLM y Nano Banana potencian mi creación de contenido",
+        "Aprender tecnología en video sin anuncios con YouTube Lite impulsa mi productividad"
+      ]
+    },
+    closing: "¿Qué herramientas utilizas en tu setup diario? ¡Cuéntame en los comentarios! 🌸",
+    closingSign: "Nos vemos en la próxima entrada 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Quais Ferramentas Eu Uso para Programar & Meu Setup com Antigravity 🌸",
+    date: "26 de Setembro, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Ultimamente, várias pessoas me perguntaram: 'Jill, quais ferramentas e IA você realmente usa para programar?'",
+    introDesc: "Por isso queria escrever uma entrada curtinha, humana e transparente para mostrar meu setup 🌸",
+    introExtra: [
+      "Existem tantas ferramentas de IA surgindo semanalmente que escolher um setup pode parecer confuso.",
+      "Para mim, programar é sobre estabilidade, eficiência e ter um ecossistema que realmente ajude no meu trabalho diário.",
+      "Aqui está um olhar sobre o que uso todos os dias."
+    ],
+    assistant: {
+      heading: "Meu Assistente de Código: Antigravity & Gemini 3.6 🌷",
+      paragraphs: [
+        "Meu ambiente principal de desenvolvimento com IA é o **Antigravity**.",
+        "Em relação aos modelos, eu pessoalmente prefiro o **Gemini 3.6 Flash**. Acho um modelo incrivelmente estável, confiável e bem equilibrado para desenvolvimento Full Stack.",
+        "Testei modelos como o 3.8 e, embora pareçam um pouco mais rápidos, gastam tokens demais desnecessariamente sem oferecer uma vantagem real em tarefas complexas.",
+        "Para mim, o Gemini 3.6 Flash oferece a consistência exata de que preciso."
+      ]
+    },
+    ecosystem: {
+      heading: "O Ecossistema Google AI & Criação de Conteúdo 🌺",
+      paragraphs: [
+        "Uma das maiores vantagens de estar no ecossistema Antigravity / Google AI é o acesso a ferramentas criativas conectadas.",
+        "Além de programar, crio conteúdo para meus negócios, e ter acesso a ferramentas como **NotebookLM** e **Nano Banana** facilitou muito o meu dia a dia.",
+        "🌸 **NotebookLM** me permite organizar documentação técnica, notas e planejar arquiteturas.",
+        "🌸 **Nano Banana** me ajuda a gerar vídeos com IA para o marketing dos meus projetos.",
+        "Ter todas essas ferramentas conectadas me permite aproveitar ao máximo meu setup."
+      ]
+    },
+    perk: {
+      heading: "Uma Novidade Inesperada: YouTube Lite 🌼",
+      paragraphs: [
+        "Hoje mesmo recebi um e-mail informando que os assinantes do Antigravity receberão acesso ao **YouTube Lite**!",
+        "Como desenvolvedora Full Stack, grande parte do meu aprendizado vem de tutoriais, palestras de tecnologia e vídeos de código.",
+        "Ter uma experiência de vídeos sem anúncios significa aprender mais rápido e sem distrações enquanto pesquiso soluções técnicas.",
+        "É um benefício incrível que aumenta minha produtividade diária de estudo."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌸",
+      items: [
+        "Estabilidade e eficiência de tokens importam mais do que apenas velocidade",
+        "O Gemini 3.6 Flash oferece o equilíbrio perfeito para meu trabalho Full Stack",
+        "Ferramentas conectadas como NotebookLM e Nano Banana impulsionam minha criação de conteúdo",
+        "Aprender programação sem anúncios no YouTube Lite aumenta a produtividade"
+      ]
+    },
+    closing: "Quais ferramentas você usa no seu setup diário? Me conte nos comentários 🌸",
+    closingSign: "Nos vemos na próxima entrada 🌸",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p set:html={para}></p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- Assistant Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.assistant.heading}</h2>
+            <div class="section-body">
+              {page.assistant.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Ecosystem Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.ecosystem.heading}</h2>
+            <div class="section-body">
+              {page.ecosystem.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Perk Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.perk.heading}</h2>
+            <div class="section-body">
+              {page.perk.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Remember Section -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing Block -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+          <!-- Comments Section -->
+          <CommentsSection slug="blog-antigravity" lang={lang} client:load />
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>
