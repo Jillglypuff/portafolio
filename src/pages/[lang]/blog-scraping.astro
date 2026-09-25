@@ -1,0 +1,710 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Dear Diary, What Is Web Scraping & How I Used It to Reverse-Engineer GSAP Animations 🌸",
+    date: "October 1, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Web Scraping is one of those technical terms that sounds intimidating until you realize it's basically teaching software how to read and extract data from web pages.",
+    introDesc: "Today I want to explain what web scraping is, how it works, and share a personal story of how it helped me decode a complex GSAP animation 🌸",
+    introExtra: [
+      "Whether you're gathering data for market research, monitoring prices, or analyzing public code, web scraping is an essential superpower in a developer's toolkit.",
+      "Here is how I use it in my real-world workflow."
+    ],
+    whatIsIt: {
+      heading: "What Is Web Scraping? 🌷",
+      paragraphs: [
+        "In simple terms, **Web Scraping** is an automated technique used to extract data, HTML elements, scripts, or text from websites.",
+        "Instead of manually copying and pasting information from a browser tab, a script fetches the web page, parses its Document Object Model (DOM), and extracts the exact pieces of information you need.",
+        "Here is a simple example of fetching and parsing HTML in JavaScript:"
+      ],
+      codeLabel: "Simple Web Scraping in Node.js",
+      code: `import fetch from 'node-fetch';
+import { JSDOM } from 'jsdom';
+
+async function scrapePage(url) {
+  const response = await fetch(url);
+  const html = await response.text();
+  const dom = new JSDOM(html);
+  const title = dom.window.document.querySelector('h1')?.textContent;
+  return { title };
+}`
+    },
+    story: {
+      heading: "My Personal Story: Decoding GSAP Animations 🌺",
+      paragraphs: [
+        "A while ago, I was browsing an inspiration gallery looking for smooth UI ideas for my portfolio.",
+        "I stumbled upon a website with an extraordinary, fluid GSAP scroll animation. I loved the effect, but I didn't know how to put into words what the math or keyframes were doing behind the scenes.",
+        "I couldn't just tell my AI assistant 'make that cool wave effect' because I didn't know the exact CSS or GSAP properties used.",
+        "So I used web scraping! I gave the URL to my assistant and asked it to scrape the page's scripts, DOM nodes, and inline animation properties.",
+        "By analyzing the extracted GSAP timeline triggers, duration parameters, and easing functions, the AI broke down the exact math for me. It was like magic!"
+      ]
+    },
+    useCases: {
+      heading: "Other Powerful Real-World Use Cases 🌼",
+      paragraphs: [
+        "Reverse-engineering animations is just one creative application. Web scraping is widely used across the industry for:",
+        "🌸 **Market & Competitor Analysis:** Tracking public product catalogs and feature releases.",
+        "🌸 **E-commerce Price Monitoring:** Aggregating price changes across platforms automatically.",
+        "🌸 **Dataset Collection for AI:** Gathering public text or structured data to fine-tune AI models.",
+        "🌸 **Automated Auditing:** Extracting SEO meta tags, broken links, or accessibility headers from large sites."
+      ]
+    },
+    ethics: {
+      heading: "Doing It Responsibly & Ethically 🌸",
+      paragraphs: [
+        "With great power comes great responsibility! When performing web scraping, I always adhere to best practices:",
+        "🌸 **Respect robots.txt:** Always check what endpoints a site permits for automated access.",
+        "🌸 **Rate Limiting:** Don't overload target servers with hundreds of requests per second.",
+        "🌸 **Public Data Only:** Only scrape publicly accessible information and respect user privacy."
+      ]
+    },
+    remember: {
+      heading: "Things I Want To Remember 🌸",
+      items: [
+        "Web scraping turns unorganized web pages into structured, usable data",
+        "It's a fantastic tool for reverse-engineering complex UI animations and GSAP timelines",
+        "Always combine automated fetching with DOM parsing libraries like JSDOM or Cheerio",
+        "Scrape responsibly by honoring rate limits and robots.txt guidelines"
+      ]
+    },
+    closing: "Have you ever used web scraping in your own projects? Share your experience in the comments below 🌸",
+    closingSign: "See you in the next entry 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Qué Es Web Scraping y Cómo lo Usé para Descodificar Animaciones de GSAP 🌸",
+    date: "1 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "El término Web Scraping suena muy técnico hasta que entiendes que consiste en enseñarle al software a leer y extraer datos automáticamente de páginas web.",
+    introDesc: "Hoy quiero explicarte qué es el web scraping, cómo funciona y contarte la historia de cómo me ayudó a recrear una animación compleja de GSAP 🌸",
+    introExtra: [
+      "Ya sea para recopilar información en investigación de mercado, monitorear precios o analizar código público, el web scraping es una habilidad fantástica en el kit de cualquier desarrolladora.",
+      "Aquí te comparto cómo lo aplico en mi flujo de trabajo real."
+    ],
+    whatIsIt: {
+      heading: "¿Qué Es Web Scraping? 🌷",
+      paragraphs: [
+        "En términos sencillos, el **Web Scraping** es una técnica automatizada para extraer datos, elementos HTML, scripts o texto desde sitios web.",
+        "En lugar de copiar y pegar información manualmente desde el navegador, un script consulta la página web, analiza su Document Object Model (DOM) y extrae los fragmentos exactos que necesitas.",
+        "Aquí tienes un ejemplo básico de cómo obtener y analizar HTML en JavaScript:"
+      ],
+      codeLabel: "Ejemplo de Web Scraping en Node.js",
+      code: `import fetch from 'node-fetch';
+import { JSDOM } from 'jsdom';
+
+async function scrapePage(url) {
+  const response = await fetch(url);
+  const html = await response.text();
+  const dom = new JSDOM(html);
+  const title = dom.window.document.querySelector('h1')?.textContent;
+  return { title };
+}`
+    },
+    story: {
+      heading: "Mi Historia Personal: Descodificando Animaciones en GSAP 🌺",
+      paragraphs: [
+        "Hace un tiempo estaba navegando en un sitio de inspiración buscando ideas visuales para mi portafolio.",
+        "Me encontré con una web que tenía una animación increíble con GSAP al hacer scroll. Me fascinó el efecto, pero no sabía cómo explicar con palabras la matemática o los parámetros que ocurrían detrás de escena.",
+        "No podía simplemente decirle a mi asistente de IA 'hazme ese efecto tan genial' porque no conocía las propiedades exactas de CSS o GSAP que estaban usando.",
+        "¡Así que usé web scraping! Le pasé el enlace a mi asistente y le pedí que hiciera scraping de los scripts, nodos del DOM y propiedades de animación de la página.",
+        "Al analizar los activadores de la línea de tiempo de GSAP, duraciones y funciones de *easing* extraídas, la IA me desglosó la matemática exacta. ¡Fue genial!"
+      ]
+    },
+    useCases: {
+      heading: "Otros Casos de Uso Poderosos 🌼",
+      paragraphs: [
+        "Ingeniería inversa de animaciones es solo un uso creativo. El web scraping se usa ampliamente en la industria para:",
+        "🌸 **Análisis de Mercado y Competencia:** Rastrear catálogos públicos de productos y lanzamientos.",
+        "🌸 **Monitoreo de Precios en E-commerce:** Automatizar el seguimiento de cambios de precio entre plataformas.",
+        "🌸 **Recopilación de Datasets para IA:** Extraer texto público o datos estructurados para entrenar o contextualizar modelos.",
+        "🌸 **Auditorías Automatizadas:** Extraer etiquetas SEO, enlaces rotos o encabezados de accesibilidad en sitios grandes."
+      ]
+    },
+    ethics: {
+      heading: "Hacerlo de Forma Responsable y Ética 🌸",
+      paragraphs: [
+        "Un gran poder conlleva una gran responsabilidad. Al hacer web scraping, siempre aplico buenas prácticas:",
+        "🌸 **Respetar robots.txt:** Verificar qué rutas permite o restringe el sitio para acceso automatizado.",
+        "🌸 **Control de Frecuencia (Rate Limiting):** No saturar los servidores destino con cientos de peticiones por segundo.",
+        "🌸 **Solo Datos Públicos:** Extraer únicamente información de acceso público respetando la privacidad de los usuarios."
+      ]
+    },
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌸",
+      items: [
+        "El web scraping transforma páginas web no estructuradas en datos limpios y aprovechables",
+        "Es una herramienta fabulosa para hacer ingeniería inversa a animaciones complejas en GSAP",
+        "Combina siempre peticiones de red con librerías de parseo del DOM como JSDOM o Cheerio",
+        "Practica el scraping responsable respetando límites de peticiones y archivos robots.txt"
+      ]
+    },
+    closing: "¿Has utilizado web scraping en alguno de tus proyectos? ¡Cuéntame tu experiencia en los comentarios! 🌸",
+    closingSign: "Nos vemos en la próxima entrada 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, O Que É Web Scraping & Como Usei para Decodificar Animações em GSAP 🌸",
+    date: "1 de Outubro, 2026",
+    subtitle: "Diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "O termo Web Scraping soa muito técnico até você entender que consiste em ensinar o software a ler e extrair dados de páginas web.",
+    introDesc: "Hoje quero explicar o que é web scraping, como funciona e contar como ele me ajudou a recriar uma animação complexa em GSAP 🌸",
+    introExtra: [
+      "Seja para coletar dados em pesquisas de mercado, monitorar preços ou analisar código público, o web scraping é uma habilidade incrível no kit de qualquer desenvolvedora.",
+      "Aqui mostro como aplico isso no meu fluxo de trabalho real."
+    ],
+    whatIsIt: {
+      heading: "O Que É Web Scraping? 🌷",
+      paragraphs: [
+        "Em termos simples, o **Web Scraping** é uma técnica automatizada para extrair dados, elementos HTML, scripts ou texto de sites.",
+        "Em vez de copiar e colar informações manualmente do navegador, um script busca a página web, analisa o DOM e extrai exatamente as informações de que você precisa.",
+        "Aqui está um exemplo simples de busca e análise de HTML em JavaScript:"
+      ],
+      codeLabel: "Exemplo de Web Scraping em Node.js",
+      code: `import fetch from 'node-fetch';
+import { JSDOM } from 'jsdom';
+
+async function scrapePage(url) {
+  const response = await fetch(url);
+  const html = await response.text();
+  const dom = new JSDOM(html);
+  const title = dom.window.document.querySelector('h1')?.textContent;
+  return { title };
+}`
+    },
+    story: {
+      heading: "Minha História Pessoal: Decodificando Animações GSAP 🌺",
+      paragraphs: [
+        "Um tempo atrás eu estava navegando em um site de inspiração procurando ideias visuais para meu portfólio.",
+        "Encontrei um site com uma animação incrível em GSAP ao rolar a página. Adorei o efeito, mas não sabia como explicar em palavras a matemática por trás da cena.",
+        "Eu não podia simplesmente dizer ao assistente de IA 'faça aquele efeito legal' porque não sabia as propriedades exatas de CSS ou GSAP usadas.",
+        "Então usei web scraping! Passei o link para meu assistente e pedi para fazer scraping dos scripts, nós do DOM e propriedades de animação.",
+        "Ao analisar os acionadores da linha do tempo do GSAP e funções de *easing*, a IA desfez a matemática exata para mim. Foi incrível!"
+      ]
+    },
+    useCases: {
+      heading: "Outros Casos de Uso Poderosos 🌼",
+      paragraphs: [
+        "Fazer engenharia reversa de animações é apenas um uso criativo. O web scraping é amplamente usado na indústria para:",
+        "🌸 **Análise de Mercado e Concorrência:** Acompanhar catálogos públicos de produtos.",
+        "🌸 **Monitoramento de Preços em E-commerce:** Automatizar o rastreamento de preços.",
+        "🌸 **Coleta de Datasets para IA:** Extrair texto público para contextualizar modelos.",
+        "🌸 **Auditorias Automatizadas:** Extrair meta tags SEO ou links quebrados."
+      ]
+    },
+    ethics: {
+      heading: "Fazendo de Forma Responsável e Ética 🌸",
+      paragraphs: [
+        "Com grandes poderes vêm grandes responsabilidades. Ao fazer web scraping, sempre sigo as melhores práticas:",
+        "🌸 **Respeitar o robots.txt:** Verificar quais caminhos o site permite para acesso automatizado.",
+        "🌸 **Limite de Requisições (Rate Limiting):** Não sobrecarregar servidores com centenas de requisições.",
+        "🌸 **Apenas Dados Públicos:** Extrair somente informações de acesso público."
+      ]
+    },
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌸",
+      items: [
+        "O web scraping transforma páginas não estruturadas em dados limpos",
+        "É uma ferramenta incrível para engenharia reversa de animações GSAP",
+        "Sempre combine requisições com bibliotecas de DOM como JSDOM ou Cheerio",
+        "Pratique o scraping responsável respeitando limites de requisição e o robots.txt"
+      ]
+    },
+    closing: "Você já usou web scraping em algum projeto? Compartilhe sua experiência nos comentários 🌸",
+    closingSign: "Nos vemos na próxima entrada 🌸",
+    signature: "— Jill"
+  }
+};
+
+const page = content[lang] || content.es;
+---
+
+<Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
+  <Animations client:load />
+  <Nav lang={lang} />
+  
+  <!-- Falling Petals Background Animation -->
+  <div class="falling-petals-container" aria-hidden="true">
+    <div class="petal p-1">🌸</div>
+    <div class="petal p-2">🌸</div>
+    <div class="petal p-3">🌸</div>
+    <div class="petal p-4">🌸</div>
+    <div class="petal p-5">🌸</div>
+    <div class="petal p-6">🌸</div>
+  </div>
+
+  <main class="blog-view">
+    <div class="blog-container container-narrow">
+      
+      <!-- Back navigation link -->
+      <div class="back-nav reveal">
+        <a href={`/${lang}/`} class="back-link">
+          <span class="arrow">←</span> {page.back}
+        </a>
+      </div>
+
+      <!-- Main Article Card -->
+      <article class="blog-card reveal">
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-category">🌷 {lang === 'en' ? 'Developer Diary' : lang === 'pt' ? 'Diário de Desenvolvimento' : 'Diario de Desarrollo'}</span>
+            <span class="post-dot">•</span>
+            <span class="post-date">{page.date}</span>
+          </div>
+          <h1 class="post-title">{page.title}</h1>
+          <p class="post-subtitle">{page.subtitle}</p>
+        </header>
+
+        <!-- Post Content Body -->
+        <div class="post-content">
+
+          <!-- Intro -->
+          <p class="lead-text">{page.intro}</p>
+          <p class="lead-desc">{page.introDesc}</p>
+          {page.introExtra.map((para) => (
+            <p set:html={para}></p>
+          ))}
+
+          <hr class="post-divider" />
+
+          <!-- What Is It Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.whatIsIt.heading}</h2>
+            <div class="section-body">
+              {page.whatIsIt.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+              <div class="code-container">
+                <p class="code-label">{page.whatIsIt.codeLabel}</p>
+                <pre class="code-block"><code>{page.whatIsIt.code}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Personal Story Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.story.heading}</h2>
+            <div class="section-body">
+              {page.story.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Use Cases Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.useCases.heading}</h2>
+            <div class="section-body">
+              {page.useCases.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Ethics Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.ethics.heading}</h2>
+            <div class="section-body">
+              {page.ethics.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Remember Section -->
+          <div class="post-section remember-section">
+            <h2 class="section-heading">{page.remember.heading}</h2>
+            <ul class="remember-list">
+              {page.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Closing Block -->
+          <div class="closing-block">
+            <p class="closing-text">{page.closing}</p>
+            <p class="closing-sign">{page.closingSign}</p>
+            <p class="signature">{page.signature}</p>
+          </div>
+
+          <!-- Comments Section -->
+          <CommentsSection slug="blog-scraping" lang={lang} client:load />
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Decorative ambient flowers -->
+    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
+    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
+  </main>
+</Layout>
+
+<style>
+  /* Falling Petals Animation */
+  .falling-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -10%;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    animation: fall 14s linear infinite;
+    user-select: none;
+  }
+
+  .petal.p-1 { left: 10%; animation-delay: 0s; animation-duration: 16s; }
+  .petal.p-2 { left: 28%; animation-delay: 3s; animation-duration: 13s; font-size: 1.2rem; }
+  .petal.p-3 { left: 45%; animation-delay: 1.5s; animation-duration: 19s; }
+  .petal.p-4 { left: 62%; animation-delay: 6s; animation-duration: 15s; font-size: 1rem; }
+  .petal.p-5 { left: 78%; animation-delay: 4.5s; animation-duration: 17s; }
+  .petal.p-6 { left: 92%; animation-delay: 8s; animation-duration: 14s; }
+
+  @keyframes fall {
+    0% {
+      top: -10%;
+      transform: translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      top: 110%;
+      transform: translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .blog-view {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .blog-container {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-nav {
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--rose);
+    transform: translateX(-4px);
+  }
+
+  /* Glassmorphic Blog Card */
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 75, 145, 0.12);
+    padding-bottom: 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--rose);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .post-dot {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 850;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-cursive);
+    font-size: 1.35rem;
+    color: var(--rose);
+    opacity: 0.95;
+    margin: 0;
+  }
+
+  /* Post Content styling */
+  .post-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .lead-desc {
+    font-size: 1.18rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.25), transparent);
+    margin: 3.5rem 0;
+  }
+
+  /* Code Container Styles */
+  .code-container {
+    margin: 1.5rem 0 2rem;
+  }
+
+  .code-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rose);
+    margin-bottom: 6px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .code-block {
+    background: rgba(15, 15, 26, 0.8);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #f8f8f2;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .code-block code {
+    white-space: pre;
+    font-family: inherit;
+  }
+
+  /* Section Styles */
+  .post-section {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--rose);
+    border-radius: 2px;
+  }
+
+  /* Remember List */
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 75, 145, 0.05);
+    border: 1px solid rgba(255, 75, 145, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.1);
+    border-color: rgba(255, 75, 145, 0.25);
+  }
+
+  .remember-dot {
+    color: var(--rose);
+    font-size: 0.9rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Closing Block */
+  .closing-block {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .closing-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem !important;
+  }
+
+  .closing-sign {
+    font-family: var(--font-cursive);
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .signature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 !important;
+  }
+
+  /* Ambient Decor */
+  .decorative-flower-1 {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    font-size: 5rem;
+    opacity: 0.05;
+    filter: blur(2px);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .decorative-flower-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    font-size: 6rem;
+    opacity: 0.07;
+    filter: blur(3px);
+    transform: rotate(25deg);
+    pointer-events: none;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .blog-view {
+      padding: 100px 16px 60px;
+    }
+    .blog-card {
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+    }
+    .post-title {
+      font-size: 2.25rem;
+    }
+    .lead-text {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-card {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>
