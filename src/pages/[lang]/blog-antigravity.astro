@@ -38,6 +38,17 @@ const content = {
         "For me, Gemini 3.6 Flash gives me the consistency I need without burning through tokens."
       ]
     },
+    tokenTips: {
+      heading: "My Tips to Never Run Out of Tokens by Midday 🌷",
+      paragraphs: [
+        "Many developers and colleagues often tell me they run out of tokens by midday. Personally, I can count on one hand the number of times that has ever happened to me!",
+        "Here are the 4 key habits I apply every day in Antigravity (which work in any AI-powered IDE):",
+        "🌸 **1. Never stop reading or inspecting code yourself:** Even for simple changes, I first inspect the function or target element (like a `TableHead` in a table) myself before prompting the AI.",
+        "🌸 **2. Attach the exact file to the chat:** Rather than making the AI search through the entire repository to find where a change belongs, I attach the specific target file directly. This saves thousands of context tokens.",
+        "🌸 **3. Handle tests and commits yourself:** I tell the AI that I will handle running tests and committing code. It's safer and prevents heavy automated trial-and-error loops.",
+        "🌸 **4. Specify Current vs. Expected Behavior:** Clearly describing what is currently happening versus what *should* happen gives the AI exact context to solve issues on the very first try."
+      ]
+    },
     ecosystem: {
       heading: "The Google AI Ecosystem & Business Creation 🌺",
       paragraphs: [
@@ -62,6 +73,7 @@ const content = {
       items: [
         "Stability and token efficiency matter more than just raw speed",
         "Gemini 3.6 Flash provides the ideal balance for my Full Stack workflow",
+        "Targeted file context and clear expected behavior prevent token drain",
         "Connected AI tools like NotebookLM and Nano Banana supercharge business content creation",
         "Ad-free tech video learning with YouTube Lite is a huge productivity booster"
       ]
@@ -91,6 +103,17 @@ const content = {
         "Para mí, Gemini 3.6 Flash ofrece la consistencia exacta que necesito sin malgastar tokens."
       ]
     },
+    tokenTips: {
+      heading: "Mis Tips para No Agotar los Tokens a Medio Día 🌷",
+      paragraphs: [
+        "Muchos colegas y desarrolladores me comentan con frecuencia que se quedan sin tokens a mitad del día. En lo personal, ¡puedo contar con los dedos de una mano las veces que me ha pasado algo así!",
+        "Aquí están los 4 hábitos clave que aplico en mi día a día dentro de Antigravity (y que funcionan en cualquier IDE con IA):",
+        "🌸 **1. Nunca dejo de programar ni de revisar mi código:** Incluso para cambios sencillos, primero inspecciono yo misma la función o el elemento exacto (por ejemplo, el `TableHead` de una tabla) antes de pedirle cambios a la IA.",
+        "🌸 **2. Adjunto el archivo específico al chat:** En lugar de dejar que la IA busque en todo el proyecto qué archivo necesita actualizar, le adjunto directamente el archivo correcto. Esto ahorra miles de tokens de búsqueda.",
+        "🌸 **3. Yo me encargo de las pruebas y de los commits:** Le indico a la IA que yo misma ejecutaré las pruebas y haré el commit. Es mucho más seguro y evita ciclos pesados de peticiones automáticas.",
+        "🌸 **4. Explicar el comportamiento actual vs. el esperado (Expected Behavior):** Definir claramente qué está pasando hoy y qué debería pasar le da a la IA el contexto perfecto para resolver el problema al primer intento."
+      ]
+    },
     ecosystem: {
       heading: "El Ecosistema de Google y Creación de Contenido 🌺",
       paragraphs: [
@@ -115,6 +138,7 @@ const content = {
       items: [
         "La estabilidad y la eficiencia de tokens importan más que la velocidad pura",
         "Gemini 3.6 Flash me ofrece el equilibrio perfecto para mi trabajo Full Stack",
+        "Adjuntar archivos específicos y definir el expected behavior evita el gasto excesivo de tokens",
         "Herramientas conectadas como NotebookLM y Nano Banana potencian mi creación de contenido",
         "Aprender tecnología en video sin anuncios con YouTube Lite impulsa mi productividad"
       ]
@@ -144,6 +168,17 @@ const content = {
         "Para mim, o Gemini 3.6 Flash oferece a consistência exata de que preciso."
       ]
     },
+    tokenTips: {
+      heading: "Minhas Dicas para Nunca Ficar Sem Tokens no Meio do Dia 🌷",
+      paragraphs: [
+        "Muitos colegas me dizem com frequência que ficam sem tokens no meio do dia. Pessoalmente, posso contar nos dedos de uma mão as vezes que isso me aconteceu!",
+        "Aqui estão os 4 hábitos que aplico no meu dia a dia no Antigravity (e que funcionam em qualquer IDE com IA):",
+        "🌸 **1. Nunca pare de inspecionar seu próprio código:** Mesmo para mudanças simples, eu primeiro reviso a função ou elemento exato (como um `TableHead`) antes de pedir alterações à IA.",
+        "🌸 **2. Anexe o arquivo exato no chat:** Em vez de deixar a IA buscar no projeto inteiro qual arquivo precisa atualizar, anexo diretamente o arquivo correto. Isso economiza milhares de tokens.",
+        "🌸 **3. Cuide dos testes e commits você mesma:** Eu digo à IA que eu mesma executarei os testes e farei os commits. É mais seguro e evita loops automáticos pesados.",
+        "🌸 **4. Defina o Comportamento Atual vs. Esperado (Expected Behavior):** Explicar o que está acontecendo e o que deveria acontecer dá à IA o contexto exato para resolver o problema de primeira."
+      ]
+    },
     ecosystem: {
       heading: "O Ecossistema Google AI & Criação de Conteúdo 🌺",
       paragraphs: [
@@ -168,6 +203,7 @@ const content = {
       items: [
         "Estabilidade e eficiência de tokens importam mais do que apenas velocidade",
         "O Gemini 3.6 Flash oferece o equilíbrio perfeito para meu trabalho Full Stack",
+        "Anexar arquivos específicos e definir o comportamento esperado economiza tokens",
         "Ferramentas conectadas como NotebookLM e Nano Banana impulsionam minha criação de conteúdo",
         "Aprender programação sem anúncios no YouTube Lite aumenta a produtividade"
       ]
@@ -236,6 +272,18 @@ const page = content[lang] || content.es;
             <h2 class="section-heading">{page.assistant.heading}</h2>
             <div class="section-body">
               {page.assistant.paragraphs.map((para) => (
+                <p set:html={para}></p>
+              ))}
+            </div>
+          </div>
+
+          <hr class="post-divider" />
+
+          <!-- Token Tips Section -->
+          <div class="post-section">
+            <h2 class="section-heading">{page.tokenTips.heading}</h2>
+            <div class="section-body">
+              {page.tokenTips.paragraphs.map((para) => (
                 <p set:html={para}></p>
               ))}
             </div>
