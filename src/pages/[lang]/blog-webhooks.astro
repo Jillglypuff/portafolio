@@ -19,21 +19,21 @@ const t = useTranslations(lang);
 const content = {
   en: {
     title: "Dear Diary, What Is a Webhook & How Do They Differ From Regular APIs? 🌸",
-    date: "October 4, 2026",
+    date: "September 27, 2026",
     subtitle: "A developer diary entry by Jill",
     back: 'Back to Home',
-    intro: "For a long time when I worked with APIs, I thought the only way to get fresh data was to ask the server over and over again. Then I discovered Webhooks.",
-    introDesc: "Today I want to explain what webhooks are, why event-driven architecture is so elegant, and how they flip traditional API communication upside down 🌸",
+    intro: "I actually discovered webhooks back around 2024, but it hadn't occurred to me to write a developer diary entry about them until now 🌸",
+    introDesc: "Today I want to explain what webhooks are, why event-driven architecture is so elegant, and share how I've used them to dynamically extend UI views 🌸",
     introExtra: [
-      "Instead of your app constantly asking <i>'Has anything changed yet?'</i> (Polling), a Webhook allows the server to ping your application directly the second something actually happens.",
-      "It's the difference between calling a delivery service every 5 minutes vs receiving a notification right when your package arrives at your door."
+      "For a long time when I started working with APIs, I thought the only way to get fresh data was to ask the server over and over again (Polling).",
+      "Instead of your app constantly asking <i>'Has anything changed yet?'</i>, a Webhook allows the server to ping your application directly the second something actually happens."
     ],
     whatIsIt: {
       heading: "What Is a Webhook? 🌷",
       paragraphs: [
         "In simple terms, a **Webhook** is an automated message sent from one application to another when a specific event occurs.",
-        "It's often referred to as a **Reverse API** or a HTTP POST callback. Instead of making an outbound HTTP request to request information, your application exposes a route (an endpoint) that listens for incoming HTTP POST payloads.",
-        "Here is a simple express server route set up to receive a incoming webhook payload in Node.js:"
+        "It's often referred to as a **Reverse API** or a HTTP POST callback. Instead of making an outbound HTTP request to pull information, your application exposes a route (an endpoint) that listens for incoming HTTP POST payloads.",
+        "Here is a simple express server route set up to receive an incoming webhook payload in Node.js:"
       ],
       codeLabel: "Simple Webhook Listener in Node.js",
       code: `import express from 'express';
@@ -64,12 +64,12 @@ app.listen(3000, () => console.log('Webhook listener running on port 3000 🌸')
       ]
     },
     useCases: {
-      heading: "Real-World Webhook Superpowers 🌼",
+      heading: "Real-World Superpowers & My Personal Experience 🌼",
       paragraphs: [
-        "Webhooks power almost every modern developer integration on the web today:",
+        "Webhooks power almost every modern developer integration on the web today, but one of the main ways I've personally used them is for **Modular UI Extension**:",
+        "🌸 **Dynamic UI Injection:** If a specific module in a system is active, a hook triggers the existing root view to display a brand new HTML section—such as a dropdown menu, a custom text area, or an dynamic admin block—purely because that module is enabled!",
         "🌸 **Payment Processors (Stripe / PayPal):** Instantly know when a subscription renews, a charge fails, or a refund is processed.",
         "🌸 **Git & CI/CD Pipelines (GitHub / GitLab):** Trigger automatic deployments or build runs whenever code is pushed to `main`.",
-        "🌸 **Messaging & Bot Alerts (Discord / Slack):** Send real-time notifications to team channels when a bug is reported.",
         "🌸 **Blog Comment Approval (Supabase & MCP):** Triggering AI processing or notification handlers as soon as a new comment is submitted!"
       ]
     },
@@ -86,25 +86,26 @@ app.listen(3000, () => console.log('Webhook listener running on port 3000 🌸')
       heading: "Things I Want To Remember 🌸",
       items: [
         "Polling is asking 'Is it ready?'; Webhooks are 'Ring my bell when it's ready'",
+        "Hooks allow active modules to dynamically inject HTML components into root views",
         "Webhooks are HTTP POST requests sent to a listener URL you provide",
         "Always verify signatures (HMAC) to prevent forged request attacks",
         "Acknowledge webhook requests quickly with a 200 status code to prevent retry storms"
       ]
     },
-    closing: "How are you using webhooks in your architecture? Do you prefer webhooks or polling for your integrations? Share your thoughts below 🌸",
+    closing: "How are you using webhooks in your architecture? Have you used hooks to dynamically render UI modules? Share your thoughts below 🌸",
     closingSign: "See you in the next entry 🌸",
     signature: "— Jill"
   },
   es: {
     title: "Querido Diario, Qué Es un Webhook y Por Qué No Todas las APIs Tienen que Funcionar Preguntando Todo el Tiempo 🌸",
-    date: "4 de Octubre, 2026",
+    date: "27 de Septiembre, 2026",
     subtitle: "El diario de desarrollo de Jill",
     back: "Volver al Inicio",
-    intro: "Durante mucho tiempo cuando trabajaba con APIs, pensaba que la única forma de obtener datos frescos era preguntándole al servidor una y otra vez. Hasta que descubrí los Webhooks.",
-    introDesc: "Hoy quiero explicarte qué son los webhooks, por qué la arquitectura basada en eventos es tan elegante y cómo cambian por completo la forma en que se comunican las aplicaciones 🌸",
+    intro: "Descubrí el concepto de los webhooks por ahí del 2024, pero simplemente no se me había ocurrido escribir una entrada en mi diario sobre esto hasta hoy 🌸",
+    introDesc: "Hoy quiero explicarte qué son los webhooks, por qué la arquitectura basada en eventos es tan elegante y contarte cómo los he usado para extender la interfaz dinámicamente 🌸",
     introExtra: [
-      "En lugar de que tu aplicación esté preguntando constantemente <i>'¿Ya hay cambios?'</i> (Polling), un Webhook le permite al servidor avisarle a tu aplicación en el milisegundo exacto en que algo sucede.",
-      "Es la diferencia entre llamar a la pizzería cada 5 minutos vs recibir un timbre en tu puerta justo cuando llega tu comida."
+      "Durante mucho tiempo cuando comencé a trabajar con APIs, pensaba que la única forma de obtener datos frescos era preguntándole al servidor una y otra vez (Polling).",
+      "En lugar de que tu aplicación esté preguntando constantemente <i>'¿Ya hay cambios?'</i>, un Webhook le permite al servidor avisarle a tu aplicación en el milisegundo exacto en que algo sucede."
     ],
     whatIsIt: {
       heading: "¿Qué Es un Webhook? 🌷",
@@ -142,12 +143,12 @@ app.listen(3000, () => console.log('Escuchador de Webhooks ejecutándose en puer
       ]
     },
     useCases: {
-      heading: "Superpoderes de los Webhooks en el Mundo Real 🌼",
+      heading: "Superpoderes en el Mundo Real y mi Experiencia Personal 🌼",
       paragraphs: [
-        "Los webhooks impulsan las integraciones más importantes del desarrollo web actual:",
+        "Los webhooks impulsan las integraciones más importantes del desarrollo web actual, y una de las formas principales en que los he usado es para la **Extensión Modular de Interfaces**:",
+        "🌸 **Inyección Dinámica de HTML (Hooks de UI):** Si un módulo del sistema está activo, el hook le avisa a la vista raíz (`view`) que ya existe en el código para mostrar una nueva sección de HTML—ya sea un desplegable, una caja de texto o un área interactiva—únicamente porque ese módulo está habilitado.",
         "🌸 **Procesadores de Pago (Stripe / PayPal):** Entérate al instante si una suscripción se renueva o un pago falla.",
         "🌸 **Pipelines de Git y CI/CD (GitHub / GitLab):** Dispara despliegues automáticos cada vez que haces push a la rama `main`.",
-        "🌸 **Alertas en Chat (Discord / Slack):** Envía notificaciones a tu equipo cuando se reporte un error grave.",
         "🌸 **Aprobación de Comentarios (Supabase y MCP):** Notificar al servidor de moderación cuando se publica un nuevo comentario en el blog."
       ]
     },
@@ -164,25 +165,26 @@ app.listen(3000, () => console.log('Escuchador de Webhooks ejecutándose en puer
       heading: "Cosas Que Quiero Recordar 🌸",
       items: [
         "Polling es preguntar '¿Ya está listo?'; Webhook es 'Toca el timbre cuando esté listo'",
+        "Los hooks permiten a módulos activos inyectar fragmentos de HTML dinámicamente en vistas raíz",
         "Un Webhook es una petición HTTP POST hacia una URL que tú provees",
         "Siempre valida las firmas secretas (HMAC) para prevenir ataques de peticiones falsas",
         "Responde rápidamente con código 200 para evitar tormentas de reintentos"
       ]
     },
-    closing: "¿Usas webhooks en tus proyectos? ¿Prefieres webhooks o peticiones tradicionales para tus integraciones? ¡Déjame tu comentario abajo! 🌸",
+    closing: "¿Usas webhooks o hooks de UI en tus proyectos? ¿Prefieres webhooks o peticiones tradicionales para tus integraciones? ¡Déjame tu comentario abajo! 🌸",
     closingSign: "Nos vemos en la próxima entrada 🌸",
     signature: "— Jill"
   },
   pt: {
     title: "Querido Diário, O Que É um Webhook e Por Que Nem Todas as APIs Precisam Ficar Perguntando Toda Hora 🌸",
-    date: "4 de Outubro, 2026",
+    date: "27 de Setembro, 2026",
     subtitle: "O diário de desenvolvimento de Jill",
     back: "Voltar ao Início",
-    intro: "Por muito tempo ao trabalhar com APIs, achei que a única forma de obter dados novos era perguntando ao servidor repetidamente. Até que descobri os Webhooks.",
-    introDesc: "Hoje quero explicar o que são webhooks, por que a arquitetura guiada por eventos é tão elegante e como eles transformam a comunicação entre sistemas 🌸",
+    intro: "Descobri o conceito de webhooks por volta de 2024, mas simplesmente não tinha pensado em escrever uma entrada no meu diário sobre isso até hoje 🌸",
+    introDesc: "Hoje quero explicar o que são webhooks, por que a arquitetura guiada por eventos é tão elegante e como os usei para extender a interface dinamicamente 🌸",
     introExtra: [
-      "Em vez de sua aplicação perguntar constantemente <i>'Já tem novidade?'</i> (Polling), um Webhook permite que o servidor avise sua aplicação no exato segundo em que algo acontece.",
-      "É a diferença entre ligar para a entrega a cada 5 minutos vs receber a campainha quando o pacote chega."
+      "Por muito tempo ao trabalhar com APIs, achei que a única forma de obter dados novos era perguntando ao servidor repetidamente (Polling).",
+      "Em vez de sua aplicação perguntar constantemente <i>'Já tem novidade?'</i>, um Webhook permite que o servidor avise sua aplicação no exato segundo em que algo acontece."
     ],
     whatIsIt: {
       heading: "O Que É um Webhook? 🌷",
@@ -220,12 +222,12 @@ app.listen(3000, () => console.log('Escutador de Webhooks rodando na porta 3000 
       ]
     },
     useCases: {
-      heading: "Superpoderes dos Webhooks no Mundo Real 🌼",
+      heading: "Superpoderes no Mundo Real e Minha Experiência Pessoal 🌼",
       paragraphs: [
-        "Os webhooks alimentam as maiores integrações da web hoje:",
+        "Os webhooks alimentam as maiores integrações da web hoje, e uma das principais formas como os usei foi para **Extensão Modular de Interfaces**:",
+        "🌸 **Injeção Dinâmica de HTML (Hooks de UI):** Se um módulo do sistema estiver ativo, o hook avisa a vista raiz (`view`) para exibir uma nova seção de HTML—como um menu suspenso, caixa de texto ou painel—apenas porque aquele módulo está habilitado!",
         "🌸 **Processamento de Pagamentos (Stripe / PayPal):** Saiba instantaneamente quando uma assinatura é renovada ou um pagamento falha.",
         "🌸 **Pipelines de Git e CI/CD (GitHub / GitLab):** Inicie deploys automáticos assim que fizer um push na branch `main`.",
-        "🌸 **Alertas em Chat (Discord / Slack):** Envie notificações em tempo real para a equipe quando um erro for detectado.",
         "🌸 **Aprovação de Comentários (Supabase e MCP):** Notificar servidores quando um comentário for enviado no blog."
       ]
     },
@@ -242,12 +244,13 @@ app.listen(3000, () => console.log('Escutador de Webhooks rodando na porta 3000 
       heading: "Coisas Que Quero Lembrar 🌸",
       items: [
         "Polling é perguntar 'Está pronto?'; Webhook é 'Toque a campainha quando estiver pronto'",
+        "Hooks permitem que módulos ativos injetem componentes de HTML dinamicamente em views raiz",
         "Webhooks são requisições HTTP POST enviadas para uma URL que você fornece",
         "Sempre valide assinaturas HMAC para prevenir requisições forjadas",
         "Responda rapidamente com status 200 para evitar reenvios desnecessários"
       ]
     },
-    closing: "Você usa webhooks em seus projetos? Prefere webhooks ou requisições tradicionais? Deixe seu comentário abaixo 🌸",
+    closing: "Você usa webhooks ou hooks de UI em seus projetos? Prefere webhooks ou requisições tradicionais? Deixe seu comentário abaixo 🌸",
     closingSign: "Até a próxima entrada 🌸",
     signature: "— Jill"
   }
