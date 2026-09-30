@@ -1,0 +1,652 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Google Cloud Summit Mexico — Technical Summary and Objective Analysis",
+    date: "September 30, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "In this post, I summarize and objectively analyze the announcements from Google Cloud Summit Mexico, focusing on technical facts.",
+    introDesc: "A realistic breakdown of what tools like Vertex AI, BigQuery Vector Search, and Cloud Run GPUs actually offer to software engineers.",
+    introExtra: [
+      "Evaluating real technical features versus implementation complexity.",
+      "Cost considerations, vendor lock-in, and practical use cases."
+    ],
+    section1: {
+      heading: "1. Vertex AI & Gemini 1.5: Agent Capabilities and Trade-offs",
+      paragraphs: [
+        `Google showcased updates to **Vertex AI Agent Builder** and the expanded context windows for **Gemini 1.5 Pro and Flash** (up to 2 million tokens).`,
+        `While large context windows are useful for ingesting extensive documents, latency and token costs remain key operational factors. Combining structured **RAG** *(if you want to learn more about Retrieval-Augmented Generation, check out my <a href="/en/blog-vector-search" class="inline-blog-link">entry on Vector Search & RAG</a>)* with targeted tool calls often yields more predictable results than relying solely on raw prompt size.`,
+        "Below is a standard integration snippet using the Node.js SDK for Vertex AI:"
+      ],
+      codeLabel: "Vertex AI Integration in Node.js",
+      code: `import { VertexAI } from '@google-cloud/vertexai';
+
+const vertexAi = new VertexAI({
+  project: 'jill-cloud-portfolio',
+  location: 'us-central1'
+});
+
+const generativeModel = vertexAi.getGenerativeModel({
+  model: 'gemini-1.5-flash-002',
+  generationConfig: {
+    maxOutputTokens: 2048,
+    temperature: 0.2,
+  }
+});
+
+async function runCloudAgentPrompt(userQuery) {
+  const resp = await generativeModel.generateContent({
+    contents: [{ role: 'user', parts: [{ text: userQuery }] }]
+  });
+  
+  console.log('Response:', resp.response.candidates[0].content.parts[0].text);
+}
+
+runCloudAgentPrompt("Summarize technical updates from Google Cloud Summit");`
+    },
+    section2: {
+      heading: "2. BigQuery Vector Search: Native Queries vs Dedicated DBs",
+      paragraphs: [
+        "The inclusion of **native Vector Search inside BigQuery** allows running similarity queries via standard SQL without exporting datasets to external vector stores.",
+        "This reduces pipeline architecture overhead when working within GCP. However, for real-time sub-10ms similarity lookup requirements, dedicated vector databases still offer lower latency.",
+        "Example of executing vector similarity directly in SQL:"
+      ],
+      codeLabel: "BigQuery SQL Vector Search",
+      code: `SELECT 
+  doc_id,
+  title,
+  COSINE_DISTANCE(
+    ml_generate_embedding_result, 
+    (SELECT ml_generate_embedding_result FROM \`query_vector\`)
+  ) AS similarity_score
+FROM \`jill_dataset.knowledge_embeddings\`
+WHERE status = 'active'
+ORDER BY similarity_score ASC
+LIMIT 5;`
+    },
+    section3: {
+      heading: "3. Cloud Run + NVIDIA L4 GPUs: Serverless Container Inference",
+      paragraphs: [
+        `Adding **NVIDIA L4 GPU support to Cloud Run** allows deploying containerized ML workloads under a **PaaS** model *(if you're unfamiliar with PaaS concepts, read my <a href="/en/blog-cloud" class="inline-blog-link">entry explaining SaaS, PaaS, and IaaS</a>)* and **serverless architecture** *(if you'd like to understand serverless FaaS and scale-to-zero economics, check out my <a href="/en/blog-serverless" class="inline-blog-link">entry on Serverless</a>)*.`,
+        `The main technical trade-off in production remains container cold-start times when loading large model weights. For latency-sensitive **APIs** *(see my <a href="/en/blog-apis" class="inline-blog-link">entry on why APIs are conversations</a>)*, provisioned concurrency may still be required.`,
+        "Standard deployment command via Google Cloud CLI:"
+      ],
+      codeLabel: "Cloud Run GPU Deployment Command",
+      code: `gcloud run deploy ai-inference-service \\
+  --image gcr.io/jill-cloud-portfolio/llm-runner:v1 \\
+  --gpu 1 \\
+  --gpu-type nvidia-l4 \\
+  --region us-central1 \\
+  --concurrency 8 \\
+  --no-cpu-throttling`
+    },
+    section4: {
+      heading: "4. Security AI Command Center and Regional Infrastructure",
+      paragraphs: [
+        `Google presented security automation features powered by specialized **SecLM** models to summarize threat vectors and configuration alerts.`,
+        `While automated summaries streamline triage, security recommendations must still be validated by infrastructure engineers before automated remediation is triggered in **CI/CD pipelines** *(read my <a href="/en/blog-deployment" class="inline-blog-link">entry on deployment pipelines and fear</a>)*.`
+      ]
+    },
+    section5: {
+      heading: "5. Technical Takeaways and Conclusion",
+      paragraphs: [
+        "The summit presented practical tools for data orchestration, containerized ML inference, and security analysis.",
+        "As developers, evaluating these services based on latency budget, cost predictability, and system architecture gives a much clearer picture than marketing highlights."
+      ]
+    }
+  },
+  es: {
+    title: "Google Cloud Summit México — Resumen Técnico y Análisis Objetivo",
+    date: "30 de Septiembre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "En esta entrada analizo de forma objetiva los anuncios presentados en el Google Cloud Summit México, evaluando las características técnicas reales.",
+    introDesc: "Un desglose práctico de lo que realmente aportan herramientas como Vertex AI, BigQuery Vector Search y Cloud Run GPUs al flujo de trabajo de un desarrollador.",
+    introExtra: [
+      "Evaluación de capacidades técnicas versus complejidad de integración.",
+      "Consideraciones de costos, dependencia de proveedor (vendor lock-in) y casos de uso reales."
+    ],
+    section1: {
+      heading: "1. Vertex AI y Gemini 1.5: Agentes y Consideraciones de Integración",
+      paragraphs: [
+        `Google presentó avances en **Vertex AI Agent Builder** y la extensión de las ventanas de contexto de **Gemini 1.5 Pro y Flash** (hasta 2 millones de tokens).`,
+        `Aunque la capacidad de procesar contextos masivos facilita el análisis de documentos extensos, en la práctica la latencia y el costo por petición siguen siendo factores determinantes. La orquestación mediante **RAG** *(si no estás familiarizado con la generación aumentada por recuperación, puedes leer mi <a href="/es/blog-vector-search" class="inline-blog-link">entrada dedicada a Búsqueda Vectorial y RAG</a>)* y llamadas a funciones suele ser más predecible que depender únicamente del tamaño del prompt.`,
+        "A continuación se muestra un snippet de integración estándar con el SDK de Node.js:"
+      ],
+      codeLabel: "Integración de Vertex AI en Node.js",
+      code: `import { VertexAI } from '@google-cloud/vertexai';
+
+const vertexAi = new VertexAI({
+  project: 'jill-cloud-portfolio',
+  location: 'us-central1'
+});
+
+const generativeModel = vertexAi.getGenerativeModel({
+  model: 'gemini-1.5-flash-002',
+  generationConfig: {
+    maxOutputTokens: 2048,
+    temperature: 0.2,
+  }
+});
+
+async function runCloudAgentPrompt(userQuery) {
+  const resp = await generativeModel.generateContent({
+    contents: [{ role: 'user', parts: [{ text: userQuery }] }]
+  });
+  
+  console.log('Respuesta:', resp.response.candidates[0].content.parts[0].text);
+}
+
+runCloudAgentPrompt("Resumen técnico de novedades de Google Cloud Summit");`
+    },
+    section2: {
+      heading: "2. BigQuery Vector Search: Consultas Nativas vs Bases Vectoriales",
+      paragraphs: [
+        "La inclusión de **Vector Search en BigQuery** permite ejecutar búsquedas semánticas mediante SQL sin necesidad de exportar datos a bases vectoriales externas.",
+        "Esto simplifica la arquitectura si la infraestructura ya reside en GCP. Sin embargo, para aplicaciones con requerimientos de latencia de milisegundos de un solo dígito, las bases vectoriales dedicadas siguen ofreciendo menor tiempo de respuesta.",
+        "Ejemplo de consulta de similitud vectorial directa en SQL:"
+      ],
+      codeLabel: "Búsqueda de Similitud Vectorial en BigQuery SQL",
+      code: `SELECT 
+  doc_id,
+  title,
+  COSINE_DISTANCE(
+    ml_generate_embedding_result, 
+    (SELECT ml_generate_embedding_result FROM \`query_vector\`)
+  ) AS similarity_score
+FROM \`jill_dataset.knowledge_embeddings\`
+WHERE status = 'active'
+ORDER BY similarity_score ASC
+LIMIT 5;`
+    },
+    section3: {
+      heading: "3. Cloud Run + GPUs NVIDIA L4: Inferencia en Contenedores",
+      paragraphs: [
+        `El soporte de **GPUs NVIDIA L4 en Cloud Run** permite desplegar cargas de trabajo de inferencia en contenedores bajo un esquema **PaaS** *(si no conoces la diferencia entre PaaS, IaaS y SaaS, consulta mi <a href="/es/blog-cloud" class="inline-blog-link">entrada explicando la nube</a>)* e infraestructura **serverless** *(si quieres aprender a fondo qué es Serverless y cómo funciona el escalado a cero, revisa mi <a href="/es/blog-serverless" class="inline-blog-link">entrada sobre Serverless</a>)*.`,
+        `El reto principal en producción sigue siendo el tiempo de arranque en frío (cold start) al inicializar instancias con modelos pesados. Para **APIs** *(revisa mi <a href="/es/blog-apis" class="inline-blog-link">diario donde explico las APIs como conversaciones</a>)* de baja latencia, puede seguir siendo necesaria la concurrencia reservada.`,
+        "Comando de despliegue en Google Cloud CLI:"
+      ],
+      codeLabel: "Comando de Despliegue de GPU en Cloud Run",
+      code: `gcloud run deploy ai-inference-service \\
+  --image gcr.io/jill-cloud-portfolio/llm-runner:v1 \\
+  --gpu 1 \\
+  --gpu-type nvidia-l4 \\
+  --region us-central1 \\
+  --concurrency 8 \\
+  --no-cpu-throttling`
+    },
+    section4: {
+      heading: "4. Security AI Command Center y Gobernanza de Datos",
+      paragraphs: [
+        `Se presentaron herramientas de seguridad guiadas por modelos **SecLM** para resumir alertas y posibles vectores de ataque.`,
+        `Si bien ayuda a acelerar el triaje de auditoría, las recomendaciones automatizadas deben ser revisadas por ingenieros de infraestructura antes de aplicarse en **pipelines de despliegue** *(si quieres leer sobre los retos del despliegue, consulta mi <a href="/es/blog-deployment" class="inline-blog-link">entrada sobre el miedo al deploy</a>)*.`
+      ]
+    },
+    section5: {
+      heading: "5. Conclusión Técnica",
+      paragraphs: [
+        "El evento mostró soluciones prácticas para la gestión de datos, inferencia en contenedores y análisis de seguridad.",
+        "La clave como desarrolladores es evaluar cada servicio en función de requerimientos reales de latencia, costos y arquitectura de software."
+      ]
+    }
+  },
+  pt: {
+    title: "Google Cloud Summit México — Resumo Técnico e Análise Objetiva",
+    date: "30 de Setembro, 2026",
+    subtitle: "O diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "Neste post, analiso de forma objetiva os anúncios do Google Cloud Summit México, focando em aspectos técnicos reais.",
+    introDesc: "Um resumo prático do que ferramentas como Vertex AI, BigQuery Vector Search e Cloud Run GPUs oferecem ao fluxo de trabalho de um desenvolvedor.",
+    introExtra: [
+      "Avaliação de capacidades técnicas versus complexidade de implementação.",
+      "Considerações de custo, dependência de fornecedor e casos de uso reais."
+    ],
+    section1: {
+      heading: "1. Vertex AI e Gemini 1.5: Capacidades e Análise de Integração",
+      paragraphs: [
+        `O Google apresentou atualizações no **Vertex AI Agent Builder** e janelas de contexto expandidas para **Gemini 1.5 Pro e Flash** (até 2 milhões de tokens).`,
+        `Embora grandes janelas de contexto ajudem na análise de documentos extensos, latência e custo por requisição continuam sendo fatores determinantes. A orquestração com **RAG** *(se quiser entender como funciona Geração Aumentada por Recuperação, veja minha <a href="/pt/blog-vector-search" class="inline-blog-link">entrada sobre Busca Vetorial e RAG</a>)* costuma trazer resultados mais previsíveis do que depender apenas do tamanho do prompt.`,
+        "Abaixo está um exemplo de integração padrão usando o SDK em Node.js:"
+      ],
+      codeLabel: "Integração do Vertex AI em Node.js",
+      code: `import { VertexAI } from '@google-cloud/vertexai';
+
+const vertexAi = new VertexAI({
+  project: 'jill-cloud-portfolio',
+  location: 'us-central1'
+});
+
+const generativeModel = vertexAi.getGenerativeModel({
+  model: 'gemini-1.5-flash-002',
+  generationConfig: {
+    maxOutputTokens: 2048,
+    temperature: 0.2,
+  }
+});
+
+async function runCloudAgentPrompt(userQuery) {
+  const resp = await generativeModel.generateContent({
+    contents: [{ role: 'user', parts: [{ text: userQuery }] }]
+  });
+  
+  console.log('Resposta:', resp.response.candidates[0].content.parts[0].text);
+}
+
+runCloudAgentPrompt("Resumo técnico das novidades do Google Cloud Summit");`
+    },
+    section2: {
+      heading: "2. BigQuery Vector Search: Consultas Nativas vs Bancos Vetoriais",
+      paragraphs: [
+        "A adição de **Vector Search nativo no BigQuery** permite consultas de similaridade via SQL sem exportar dados para bancos vetoriais externos.",
+        "Isso simplifica a arquitetura quando a infraestrutura já está no GCP. No entanto, para requisitos de latência abaixo de 10ms, bancos vetoriais dedicados continuam entregando menor tempo de resposta.",
+        "Exemplo de busca vetorial direta em SQL:"
+      ],
+      codeLabel: "Busca de Similaridade Vetorial no BigQuery SQL",
+      code: `SELECT 
+  doc_id,
+  title,
+  COSINE_DISTANCE(
+    ml_generate_embedding_result, 
+    (SELECT ml_generate_embedding_result FROM \`query_vector\`)
+  ) AS similarity_score
+FROM \`jill_dataset.knowledge_embeddings\`
+WHERE status = 'active'
+ORDER BY similarity_score ASC
+LIMIT 5;`
+    },
+    section3: {
+      heading: "3. Cloud Run + GPUs NVIDIA L4: Inferência Serverless",
+      paragraphs: [
+        `O suporte a **GPUs NVIDIA L4 no Cloud Run** permite executar cargas de inferência de ML sob um modelo **PaaS** *(se não estiver familiarizado com PaaS, confira meu <a href="/pt/blog-cloud" class="inline-blog-link">post explicando SaaS, PaaS e IaaS</a>)* e infraestrutura **serverless** *(se quiser entender como funciona Serverless e escala a zero, veja meu <a href="/pt/blog-serverless" class="inline-blog-link">post sobre Serverless</a>)*.`,
+        `O desafio em produção continua sendo o tempo de cold-start ao carregar modelos pesados. Para **APIs** *(veja meu <a href="/pt/blog-apis" class="inline-blog-link">post sobre APIs como conversas</a>)* de baixa latência, concorrência reservada ainda pode ser necessária.`,
+        "Comando de implantação na CLI do Google Cloud:"
+      ],
+      codeLabel: "Comando de Implantação de GPU no Cloud Run",
+      code: `gcloud run deploy ai-inference-service \\
+  --image gcr.io/jill-cloud-portfolio/llm-runner:v1 \\
+  --gpu 1 \\
+  --gpu-type nvidia-l4 \\
+  --region us-central1 \\
+  --concurrency 8 \\
+  --no-cpu-throttling`
+    },
+    section4: {
+      heading: "4. Security AI Command Center e Governança de Dados",
+      paragraphs: [
+        `Foram apresentadas ferramentas de segurança com suporte a modelos **SecLM** para resumir alertas e vetores de ataque.`,
+        `Embora ajudem na triagem, as recomendações automatizadas devem ser validadas por engenheiros antes de aplicadas em **pipelines de CI/CD** *(confira meu <a href="/pt/blog-deployment" class="inline-blog-link">post sobre deploy de código</a>)*.`
+      ]
+    },
+    section5: {
+      heading: "5. Conclusão Técnica",
+      paragraphs: [
+        "O evento apresentou soluções práticas para gerenciamento de dados, inferência em contêineres e análise de segurança.",
+        "Para desenvolvedores, o caminho ideal é avaliar cada serviço com base em latência, previsibilidade de custo e arquitetura de software."
+      ]
+    }
+  }
+};
+
+const c = content[lang] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Google Cloud & AI Infrastructure
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon">📅</span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main">{c.intro}</p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section1.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section1.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section2.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section2.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section3.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section3.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            {c.section4.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section5.heading}</h2>
+            {c.section5.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-google-cloud-summit" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

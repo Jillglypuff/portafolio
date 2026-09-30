@@ -1,0 +1,555 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "What Is Vertex AI? — History, Use Cases, and Technical Deep Dive",
+    date: "October 1, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Understanding Google Cloud's Vertex AI: when it was launched, what problem it solves, and how software engineers actually use it.",
+    introDesc: "A complete technical breakdown of Vertex AI components including Model Garden, Agent Builder, and custom model orchestration.",
+    introExtra: [
+      "Launched at Google I/O 2021 to unify Google's legacy AI Platform and AutoML into a single MLOps framework.",
+      "Serves as the gateway for foundation models like Gemini 1.5, custom model training, and agentic workflows."
+    ],
+    section1: {
+      heading: "1. Background & Evolution of Vertex AI",
+      paragraphs: [
+        "Before 2021, building machine learning models on Google Cloud meant stitching together fragmented tools like AI Platform, AutoML, and custom Compute Engine instances.",
+        "In **May 2021**, Google launched **Vertex AI** as a unified MLOps platform. The goal was to provide an end-to-end lifecycle for machine learning: data preparation, model training, hyperparameter tuning, model deployment, and monitoring.",
+        `With the rise of Generative AI, Vertex AI evolved into Google's enterprise foundation model platform, giving developers direct **API** *(if you'd like a refresher on how APIs act as conversations, check out my <a href="/en/blog-apis" class="inline-blog-link">entry on APIs</a>)* access to Gemini 1.5 Pro and Flash, Imagen, and third-party models in Model Garden.`
+      ]
+    },
+    section2: {
+      heading: "2. Core Architectural Components",
+      paragraphs: [
+        "Vertex AI consists of several specialized subsystems depending on whether you are building custom ML or leveraging generative models:",
+        "**• Model Garden:** A curated repository of foundation models (Gemini, Claude 3.5, Llama 3, Gemma) that can be deployed with a single click or queried via API.",
+        `**• Vertex AI Agent Builder:** High-level framework for assembling conversational agents with built-in **RAG** *(see my <a href="/en/blog-vector-search" class="inline-blog-link">entry on Vector Search and RAG</a>)*, groundings against enterprise data, and **tool-calling capabilities** *(read my <a href="/en/blog-mcp-guide" class="inline-blog-link">step-by-step MCP server guide</a> for an example of tool execution)*.`,
+        "**• Vertex AI Search & Conversation:** Managed search indexes that automatically parse PDFs, tables, and internal documents for semantic querying.",
+        "**• Pipelines & Feature Store:** Infrastructure for automated model retraining, feature management, and monitoring prediction drift."
+      ]
+    },
+    section3: {
+      heading: "3. Practical Code Example: Instantiating Gemini 1.5 in Node.js",
+      paragraphs: [
+        "Connecting to Vertex AI requires project authentication via Service Account credentials or ADC (Application Default Credentials). Below is an example of querying Gemini 1.5 Flash using the `@google-cloud/vertexai` SDK:"
+      ],
+      codeLabel: "Vertex AI Gemini 1.5 Node.js Snippet",
+      code: `import { VertexAI } from '@google-cloud/vertexai';
+
+const vertex_ai = new VertexAI({
+  project: 'jill-dev-portfolio',
+  location: 'us-central1'
+});
+
+// Load Gemini 1.5 Flash
+const model = vertex_ai.getGenerativeModel({
+  model: 'gemini-1.5-flash-002',
+  generationConfig: {
+    maxOutputTokens: 1024,
+    temperature: 0.2
+  }
+});
+
+async function generateResponse(promptText) {
+  const req = {
+    contents: [{ role: 'user', parts: [{ text: promptText }] }]
+  };
+  
+  const streamingResult = await model.generateContentStream(req);
+  for await (const item of streamingResult.stream) {
+    process.stdout.write(item.candidates[0].content.parts[0].text);
+  }
+}
+
+generateResponse("Explain the architectural difference between RAG and full-context prompts.");`
+    },
+    section4: {
+      heading: "4. Real-World Use Cases & Trade-offs",
+      paragraphs: [
+        "**Common Use Cases:** Customer support automation with grounding in internal knowledge bases, document analysis (parsing invoices/contracts), and building autonomous assistant workflows.",
+        `**Trade-offs & Considerations:** While Vertex AI provides managed security and IAM integration, costs can scale quickly if token usage or continuous endpoint hosting is not monitored. Evaluating cloud costs vs. self-hosted **local AI models** *(check out my <a href="/en/blog-hermes" class="inline-blog-link">analysis on local LLMs and Hermes Agent</a>)* is essential for budget management.`
+      ]
+    }
+  },
+  es: {
+    title: "¿Qué es Vertex AI? — Historia, Casos de Uso y Guía Técnica",
+    date: "1 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Una explicación clara sobre Vertex AI de Google Cloud: cuándo nació, qué problema resuelve y cómo lo utilizamos los desarrolladores en proyectos reales.",
+    introDesc: "Un desglose técnico completo de sus componentes principales: Model Garden, Agent Builder y la orquestación de modelos de lenguaje.",
+    introExtra: [
+      "Lanzado en Google I/O 2021 para unificar las herramientas dispersas de AI Platform y AutoML en una sola plataforma MLOps.",
+      "Hoy funciona como el punto de acceso central para Gemini 1.5 Pro y Flash, entrenamiento personalizado y creación de agentes."
+    ],
+    section1: {
+      heading: "1. Origen y Evolución de Vertex AI",
+      paragraphs: [
+        "Antes de 2021, construir modelos de Machine Learning en Google Cloud requería combinar múltiples servicios separados como AI Platform, AutoML e instancias personalizadas de Compute Engine.",
+        "En **mayo de 2021**, Google lanzó **Vertex AI** con el objetivo de unificar el ciclo de vida completo de ML: preparación de datos, entrenamiento, afinación de hiperparámetros, despliegue de modelos y monitoreo.",
+        `Con la llegada de la Inteligencia Artificial Generativa, Vertex AI evolucionó para convertirse en la plataforma empresarial de modelos base, ofreciendo acceso por **API** *(si quieres recordar cómo las APIs funcionan como conversaciones entre sistemas, lee mi <a href="/es/blog-apis" class="inline-blog-link">diario sobre APIs</a>)* a Gemini 1.5 Pro y Flash, Imagen y modelos de terceros en Model Garden.`
+      ]
+    },
+    section2: {
+      heading: "2. Componentes Clave de la Arquitectura",
+      paragraphs: [
+        "Vertex AI integra varios subsistemas especializados según las necesidades del proyecto:",
+        "**• Model Garden:** Catálogo de modelos base (Gemini, Claude 3.5, Llama 3, Gemma) listos para desplegarse mediante API.",
+        `**• Vertex AI Agent Builder:** Entorno para ensamblar agentes conversacionales con **RAG** integrado *(si no conoces cómo funciona la generación aumentada por recuperación, consulta mi <a href="/es/blog-vector-search" class="inline-blog-link">entrada dedicada a Búsqueda Vectorial y RAG</a>)* y llamadas a **herramientas externas** *(revisa mi <a href="/es/blog-mcp-guide" class="inline-blog-link">guía paso a paso sobre servidores MCP</a>)*.`,
+        "**• Vertex AI Search:** Servicio administrado para indexar documentos (PDFs, tablas) y realizar búsquedas semánticas.",
+        "**• Pipelines y Feature Store:** Infraestructura para automatizar el reentrenamiento de modelos y monitorear el rendimiento en producción."
+      ]
+    },
+    section3: {
+      heading: "3. Ejemplo Práctico de Código: Usando Gemini 1.5 en Node.js",
+      paragraphs: [
+        "Para conectar una aplicación a Vertex AI se utiliza el SDK oficial autenticado mediante credenciales de servicio o ADC (Application Default Credentials):"
+      ],
+      codeLabel: "Snippet de Vertex AI con Node.js",
+      code: `import { VertexAI } from '@google-cloud/vertexai';
+
+const vertex_ai = new VertexAI({
+  project: 'jill-dev-portfolio',
+  location: 'us-central1'
+});
+
+// Cargar el modelo Gemini 1.5 Flash
+const model = vertex_ai.getGenerativeModel({
+  model: 'gemini-1.5-flash-002',
+  generationConfig: {
+    maxOutputTokens: 1024,
+    temperature: 0.2
+  }
+});
+
+async function generateResponse(promptText) {
+  const req = {
+    contents: [{ role: 'user', parts: [{ text: promptText }] }]
+  };
+  
+  const streamingResult = await model.generateContentStream(req);
+  for await (const item of streamingResult.stream) {
+    process.stdout.write(item.candidates[0].content.parts[0].text);
+  }
+}
+
+generateResponse("Explica la diferencia técnica entre RAG y el uso de contexto extendido.");`
+    },
+    section4: {
+      heading: "4. Casos de Uso Reales y Consideraciones",
+      paragraphs: [
+        "**Casos de uso frecuentes:** Automatización de soporte al cliente con base de conocimientos interna, extracción estructurada de información en documentos complejos y creación de agentes de flujo de trabajo.",
+        `**Consideraciones:** Aunque Vertex AI ofrece integración directa con la seguridad e IAM de GCP, es importante monitorear el consumo de tokens y el costo de endpoints dedicados. Comparar soluciones cloud con **modelos de IA locales** *(consulta mi <a href="/es/blog-hermes" class="inline-blog-link">análisis sobre IAs locales y Hermes Agent</a>)* es clave para el control de presupuestos.`
+      ]
+    }
+  },
+  pt: {
+    title: "O que é Vertex AI? — História, Casos de Uso e Guia Técnico",
+    date: "1 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "Uma explicação técnica sobre o Vertex AI do Google Cloud: lançamento, propósitos e como desenvolvedores utilizam a plataforma.",
+    introDesc: "Um resumo detalhado dos componentes como Model Garden, Agent Builder e orquestração de modelos de linguagem.",
+    introExtra: [
+      "Lançado no Google I/O 2021 para unificar as ferramentas de AI Platform e AutoML em um único ambiente MLOps.",
+      "Serve como o ponto central para acesso aos modelos Gemini 1.5 Pro e Flash e criação de agentes."
+    ],
+    section1: {
+      heading: "1. Origem e Evolução do Vertex AI",
+      paragraphs: [
+        "Antes de 2021, criar modelos de aprendizado de máquina no Google Cloud exigia integrar ferramentas separadas como AI Platform e AutoML.",
+        "Em **maio de 2021**, o Google lançou o **Vertex AI** com o objetivo de unificar todo o ciclo de vida de ML: preparação de dados, treinamento, implantação e monitoramento.",
+        `Com o avanço da IA Generativa, a plataforma se tornou a porta de entrada para modelos base via **API** *(se quiser relembrar como APIs funcionam como conversas, confira meu <a href="/pt/blog-apis" class="inline-blog-link">diário sobre APIs</a>)* como Gemini 1.5 Pro e Flash.`
+      ]
+    },
+    section2: {
+      heading: "2. Componentes Principais da Arquitetura",
+      paragraphs: [
+        "O Vertex AI oferece diversos módulos integrados:",
+        "**• Model Garden:** Repositório de modelos (Gemini, Claude, Llama) prontos para consulta via API.",
+        `**• Vertex AI Agent Builder:** Framework para construir agentes com **RAG** *(se quiser entender Geração Aumentada por Recuperação, leia meu <a href="/pt/blog-vector-search" class="inline-blog-link">post sobre Busca Vetorial e RAG</a>)* e chamadas de ferramentas *(confira meu <a href="/pt/blog-mcp-guide" class="inline-blog-link">guia sobre servidores MCP</a>)*.`,
+        "**• Vertex AI Search:** Indexação automatizada de arquivos e busca semântica em documentos corporativos.",
+        "**• Pipelines e Feature Store:** Automação de re-treinamento e monitoramento de desempenho em produção."
+      ]
+    },
+    section3: {
+      heading: "3. Exemplo Prático de Código: Gemini 1.5 em Node.js",
+      paragraphs: [
+        "Exemplo simples de conexão com o SDK do Vertex AI usando Node.js:"
+      ],
+      codeLabel: "Snippet Vertex AI em Node.js",
+      code: `import { VertexAI } from '@google-cloud/vertexai';
+
+const vertex_ai = new VertexAI({
+  project: 'jill-dev-portfolio',
+  location: 'us-central1'
+});
+
+const model = vertex_ai.getGenerativeModel({
+  model: 'gemini-1.5-flash-002',
+  generationConfig: {
+    maxOutputTokens: 1024,
+    temperature: 0.2
+  }
+});
+
+async function generateResponse(promptText) {
+  const req = {
+    contents: [{ role: 'user', parts: [{ text: promptText }] }]
+  };
+  
+  const streamingResult = await model.generateContentStream(req);
+  for await (const item of streamingResult.stream) {
+    process.stdout.write(item.candidates[0].content.parts[0].text);
+  }
+}
+
+generateResponse("Explique a diferença entre RAG e contexto estendido.");`
+    },
+    section4: {
+      heading: "4. Casos de Uso e Considerações Práticas",
+      paragraphs: [
+        "**Casos de uso comuns:** Assistentes virtuais conectados a bases internas de conhecimento, extração de dados de PDFs e automação de processos.",
+        `**Considerações:** Monitorar o consumo de tokens e custos de hospedagem contínua. Comparar custos com **modelos de IA locais** *(confira minha <a href="/pt/blog-hermes" class="inline-blog-link">análise sobre IAs locais</a>)* é essencial para controle de orçamento.`
+      ]
+    }
+  }
+};
+
+const c = content[lang] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Google Cloud Infrastructure
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon">📅</span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main">{c.intro}</p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section3.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section3.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            {c.section4.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-vertex-ai" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

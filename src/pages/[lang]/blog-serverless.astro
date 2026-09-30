@@ -1,0 +1,522 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "What Is Serverless Architecture? — Scale-to-Zero, FaaS, and Cloud Economics",
+    date: "October 5, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Demystifying 'Serverless': yes, there are still servers, but you don't have to manage, provision, or pay for them when they sit idle.",
+    introDesc: "A complete technical guide explaining FaaS (Functions as a Service), serverless containers, scale-to-zero, cold starts, and stateless application design.",
+    introExtra: [
+      "Emerging around 2014 with AWS Lambda, serverless shifted cloud computing from server rentals to event-driven execution.",
+      "Complements modern cloud architectures alongside PaaS, IaaS, and container platforms."
+    ],
+    section1: {
+      heading: "1. What Does 'Serverless' Actually Mean?",
+      paragraphs: [
+        "The name **Serverless** can be misleading: servers obviously still exist. The core difference is **who manages them** and **how you are billed**.",
+        `In traditional cloud models like **IaaS or PaaS** *(if you want to review the differences between SaaS, PaaS, and IaaS, check out my <a href="/en/blog-cloud" class="inline-blog-link">entry explaining cloud models</a>)*, you pay for provisioned virtual machines 24/7 regardless of incoming traffic.`,
+        "In a **Serverless model**, the cloud provider dynamically manages machine allocation. Code is executed in response to events (HTTP requests, database triggers, message queues), and you are billed down to the millisecond of actual execution time. When there are zero requests, you pay **$0**."
+      ]
+    },
+    section2: {
+      heading: "2. FaaS vs. Serverless Containers",
+      paragraphs: [
+        "Serverless has evolved into two primary paradigms:",
+        `**• FaaS (Functions as a Service):** You write individual function handlers (e.g. AWS Lambda, Supabase Edge Functions). The platform manages runtime, execution wrappers, and scaling automatically.`,
+        `**• Serverless Containers:** You package an entire application into an OCI/Docker container image, and the platform handles scale-to-zero execution. A prime example is **Cloud Run** *(read my <a href="/en/blog-cloud-run" class="inline-blog-link">entry dedicated to Cloud Run and GPUs</a>)*.`
+      ]
+    },
+    section3: {
+      heading: "3. Example: Writing a Serverless Function in Node.js",
+      paragraphs: [
+        `Serverless functions are stateless: each request must be self-contained. Below is an HTTP event handler example in Node.js designed to receive **Webhooks** *(see my <a href="/en/blog-webhooks" class="inline-blog-link">entry on Webhooks vs APIs</a>)*:`
+      ],
+      codeLabel: "Stateless Serverless Handler Snippet",
+      code: `// Stateless Serverless Function Handler
+export async function handleRequest(event, context) {
+  try {
+    const payload = JSON.parse(event.body || '{}');
+    
+    // Perform processing (e.g. database query, API call)
+    console.log(\`Received event \${payload.event_type} for user \${payload.user_id}\`);
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'success', timestamp: new Date().toISOString() })
+    };
+  } catch (err) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: err.message })
+    };
+  }
+}`
+    },
+    section4: {
+      heading: "4. Trade-offs: Cold Starts, Statelessness, and Vendor Lock-in",
+      paragraphs: [
+        `**• Cold Starts:** When a function hasn't been invoked recently, the cloud provider must spin up a new container container instance, adding initial latency.`,
+        `**• Statelessness:** Serverless execution environments do not persist local memory between requests. Persistent state must be stored in external databases or caches like Supabase or Redis.`,
+        `**• When to Use:** Highly variable workloads, **APIs** *(read my <a href="/en/blog-apis" class="inline-blog-link">entry on APIs as conversations</a>)*, event-driven webhooks, and automation pipelines where scale-to-zero saves significant infrastructure costs.`
+      ]
+    }
+  },
+  es: {
+    title: "¿Qué es la Arquitectura Serverless? — Funciones, Escala a Cero y Economía Cloud",
+    date: "5 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Desmitificando el concepto 'Serverless': sí existen servidores, pero tú no tienes que administrarlos, provisionarlos ni pagarlos cuando están inactivos.",
+    introDesc: "Una guía técnica completa que explica FaaS (Funciones como Servicio), contenedores serverless, escalado a cero, arranques en frío y diseño sin estado (stateless).",
+    introExtra: [
+      "Surgido alrededor de 2014 con AWS Lambda, serverless cambió el cómputo en la nube del alquiler de servidores a la ejecución guiada por eventos.",
+      "Complementa la arquitectura cloud moderna junto con PaaS, IaaS y plataformas de contenedores."
+    ],
+    section1: {
+      heading: "1. ¿Qué significa realmente 'Serverless'?",
+      paragraphs: [
+        "El término **Serverless** (sin servidor) puede ser confuso: los servidores físicos evidentemente siguen existiendo. La diferencia fundamental radica en **quién los administra** y **cómo te cobran**.",
+        `En modelos cloud tradicionales como **IaaS o PaaS** *(si quieres revisar las diferencias entre SaaS, PaaS e IaaS, consulta mi <a href="/es/blog-cloud" class="inline-blog-link">entrada explicando la nube</a>)*, pagas por máquinas virtuales activas las 24 horas del día sin importar el tráfico real.`,
+        "En un **modelo Serverless**, el proveedor de la nube administra dinámicamente la infraestructura. El código se ejecuta únicamente en respuesta a eventos (peticiones HTTP, eventos de base de datos, colas de mensajes) y pagas por los milisegundos exactos de ejecución. Si hay 0 peticiones, pagas **$0**."
+      ]
+    },
+    section2: {
+      heading: "2. FaaS vs. Contenedores Serverless",
+      paragraphs: [
+        "Serverless ha evolucionado en dos esquemas principales:",
+        `**• FaaS (Functions as a Service):** Ecribes funciones individuales (como AWS Lambda o Supabase Edge Functions). La plataforma administra el entorno de ejecución y el escalado de forma transparente.`,
+        `**• Contenedores Serverless:** Empaquetas tu aplicación completa en una imagen de Docker y la plataforma ejecuta y escala el contenedor a cero. El ejemplo principal es **Cloud Run** *(consulta mi <a href="/es/blog-cloud-run" class="inline-blog-link">entrada dedicada a Cloud Run y GPUs</a>)*.`
+      ]
+    },
+    section3: {
+      heading: "3. Ejemplo: Escribiendo una Función Serverless en Node.js",
+      paragraphs: [
+        `Las funciones serverless son sin estado (stateless): cada petición debe ser autosuficiente. A continuación se muestra un manejador de eventos HTTP en Node.js diseñado para recibir **Webhooks** *(revisa mi <a href="/es/blog-webhooks" class="inline-blog-link">entrada sobre Webhooks vs APIs</a>)*:`
+      ],
+      codeLabel: "Manejador Serverless en Node.js",
+      code: `// Manejador Serverless Sin Estado
+export async function handleRequest(event, context) {
+  try {
+    const payload = JSON.parse(event.body || '{}');
+    
+    // Procesamiento (consulta a base de datos o llamada a API)
+    console.log(\`Evento recibido \${payload.event_type} para el usuario \${payload.user_id}\`);
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'success', timestamp: new Date().toISOString() })
+    };
+  } catch (err) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: err.message })
+    };
+  }
+}`
+    },
+    section4: {
+      heading: "4. Consideraciones: Cold Starts, Ausencia de Estado y Uso Práctico",
+      paragraphs: [
+        `**• Cold Starts (Arranques en frío):** Cuando una función no se ha invocado recientemente, el proveedor debe instanciar un nuevo contenedor, añadiendo latencia inicial.`,
+        `**• Arquitectura Sin Estado:** Los entornos serverless no conservan memoria local entre ejecuciones. El estado persistente debe guardarse en bases de datos externas como Supabase o Redis.`,
+        `**• Cuándo usarlo:** Cargas de trabajo con tráfico variable, **APIs** *(lee mi <a href="/es/blog-apis" class="inline-blog-link">diario sobre APIs como conversaciones</a>)*, webhooks y tareas automatizadas donde el escalado a cero reduce significativamente costos.`
+      ]
+    }
+  },
+  pt: {
+    title: "O que é Arquitetura Serverless? — Funções, Escala a Zero e Economia Cloud",
+    date: "5 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "Desmistificando o termo 'Serverless': servidores existem, mas você não precisa gerenciá-los nem pagar quando estão ociosos.",
+    introDesc: "Guia técnico sobre FaaS (Functions as a Service), contêineres serverless, escala a zero e código sem estado (stateless).",
+    introExtra: [
+      "Criado por volta de 2014 com o AWS Lambda, mudou a computação em nuvem para execução orientada a eventos.",
+      "Complementa modelos como PaaS e IaaS na arquitetura moderna."
+    ],
+    section1: {
+      heading: "1. O que significa Serverless?",
+      paragraphs: [
+        "No modelo serverless, a infraestrutura é gerenciada pelo provedor de nuvem. O código roda apenas em resposta a eventos e você paga estritamente pelo tempo de execução.",
+        `Diferente de modelos **IaaS ou PaaS** *(confira meu <a href="/pt/blog-cloud" class="inline-blog-link">post sobre SaaS, PaaS e IaaS</a>)*, não há custo por servidores virtuais ociosos.`
+      ]
+    },
+    section2: {
+      heading: "2. FaaS vs Contêineres Serverless",
+      paragraphs: [
+        `**• FaaS:** Funções isoladas executadas sob demanda.`,
+        `**• Contêineres Serverless:** Aplicações completas em contêineres Docker que escalam a zero, como o **Cloud Run** *(veja meu <a href="/pt/blog-cloud-run" class="inline-blog-link">post sobre Cloud Run</a>)*.`
+      ]
+    },
+    section3: {
+      heading: "3. Exemplo Prático de Código",
+      paragraphs: [
+        `Exemplo de manipulador serverless para recepção de **Webhooks** *(confira meu <a href="/pt/blog-webhooks" class="inline-blog-link">post de Webhooks</a>)*:`
+      ],
+      codeLabel: "Manipulador Serverless em Node.js",
+      code: `export async function handleRequest(event, context) {
+  try {
+    const payload = JSON.parse(event.body || '{}');
+    console.log(\`Evento \${payload.event_type} para \${payload.user_id}\`);
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'success' })
+    };
+  } catch (err) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: err.message })
+    };
+  }
+}`
+    },
+    section4: {
+      heading: "4. Considerações Finais",
+      paragraphs: [
+        `**Considerações:** Latência de cold start e necessidade de persistência externa de estado para **APIs** *(veja meu <a href="/pt/blog-apis" class="inline-blog-link">post de APIs</a>)*.`
+      ]
+    }
+  }
+};
+
+const c = content[lang] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Cloud Architecture & Serverless
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon">📅</span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main">{c.intro}</p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section3.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section3.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            {c.section4.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-serverless" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,517 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Vector Search and Embeddings — From Math Theory to SQL in BigQuery",
+    date: "October 2, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Understanding vector search, text embeddings, and how BigQuery brings semantic similarity directly into standard SQL queries.",
+    introDesc: "A practical guide explaining how high-dimensional vectors work, distance metrics (Cosine vs Euclidean), and SQL implementation.",
+    introExtra: [
+      "Vector embeddings convert unstructured text or images into numerical vectors that capture semantic relationships.",
+      "BigQuery Vector Search eliminates the need to export data to external vector databases for enterprise RAG pipelines."
+    ],
+    section1: {
+      heading: "1. What Are Vector Embeddings & Vector Search?",
+      paragraphs: [
+        "In traditional databases, search relies on exact keyword matching (`WHERE text LIKE '%keyword%'`). If a user searches for *'car'*, standard SQL won't match rows containing *'automobile'* unless explicitly mapped.",
+        "**Embeddings** solve this by passing text through an embedding model (like `text-embedding-004`), which returns an array of floating-point numbers (e.g. 768 dimensions) representing semantic meaning.",
+        `**Vector Search** measures the distance between vectors in multidimensional space. Concepts with similar meanings end up close together, enabling semantic search, recommendation systems, and **RAG pipelines** *(if you'd like to see how RAG agents are orchestrated, check out my <a href="/en/blog-vertex-ai" class="inline-blog-link">entry on Vertex AI</a>)*.`
+      ]
+    },
+    section2: {
+      heading: "2. Distance Metrics: Cosine vs Euclidean Distance",
+      paragraphs: [
+        "When comparing two vectors **A** and **B**, vector search relies on mathematical distance formulas:",
+        "**• Cosine Distance / Similarity:** Measures the angle between two vectors. It ranges from 0 (identical direction) to 2 (opposite). Best suited for text length variations.",
+        "**• Euclidean Distance (L2):** Measures straight-line distance between vector endpoints in multi-dimensional space.",
+        "**• Dot Product:** Multiplies corresponding vector elements; optimal when vectors are normalized to unit length."
+      ]
+    },
+    section3: {
+      heading: "3. Executing Vector Search in BigQuery SQL",
+      paragraphs: [
+        "BigQuery supports generating embeddings directly via `ML.GENERATE_EMBEDDING` and querying vector indexes via `VECTOR_SEARCH` or `COSINE_DISTANCE`:",
+        "Below is an example of querying text embeddings natively using SQL:"
+      ],
+      codeLabel: "BigQuery SQL Vector Similarity Query",
+      code: `-- Generate embeddings for a search query and find top 5 matches
+WITH query_embedding AS (
+  SELECT text_content, ml_generate_embedding_result AS query_vector
+  FROM ML.GENERATE_EMBEDDING(
+    MODEL \`jill_proj.embedding_model\`,
+    (SELECT 'How do I handle authentication in microservices?' AS text_content)
+  )
+)
+SELECT 
+  d.doc_id,
+  d.title,
+  COSINE_DISTANCE(d.embedding, q.query_vector) AS distance
+FROM \`jill_proj.knowledge_base\` d, query_embedding q
+WHERE d.status = 'active'
+ORDER BY distance ASC
+LIMIT 5;`
+    },
+    section4: {
+      heading: "4. Practical Use Cases & Architecture Trade-offs",
+      paragraphs: [
+        "**Best Use Cases:** Building RAG over petabyte-scale data lakes, deduplicating customer tickets, and semantic document search.",
+        `**Trade-offs:** Running vector search in BigQuery is ideal for analytical queries and batch RAG. For real-time applications requiring sub-10ms response times for live **APIs** *(see my <a href="/en/blog-apis" class="inline-blog-link">entry on APIs</a>)*, dedicated vector stores like Pinecone, Qdrant, or Pgvector remain superior.`
+      ]
+    }
+  },
+  es: {
+    title: "Búsqueda Vectorial y Embeddings — De la Teoría a SQL en BigQuery",
+    date: "2 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Una explicación clara sobre búsqueda vectorial, embeddings de texto y cómo BigQuery integra la similitud semántica en consultas SQL.",
+    introDesc: "Guía práctica sobre vectores de alta dimensión, métricas de distancia (Coseno vs Euclidiana) e implementación en bases de datos.",
+    introExtra: [
+      "Los embeddings convierten texto e imágenes en vectores numéricos que capturan relaciones de significado.",
+      "BigQuery Vector Search permite hacer búsquedas semánticas sobre petabytes de datos sin requerir bases de datos vectoriales externas."
+    ],
+    section1: {
+      heading: "1. ¿Qué son los Embeddings y la Búsqueda Vectorial?",
+      paragraphs: [
+        "En bases de datos tradicionales, la búsqueda se basa en coincidencias exactas (`WHERE texto LIKE '%palabra%'`). Si un usuario busca *'auto'*, SQL estándar no encontrará registros con la palabra *'vehículo'* a menos que se configure explícitamente.",
+        "Los **Embeddings** resuelven esto convirtiendo texto a través de un modelo de embedding (como `text-embedding-004`) en un arreglo de números flotantes (por ejemplo, 768 dimensiones) que representan su significado semántico.",
+        `La **Búsqueda Vectorial** calcula la distancia entre vectores en un espacio multidimensional. Los conceptos similares quedan cercanos entre sí, lo que habilita la búsqueda por contexto y sistemas de **RAG** *(si quieres aprender cómo se orquestan agentes con RAG, revisa mi <a href="/es/blog-vertex-ai" class="inline-blog-link">entrada sobre Vertex AI</a>)*.`
+      ]
+    },
+    section2: {
+      heading: "2. Métricas de Distancia: Coseno vs Euclidiana",
+      paragraphs: [
+        "Para comparar dos vectores **A** y **B**, se utilizan fórmulas matemáticas de distancia:",
+        "**• Distancia Coseno:** Mide el ángulo entre dos vectores. Varía entre 0 (misma dirección) y 2 (opuesta). Es la más utilizada en procesamiento de lenguaje natural.",
+        "**• Distancia Euclidiana (L2):** Mide la distancia en línea recta entre los puntos en el espacio multidimensional.",
+        "**• Producto Punto:** Multiplica los elementos correspondientes; es eficiente cuando los vectores están normalizados."
+      ]
+    },
+    section3: {
+      heading: "3. Ejecutando Búsquedas Vectoriales en BigQuery SQL",
+      paragraphs: [
+        "BigQuery permite generar embeddings directamente mediante `ML.GENERATE_EMBEDDING` y consultar vectores con `COSINE_DISTANCE`:",
+        "Ejemplo de consulta de similitud vectorial en SQL:"
+      ],
+      codeLabel: "Consulta SQL de Similitud Vectorial",
+      code: `-- Generar embedding de búsqueda y consultar las 5 coincidencias más cercanas
+WITH query_embedding AS (
+  SELECT text_content, ml_generate_embedding_result AS query_vector
+  FROM ML.GENERATE_EMBEDDING(
+    MODEL \`jill_proj.embedding_model\`,
+    (SELECT '¿Cómo manejar la autenticación en microservicios?' AS text_content)
+  )
+)
+SELECT 
+  d.doc_id,
+  d.title,
+  COSINE_DISTANCE(d.embedding, q.query_vector) AS distance
+FROM \`jill_proj.knowledge_base\` d, query_embedding q
+WHERE d.status = 'active'
+ORDER BY distance ASC
+LIMIT 5;`
+    },
+    section4: {
+      heading: "4. Casos de Uso y Comparativa Arquitectónica",
+      paragraphs: [
+        "**Casos ideales:** Implementación de RAG sobre almacenes de datos a escala empresarial, deduplicación de registros y búsqueda en bases de conocimiento.",
+        `**Consideraciones:** Usar BigQuery para búsqueda vectorial es ideal en análisis y batch RAG. Para **APIs** *(revisa mi <a href="/es/blog-apis" class="inline-blog-link">diario sobre APIs como conversaciones</a>)* interactivas en tiempo real que exijan milisegundos de un solo dígito, bases vectoriales dedicadas (como Qdrant o Pgvector) siguen siendo la opción preferida.`
+      ]
+    }
+  },
+  pt: {
+    title: "Busca Vetorial e Embeddings — Da Teoria ao SQL no BigQuery",
+    date: "2 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "Uma explicação técnica sobre busca vetorial, embeddings de texto e como o BigQuery integra busca semântica em consultas SQL.",
+    introDesc: "Guia prático sobre vetores multidimensionais, métricas de distância e implementação em bancos de dados.",
+    introExtra: [
+      "Embeddings transformam texto em vetores numéricos que capturam relações de significado.",
+      "O BigQuery Vector Search permite consultas semânticas sem necessidade de exportar dados para bancos vetoriais dedicados."
+    ],
+    section1: {
+      heading: "1. O que são Embeddings e Busca Vetorial?",
+      paragraphs: [
+        "Em bancos tradicionais, a busca depende de correspondência exata de palavras (`WHERE text LIKE '%palavra%'`).",
+        "Os **Embeddings** resolvem isso convertendo o texto por meio de um modelo numérico em vetores multidimensionais que representam o contexto da frase.",
+        `A **Busca Vetorial** mede a distância entre esses vetores no espaço numérico, permitindo criar fluxos de **RAG** *(se quiser entender agentes com RAG, veja meu <a href="/pt/blog-vertex-ai" class="inline-blog-link">post sobre Vertex AI</a>)*.`
+      ]
+    },
+    section2: {
+      heading: "2. Métricas de Distância",
+      paragraphs: [
+        "**• Distância Cosseno:** Mede o ângulo entre dois vetores. Ideal para comparação de textos de tamanhos variados.",
+        "**• Distância Euclidiana (L2):** Mede a distância em linha reta no espaço multidimensional.",
+        "**• Produto Escalar:** Multiplicação direta de elementos, ideal para vetores normalizados."
+      ]
+    },
+    section3: {
+      heading: "3. Consulta de Busca Vetorial no BigQuery SQL",
+      paragraphs: [
+        "Exemplo de consulta SQL nativa no BigQuery utilizando funções de distância Cosseno:"
+      ],
+      codeLabel: "Consulta de Busca Vetorial em SQL",
+      code: `WITH query_embedding AS (
+  SELECT text_content, ml_generate_embedding_result AS query_vector
+  FROM ML.GENERATE_EMBEDDING(
+    MODEL \`jill_proj.embedding_model\`,
+    (SELECT 'Como gerenciar autenticação em microsserviços?' AS text_content)
+  )
+)
+SELECT 
+  d.doc_id,
+  d.title,
+  COSINE_DISTANCE(d.embedding, q.query_vector) AS distance
+FROM \`jill_proj.knowledge_base\` d, query_embedding q
+WHERE d.status = 'active'
+ORDER BY distance ASC
+LIMIT 5;`
+    },
+    section4: {
+      heading: "4. Casos de Uso e Considerações",
+      paragraphs: [
+        "**Casos de uso:** RAG corporativo sobre grandes volumes de dados e busca de documentos por significado.",
+        `**Considerações:** Para **APIs** *(veja meu <a href="/pt/blog-apis" class="inline-blog-link">post sobre APIs</a>)* em tempo real abaixo de 10ms, bancos vetoriais dedicados continuam sendo recomendados.`
+      ]
+    }
+  }
+};
+
+const c = content[lang] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Data & Vector Search
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon">📅</span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main">{c.intro}</p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section3.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section3.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            {c.section4.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-vector-search" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

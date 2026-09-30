@@ -1,0 +1,513 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const content = {
+  en: {
+    title: "Cloud Cybersecurity and AI — Automation with SecLM and Digital Sovereignty",
+    date: "October 4, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Understanding how AI models specialized in cybersecurity (SecLM) and digital sovereignty frameworks enhance cloud security operations.",
+    introDesc: "A technical overview of automated threat detection, log analysis, and data residency compliance in cloud environments.",
+    introExtra: [
+      "SecLM is a specialized LLM fine-tuned on Mandiant threat intelligence and Google security telemetry.",
+      "Digital sovereignty ensures enterprise data remains within specific geographical jurisdictions under local regulatory compliance."
+    ],
+    section1: {
+      heading: "1. AI in Cloud Security: What Is SecLM?",
+      paragraphs: [
+        "Modern cloud environments generate millions of security events and log entries daily. Traditional SIEM (Security Information and Event Management) tools rely on static rule sets that often produce high false-positive noise.",
+        `**SecLM (Security Language Model)** is a specialized AI model trained on threat analysis reports, malware behavior, and security configurations *(if you want to learn more about specialized local AI models, read my <a href="/en/blog-hermes" class="inline-blog-link">entry on local LLMs and Hermes Agent</a>)*.`,
+        "In **Security AI Command Center**, SecLM acts as an automated analyst: translating complex multi-stage attack graphs into natural language summaries and suggesting remediation CLI commands."
+      ]
+    },
+    section2: {
+      heading: "2. Digital Sovereignty & Data Residency",
+      paragraphs: [
+        "As organizations in Latin America and globally move mission-critical data to public cloud providers, compliance with local privacy regulations (such as LGPD or national data protection laws) is mandatory.",
+        "**• Data Sovereignty:** Guarantees customer data is stored and processed exclusively within specified geographic cloud regions.",
+        "**• Key Sovereignty (CMEK):** Customer-Managed Encryption Keys allow organizations to retain full cryptographic ownership over their data at rest and in transit.",
+        "**• Operational Sovereignty:** Restricts cloud provider support personnel access unless explicitly authorized by the client."
+      ]
+    },
+    section3: {
+      heading: "3. Example: Programmatic Audit Log Inspection with GCP SDK",
+      paragraphs: [
+        `In automated **DevSecOps & CI/CD pipelines** *(if you'd like to read about the challenges of deployment pipelines, check out my <a href="/en/blog-deployment" class="inline-blog-link">entry on deployments</a>)*, security telemetry can be ingested and filtered programmatically using cloud audit logs:`
+      ],
+      codeLabel: "Node.js Audit Log Security Event Filter",
+      code: `import { Logging } from '@google-cloud/logging';
+
+const logging = new Logging({ projectId: 'jill-sec-audit' });
+
+async function streamSecurityEvents() {
+  const log = logging.log('cloudaudit.googleapis.com%2Factivity');
+  
+  // Filter for IAM policy alterations or unusual admin actions
+  const filter = 'resource.type="gce_instance" AND protoPayload.methodName="v1.compute.instances.insert"';
+  const [entries] = await log.getEntries({ filter, pageSize: 10 });
+
+  entries.forEach(entry => {
+    console.log(\`[ALERT] Security Activity by \${entry.metadata.protoPayload?.authenticationInfo?.principalEmail}\`);
+  });
+}
+
+streamSecurityEvents();`
+    },
+    section4: {
+      heading: "4. Practical Trade-offs in Security Automation",
+      paragraphs: [
+        "**Benefits:** Faster incident response, automated threat triage, and reduced manual log auditing overhead.",
+        "**Trade-offs:** AI-generated security recommendations must always be validated by human SecOps/DevOps engineers before executing automated infrastructure remediations to avoid accidental downtime."
+      ]
+    }
+  },
+  es: {
+    title: "Ciberseguridad e IA en la Nube — Automatización con SecLM y Soberanía Digital",
+    date: "4 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Una revisión técnica sobre el uso de modelos de IA especializados en seguridad (SecLM) y los esquemas de soberanía digital en la nube.",
+    introDesc: "Análisis práctico sobre detección automatizada de amenazas, triaje de logs y cumplimiento de residencia de datos.",
+    introExtra: [
+      "SecLM es un modelo de lenguaje afinado con inteligencia de amenazas de Mandiant y telemetría de seguridad de Google.",
+      "La soberanía digital garantiza que los datos permanezcan dentro de jurisdicciones geográficas específicas según normativas locales."
+    ],
+    section1: {
+      heading: "1. IA aplicada a Ciberseguridad: ¿Qué es SecLM?",
+      paragraphs: [
+        "Los entornos cloud modernos generan millones de eventos de seguridad y registros diarios. Las herramientas SIEM tradicionales dependen de reglas estáticas que suelen generar alto volumen de falsos positivos.",
+        `**SecLM (Security Language Model)** es un modelo de IA especializado entrenado en informes de amenazas, comportamiento de código malicioso y configuraciones de seguridad *(si quieres aprender sobre la privacidad y ejecución de modelos locales, revisa mi <a href="/es/blog-hermes" class="inline-blog-link">análisis de IAs locales</a>)*.`,
+        "En **Security AI Command Center**, SecLM resume vectores de ataque complejos en lenguaje claro y sugiere comandos de remediación."
+      ]
+    },
+    section2: {
+      heading: "2. Soberanía Digital y Residencia de Datos",
+      paragraphs: [
+        "Para empresas y organismos que mueven datos sensibles a la nube, el cumplimiento de regulaciones locales de privacidad es un requisito indispensable:",
+        "**• Soberanía de Datos:** Garantiza que la información se almacene y procese exclusivamente en regiones geográficas delimitadas.",
+        "**• Soberanía de Claves (CMEK):** Permite a la organización mantener el control criptográfico total sobre sus claves de cifrado en reposo y en tránsito.",
+        "**• Soberanía Operativa:** Restringe el acceso del personal de soporte del proveedor de nube a menos que sea explícitamente autorizado."
+      ]
+    },
+    section3: {
+      heading: "3. Ejemplo de Inspección Programática de Logs de Auditoría",
+      paragraphs: [
+        `En **pipelines automatizados de CI/CD** *(si quieres recordar los retos del despliegue en producción, consulta mi <a href="/es/blog-deployment" class="inline-blog-link">entrada sobre el miedo al deploy</a>)*, la telemetría de seguridad se puede consultar programáticamente para detectar alteraciones de configuración:`
+      ],
+      codeLabel: "Filtro de Eventos de Seguridad en Node.js",
+      code: `import { Logging } from '@google-cloud/logging';
+
+const logging = new Logging({ projectId: 'jill-sec-audit' });
+
+async function streamSecurityEvents() {
+  const log = logging.log('cloudaudit.googleapis.com%2Factivity');
+  
+  // Filtrar cambios en políticas de IAM o creación no autorizada de recursos
+  const filter = 'resource.type="gce_instance" AND protoPayload.methodName="v1.compute.instances.insert"';
+  const [entries] = await log.getEntries({ filter, pageSize: 10 });
+
+  entries.forEach(entry => {
+    console.log(\`[ALERTA] Evento de Seguridad por \${entry.metadata.protoPayload?.authenticationInfo?.principalEmail}\`);
+  });
+}
+
+streamSecurityEvents();`
+    },
+    section4: {
+      heading: "4. Consideraciones Técnicas",
+      paragraphs: [
+        "**Beneficios:** Mayor velocidad en el triaje de incidentes y reducción del trabajo manual en análisis de logs.",
+        "**Consideraciones:** Las recomendaciones de remediación generadas por IA deben ser auditadas por ingenieros de seguridad antes de aplicarse en producción."
+      ]
+    }
+  },
+  pt: {
+    title: "Cibersegurança e IA na Nuvem — Automação com SecLM e Soberania Digital",
+    date: "4 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "Análise técnica do uso de IA especializada em segurança (SecLM) e soberania de dados na nuvem.",
+    introDesc: "Visão prática sobre detecção de ameaças, logs de auditoria e conformidade regulatória.",
+    introExtra: [
+      "SecLM é um modelo especializado treinado em relatórios de inteligência de ameaças.",
+      "A soberania digital assegura que os dados permaneçam sob controle geográfico e regulatório local."
+    ],
+    section1: {
+      heading: "1. O que é o SecLM?",
+      paragraphs: [
+        `O **SecLM** é um modelo de IA treinado para identificar padrões de ataque em registros de auditoria *(se quiser entender modelos locais, confira meu <a href="/pt/blog-hermes" class="inline-blog-link">post sobre IAs locais</a>)* e sugerir ações de remediação.`
+      ]
+    },
+    section2: {
+      heading: "2. Soberania Digital e Criptografia",
+      paragraphs: [
+        "**• Residência de Dados:** Garantia de armazenamento em regiões específicas.",
+        "**• Chaves CMEK:** Controle total do cliente sobre as chaves de criptografia."
+      ]
+    },
+    section3: {
+      heading: "3. Inspeção Programática de Logs de Auditoria",
+      paragraphs: [
+        `Exemplo de código para monitorar eventos em **pipelines de CI/CD** *(relembre os desafios no meu <a href="/pt/blog-deployment" class="inline-blog-link">post sobre deploy</a>)*:`
+      ],
+      codeLabel: "Filtro de Logs de Auditoria em Node.js",
+      code: `import { Logging } from '@google-cloud/logging';
+
+const logging = new Logging({ projectId: 'jill-sec-audit' });
+
+async function streamSecurityEvents() {
+  const log = logging.log('cloudaudit.googleapis.com%2Factivity');
+  const filter = 'resource.type="gce_instance" AND protoPayload.methodName="v1.compute.instances.insert"';
+  const [entries] = await log.getEntries({ filter, pageSize: 10 });
+
+  entries.forEach(entry => {
+    console.log(\`[ALERTA] Evento: \${entry.metadata.protoPayload?.authenticationInfo?.principalEmail}\`);
+  });
+}
+
+streamSecurityEvents();`
+    },
+    section4: {
+      heading: "4. Considerações Finais",
+      paragraphs: [
+        "Recomendações automáticas de IA devem passar por validação de engenheiros antes da aplicação em produção."
+      ]
+    }
+  }
+};
+
+const c = content[lang] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Cloud Security & Governance
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon">📅</span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main">{c.intro}</p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section3.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section3.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            {c.section4.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-security-ai" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
