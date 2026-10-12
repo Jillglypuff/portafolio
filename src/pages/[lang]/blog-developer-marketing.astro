@@ -1,0 +1,409 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, Writing Code Makes Sense... Meta Does Not 🌸",
+    date: "October 19, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "I am going to be completely honest: dealing with Meta and content creation has me utterly exhausted.",
+    introDesc: "This isn't a tutorial, an educational guide, or marketing advice. It's just me venting about how infuriating it is to navigate Instagram's algorithm when you are a programmer used to logic.",
+    sections: [
+      {
+        heading: "In programming, things actually make sense",
+        paragraphs: [
+          "When you write software, there is cause and effect. If an endpoint throws a 500 error, you read the stack trace. If a function misbehaves, you drop a console log or attach a debugger. You find the root cause, fix it, and it works. Code respects logic.",
+          "Meta (Instagram), on the other hand, is an exercise in pure frustration. There is zero logic. You can do everything 'right' and get buried under the rug.",
+          "I genuinely joke sometimes that the accounts blowing up have some secret pact with the devil that nobody knows about, because looking at it rationally, none of the distribution makes any sense."
+        ]
+      },
+      {
+        heading: "Hours in Canva vs. five seconds with a template",
+        paragraphs: [
+          "The thing that infuriates me the most is the blatant hypocrisy around originality.",
+          "I spend hours in Canva carefully designing original carousels, writing thoughtful copy, and putting real heart into content for my business <a href=\"https://lagatacr.com\" target=\"_blank\" class=\"inline-blog-link\">lagatacr.com</a>. Result? Meta shows it to ten people.",
+          "And then, you see someone grab a 5-second video template from the Instagram Edits app, slap two generic sentences on top without thinking, and it gets tens of thousands of views.",
+          "What the actual f? They constantly preach that you need to be 'original, creative, and authentic,' yet the algorithm actively punishes original work and aggressively rewards the exact same recycled templates everyone is using.",
+          "They demand originality, but force you to copy templates if you want anyone to see you."
+        ]
+      },
+      {
+        heading: "The schedule trap (when you actually have a life)",
+        paragraphs: [
+          "Then there's the whole obsession with posting schedules. If I finish studying, coding, or working on client tasks at 11 PM or midnight and post something, it is instantly dead on arrival. ten views.",
+          "Marketing gurus tell you that you *must* post at 8 AM or exactly at noon. But in real life, I have university classes, workouts at the gym, work commitments, and a business to run. My life doesn't revolve around my phone screen.",
+          "I can't—and refuse to—live glued to Instagram waiting for whatever arbitrary hour the algorithm decides to favor that day.",
+          "And to make matters worse: what barely works one week stops working the next. It feels like running on an endless, exhausting hamster wheel."
+        ]
+      },
+      {
+        heading: "No, I haven't figured this out",
+        paragraphs: [
+          "I didn't write this entry to give tips or pretend I found some magic 'sweet spot'. I haven't. It is still an ongoing, daily headache.",
+          "It bothers me deeply that genuine, high-effort work gets silenced by a black-box algorithm designed for mindless consumption.",
+          "If there is anyone out there who actually knows how to navigate this madness without losing their sanity, please guide me, because as a developer, this makes zero sense."
+        ]
+      }
+    ],
+    closingHeading: "A personal reflection",
+    closingText: "At the end of the day, building real software and living a real life matters more than feeding an algorithm. But man, it is so frustrating.",
+    closingSign: "See you in the next entry 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Programar Tiene Lógica... Meta No Tiene Ninguna 🌸",
+    date: "19 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Voy a ser completamente honesta: trabajar con Meta y la creación de contenido me tiene totalmente harta.",
+    introDesc: "Esta entrada no es un tutorial, ni una guía educativa, ni consejos de marketing. Es simplemente mi desahogo sobre lo frustrante que es lidiar con el algoritmo de Instagram cuando eres programadora y estás acostumbrada a la lógica.",
+    sections: [
+      {
+        heading: "En el código las cosas tienen sentido",
+        paragraphs: [
+          "Cuando programas software, hay causa y efecto. Si una función lanza un error 500, revisas el stack trace. Si algo falla, metes un console.log o usas el depurador, entiendes qué pasó, lo arreglas y funciona. El código respeta la lógica.",
+          "Pero Meta (Instagram)... Meta no tiene ningún sentido. Trabajar con sus algoritmos es toparse con una pared de incoherencias. Haces todo 'bien' y la plataforma simplemente decide ignorarte.",
+          "A veces bromeo con que la gente que crece ahí tiene algún convenio o un pacto con el diablo que nadie conoce, porque desde la razón no hay forma humana de explicar cómo distribuyen el contenido."
+        ]
+      },
+      {
+        heading: "Horas en Canva vs. cinco segundos con una plantilla",
+        paragraphs: [
+          "Lo que más coraje y frustración me da es la hipocresía descarada con la originalidad.",
+          "Paso horas en Canva diseñando carruseles propios, cuidando cada detalle para aportar algo genuino y de valor para <a href=\"https://lagatacr.com\" target=\"_blank\" class=\"inline-blog-link\">lagatacr.com</a> y mi marca. ¿El resultado? Meta se lo enseña a diez personas con suerte.",
+          "Y luego ves a alguien que agarra una plantilla reciclada de 5 segundos en la aplicación de Edits de Instagram, le monta dos textos genéricos encima sin pensar, y de repente tiene miles y miles de reproducciones.",
+          "¿Qué carajos? Te llenan la cabeza diciendo que tenés que ser 'original, creativa y auténtica', pero el algoritmo castiga el esfuerzo propio y premia descaradamente las mismas plantillas que todo el mundo está repitiendo hasta el cansancio.",
+          "Te piden originalidad, pero te obligan a usar plantillas si querés que alguien te vea."
+        ]
+      },
+      {
+        heading: "La trampa de los horarios (cuando tenés una vida real)",
+        paragraphs: [
+          "Luego está el circo de los horarios. Si me quedo hasta tarde estudiando, programando o trabajando en entregas y publico algo a las 11 o 12 de la noche, el post nace muerto. Cero alcance inicial.",
+          "Te dicen que tenés que publicar obligatoriamente a las 8 AM o a las 12 PM en punto. ¿Pero en qué momento? Entre la universidad, mis entrenamientos en el gimnasio, el trabajo y gestionar mi negocio, mi tiempo no es infinito. Mi vida no gira alrededor de una pantalla de celular.",
+          "No puedo ni quiero vivir pegada al teléfono esperando la hora bendecida que al algoritmo se le antoje premiar ese día.",
+          "Y para colmo: lo que medio funcionó una semana, a la siguiente ya no sirve para nada. Es una rueda de hámster sin fin."
+        ]
+      },
+      {
+        heading: "No, no tengo nada resuelto",
+        paragraphs: [
+          "No escribí esto para dar tips ni para fingir que encontré algún 'truco' o fórmula mágica. No lo he encontrado. Sigue siendo un dolor de cabeza diario.",
+          "Me molesta profundamente que el esfuerzo y el trabajo real se queden invisibles ante un algoritmo diseñado para consumo rápido y vacío.",
+          "Si hay alguien ahí afuera que de verdad sepa cómo se le hace este desmadre sin volverse loca, que por favor me guíe, porque como desarrolladora esto me parece completamente absurdo."
+        ]
+      }
+    ],
+    closingHeading: "Una reflexión sincera",
+    closingText: "Al final del día, construir proyectos reales y vivir una vida propia vale mil veces más que alimentar un algoritmo. Pero qué frustrante es.",
+    closingSign: "Nos vemos en la siguiente entrada 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Programar Tem Lógica... A Meta Não Tem Nenhuma 🌸",
+    date: "19 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Vou ser bem sincera: lidar com a Meta e criação de conteúdo está me deixando totalmente exausta.",
+    introDesc: "Isso não é um tutorial, nem dicas de marketing. É apenas um desabafo sobre como é frustrante lidar com o algoritmo do Instagram quando você é programadora e está acostumada com a lógica.",
+    sections: [
+      {
+        heading: "No código as coisas fazem sentido",
+        paragraphs: [
+          "No software existe causa e efeito. Se algo quebra, você lê o log, investiga o erro, conserta e roda. O código respeita a razão.",
+          "Com a Meta (Instagram), nada faz sentido. É uma caixa preta de incoerências.",
+          "Às vezes brinco que quem cresce tem algum pacto que ninguém sabe, porque pela lógica não há como explicar a distribuição do conteúdo."
+        ]
+      },
+      {
+        heading: "Horas no Canva vs. cinco segundos com um template",
+        paragraphs: [
+          "O que mais me revolta é a hipocrisia com a originalidade.",
+          "Passo horas no Canva criando designs autorais para o meu negócio <a href=\"https://lagatacr.com\" target=\"_blank\" class=\"inline-blog-link\">lagatacr.com</a>, e a Meta mal entrega para dez pessoas.",
+          "Aí alguém pega um template de 5 segundos no Instagram Edits, coloca duas frases genéricas e explode em visualizações.",
+          "Que absurdo! Cobram autenticidade, mas o algoritmo castiga o esforço autoral e só premia templates reciclados que todo mundo já viu.",
+          "Exigem originalidade, mas te forçam a usar templates se quiser alcance."
+        ]
+      },
+      {
+        heading: "A armadilha dos horários (quando você tem uma rotina real)",
+        paragraphs: [
+          "Se posto tarde da noite depois de estudar ou programar, a publicação morre na hora.",
+          "Dizem que preciso postar às 8h ou 12h, mas minha rotina tem faculdade, academia, trabalho e negócios. Não posso nem quero viver refém do celular.",
+          "E o que funciona hoje não funciona na semana seguinte. É uma corrida sem fim."
+        ]
+      },
+      {
+        heading: "Não, não tenho nada resolvido",
+        paragraphs: [
+          "Não escrevi isso para fingir que encontrei uma fórmula mágica. Não encontrei. Continua sendo uma frustração diária.",
+          "Incomoda que trabalho real seja abafado por métricas vazias.",
+          "Se alguém aí sabe como lidar com essa loucura sem surtar, por favor me guie, porque isso é exaustivo."
+        ]
+      }
+    ],
+    closingHeading: "Reflexão sincera",
+    closingText: "No fim das contas, construir coisas reais e viver sua vida vale muito mais do que alimentar algoritmos. Mas a frustração é real.",
+    closingSign: "Nos vemos na próxima entrada 🌸",
+    signature: "— Jill"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Developer Diary & Honest Content
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main" set:html={c.intro}></p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          {c.sections.map(sec => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+            </section>
+          ))}
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-developer-marketing" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #f87171;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(239, 68, 68, 0.08);
+    border-left: 4px solid #f87171;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .closing-signature {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: #38bdf8;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

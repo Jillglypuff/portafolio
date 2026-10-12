@@ -1,0 +1,638 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, Reverse Engineering, Crossovers & IP Laws in Gaming 🌸",
+    date: "October 12, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Free time is scarce between university, the gym, and managing my business <a href=\"https://lagatacr.com\" target=\"_blank\" class=\"inline-blog-link\">lagatacr.com</a>, but whenever I do get a rare window, I enjoy playing video games.",
+    introDesc: "Recently I was analyzing how community modders perform reverse engineering on AAA games—like connecting Elden Ring combat mechanics with Minecraft—and I wanted to look at it from a serious engineering and legal perspective.",
+    introExtra: [
+      "Decompilation tools like Ghidra, IDA Pro, and x64dbg are industry standards for analyzing game binaries.",
+      "Dual-process memory injection and IPC allow developers to bridge state between two running game executables.",
+      "Clear legal distinction: Clean-room logic code can be open source, but selling mods with extracted proprietary assets is illegal."
+    ],
+    section1: {
+      heading: "1. Reverse Engineering Tools & Binary Analysis ⚙️",
+      paragraphs: [
+        `Between university classes, workout routines at the gym, and managing operational workflows for <a href="https://lagatacr.com" target="_blank" class="inline-blog-link">lagatacr.com</a>, finding time for video games doesn't happen often. But when I do play, I look at software through a technical lens.`,
+        "When developers perform reverse engineering on closed-source game executables, they rely on standardized industry tools:",
+        "**• Static Analysis (Ghidra & IDA Pro):** Decompilers like Ghidra (NSA open-source tool) and IDA Pro convert machine assembly into readable C/C++ pseudocode to map data structures, movement vectors, and damage formulas.",
+        "**• Dynamic Analysis & Debugging (x64dbg & Cheat Engine):** Memory scanners and debuggers inspect registers, set execution breakpoints, and map active memory pointers while the game binary is running.",
+        "**• Hex Editing (HxD):** Directly inspecting raw byte streams in executables or asset archives to analyze headers and compression offsets."
+      ]
+    },
+    section2: {
+      heading: "2. Dual-Process Execution & Memory Injection Hooks ⚔️",
+      paragraphs: [
+        "In complex gaming crossovers (such as linking Elden Ring combat telemetry into a voxel engine like Minecraft), developers often use a **Dual-Process Architecture** where both games run concurrently on the host system.",
+        "Rather than just porting raw 3D assets, dynamic memory injection and Inter-Process Communication (IPC) enable real-time state synchronization:",
+        "**• Memory Injection & DLL Hooking:** Using Windows APIs (`VirtualAllocEx`, `WriteProcessMemory`, `CreateRemoteThread`) to inject custom C++ DLLs into the running target process.",
+        "**• Function Hooking:** Intercepting internal game loop functions to capture player coordinates, animation state indexes, and boss health values in real time.",
+        "**• IPC Telemetry Relay:** Transmitting captured state parameters over local sockets or shared memory to the receiving sandbox client, updating entity states synchronously on every game tick."
+      ],
+      codeLabel: "Process Memory State Reader & Hooking Logic (C++ / Pseudocode)",
+      code: `// C++ Process Memory Reader for Real-Time Telemetry Relay
+#include <windows.h>
+#include <iostream>
+
+struct PlayerTelemetry {
+    float x, y, z;
+    int currentAnimationId;
+    float health;
+};
+
+PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
+    PlayerTelemetry state;
+    uintptr_t playerStructOffset = 0x028A7F40; // Discovered via Ghidra/IDA Pro
+    uintptr_t playerAddress = 0;
+
+    // Read base pointer to player structure
+    ReadProcessMemory(hProcess, (LPCVOID)(baseAddress + playerStructOffset), &playerAddress, sizeof(playerAddress), NULL);
+
+    if (playerAddress != 0) {
+        // Read spatial coordinates and state
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x30), &state.x, sizeof(state.x), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x34), &state.y, sizeof(state.y), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x38), &state.z, sizeof(state.z), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x110), &state.currentAnimationId, sizeof(state.currentAnimationId), NULL);
+    }
+    return state;
+}`
+    },
+    section3: {
+      heading: "3. Commercial Rules: Can You Sell Game Mods or Crossovers? ⚖️",
+      paragraphs: [
+        "A critical question often arises in software engineering: **Can someone sell a mod or crossover that uses assets or logic from commercial games?**",
+        "**• Selling Commercial Assets is Illegal:** Absolutely not. Extracting proprietary 3D meshes, textures, sound files, or original code from publishers (like FromSoftware, Nintendo, or Bethesda) and selling them violates copyright law and End User License Agreements (EULA). This results in DMCA cease-and-desist notices and legal liability.",
+        "**• The Clean-Room & Legal Model:** Legitimate modding projects distribute **only clean-room source code or standalone utility injectors**. The installer requires the end user to legally own both original games, extracting necessary data locally on their own hardware.",
+        "**• Monetization Constraints:** Developers can only monetize custom original code or accept voluntary donations for open-source tooling, provided no copyrighted commercial assets are bundled or paywalled."
+      ]
+    },
+    section4: {
+      heading: "4. Key Engineering & Legal Takeaways 🌸",
+      items: [
+        "Ghidra, IDA Pro, and x64dbg are standard tools used by engineers for binary analysis",
+        "Dual-process crossovers operate by keeping both executables open and syncing telemetry over shared memory/IPC",
+        "Selling mods or crossovers containing extracted commercial assets is illegal under copyright law",
+        "Clean-room engineering requires separating specification from original proprietary binaries",
+        "Open-source modding tooling must require users to locally extract assets from legally owned game copies"
+      ],
+      closing: "What is your perspective on reverse engineering and modding ethics in software engineering? Share your thoughts below 🌸",
+      closingSign: "See you in the next entry 🌸",
+      signature: "— Jill"
+    }
+  },
+  es: {
+    title: "Querido Diario, Ingeniería Inversa, Crossovers y Leyes de PI en Videojuegos 🌸",
+    date: "12 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "El tiempo libre es escaso entre la universidad, el gimnasio y la gestión de mi negocio <a href=\"https://lagatacr.com\" target=\"_blank\" class=\"inline-blog-link\">lagatacr.com</a>, pero cuando se me presenta una oportunidad rara, me gusta jugar videojuegos.",
+    introDesc: "Recientemente estuve analizando cómo los modders comunitarios realizan ingeniería inversa en juegos AAA—como conectar mecánicas de Elden Ring con Minecraft—y quise abordarlo desde una perspectiva de ingeniería y legal seria.",
+    introExtra: [
+      "Herramientas de descompilación como Ghidra, IDA Pro y x64dbg son estándares de la industria para binarios.",
+      "La inyección de memoria y la comunicación IPC en procesos duales permiten sincronizar el estado entre dos ejecutables.",
+      "Distinción legal clara: El código de lógica clean-room puede ser open source, pero vender mods con assets propietarios es ilegal."
+    ],
+    section1: {
+      heading: "1. Herramientas de Ingeniería Inversa y Análisis de Binarios ⚙️",
+      paragraphs: [
+        `Entre las clases de la universidad, mis rutinas en el gimnasio y la administración operativa de <a href="https://lagatacr.com" target="_blank" class="inline-blog-link">lagatacr.com</a>, rara vez me queda tiempo libre para jugar videojuegos. Sin embargo, cuando juego, me gusta entender cómo está construido el software por dentro.`,
+        "Cuando los desarrolladores analizan un ejecutable de código cerrado, utilizan herramientas estándar de la industria:",
+        "**• Análisis Estático (Ghidra e IDA Pro):** Descompiladores como Ghidra (herramienta de código abierto de la NSA) e IDA Pro traducen ensamblador de máquina a pseudocódigo C/C++ legible para mapear estructuras de datos, vectores de movimiento y fórmulas de daño.",
+        "**• Análisis Dinámico y Depuración (x64dbg y Cheat Engine):** Escáneres de memoria y depuradores que inspeccionan registros, puntos de interrupción y punteros de memoria mientras el juego está corriendo.",
+        "**• Edición Hexadecimal (HxD):** Inspección directa de bytes en ejecutables o contenedores de assets para analizar cabeceras y compresión."
+      ]
+    },
+    section2: {
+      heading: "2. Ejecución Dual en Memoria e Inyección de Hooks ⚔️",
+      paragraphs: [
+        "En crossovers complejos (como enviar telemetría de combate de Elden Ring hacia un motor de vóxeles como Minecraft), los desarrolladores suelen emplear una **Arquitectura de Proceso Dual** donde ambos juegos se ejecutan simultáneamente en el sistema.",
+        "En lugar de simplemente portar modelos 3D, la inyección de memoria dinámica y la comunicación entre procesos (IPC) permiten la sincronización en tiempo real:",
+        "**• Inyección de Memoria y DLL Hooking:** Uso de APIs de Windows (`VirtualAllocEx`, `WriteProcessMemory`, `CreateRemoteThread`) para inyectar una biblioteca DLL personalizada dentro del proceso del juego en ejecución.",
+        "**• Hooking de Funciones:** Intercepción de funciones internas del bucle del juego para capturar coordenadas del jugador, animaciones y salud en tiempo real.",
+        "**• Relevo de Telemetría por IPC:** Transmisión de parámetros capturados hacia el cliente receptor mediante sockets locales o memoria compartida, actualizando entidades en cada tick del motor."
+      ],
+      codeLabel: "Lectura de Estado e Inyección de Memoria (C++ / Pseudocódigo)",
+      code: `// Lectura de Memoria de Proceso para Relevo de Telemetría
+#include <windows.h>
+#include <iostream>
+
+struct PlayerTelemetry {
+    float x, y, z;
+    int currentAnimationId;
+    float health;
+};
+
+PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
+    PlayerTelemetry state;
+    uintptr_t playerStructOffset = 0x028A7F40; // Identificado mediante Ghidra / IDA Pro
+    uintptr_t playerAddress = 0;
+
+    // Leer puntero base a la estructura del jugador
+    ReadProcessMemory(hProcess, (LPCVOID)(baseAddress + playerStructOffset), &playerAddress, sizeof(playerAddress), NULL);
+
+    if (playerAddress != 0) {
+        // Leer coordenadas espaciales y estado de animación
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x30), &state.x, sizeof(state.x), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x34), &state.y, sizeof(state.y), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x38), &state.z, sizeof(state.z), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x110), &state.currentAnimationId, sizeof(state.currentAnimationId), NULL);
+    }
+    return state;
+}`
+    },
+    section3: {
+      heading: "3. Marco Comercial: ¿Se Pueden Vender Mods o Crossovers? ⚖️",
+      paragraphs: [
+        "Surge una pregunta fundamental en desarrollo: **¿Puede alguien vender un mod o crossover que utilice assets o código de juegos comerciales?**",
+        "**• Vender Assets Comerciales es Ilegal:** Definitivamente no. Extraer modelos 3D, texturas, audio o código de empresas (como FromSoftware, Nintendo o Bethesda) y venderlos viola las leyes de derechos de autor y las licencias EULA. Esto resulta en notificaciones DMCA y responsabilidad legal.",
+        "**• El Modelo Legal Clean-Room:** Los proyectos de modding legítimos distribuyen **únicamente código fuente propio o herramientas inyectoras**. El instalador exige que el usuario posea ambos juegos comprados legalmente y extraiga los datos localmente en su propia máquina.",
+        "**• Restricciones de Monetización:** Los desarrolladores solo pueden monetizar código original propio o recibir donaciones voluntarias para la herramienta, sin empaquetar ni cobrar por assets comerciales protegidos."
+      ]
+    },
+    section4: {
+      heading: "4. Puntos Clave de Ingeniería y Leyes 🌸",
+      items: [
+        "Ghidra, IDA Pro y x64dbg son herramientas estándar utilizadas por ingenieros para análisis de binarios",
+        "Los crossovers con procesos duales mantienen ambos ejecutables abiertos sincronizando telemetría por IPC",
+        "Vender mods o crossovers que incluyan assets comerciales extraídos es ilegal bajo las leyes de propiedad intelectual",
+        "La ingeniería clean-room requiere separar las especificaciones técnicas del binario propietario original",
+        "Las herramientas open-source deben requerir que el usuario extraiga los assets localmente de sus propias copias legales"
+      ],
+      closing: "¿Cuál es tu perspectiva sobre la ingeniería inversa y la ética en la modificación de software? Déjame tu punto de vista en los comentarios 🌸",
+      closingSign: "Nos vemos en la siguiente entrada 🌸",
+      signature: "— Jill"
+    }
+  },
+  pt: {
+    title: "Querido Diário, Engenharia Reversa, Crossovers e Leis de PI em Jogos 🌸",
+    date: "12 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "O tempo livre é escasso entre a universidade, a academia e a gestão do meu negócio <a href=\"https://lagatacr.com\" target=\"_blank\" class=\"inline-blog-link\">lagatacr.com</a>, mas quando surge uma rara oportunidade, gosto de jogar videogames.",
+    introDesc: "Recentemente analisei como modders fazem engenharia reversa em jogos AAA—como conectar mecânicas de Elden Ring ao Minecraft—e quis abordar isso sob uma perspectiva técnica e legal séria.",
+    introExtra: [
+      "Ferramentas como Ghidra, IDA Pro e x64dbg são padrões da indústria para análise de binários.",
+      "Injeção de memória e comunicação IPC em processos duplos permitem sincronizar o estado entre executáveis.",
+      "Distinção legal clara: Código clean-room pode ser open-source, mas vender mods com assets proprietários é ilegal."
+    ],
+    section1: {
+      heading: "1. Ferramentas de Engenharia Reversa e Análise de Binários ⚙️",
+      paragraphs: [
+        `Entre as aulas na universidade, treinos na academia e a administração de <a href="https://lagatacr.com" target="_blank" class="inline-blog-link">lagatacr.com</a>, raramente sobra tempo livre para jogar. Mas quando jogo, gosto de observar como o software é construído internamente.`,
+        "Quando desenvolvedores analisam executáveis comerciais de código fechado, usam ferramentas padrão da indústria:",
+        "**• Análise Estática (Ghidra e IDA Pro):** Descompiladores como Ghidra (ferramenta open-source da NSA) e IDA Pro convertem assembly em pseudocódigo C/C++ legível para mapear estruturas de dados e fórmulas de dano.",
+        "**• Análise Dinâmica e Depuração (x64dbg e Cheat Engine):** Scanners de memória e depuradores para inspecionar registradores e ponteiros de memória com o jogo em execução.",
+        "**• Edição Hexadecimal (HxD):** Inspeção direta de bytes em executáveis para analisar cabeçalhos e offsets de compressão."
+      ]
+    },
+    section2: {
+      heading: "2. Execução Dupla em Memória e Hooks de Injeção ⚔️",
+      paragraphs: [
+        "Em crossovers complexos (como sincronizar a telemetria de combate do Elden Ring com um motor em voxels como o Minecraft), desenvolvedores utilizam uma **Arquitetura de Processo Duplo** onde ambos os jogos rodam simultaneamente no sistema.",
+        "Em vez de apenas portar modelos 3D, a injeção de memória dinâmica e a comunicação entre processos (IPC) permitem sincronização em tempo real:",
+        "**• Injeção de Memória e DLL Hooking:** Uso de APIs do Windows (`VirtualAllocEx`, `WriteProcessMemory`, `CreateRemoteThread`) para injetar DLLs personalizadas no processo em execução.",
+        "**• Hooking de Funções:** Intercepção de funções internas do jogo para capturar coordenadas, animações e vida do jogador em tempo real.",
+        "**• Transmissão de Telemetria por IPC:** Envio de parâmetros para o cliente receptor via sockets locais ou memória compartilhada, atualizando entidades a cada tick do motor."
+      ],
+      codeLabel: "Leitura de Memória e Injeção (C++ / Pseudocódigo)",
+      code: `// Leitura de Memória de Processo para Telemetria
+#include <windows.h>
+#include <iostream>
+
+struct PlayerTelemetry {
+    float x, y, z;
+    int currentAnimationId;
+    float health;
+};
+
+PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
+    PlayerTelemetry state;
+    uintptr_t playerStructOffset = 0x028A7F40; // Identificado via Ghidra / IDA Pro
+    uintptr_t playerAddress = 0;
+
+    ReadProcessMemory(hProcess, (LPCVOID)(baseAddress + playerStructOffset), &playerAddress, sizeof(playerAddress), NULL);
+
+    if (playerAddress != 0) {
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x30), &state.x, sizeof(state.x), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x34), &state.y, sizeof(state.y), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x38), &state.z, sizeof(state.z), NULL);
+        ReadProcessMemory(hProcess, (LPCVOID)(playerAddress + 0x110), &state.currentAnimationId, sizeof(state.currentAnimationId), NULL);
+    }
+    return state;
+}`
+    },
+    section3: {
+      heading: "3. Regras Comerciais: É Permitido Vender Mods ou Crossovers? ⚖️",
+      paragraphs: [
+        "Uma questão fundamental em engenharia de software: **É possível vender um mod ou crossover que utiliza assets ou código de jogos comerciais?**",
+        "**• Vender Assets Comerciais é Ilegal:** Definitivamente não. Extrair modelos 3D, texturas, áudio ou código de empresas (como FromSoftware, Nintendo ou Bethesda) e vendê-los viola leis de direitos autorais e licenças EULA, resultando em notificações DMCA e sanções legais.",
+        "**• O Modelo Legal Clean-Room:** Projetos legítimos distribuem **apenas código-fonte próprio ou injetores**. O instalador exige que o usuário possua ambos os jogos comprados legalmente e extraia os dados localmente em sua própria máquina.",
+        "**• Restrições de Monetização:** Desenvolvedores só podem monetizar código original próprio ou receber doações voluntárias para a ferramenta, sem empacotar assets comerciais protegidos."
+      ]
+    },
+    section4: {
+      heading: "4. Pontos-Chave de Engenharia e Leis 🌸",
+      items: [
+        "Ghidra, IDA Pro e x64dbg são ferramentas padrão usadas por engenheiros para análise de binários",
+        "Crossovers em processos duplos mantêm ambos os executáveis abertos sincronizando telemetria por IPC",
+        "Vender mods ou crossovers contendo assets comerciais extraídos é ilegal sob as leis de propriedade intelectual",
+        "A engenharia clean-room exige separar especificações técnicas do binário proprietário original",
+        "Ferramentas open-source devem exigir que o usuário extraia assets localmente de suas próprias cópias legais"
+      ],
+      closing: "Qual é a sua perspectiva sobre engenharia reversa e ética na modificação de software? Compartilhe nos comentários 🌸",
+      closingSign: "Nos vemos na próxima entrada 🌸",
+      signature: "— Jill"
+    }
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Reverse Engineering & Gaming
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon">📅</span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main" set:html={c.intro}></p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section2.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section2.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            <ul class="remember-list">
+              {c.section4.items.map(item => (
+                <li class="remember-item">
+                  <span class="remember-bullet">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p class="closing-paragraph">{c.section4.closing}</p>
+            <div class="closing-signature">
+              <p>{c.section4.closingSign}</p>
+              <p class="signature-name">{c.section4.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-open-source-games" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.975rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .remember-bullet {
+    font-size: 1rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #f8fafc;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+
+  .closing-signature {
+    margin-top: 1.25rem;
+    font-style: italic;
+    color: #38bdf8;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

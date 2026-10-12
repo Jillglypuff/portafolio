@@ -1,0 +1,620 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, Memory Injection & Low-Level Hooks — Systems Beyond Gaming 🌸",
+    date: "October 16, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Process memory injection, DLL hooks, and IPC telemetry relays aren't just for game modding—they are core engineering patterns in OS security, APM monitoring, and anti-malware tools.",
+    introDesc: "Understanding VirtualAllocEx, WriteProcessMemory, DLL injection, and inter-process communication (IPC): how low-level systems hook into running applications and where these techniques are applied.",
+    introExtra: [
+      "Process memory readers inspect runtime pointer chains (`ReadProcessMemory` / `VirtualQueryEx`).",
+      "DLL Injection forces a host process to load custom executable code dynamically.",
+      "Crucial for Application Performance Monitoring (APM), security behavioral shielding, and accessibility overlays."
+    ],
+    section1: {
+      heading: "1. How Memory Injection & DLL Hooking Work",
+      paragraphs: [
+        "Every running process on an operating system operates inside an isolated virtual memory address space. **Memory Injection** is the mechanism by which an external process allocates memory and executes code inside another process's address space.",
+        "**• VirtualAllocEx & WriteProcessMemory:** Windows API functions used to allocate memory inside a target process and write binary payloads or DLL file paths into its memory.",
+        "**• CreateRemoteThread:** Instructing the target process's thread scheduler to execute `LoadLibraryA` on the injected DLL path.",
+        "**• Function Hooking (Detours):** Overwriting the first few bytes of an exported API function with a `JMP` instruction pointing to custom handler code before jumping back to the original function."
+      ]
+    },
+    section2: {
+      heading: "2. Real-World Engineering Applications",
+      paragraphs: [
+        "While memory injection is often associated with game modding or game cheats, it is extensively used across legitimate software infrastructure:",
+        "**• Application Performance Monitoring (APM):** Tools like New Relic, Datadog, or Dynatrace inject agent hooks to measure HTTP request latency, SQL query execution time, and CPU profiling without modifying application source code.",
+        "**• Antivirus & Endpoint Detection (EDR):** Cybersecurity agents (CrowdStrike, Windows Defender) hook sensitive APIs (`NtCreateFile`, `NtMapViewOfSection`) to block unauthorized process behavior in real time.",
+        "**• Accessibility & Screen Overlays:** Tools like Discord Overlay, OBS Studio, and screen readers use DLL injection to render GPU overlays (DirectX/OpenGL/Vulkan) on top of active windows."
+      ],
+      codeLabel: "C++ DLL Injection Pattern (Windows API)",
+      code: `// C++ DLL Injector Example
+#include <windows.h>
+#include <iostream>
+
+bool InjectDLL(DWORD processId, const char* dllPath) {
+    // 1. Open target process handle
+    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
+    if (!hProcess) return false;
+
+    // 2. Allocate memory in target process for DLL path string
+    LPVOID pRemoteMem = VirtualAllocEx(hProcess, NULL, strlen(dllPath) + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    
+    // 3. Write DLL path into target memory
+    WriteProcessMemory(hProcess, pRemoteMem, (LPVOID)dllPath, strlen(dllPath) + 1, NULL);
+
+    // 4. Create remote thread calling LoadLibraryA
+    LPVOID pLoadLibrary = (LPVOID)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibrary, pRemoteMem, 0, NULL);
+
+    WaitForSingleObject(hThread, INFINITE);
+    VirtualFreeEx(hProcess, pRemoteMem, 0, MEM_RELEASE);
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+    return true;
+}`
+    },
+    section3: {
+      heading: "3. Inter-Process Communication (IPC) & Telemetry Relays",
+      paragraphs: [
+        "Once code is injected, how does data get sent to another application?",
+        "**• Shared Memory (Memory-Mapped Files):** High-speed buffer sharing between processes without network socket overhead.",
+        "**• Named Pipes & Sockets:** Local TCP/Unix domain sockets transmitting JSON/Protobuf telemetry events at millisecond latency.",
+        "**• Event-Driven Relays:** Synchronizing state changes tick-by-tick across completely separate executables."
+      ]
+    },
+    section4: {
+      heading: "4. Things I Want To Remember 🌸",
+      items: [
+        "Memory injection isn't malware by default—it powers APM profilers, screen overlays, and EDR security tools",
+        "DLL Injection uses `VirtualAllocEx`, `WriteProcessMemory`, and `CreateRemoteThread`",
+        "Function hooking (like Microsoft Detours) redirects execution flow by patching memory instruction bytes",
+        "IPC (Shared Memory / Named Pipes) allows decoupled processes to share telemetry at ultra-low latency",
+        "Operating systems enforce access rights (Admin vs User mode) to prevent unauthorized process tampering"
+      ],
+      closing: "Have you ever worked with low-level Windows APIs, DLL hooking, or shared memory? Share your thoughts below 🌸",
+      closingSign: "See you in the next entry 🌸",
+      signature: "— Jill"
+    }
+  },
+  es: {
+    title: "Querido Diario, Inyección de Memoria y Hooks de Bajo Nivel — Sistemas Más Allá de los Juegos 🌸",
+    date: "16 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "La inyección de memoria, los hooks de DLL y el relevo por IPC no son solo para modding—son patrones fundamentales en seguridad de SO, monitoreo APM y utilidades de sistema.",
+    introDesc: "Entendiendo VirtualAllocEx, WriteProcessMemory, inyección DLL y comunicación entre procesos (IPC): cómo los sistemas de bajo nivel se conectan a ejecutables activos y dónde se usan.",
+    introExtra: [
+      "Los lectores de memoria inspeccionan cadenas de punteros dinámicos (`ReadProcessMemory`).",
+      "La inyección de DLL fuerza a un proceso anfitrión a cargar código ejecutable dinámicamente.",
+      "Crucial para herramientas de monitoreo (APM), escudos de seguridad (EDR) y overlays de accesibilidad."
+    ],
+    section1: {
+      heading: "1. Cómo Funciona la Inyección de Memoria y el DLL Hooking ⚙️",
+      paragraphs: [
+        "Cada proceso en ejecución en un sistema operativo funciona dentro de un espacio de dirección de memoria virtual aislado. La **Inyección de Memoria** es el mecanismo mediante el cual un proceso externo asigna memoria y ejecuta código dentro de otro proceso.",
+        "**• VirtualAllocEx y WriteProcessMemory:** Funciones de la API de Windows utilizadas para reservar memoria en un proceso objetivo y escribir payloads binarios o rutas de archivos DLL.",
+        "**• CreateRemoteThread:** Instrucción al planificador de hilos del sistema para ejecutar `LoadLibraryA` sobre la ruta de la DLL inyectada.",
+        "**• Hooking de Funciones (Detours):** Sobrescribir los primeros bytes de una función con una instrucción `JMP` hacia un manejador personalizado antes de regresar a la función original."
+      ]
+    },
+    section2: {
+      heading: "2. Aplicaciones en la Vida Real e Infraestructura",
+      paragraphs: [
+        "Aunque la inyección de memoria suele asociarse a mods de juegos, se utiliza masivamente en la infraestructura de software legítima:",
+        "**• Monitoreo de Rendimiento (APM):** Herramientas como New Relic o Datadog inyectan agentes para medir latencia de peticiones HTTP, consultas SQL y uso de CPU sin modificar el código fuente de la app.",
+        "**• Antivirus y Seguridad Endpoint (EDR):** Agentes de ciberseguridad (CrowdStrike, Windows Defender) hacen hooking a APIs sensibles (`NtCreateFile`) para bloquear comportamientos no autorizados en tiempo real.",
+        "**• Overlays y Accesibilidad:** Herramientas como Discord Overlay u OBS Studio inyectan DLLs para renderizar elementos gráficos (DirectX/OpenGL/Vulkan) sobre ventanas activas."
+      ],
+      codeLabel: "Inyector de DLL en C++ (API de Windows)",
+      code: `// Ejemplo de Inyector de DLL en C++
+#include <windows.h>
+#include <iostream>
+
+bool InjectDLL(DWORD processId, const char* dllPath) {
+    // 1. Abrir handle al proceso objetivo
+    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
+    if (!hProcess) return false;
+
+    // 2. Asignar memoria en el proceso objetivo para la ruta de la DLL
+    LPVOID pRemoteMem = VirtualAllocEx(hProcess, NULL, strlen(dllPath) + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    
+    // 3. Escribir la ruta de la DLL en la memoria reservada
+    WriteProcessMemory(hProcess, pRemoteMem, (LPVOID)dllPath, strlen(dllPath) + 1, NULL);
+
+    // 4. Crear hilo remoto ejecutando LoadLibraryA
+    LPVOID pLoadLibrary = (LPVOID)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibrary, pRemoteMem, 0, NULL);
+
+    WaitForSingleObject(hThread, INFINITE);
+    VirtualFreeEx(hProcess, pRemoteMem, 0, MEM_RELEASE);
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+    return true;
+}`
+    },
+    section3: {
+      heading: "3. Comunicación Entre Procesos (IPC) y Relevo de Telemetría",
+      paragraphs: [
+        "Una vez inyectado el código, ¿cómo se transmiten los datos a otra aplicación?",
+        "**• Memoria Compartida (Memory-Mapped Files):** Intercambio de búferes a ultra alta velocidad sin sobrecarga de red.",
+        "**• Sockets y Pipes Nombrados:** Sockets locales transmitiendo eventos de telemetría en JSON/Protobuf con latencia de milisegundos.",
+        "**• Relevo Guiado por Eventos:** Sincronización de cambios de estado tick a tick entre ejecutables independientes."
+      ]
+    },
+    section4: {
+      heading: "4. Cosas Que Quiero Recordar 🌸",
+      items: [
+        "La inyección de memoria no es maliciosa por defecto; impulsa perfiladores APM, overlays y herramientas EDR",
+        "La Inyección de DLL utiliza `VirtualAllocEx`, `WriteProcessMemory` y `CreateRemoteThread`",
+        "El hooking de funciones (como Microsoft Detours) redirige el flujo modificando bytes de instrucciones",
+        "IPC (Memoria Compartida / Pipes) permite que procesos desacoplados compartan datos con latencia mínima",
+        "Los sistemas operativos imponen permisos de acceso (Modo Administrador vs Usuario) para proteger procesos"
+      ],
+      closing: "¿Has trabajado alguna vez con APIs de bajo nivel de Windows, DLL hooking o memoria compartida? Cuéntame abajo 🌸",
+      closingSign: "Nos vemos en la siguiente entrada 🌸",
+      signature: "— Jill"
+    }
+  },
+  pt: {
+    title: "Querido Diário, Injeção de Memória e Hooks de Baixo Nível — Sistemas Além dos Jogos 🌸",
+    date: "16 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Injeção de memória, hooks de DLL e IPC não são apenas para modding—são padrões essenciais em segurança de SO e monitoramento APM.",
+    introDesc: "Entendendo VirtualAllocEx, WriteProcessMemory, injeção de DLL e comunicação IPC no desenvolvimento de software de baixo nível.",
+    introExtra: [
+      "Leitores de memória inspecionam ponteiros dinâmicos (`ReadProcessMemory`).",
+      "A injeção de DLL força um processo a carregar código executável dinamicamente.",
+      "Crucial para APM (New Relic, Datadog), agentes EDR e overlays de vídeo."
+    ],
+    section1: {
+      heading: "1. Como Funciona a Injeção de Memória e DLL Hooking",
+      paragraphs: [
+        "Cada processo roda em seu próprio endereço de memória virtual. A **Injeção de Memória** permite alocar e executar código dentro de outro processo.",
+        "**• VirtualAllocEx e WriteProcessMemory:** Reservam memória e escrevem payloads ou caminhos de DLL.",
+        "**• CreateRemoteThread:** Executa `LoadLibraryA` no processo alvo.",
+        "**• Function Hooking:** Redireciona a execução de funções nativas para manipuladores customizados."
+      ]
+    },
+    section2: {
+      heading: "2. Aplicações Práticas no Mundo Real",
+      paragraphs: [
+        "**• Monitoramento de Performance (APM):** Ferramentas como New Relic injetam agentes para medir requisições HTTP e banco de dados.",
+        "**• Antivirus e EDR:** Agentes de segurança interceptam chamadas del sistema para bloquear ameaças em tempo real.",
+        "**• Overlays:** Discord Overlay e OBS utilizam injeção DLL para renderizar gráficos sobre janelas ativas."
+      ],
+      codeLabel: "Injetor de DLL em C++ (Windows API)",
+      code: `// Exemplo de Injetor de DLL em C++
+#include <windows.h>
+#include <iostream>
+
+bool InjectDLL(DWORD processId, const char* dllPath) {
+    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
+    if (!hProcess) return false;
+
+    LPVOID pRemoteMem = VirtualAllocEx(hProcess, NULL, strlen(dllPath) + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    WriteProcessMemory(hProcess, pRemoteMem, (LPVOID)dllPath, strlen(dllPath) + 1, NULL);
+
+    LPVOID pLoadLibrary = (LPVOID)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibrary, pRemoteMem, 0, NULL);
+
+    WaitForSingleObject(hThread, INFINITE);
+    VirtualFreeEx(hProcess, pRemoteMem, 0, MEM_RELEASE);
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+    return true;
+}`
+    },
+    section3: {
+      heading: "3. Comunicação Entre Processos (IPC)",
+      paragraphs: [
+        "**• Memória Compartilhada:** Troca de buffers em altíssima velocidade sem overhead de rede.",
+        "**• Named Pipes e Sockets:** Transmissão de eventos em JSON/Protobuf a cada milissegundo."
+      ]
+    },
+    section4: {
+      heading: "4. Coisas Que Quero Lembrar 🌸",
+      items: [
+        "A injeção de memória alimenta profiladores APM, overlays e ferramentas de segurança EDR",
+        "A Injeção de DLL usa `VirtualAllocEx`, `WriteProcessMemory` e `CreateRemoteThread`",
+        "Hooking de funções redireciona o fluxo modificando bytes de instrução",
+        "IPC permite que processos desacoplados compartilhem dados com latência mínima",
+        "Sistemas operacionais exigem privilégios elevados para proteção de processos"
+      ],
+      closing: "Você já trabalhou com APIs de baixo nível do Windows ou DLL hooking? Compartilhe nos comentários 🌸",
+      closingSign: "Nos vemos na próxima entrada 🌸",
+      signature: "— Jill"
+    }
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Systems & Memory Architecture
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main">{c.intro}</p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section2.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section2.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            <ul class="remember-list">
+              {c.section4.items.map(item => (
+                <li class="remember-item">
+                  <span class="remember-bullet">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p class="closing-paragraph">{c.section4.closing}</p>
+            <div class="closing-signature">
+              <p>{c.section4.closingSign}</p>
+              <p class="signature-name">{c.section4.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-memory-injection" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.975rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .remember-bullet {
+    font-size: 1rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #f8fafc;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+
+  .closing-signature {
+    margin-top: 1.25rem;
+    font-style: italic;
+    color: #38bdf8;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

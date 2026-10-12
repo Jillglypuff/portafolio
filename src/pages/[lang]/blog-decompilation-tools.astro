@@ -1,0 +1,596 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, Ghidra, IDA Pro & x64dbg — Decompilation Beyond Gaming 🌸",
+    date: "October 14, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Decompilers aren't just for game modders—they are fundamental engineering tools for security audits, malware analysis, and legacy software maintenance.",
+    introDesc: "A deep dive into Ghidra, IDA Pro, and x64dbg: when to use static vs dynamic analysis, how reverse engineering works in real-world software engineering, and practical use cases.",
+    introExtra: [
+      "Static analysis tools (Ghidra & IDA Pro) reconstruct pseudocode without executing the binary.",
+      "Dynamic debuggers (x64dbg & WinDbg) inspect registers, memory addresses, and stack traces at runtime.",
+      "Crucial for security triage, patch differential analysis, and recovering lost source code in enterprise systems."
+    ],
+    section1: {
+      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Tooling Breakdown ⚙️",
+      paragraphs: [
+        "In modern software engineering, closed-source executables (`.exe`, `.dll`, `.so`, `.dylib`) are black boxes. Decompilation tools allow developers and security researchers to peer inside.",
+        "**• Ghidra (NSA Open Source):** A free, multi-architecture reverse engineering framework. Excellent C decompiler, scriptable in Python/Java, and ideal for team collaboration.",
+        "**• IDA Pro (Hex-Rays):** The commercial gold standard disassembler. Known for unmatched decompiler accuracy, clean pseudocode generation, and robust type recovery.",
+        "**• x64dbg & Debuggers:** Unlike disassemblers that analyze code statically, x64dbg is a dynamic Windows debugger that pauses execution, steps through assembly instructions, and monitors CPU registers (`RAX`, `RBX`, `RIP`)."
+      ]
+    },
+    section2: {
+      heading: "2. Real-World Use Cases Beyond Gaming",
+      paragraphs: [
+        "Reverse engineering tools serve vital functions in enterprise software development and cybersecurity:",
+        "**• Security Audits & Vulnerability Research:** Identifying buffer overflows, format string bugs, or hardcoded API keys in compiled third-party binaries.",
+        "**• Malware Triage & Incident Response:** Analyzing obfuscated malicious payloads without risking infection, identifying command-and-control (C2) servers.",
+        "**• Legacy Code Recovery:** When original source code is lost or vendor support ends, decompilation helps engineers understand legacy binary logic to write modern API wrappers."
+      ],
+      codeLabel: "Python Script for Ghidra API (Automated Function Analysis)",
+      code: `# Ghidra Python Script: Search for Unsafe String Copy Functions
+from ghidra.program.model.symbol import SymbolType
+
+target_functions = ["strcpy", "sprintf", "gets"]
+listing = currentProgram.getListing()
+function_manager = currentProgram.getFunctionManager()
+
+print("🌸 Scanning binary for potentially unsafe C functions...")
+
+for func in function_manager.getFunctions(True):
+    name = func.getName()
+    if any(target in name for target in target_functions):
+        entry_point = func.getEntryPoint()
+        references = getReferencesTo(entry_point)
+        print(f"⚠️ Found {name} at {entry_point} - Referenced {len(references)} times")`
+    },
+    section3: {
+      heading: "3. Static Analysis vs. Dynamic Analysis Workflow",
+      paragraphs: [
+        "A typical reverse engineering workflow combines both static and dynamic approaches:",
+        "**1. Reconnaissance:** Load the binary into Ghidra or IDA Pro. Analyze imported libraries (`KERNEL32.DLL`, `WS2_32.DLL`) and strings to locate entry points.",
+        "**2. Decompilation:** Reconstruct high-level control flow structures (`if/else`, loops, struct definitions).",
+        "**3. Runtime Debugging:** Attach x64dbg to set hardware breakpoints, inspect memory buffers, and verify runtime variable values."
+      ]
+    },
+    section4: {
+      heading: "4. Things I Want To Remember 🌸",
+      items: [
+        "Ghidra is open source and powerful; IDA Pro offers industry-leading decompiler accuracy",
+        "x64dbg is for dynamic analysis (running code), Ghidra/IDA are for static analysis (reading code)",
+        "Decompilation is essential for security auditing, malware analysis, and legacy system recovery",
+        "Never run untrusted malware binaries outside isolated virtual machine (VM) sandbox environments",
+        "Symbol tables and debugging symbols (PDBs) make decompiled pseudocode vastly more readable"
+      ],
+      closing: "Have you ever used Ghidra or IDA Pro to debug a binary or analyze a protocol? Share your experience below 🌸",
+      closingSign: "See you in the next entry 🌸",
+      signature: "— Jill"
+    }
+  },
+  es: {
+    title: "Querido Diario, Ghidra, IDA Pro y x64dbg — Descompilación Más Allá de los Juegos 🌸",
+    date: "14 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Los descompiladores no son solo para modders—son herramientas fundamentales de ingeniería para auditorías de seguridad, análisis de malware y mantenimiento de software legado.",
+    introDesc: "Un análisis profundo de Ghidra, IDA Pro y x64dbg: cuándo usar análisis estático vs dinámico, cómo funciona la ingeniería inversa en la vida real y sus casos de uso prácticos.",
+    introExtra: [
+      "Herramientas estáticas (Ghidra e IDA Pro) reconstruyen pseudocódigo sin ejecutar el binario.",
+      "Depuradores dinámicos (x64dbg y WinDbg) inspeccionan registros, direcciones de memoria y la pila en tiempo de ejecución.",
+      "Crucial para auditorías de seguridad, análisis diferencial de parches y recuperación de código fuente perdido."
+    ],
+    section1: {
+      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Comparativa Técnica ⚙️",
+      paragraphs: [
+        "En ingeniería de software, los ejecutables de código cerrado (`.exe`, `.dll`, `.so`) son cajas negras. Las herramientas de descompilación permiten ver qué hay dentro.",
+        "**• Ghidra (Open Source de la NSA):** Framework gratuito y multiplataforma. Excelente descompilador de C, automatizable con Python/Java y perfecto para trabajo en equipo.",
+        "**• IDA Pro (Hex-Rays):** El estándar comercial de la industria. Destaca por su alta precisión al generar pseudocódigo y reconstruir tipos de datos complejos.",
+        "**• x64dbg y Depuradores:** A diferencia de los descompiladores estáticos, x64dbg es un depurador dinámico para Windows que pausa la ejecución, avanza instrucción por instrucción y monitorea registros de CPU (`RAX`, `RBX`, `RIP`)."
+      ]
+    },
+    section2: {
+      heading: "2. Casos de Uso Reales Más Allá de los Videojuegos",
+      paragraphs: [
+        "La ingeniería inversa cumple funciones vitales en ciberseguridad y desarrollo empresarial:",
+        "**• Auditorías de Seguridad:** Identificación de desbordamientos de búfer (buffer overflows), vulnerabilidades o claves de API hardcodeadas en binarios de terceros.",
+        "**• Análisis de Malware:** Análisis de payloads maliciosos de forma segura en entornos aislados para identificar servidores de comando y control (C2).",
+        "**• Recuperación de Código Legado:** Cuando se pierde el código fuente original o termina el soporte del proveedor, la descompilación permite entender la lógica para construir wrappers modernos."
+      ],
+      codeLabel: "Script en Python para Ghidra API (Análisis Automatizado)",
+      code: `# Script de Python para Ghidra: Buscar funciones inseguras en C
+from ghidra.program.model.symbol import SymbolType
+
+target_functions = ["strcpy", "sprintf", "gets"]
+listing = currentProgram.getListing()
+function_manager = currentProgram.getFunctionManager()
+
+print("🌸 Escaneando binario en busca de funciones C inseguras...")
+
+for func in function_manager.getFunctions(True):
+    name = func.getName()
+    if any(target in name for target in target_functions):
+        entry_point = func.getEntryPoint()
+        references = getReferencesTo(entry_point)
+        print(f"⚠️ Encontrada {name} en {entry_point} - Referenciada {len(references)} veces")`
+    },
+    section3: {
+      heading: "3. Flujo de Trabajo: Análisis Estático vs. Dinámico",
+      paragraphs: [
+        "Un flujo de trabajo profesional combina técnicas estáticas y dinámicas:",
+        "**1. Reconocimiento:** Cargar el binario en Ghidra o IDA Pro. Analizar librerías importadas (`KERNEL32.DLL`, `WS2_32.DLL`) y cadenas de texto para ubicar puntos de entrada.",
+        "**2. Descompilación:** Reconstruir estructuras de control de alto nivel (`if/else`, bucles, estructuras).",
+        "**3. Depuración en Tiempo de Ejecución:** Conectar x64dbg para establecer puntos de interrupción por hardware y verificar valores en memoria."
+      ]
+    },
+    section4: {
+      heading: "4. Cosas Que Quiero Recordar 🌸",
+      items: [
+        "Ghidra es open-source y potente; IDA Pro ofrece la máxima precisión de descompilación comercial",
+        "x64dbg es para análisis dinámico (ejecutar código), Ghidra/IDA son para análisis estático (leer código)",
+        "La descompilación es vital en seguridad, análisis de malware y mantenimiento de sistemas legados",
+        "Nunca ejecutes binarios sospechosos fuera de entornos virtuales (VM) o sandboxes aislados",
+        "Los archivos de símbolos (PDBs) hacen que el pseudocódigo descompilado sea mucho más legible"
+      ],
+      closing: "¿Has utilizado Ghidra o IDA Pro alguna vez para analizar un binario o protocolo? Cuéntame tu experiencia abajo 🌸",
+      closingSign: "Nos vemos en la siguiente entrada 🌸",
+      signature: "— Jill"
+    }
+  },
+  pt: {
+    title: "Querido Diário, Ghidra, IDA Pro e x64dbg — Descompilação Além dos Jogos 🌸",
+    date: "14 de Outubro, 2026",
+    subtitle: "O diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Descompiladores não servem apenas para modders—são ferramentas essenciais de engenharia para auditorias de segurança e análise de malware.",
+    introDesc: "Uma análise profunda sobre Ghidra, IDA Pro e x64dbg: quando usar análise estática vs dinâmica e casos de uso no mundo real.",
+    introExtra: [
+      "Ferramentas estáticas (Ghidra e IDA Pro) reconstroem pseudocódigo sem executar o binário.",
+      "Depuradores dinâmicos (x64dbg) inspecionam registradores e memória em tempo de execução.",
+      "Fundamentais para auditorias de segurança e recuperação de código-fonte legado."
+    ],
+    section1: {
+      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Comparativo Técnico ⚙️",
+      paragraphs: [
+        "Executáveis de código fechado (`.exe`, `.dll`) são caixas pretas. Ferramentas de descompilação permitem entender o que há dentro.",
+        "**• Ghidra (Open Source da NSA):** Framework gratuito e poderoso. Excelente descompilador de C e scriptável em Python/Java.",
+        "**• IDA Pro (Hex-Rays):** O padrão comercial da indústria, conhecido pela precisão no pseudocódigo.",
+        "**• x64dbg:** Depurador dinâmico para Windows que pausa a execução e monitora registradores de CPU (`RAX`, `RBX`)."
+      ]
+    },
+    section2: {
+      heading: "2. Casos de Uso no Mundo Real",
+      paragraphs: [
+        "A engenharia reversa é vital em cibersegurança e desenvolvimento empresarial:",
+        "**• Auditorias de Segurança:** Identificação de falhas de memória e vulnerabilidades em binários.",
+        "**• Análise de Malware:** Inspeção segura de payloads maliciosos para identificar servidores C2.",
+        "**• Recuperação de Código Legado:** Análise de binários antigos quando el código-fonte original foi perdido."
+      ],
+      codeLabel: "Script em Python para Ghidra API (Análise Automatizada)",
+      code: `# Script em Python para Ghidra: Buscar funções C inseguras
+from ghidra.program.model.symbol import SymbolType
+
+target_functions = ["strcpy", "sprintf", "gets"]
+listing = currentProgram.getListing()
+function_manager = currentProgram.getFunctionManager()
+
+print("🌸 Escaneando binário...")
+
+for func in function_manager.getFunctions(True):
+    name = func.getName()
+    if any(target in name for target in target_functions):
+        entry_point = func.getEntryPoint()
+        print(f"⚠️ Encontrada {name} em {entry_point}")`
+    },
+    section3: {
+      heading: "3. Fluxo de Trabalho: Estático vs. Dinâmico",
+      paragraphs: [
+        "**1. Reconhecimento:** Carregar o binário no Ghidra ou IDA Pro para analisar funções importadas.",
+        "**2. Descompilação:** Reconstruir estruturas de controle (`if/else`, loops).",
+        "**3. Depuração:** Conectar o x64dbg para inspecionar a memória durante a execução."
+      ]
+    },
+    section4: {
+      heading: "4. Coisas Que Quero Lembrar 🌸",
+      items: [
+        "Ghidra é open-source e gratuito; IDA Pro oferece descompilação comercial de alta precisão",
+        "x64dbg é para análise dinâmica, Ghidra/IDA são para análise estática",
+        "A descompilação é vital para auditoria de segurança e análise de malware",
+        "Nunca execute malware fora de ambientes virtuais isolados",
+        "Símbolos de depuração (PDBs) tornam o pseudocódigo descompilado muito mais legível"
+      ],
+      closing: "Você já usou o Ghidra ou IDA Pro para analisar um binário? Compartilhe nos comentários 🌸",
+      closingSign: "Nos vemos na próxima entrada 🌸",
+      signature: "— Jill"
+    }
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Reverse Engineering & Security
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main">{c.intro}</p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+
+            <div class="extra-bullets">
+              {c.introExtra.map(bullet => (
+                <div class="bullet-item">
+                  <span class="bullet-icon">•</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section1.heading}</h2>
+            {c.section1.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section2.heading}</h2>
+            {c.section2.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">{c.section2.codeLabel}</span>
+              </div>
+              <pre class="code-block"><code>{c.section2.code}</code></pre>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2 class="section-heading">{c.section3.heading}</h2>
+            {c.section3.paragraphs.map(p => (
+              <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+            ))}
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.section4.heading}</h2>
+            <ul class="remember-list">
+              {c.section4.items.map(item => (
+                <li class="remember-item">
+                  <span class="remember-bullet">🌸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p class="closing-paragraph">{c.section4.closing}</p>
+            <div class="closing-signature">
+              <p>{c.section4.closingSign}</p>
+              <p class="signature-name">{c.section4.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-decompilation-tools" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(148, 163, 184, 0.1) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #0284c7;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .extra-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .bullet-icon {
+    color: #38bdf8;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .code-box {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ef4444; }
+  .code-dot.yellow { background: #eab308; }
+  .code-dot.green { background: #22c55e; }
+
+  .code-title {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #94a3b8;
+    margin-left: 0.5rem;
+  }
+
+  .code-block {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #38bdf8;
+    margin: 0;
+  }
+
+  .conclusion-box {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.975rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .remember-bullet {
+    font-size: 1rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #f8fafc;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+
+  .closing-signature {
+    margin-top: 1.25rem;
+    font-style: italic;
+    color: #38bdf8;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
