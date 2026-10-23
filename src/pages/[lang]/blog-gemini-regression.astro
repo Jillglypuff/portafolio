@@ -1,0 +1,400 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, Gemini 3.8 Is Exhausting... Why Did They Remove 3.6? 🌸",
+    date: "October 22, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "I am going to be brutally honest: dealing with the forced transition to Gemini 3.8 has pushed my patience to its absolute limit.",
+    introDesc: "This isn't a benchmark chart or corporate press release. It's an honest developer rant about how an alleged 'AI upgrade' turned into an infuriating regression in my daily programming workflow.",
+    sections: [
+      {
+        heading: "Missing Gemini 3.6: Sharp, fast, and respectful",
+        paragraphs: [
+          "In entry #33 of this diary, I wrote about why **Gemini 3.6 Flash** was my indisputable daily driver in Antigravity. It was wonderful to work with: it grasped the surrounding context in a heartbeat, respected project boundaries, went straight to the point, and never touched things it wasn't asked to touch.",
+          "When you told 3.6 'update this URL' or 'adjust this specific logic block', it executed the instruction with surgical precision. It didn't hallucinate unprompted changes, it didn't overwrite unrelated files, and it didn't invent random placeholder domains. It was dependable, lightweight, and genuinely boosted developer momentum."
+        ]
+      },
+      {
+        heading: "The exhausting theater of 'analyzing... working, working'",
+        paragraphs: [
+          "With Gemini 3.8 Flash, simple tasks turned into an infuriating waiting game. You give it a clear, single-purpose instruction and suddenly you are stuck watching an endless loop of pseudo-reasoning: *'analyzing...', 're-reading...', 'working, working...'*",
+          "It burns time, drains cognitive energy, and completely shatters the developer flow state that takes so much effort to build. And what is the punchline? After enduring all that supposed 'deep thinking', the output arrives miscalibrated, half-baked, or accompanied by elementary mistakes that 3.6 solved in three seconds flat."
+        ]
+      },
+      {
+        heading: "Instruction drift: It does whatever it wants",
+        paragraphs: [
+          "The most maddening aspect of 3.8 is its blatant disregard for direct instructions. You can write explicit, highlighted constraints: *'Do A, and only A; do not touch B or rewrite text C'*. And what happens? It changes C anyway, modifies unrelated UI components, and acts as if it didn't even read the prompt.",
+          "In software development, predictability is everything. An AI coding assistant that disobeys commands is not an asset—it's a liability. It forces you to inspect every git diff with extreme paranoia because you simply cannot trust that it followed your parameters."
+        ]
+      },
+      {
+        heading: "Context amnesia vs. architectural awareness",
+        paragraphs: [
+          "Gemini 3.6 held project context with remarkable fidelity. You could work across multi-step tasks without it losing track of your tech stack, file hierarchy, or design system tokens.",
+          "In contrast, 3.8 suffers from bizarre contextual drift. It overcomplicates architectures, brings in unnecessary patterns, and gets sidetracked by trivialities while ignoring the core problem right in front of it."
+        ]
+      },
+      {
+        heading: "The million-dollar question: Why take away what works?",
+        paragraphs: [
+          "Why on earth did they remove Gemini 3.6 Flash from the environment? Why force developers onto a 3.8 model that feels noticeably slower, less obedient, and vastly more frustrating in practical coding scenarios?",
+          "If model creators want to experiment with new reasoning architectures or heavy deliberation chains, by all means, offer them as experimental toggles. But do not rip away the reliable, fast, battle-tested workhorse that software engineers depend on to build and ship real products every day."
+        ]
+      }
+    ],
+    closingHeading: "A personal reflection",
+    closingText: "AI tools in programming should liberate time and reduce mental friction, not become another source of workplace stress. We need models that listen, respect instructions, and let us code in peace.",
+    closingSign: "See you in the next entry 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Gemini 3.8 Es Agotador... ¿Por Qué Quitaron el 3.6? 🌸",
+    date: "22 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Voy a ser completamente sincera: lidiar con la transición forzada a Gemini 3.8 me tiene con la paciencia al límite.",
+    introDesc: "Esta entrada no es un benchmark corporativo ni una reseña patrocinada. Es mi desahogo honesto como desarrolladora sobre cómo un supuesto 'upgrade' de IA se convirtió en una regresión desesperante en mi flujo diario de programación.",
+    sections: [
+      {
+        heading: "Extrañando Gemini 3.6: Quirúrgico, rápido y respetuoso",
+        paragraphs: [
+          "En la entrada #33 de este diario conté por qué **Gemini 3.6 Flash** era mi modelo predeterminado e indiscutible en Antigravity. Daba gusto programar con él: entendía el contexto de inmediato, comprendía la arquitectura del proyecto en un segundo, iba directo al grano y jamás tocaba cosas que nadie le había pedido tocar.",
+          "Si a la 3.6 le decías 'cambia esta URL' o 'ajusta este bloque específico', lo hacía con precisión de relojero. No inventaba textos adicionales, no reescribía código sano por gusto, no se sacaba dominios de la manga. Era predecible, veloz y respetaba el tiempo de quien está programando."
+        ]
+      },
+      {
+        heading: "El suplicio del 'analizando... analizando... working, working'",
+        paragraphs: [
+          "Con Gemini 3.8 Flash, cualquier cambio sencillo se convirtió en una telenovela de sobreanálisis. Ahora le pedís una instrucción puntual y se queda pegado minutos enteros en bucles internos: *'analizando...', 'revisando...', 'working, working...'*, divagando en una supuesta deliberación interminable.",
+          "Quema tiempo, quema paciencia y destruye por completo el estado de concentración (el flow state que tanto cuesta construir cuando estás programando). Y lo peor de todo: después de tanta espera y tanto supuesto análisis profundo, la respuesta llega descalibrada, con textos inventados o con errores básicos que la 3.6 resolvía en tres segundos."
+        ]
+      },
+      {
+        heading: "No sigue instrucciones (y cambia lo que nadie le pidió)",
+        paragraphs: [
+          "Esto es lo que más coraje y frustración me provoca. Le decís con total claridad y en viñetas: *'haz A, y únicamente A; no toques B ni inventes otros textos'*. ¿Y qué hace la 3.8? Hace B, altera C, le cambia los textos a elementos que estaban perfectos y se pasa las restricciones por donde le da la gana.",
+          "Parece que no leyera el prompt o que decidiera arbitrariamente ignorar las instrucciones. En el desarrollo de software, la precisión es ley. Un asistente que desobedece no es una ayuda, es un riesgo: te obliga a revisar cada commit con lupa y paranoia porque no podés confiar en que siguió tus directivas."
+        ]
+      },
+      {
+        heading: "Amnesia de contexto vs. fidelidad arquitectónica",
+        paragraphs: [
+          "Gemini 3.6 retenía el hilo del proyecto con una fidelidad impresionante. Podías trabajar en refactorizaciones largas sin que el modelo perdiera de vista el stack tecnológico, las dependencias ni la coherencia del diseño.",
+          "La 3.8, en cambio, parece sufrir de amnesia selectiva o de una deriva conceptual donde decide sobrecomplicar soluciones sencillas, meter código innecesario y perderse en ramas que nada tienen que ver con el requerimiento principal."
+        ]
+      },
+      {
+        heading: "La pregunta del millón: ¿Por qué diablos quitan lo que funciona?",
+        paragraphs: [
+          "¿Por qué quitaron la 3.6? ¿Qué necesidad había de retirarla del selector para obligarnos a usar un modelo que en la práctica diaria es más lento, más desobediente y mucho más frustrante?",
+          "Si las empresas quieren experimentar con nuevos paradigmas de razonamiento o pipelines pesados en la 3.8, que lo hagan como opción experimental. Pero no nos arrebaten la herramienta de trabajo confiable, rápida y probada con la que los desarrolladores sacamos adelante proyectos reales todos los días."
+        ]
+      }
+    ],
+    closingHeading: "Reflexión sincera",
+    closingText: "La inteligencia artificial en desarrollo de software debe estar al servicio de la agilidad, la precisión y la paz mental, no para convertirse en una fuente extra de estrés. Exigimos asistentes que escuchen, sigan instrucciones y nos dejen programar en paz.",
+    closingSign: "Nos vemos en la próxima entrada 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, O Gemini 3.8 É Exaustivo... Por Que Tiraram o 3.6? 🌸",
+    date: "22 de Outubro de 2026",
+    subtitle: "O diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Vou ser brutalmente sincera: lidar com a transição forçada para o Gemini 3.8 levou minha paciência ao limite absoluto.",
+    introDesc: "Esta entrada não é um benchmark corporativo nem um artigo patrocinado. É meu desabafo honesto como desenvolvedora sobre como um suposto 'upgrade' de IA se tornou uma regressão desesperadora no meu dia a dia de código.",
+    sections: [
+      {
+        heading: "Saudade do Gemini 3.6: Cirúrgico, rápido e respeitoso",
+        paragraphs: [
+          "Na entrada #33 deste diário, expliquei por que o **Gemini 3.6 Flash** era meu modelo padrão absoluto no Antigravity. Era maravilhoso programar com ele: compreendia o contexto imediatamente, entendia a arquitetura do projeto num instante, ia direto ao ponto e nunca alterava coisas que ninguém pediu para tocar.",
+          "Quando você pedia ao 3.6 'atualize esta URL' ou 'ajuste este bloco lógico', ele executava com precisão milimétrica. Não inventava textos adicionais, não reescrevia funções saudáveis e não criava domínios fictícios. Era previsível, ágil e respeitava o tempo de quem desenvolve."
+        ]
+      },
+      {
+        heading: "O suplício do 'analisando... analisando... working, working'",
+        paragraphs: [
+          "Com o Gemini 3.8 Flash, qualquer mudança simples virou uma espera exaustiva. Você envia uma instrução pontual e de repente fica presa assistindo a loops internos intermináveis: *'analisando...', 'working, working...'*, divagando numa sobreanálise sem fim.",
+          "Consome tempo, drena a paciência e quebra completamente o estado de fluxo mental (o flow state tão difícil de construir enquanto programamos). E o pior: após tanta espera, a resposta chega descalibrada, com textos inventados ou com erros básicos que o 3.6 resolvia em três segundos."
+        ]
+      },
+      {
+        heading: "Não segue instruções (e altera o que ninguém pediu)",
+        paragraphs: [
+          "É isso que mais me irrita. Você escreve com total clareza: *'faça A e apenas A; não mexa em B nem altere o texto C'*. E o que o 3.8 faz? Mexe em B, altera C, inventa parâmetros do nada e ignora restrições explícitas.",
+          "Parece que nem sequer lê o prompt. No desenvolvimento de software, previsibilidade é fundamental. Um assistente que desobedece não é uma ajuda, é um risco: obriga você a revisar cada linha no git diff com desconfiança porque não dá para ter certeza de que ele seguiu as diretrizes."
+        ]
+      },
+      {
+        heading: "Amnésia de contexto vs. consciência arquitetural",
+        paragraphs: [
+          "O Gemini 3.6 retinha o fio da meada do projeto com fidelidade impressionante. Era possível trabalhar em refatorações longas sem que ele perdesse a visão do stack, dependências ou tokens de design.",
+          "Já o 3.8 parece sofrer de perda de foco constante, inventando complexidades desnecessárias e se perdendo em detalhes secundários enquanto ignora o problema principal."
+        ]
+      },
+      {
+        heading: "A pergunta que não quer calar: Por que tirar o que funciona?",
+        paragraphs: [
+          "Por que tiraram o 3.6? Que necessidade havia de removê-lo para forçar um modelo que na prática diária é mais lento, mais desobediente e muito mais frustrante?",
+          "Se querem experimentar novas abordagens de raciocínio no 3.8, que façam isso como recurso experimental opcional. Mas não retirem o motor de trabalho confiável, rápido e testado com o qual construímos e entregamos software todos os dias."
+        ]
+      }
+    ],
+    closingHeading: "Reflexão sincera",
+    closingText: "A inteligência artificial no desenvolvimento de software deve servir à agilidade, precisão e tranquilidade mental, e não criar atritos e estresse desnecessários. Queremos assistentes que ouçam, sigam instruções e nos deixem programar em paz.",
+    closingSign: "Nos vemos na próxima entrada 🌸",
+    signature: "— Jill"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Developer Diary & Honest Tech Rant
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main" set:html={c.intro}></p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          {c.sections.map(sec => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+            </section>
+          ))}
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-gemini-regression" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(239, 68, 68, 0.08) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #f87171;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #ef4444;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #fca5a5;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(239, 68, 68, 0.08);
+    border-left: 4px solid #f87171;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .closing-signature {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: #f87171;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

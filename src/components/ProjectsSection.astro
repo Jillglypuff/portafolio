@@ -1,16 +1,17 @@
 ---
 import { useTranslations } from '../i18n/utils';
 import ProjectsFloral from './ProjectsFloral.vue';
-import ProjectsGrid from './ProjectsGrid.vue';
-import type { ProjectItem } from './ProjectsGrid.vue';
+import ProjectsCarousel from './ProjectsCarousel.vue';
+import type { ProjectItem } from './ProjectsCarousel.vue';
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// Dynamically load images for stacks
+// Dynamically load images for mockups
 const capturasGlob: Record<string, any> = import.meta.glob('../assets/proyectos/capturas/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
 const canvaGlob: Record<string, any> = import.meta.glob('../assets/proyectos/diseños canva/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
 const figmaGlob: Record<string, any> = import.meta.glob('../assets/proyectos/figma/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
+const allProyectosGlob: Record<string, any> = import.meta.glob('../assets/proyectos/**/*.{png,jpg,jpeg,JPG,PNG}', { eager: true, import: 'default' });
 
 const getSrcs = (globObj: Record<string, any>, filterFn: (filename: string) => boolean) => {
   return Object.entries(globObj)
@@ -18,67 +19,13 @@ const getSrcs = (globObj: Record<string, any>, filterFn: (filename: string) => b
       const fileName = path.split('/').pop() || '';
       return filterFn(fileName);
     })
+    .sort(([pathA], [pathB]) => pathA.localeCompare(pathB))
     .map(([_, img]) => (typeof img === 'string' ? img : img.src));
 };
 
-// Build structured project objects
+// Build structured project & mockup objects (Apps section removed, mockups organized for carousel)
 const projects: ProjectItem[] = [
-  // --- MOBILE APPS ---
-  {
-    id: 'arriagas',
-    title: 'Arriagas Gas LP App',
-    category: 'mobile',
-    categoryLabel: 'App Móvil',
-    oneLiner: 'Aplicación móvil para pedidos y gestión de entregas de Gas LP por litros en tiempo real.',
-    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('arriagas')),
-    aspectRatio: 'portrait',
-    technologies: ['React Native', 'Expo', 'JavaScript', 'REST API'],
-    caseStudy: {
-      problem: 'Digitalizar y optimizar la gestión de pedidos de Gas LP por volumen en litros, eliminando llamadas manuales y coordinando la logística de distribución.',
-      solution: 'Desarrollo de app móvil responsiva en React Native Expo para solicitar recargas de Gas LP por cantidad de litros con seguimiento de pedido.',
-      highlights: [
-        'Pedidos acelerados de Gas LP seleccionando cantidad exacta de litros',
-        'Optimización operativa del negocio incrementando el volumen de órdenes gestionadas',
-        'Multiplataforma iOS/Android con React Native Expo e interfaz accesible'
-      ]
-    }
-  },
-  {
-    id: 'pollo-crix',
-    title: 'Pollo Crix App',
-    category: 'mobile',
-    categoryLabel: 'App Móvil',
-    oneLiner: 'App móvil de pedidos de comida rápida integrada con logística Uber Direct.',
-    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('pollocrix')),
-    aspectRatio: 'portrait',
-    technologies: ['Flutter', 'Dart', 'Uber Direct API', 'Mobile UI'],
-    caseStudy: {
-      problem: 'Brindar un canal propio de pedidos directos sin comisiones excesivas pero manteniendo logística automatizada de despacho.',
-      solution: 'Desarrollo nativo multiplataforma en Flutter integrado con la API de Uber Direct para asignación automática de repartidores.',
-      highlights: [
-        'Integración directa con API de Uber Direct para logística y despacho automatizado',
-        'Renderizado nativo ultra fluido a 60 FPS con Flutter',
-        'Gestión dinámica de carrito y seguimiento de orden en tiempo real'
-      ]
-    }
-  },
-  {
-    id: 'bionote',
-    title: 'BioNote Veterinary',
-    category: 'mobile',
-    categoryLabel: 'App Móvil',
-    oneLiner: 'Aplicación para control y visualización de resultados de laboratorio veterinario.',
-    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('bionote')),
-    aspectRatio: 'portrait',
-    technologies: ['React Native', 'Mobile UI', 'REST API', 'JavaScript'],
-    caseStudy: {
-      problem: 'Permitir a veterinarios y clientes consultar resultados de exámenes clínicos directamente desde el móvil.',
-      solution: 'Aplicación móvil con visualización de reportes, historial de exámenes y alertas de laboratorio.',
-      highlights: ['Interfaz móvil especializada para clínicas veterinarias', 'Consulta inmediata de resultados clínicos', 'Visualización limpia de expedientes']
-    }
-  },
-
-  // --- WEB SYSTEMS & FULL-STACK ---
+  // ─── WEB SYSTEMS & PLATFORMS ───────────────────────────────────
   {
     id: 'tienda-lagatacr',
     title: 'Tienda La Gata CR',
@@ -87,6 +34,7 @@ const projects: ProjectItem[] = [
     oneLiner: 'Plataforma e-commerce completa con panel de administración e integración de pagos.',
     images: getSrcs(capturasGlob, name => name.toLowerCase().includes('tienda_lagatacr')),
     aspectRatio: 'landscape',
+    demoUrl: 'https://lagatacr.com/',
     technologies: ['React', 'Laravel', 'MySQL', 'REST API', 'TailwindCSS'],
     caseStudy: {
       problem: 'Automatizar las ventas, gestión de catálogo e inventario para una tienda de moda en Costa Rica.',
@@ -102,26 +50,33 @@ const projects: ProjectItem[] = [
     oneLiner: 'Plataforma web con Inteligencia Artificial para análisis y filtrado automatizado de CVs.',
     images: getSrcs(capturasGlob, name => name.toLowerCase().includes('skill')),
     aspectRatio: 'landscape',
+    demoUrl: 'https://skillmatch.tejidev.com/',
     technologies: ['Python', 'AI / NLP', 'React', 'REST API'],
     caseStudy: {
       problem: 'Agilizar el filtrado manual de currículums en procesos de contratación masivos.',
       solution: 'Motor de Procesamiento de Lenguaje Natural (NLP) en Python para extracción de habilidades y cálculo de compatibilidad.',
-      highlights: ['Extracción automatizada de información en documentos CV', 'Puntuación semántica de coincidencia', 'Dashboard claro de análisis']
+      highlights: ['Extracción automatizada de información en documentos CV', 'Puntuación semántica de coincidencia', 'Dashboard interactivo de análisis']
     }
   },
   {
     id: 'pam',
     title: 'PAM — Consulta de Multas',
     category: 'web',
-    categoryLabel: 'Plataforma Web',
-    oneLiner: 'Portal web para la consulta y verificación rápida de multas de tránsito.',
+    categoryLabel: 'Full-Stack (React & C++)',
+    oneLiner: 'Portal web de alto rendimiento para consulta y verificación rápida de multas de tránsito.',
     images: getSrcs(capturasGlob, name => name.toLowerCase().includes('pam')),
     aspectRatio: 'landscape',
-    technologies: ['JavaScript', 'HTML5/CSS3', 'REST API Integration'],
+    demoUrl: 'https://pamcr.netlify.app/',
+    technologies: ['React', 'C++', 'AWS (Database)', 'REST API'],
     caseStudy: {
-      problem: 'Brindar a los conductores un medio rápido y sin complicaciones para consultar el estado de infracciones.',
-      solution: 'Interfaz liviana de respuesta inmediata integrada con servicios de consulta en tiempo real.',
-      highlights: ['Tiempos de respuesta ultra reducidos', 'Diseño accesible responsivo', 'Integración limpia con APIs']
+      problem: 'Brindar a los conductores un medio confiable, rápido y seguro para consultar el estado de infracciones de tránsito.',
+      solution: 'Arquitectura Full-Stack de alto rendimiento con Frontend interactivo en React, Backend desarrollado en C++ y Base de Datos alojada en AWS.',
+      highlights: [
+        'Frontend interactivo y responsivo en React',
+        'Backend de alto rendimiento y baja latencia en C++',
+        'Base de datos gestionada y alojada en la nube de AWS',
+        'Integración con servicios de consulta en tiempo real'
+      ]
     }
   },
   {
@@ -132,6 +87,7 @@ const projects: ProjectItem[] = [
     oneLiner: 'Sitio web corporativo para estudio de desarrollo de software.',
     images: getSrcs(capturasGlob, name => name.toLowerCase().includes('teji')),
     aspectRatio: 'landscape',
+    demoUrl: 'https://www.tejidev.com/',
     technologies: ['React', 'CSS3', 'UX/UI Design'],
     caseStudy: {
       problem: 'Reflejar la capacidad técnica y propuesta de valor del estudio ante potenciales clientes.',
@@ -140,41 +96,115 @@ const projects: ProjectItem[] = [
     }
   },
   {
-    id: 'lp-lgcr',
-    title: 'Landing Page La Gata CR',
+    id: 'lp-lgcr-bootstrap',
+    title: 'Landing Page La Gata CR — Bootstrap',
     category: 'web',
-    categoryLabel: 'Landing Page',
-    oneLiner: 'Página de aterrizaje orientada a conversión de ventas y captación de clientes.',
-    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('lp_lgcr')),
+    categoryLabel: 'Landing Page (HTML & Bootstrap)',
+    oneLiner: 'Primera landing page promocional para tienda de moda maquetada en HTML con Bootstrap.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('lp_lgcr1') || name.toLowerCase().includes('lp_lgcr2')),
     aspectRatio: 'landscape',
-    technologies: ['HTML5', 'CSS3', 'JavaScript'],
+    technologies: ['HTML5', 'Bootstrap', 'JavaScript', 'CSS3'],
     caseStudy: {
-      problem: 'Captar leads y generar ventas durante campañas promocionales específicas.',
-      solution: 'Estructura orientada a llamados a la acción claros y carga rápida en dispositivos móviles.',
-      highlights: ['Estructura optimizada para conversión', 'Enfoque Mobile-First', 'Optimización de activos gráficos']
+      problem: 'Primera landing page promocional para captación de clientes y conversión durante campañas específicas.',
+      solution: 'Maquetación responsiva con HTML5 y el framework Bootstrap, integrando dos pantallas de la misma landing page (vistas 1 y 2).',
+      highlights: [
+        'Maquetación responsiva con HTML5 y Bootstrap',
+        'Vistas 1 y 2 corresponden a la misma landing page',
+        'Diseño orientado a conversión y llamados a la acción claros'
+      ]
+    }
+  },
+  {
+    id: 'lp-lgcr-tailwind',
+    title: 'Landing Page La Gata CR — TailwindCSS',
+    category: 'web',
+    categoryLabel: 'Landing Page (TailwindCSS)',
+    oneLiner: 'Segunda versión de landing page para nueva campaña desarrollada con TailwindCSS.',
+    images: getSrcs(capturasGlob, name => name.toLowerCase().includes('lp_lgcr3')),
+    aspectRatio: 'landscape',
+    technologies: ['TailwindCSS', 'HTML5', 'JavaScript'],
+    caseStudy: {
+      problem: 'Segunda landing page para una nueva campaña de La Gata CR con requerimiento de estética más estilizada y moderna.',
+      solution: 'Maquetación utility-first con TailwindCSS (captura 3) para un control visual milimétrico y componentes livianos.',
+      highlights: [
+        'Segunda landing page independiente de la marca (captura 3)',
+        'Desarrollo moderno y estilizado con TailwindCSS',
+        'Carga ultrarrápida y optimización para pantallas móviles'
+      ]
     }
   },
   {
     id: 'ssform',
     title: 'SS Form UI',
     category: 'web',
-    categoryLabel: 'Componente UI',
-    oneLiner: 'Formulario web dinámico con validaciones avanzadas y diseño personalizado.',
+    categoryLabel: 'Maquetación UI HTML',
+    oneLiner: 'Componente y diseño de formulario web solicitado a medida en HTML y CSS.',
     images: getSrcs(capturasGlob, name => name.toLowerCase().includes('ssform')),
     aspectRatio: 'landscape',
-    technologies: ['React', 'CSS Modules', 'Validation Logic'],
+    technologies: ['HTML5', 'CSS3', 'JavaScript'],
     caseStudy: {
-      problem: 'Desarrollar un componente de formulario reutilizable con validación compleja de campos.',
-      solution: 'Componente React desacoplado con estados claros de error, éxito y retroalimentación accesible.',
-      highlights: ['Validación de datos en tiempo real', 'Excelente manejo de accesibilidad y foco', 'Componente modular']
+      problem: 'Requerimiento específico del cliente para diseñar y maquetar una interfaz de formulario limpia y estructurada puramente en HTML.',
+      solution: 'Desarrollo de interfaz de usuario en HTML5 semántico con estilos CSS personalizados para los distintos campos y estados de formulario.',
+      highlights: [
+        'Componente UI maquetado a medida en HTML y CSS según requerimiento',
+        'Estructura semántica, accesible y limpia',
+        'Diseño visual para campos de datos y validaciones'
+      ]
     }
   },
 
-  // --- DESIGN UI/UX & BRANDING ---
+  // ─── FIGMA UI/UX DESIGN & PROTOTYPES ───────────────────────────
+  {
+    id: 'figma-ui',
+    title: 'Bloom — Figma UI/UX',
+    category: 'figma',
+    categoryLabel: 'UI/UX Design Figma',
+    oneLiner: 'Prototipos interactivos, wireframes de alta fidelidad y sistemas de diseño visual.',
+    images: Object.values(figmaGlob).map((img: any) => typeof img === 'string' ? img : img.src),
+    aspectRatio: 'landscape',
+    technologies: ['Figma', 'Wireframing', 'UI/UX Prototyping', 'Design Systems'],
+    caseStudy: {
+      problem: 'Diseñar arquitectura de información y prototipos navegables antes del desarrollo.',
+      solution: 'Creación de wireframes de alta fidelidad, componentes reusables y prototipos dinámicos para Bloom y aplicaciones web.',
+      highlights: ['Wireframing de alta fidelidad', 'Prototipado interactivo en Figma', 'Diseño de sistemas de UI y tokens']
+    }
+  },
+
+  // ─── SOCIAL MEDIA & BRANDING (CANVA & MOBILE FORMATS) ─────────
+  {
+    id: 'post-lagatacr',
+    title: 'La Gata CR — Instagram Posts',
+    category: 'social',
+    categoryLabel: 'Social Media (Post 1:1)',
+    oneLiner: 'Colección de piezas gráficas promocionales e informativas en formato post de Instagram.',
+    images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ig_postlagata')),
+    aspectRatio: 'square',
+    technologies: ['Figma', 'Canva', 'Content Design', 'IG Format 1:1'],
+    caseStudy: {
+      problem: 'Mantener la comunidad interactuando activamente mediante contenido de alto impacto visual.',
+      solution: 'Plantillas cuadradas para publicaciones adaptadas a campañas del e-commerce.',
+      highlights: ['Plantillas cuadradas 1:1 para feed de Instagram', 'Contenido gráfico enfocado en engagement', 'Coherencia de paleta y tipografía']
+    }
+  },
+  {
+    id: 'ns-perfumes',
+    title: 'NS Perfumes — Instagram Branding',
+    category: 'social',
+    categoryLabel: 'Branding & Feed',
+    oneLiner: 'Diseño de publicaciones estandarizadas para cuadrícula de Instagram y gift cards promocionales.',
+    images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ns') || name.toLowerCase().includes('giftcardns')),
+    aspectRatio: 'square',
+    technologies: ['Canva', 'Figma', 'Visual Identity', 'IG Format'],
+    caseStudy: {
+      problem: 'Construir una presencia visual sofisticada y pulida en el feed de Instagram.',
+      solution: 'Diseño de publicaciones e identidades gráficas en formato post de Instagram (1:1) y piezas impresas/digitales.',
+      highlights: ['Línea gráfica elegante para perfumería', 'Formato post de Instagram estandarizado 1:1', 'Grid de diseño cohesivo']
+    }
+  },
   {
     id: 'ad-lagata',
     title: 'La Gata CR — Ad Campaigns',
-    category: 'design',
+    category: 'social',
     categoryLabel: 'Diseño Gráfico & Ads',
     oneLiner: 'Diseños publicitarios en Canva y Figma para campañas e-commerce (1200x400 y 300x250).',
     images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ad_lagata')),
@@ -187,56 +217,33 @@ const projects: ProjectItem[] = [
     }
   },
   {
-    id: 'ns-perfumes',
-    title: 'NS Perfumes — Instagram Branding',
-    category: 'design',
-    categoryLabel: 'Social Media & Branding',
-    oneLiner: 'Diseño de publicaciones estandarizadas para cuadrícula de Instagram en formato post.',
-    images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ns') || name.toLowerCase().includes('giftcardns')),
-    aspectRatio: 'square',
-    technologies: ['Canva', 'Figma', 'Visual Identity', 'IG Format'],
+    id: 'mobile-social',
+    title: 'Mobile Social Media & Stories',
+    category: 'social',
+    categoryLabel: 'Mobile Stories & Reels',
+    oneLiner: 'Diseños en formato vertical para historias, publicaciones y campañas promocionales en redes sociales.',
+    images: getSrcs(canvaGlob, name => {
+      const n = name.toLowerCase();
+      return n.includes('ig_postlagata2') || 
+             n.includes('ig_postlagata3') || 
+             n.includes('ig_postlagata4') || 
+             n.includes('ig_postns');
+    }),
+    aspectRatio: 'portrait',
+    technologies: ['Mobile Format 9:16', 'Instagram Stories', 'Reels Design', 'Figma', 'Canva'],
     caseStudy: {
-      problem: 'Construir una presencia visual sofisticada y pulida en el feed de Instagram.',
-      solution: 'Diseño de publicaciones e identidades gráficas en formato post de Instagram (1:1).',
-      highlights: ['Línea gráfica elegante para perfumería', 'Formato post de Instagram estandarizado 1:1', 'Grid de diseño cohesivo']
-    }
-  },
-  {
-    id: 'post-lagatacr',
-    title: 'La Gata CR — Instagram Posts',
-    category: 'design',
-    categoryLabel: 'Diseño UI / Social Media',
-    oneLiner: 'Colección de piezas gráficas promocionales e informativas en formato post de IG.',
-    images: getSrcs(canvaGlob, name => name.toLowerCase().includes('ig_postlagata')),
-    aspectRatio: 'square',
-    technologies: ['Figma', 'Canva', 'Content Design', 'IG Format'],
-    caseStudy: {
-      problem: 'Mantener la comunidad interactuando activamente mediante contenido de alto impacto visual.',
-      solution: 'Plantillas cuadradas para publicaciones e historias en cuadrícula adaptadas al e-commerce.',
-      highlights: ['Plantillas cuadradas 1:1 para feed de Instagram', 'Contenido gráfico enfocado en engagement']
-    }
-  },
-  {
-    id: 'figma-ui',
-    title: 'Figma UI/UX Prototypes',
-    category: 'design',
-    categoryLabel: 'UI/UX Design Figma',
-    oneLiner: 'Prototipos interactivos, wireframes y sistemas de diseño visual.',
-    images: Object.values(figmaGlob).map((img: any) => typeof img === 'string' ? img : img.src),
-    aspectRatio: 'landscape',
-    technologies: ['Figma', 'Wireframing', 'UI/UX Prototyping'],
-    caseStudy: {
-      problem: 'Diseñar arquitectura de información y prototipos navegables antes del desarrollo.',
-      solution: 'Creación de wireframes de alta fidelidad, componentes reusables y prototipos dinámicos.',
-      highlights: ['Wireframing de alta fidelidad', 'Prototipado interactivo en Figma', 'Diseño de sistemas de UI']
+      problem: 'Diseñar contenido vertical envolvente para historias y reels optimizado para pantallas de smartphones.',
+      solution: 'Diseño y maquetación de piezas en formato 9:16 con foco en engagement móvil y llamados a la acción.',
+      highlights: ['Relación de aspecto 9:16 nativa móvil', 'Composición optimizada para lectura en dispositivos', 'Mockups reales integrados en el carrusel']
     }
   }
 ];
 
 const filterLabels = {
+  all: t('projects.filter.all'),
   web: t('projects.filter.web'),
-  mobile: t('projects.filter.mobile'),
-  design: t('projects.filter.design'),
+  figma: t('projects.filter.figma'),
+  social: t('projects.filter.social'),
 };
 
 const i18nLabels = {
@@ -245,6 +252,13 @@ const i18nLabels = {
   solution: t('projects.solution'),
   highlights: t('projects.highlights'),
   stack: t('projects.stack'),
+  carousel: t('projects.view.carousel'),
+  grid: t('projects.view.grid'),
+  prev: t('projects.carousel.prev'),
+  next: t('projects.carousel.next'),
+  viewFull: t('projects.carousel.viewFull'),
+  screens: t('projects.carousel.screens'),
+  comingSoon: t('projects.carousel.comingSoon'),
 };
 ---
 
@@ -260,7 +274,7 @@ const i18nLabels = {
       </h2>
     </div>
 
-    <ProjectsGrid 
+    <ProjectsCarousel 
       client:visible
       projects={projects}
       filterLabels={filterLabels}
