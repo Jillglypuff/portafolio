@@ -10,6 +10,8 @@ const content = {
     pinnedLabel: "★ Recommended Start",
     readMore: "Read →",
     upcomingTitle: "Upcoming Articles",
+    upcomingEmptyTitle: "Thinking thoughtful thoughts 🌸",
+    upcomingEmptyDesc: "I'm currently working on new articles and experiments to share here. Check back soon!",
     browseLabel: "More Entries",
     drafts: [
       { 
@@ -315,6 +317,22 @@ const content = {
         href: "blog-gemini-regression",
         number: "44",
         shortTitle: "Gemini 3.8 vs 3.6 Flash"
+      },
+      {
+        title: "Dear Diary, The PHP RCE Vulnerability (CVE-2026-109618), the Exploit, and the Forge Chaos 🌸",
+        desc: "A deep technical analysis of CVE-2026-109618/19 (unauthenticated RCE via session.upload_progress), how the exploit chain works, how to remediate it, and my real-world scramble when my Laravel Forge server went down yesterday.",
+        publishDate: "2026-10-23",
+        href: "blog-php-cve-exploit",
+        number: "45",
+        shortTitle: "PHP RCE & Forge Downtime"
+      },
+      { 
+        title: "Dear Diary, I Enabled GitGuardian on My Repositories: Is It Actually Worth It? 🌸", 
+        desc: "Automated secret scanning, catching exposed API keys before they hit GitHub, pre-commit hooks with ggshield, and what I learned protecting client systems as a Full-Stack developer.",
+        publishDate: "2026-10-24",
+        href: "blog-gitguardian",
+        number: "46",
+        shortTitle: "GitGuardian & Secret Scanning"
       }
     ],
     featuredPost: {
@@ -365,6 +383,8 @@ const content = {
     pinnedLabel: "★ Te recomiendo iniciar por aquí",
     readMore: "Leer →",
     upcomingTitle: "Próximos Artículos",
+    upcomingEmptyTitle: "Pensando pensamientos pensosos 🌸",
+    upcomingEmptyDesc: "Estoy trabajando en nuevos artículos y experimentos para compartir por acá. ¡Vuelve pronto!",
     browseLabel: "Más Entradas",
     drafts: [
       { 
@@ -670,6 +690,22 @@ const content = {
         href: "blog-gemini-regression",
         number: "44",
         shortTitle: "Gemini 3.8 vs 3.6 Flash"
+      },
+      {
+        title: "Querido Diario, La Vulnerabilidad en PHP (CVE-2026-109618), el Exploit y el Caos con Forge 🌸",
+        desc: "Análisis técnico de CVE-2026-109618/19 (RCE no autenticado en session.upload_progress), disección del exploit, cómo prevenirlo y mi experiencia en vivo cuando el servidor en Laravel Forge se cayó ayer.",
+        publishDate: "2026-10-23",
+        href: "blog-php-cve-exploit",
+        number: "45",
+        shortTitle: "Vulnerabilidad PHP & Caos en Forge"
+      },
+      { 
+        title: "Querido Diario, Habilité GitGuardian en Mis Repositorios: ¿Realmente Vale la Pena? 🌸", 
+        desc: "Detección automatizada de secretos, evitar API keys expuestas antes de hacer push, hooks de pre-commit con ggshield y lo que aprendí protegiendo proyectos de clientes como desarrolladora Full-Stack.",
+        publishDate: "2026-10-24",
+        href: "blog-gitguardian",
+        number: "46",
+        shortTitle: "GitGuardian y Escaneo de Secretos"
       }
     ],
     featuredPost: {
@@ -720,6 +756,8 @@ const content = {
     pinnedLabel: "★ Recomendo começar por aqui",
     readMore: "Ler →",
     upcomingTitle: "Próximos Artigos",
+    upcomingEmptyTitle: "Pensando pensamentos pensosos 🌸",
+    upcomingEmptyDesc: "Estou trabalhando em novos artigos e experimentos para compartilhar por aqui. Volte em breve!",
     browseLabel: "Mais Entradas",
     drafts: [
       { 
@@ -1025,6 +1063,22 @@ const content = {
         href: "blog-gemini-regression",
         number: "44",
         shortTitle: "Gemini 3.8 vs 3.6 Flash"
+      },
+      {
+        title: "Querido Diário, A Vulnerabilidade em PHP (CVE-2026-109618), o Exploit e o Caos com o Forge 🌸",
+        desc: "Análise técnica da CVE-2026-109618/19 (RCE não autenticado no session.upload_progress), dissecação do exploit, como mitigar e o caos real quando o servidor no Laravel Forge caiu ontem.",
+        publishDate: "2026-10-23",
+        href: "blog-php-cve-exploit",
+        number: "45",
+        shortTitle: "Vulnerabilidade PHP & Caos no Forge"
+      },
+      { 
+        title: "Querido Diário, Habilitei o GitGuardian nos Meus Repositórios: Realmente Vale a Pena? 🌸", 
+        desc: "Detecção automatizada de segredos, prevenção de chaves de API expostas antes do push, hooks de pré-commit com ggshield e o que aprendi protegendo sistemas de clientes como desenvolvedora Full-Stack.",
+        publishDate: "2026-10-24",
+        href: "blog-gitguardian",
+        number: "46",
+        shortTitle: "GitGuardian e Proteção de Segredos"
       }
     ],
     featuredPost: {
@@ -1135,7 +1189,7 @@ function truncateText(str, maxLen = 80) {
         <div class="upcoming-header">
           <h3 class="upcoming-heading">{page.upcomingTitle}</h3>
         </div>
-        <div class="upcoming-list">
+        <div class="upcoming-list" id="upcomingList">
           {page.drafts.map((draft) => (
             <div class="upcoming-item" data-publish-date={draft.publishDate} data-href={draft.href} data-number={draft.number} data-short-title={draft.shortTitle}>
               <div class="upcoming-bullet"></div>
@@ -1145,6 +1199,15 @@ function truncateText(str, maxLen = 80) {
               </div>
             </div>
           ))}
+
+          <div class="upcoming-empty-card" id="upcomingEmptyCard" style={page.drafts.length > 0 ? "display: none;" : "display: flex;"}>
+            <div class="empty-icon-wrap">
+              <span class="empty-icon">💭</span>
+              <span class="empty-sparkle">✨</span>
+            </div>
+            <h4 class="upcoming-empty-title">{page.upcomingEmptyTitle}</h4>
+            <p class="upcoming-empty-desc">{page.upcomingEmptyDesc}</p>
+          </div>
         </div>
       </div>
 
@@ -1374,6 +1437,66 @@ function truncateText(str, maxLen = 80) {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  /* ── Upcoming Empty Card ("Pensando pensamientos pensosos") ── */
+  .upcoming-empty-card {
+    background: linear-gradient(135deg, rgba(255, 75, 145, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1.5px dashed rgba(255, 75, 145, 0.32);
+    border-radius: 18px;
+    padding: 32px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: auto 0;
+    transition: all 0.3s ease;
+  }
+
+  .upcoming-empty-card:hover {
+    border-color: rgba(255, 75, 145, 0.55);
+    background: linear-gradient(135deg, rgba(255, 75, 145, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    transform: translateY(-2px);
+  }
+
+  .empty-icon-wrap {
+    position: relative;
+    font-size: 2.25rem;
+    line-height: 1;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+
+  .empty-sparkle {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    font-size: 1.15rem;
+    animation: sparkleFloat 2.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes sparkleFloat {
+    0% { transform: scale(0.9) rotate(-6deg); opacity: 0.75; }
+    100% { transform: scale(1.2) rotate(14deg); opacity: 1; }
+  }
+
+  .upcoming-empty-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0;
+    font-family: var(--font-body);
+    line-height: 1.35;
+  }
+
+  .upcoming-empty-desc {
+    font-size: 0.86rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 260px;
   }
 
   /* ── Col 3: Entries card (carousel) ── */
@@ -1623,6 +1746,16 @@ function truncateText(str, maxLen = 80) {
         }
       }
     });
+
+    var remainingUpcoming = section.querySelectorAll('.upcoming-item');
+    var emptyCard = document.getElementById('upcomingEmptyCard');
+    if (emptyCard) {
+      if (remainingUpcoming.length === 0) {
+        emptyCard.style.display = 'flex';
+      } else {
+        emptyCard.style.display = 'none';
+      }
+    }
 
     if (!hasNew) return;
 

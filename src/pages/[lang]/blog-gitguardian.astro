@@ -1,0 +1,759 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import gitguardianPoc from '../../assets/gitguardian_poc.jpg';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, I Enabled GitGuardian on My Repositories: Is It Actually Worth It? 🌸",
+    date: "October 24, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "After seeing GitHub and Git security recommendations everywhere, I decided to activate GitGuardian across my repositories.",
+    introDesc: "As a Full-Stack developer managing client projects, APIs, and databases, I had to ask myself: is this just another noisy notification bot, or a critical safety net that every programmer should turn on? Here is everything I learned, how it works, and whether it's truly worth activating.",
+    bannerLabel: "Official GitGuardian Platform & Documentation:",
+    bannerUrl: "https://www.gitguardian.com",
+    screenshotTitle: "Local Defense: ggshield Blocking a Leaked Secret Before Push",
+    screenshotCaption: "Live terminal view of ggshield pre-commit hook catching a leaked Stripe API key in a local .env file and blocking the commit before the secret ever leaves localhost.",
+    sections: [
+      {
+        heading: "1. The Context: Why I Decided to Enable GitGuardian",
+        paragraphs: [
+          "Lately, I kept seeing prompts and recommendations across GitHub highlighting automated secret scanning and integrations with **GitGuardian**. If you've been coding for any length of time, you know the dread: one late-night commit, a rushed `git add .`, an accidental stash pop, and suddenly an API key or database credential is baked right into your repository history.",
+          "As a Full-Stack developer juggling multiple client projects, e-commerce integrations, payment gateways, and cloud databases, human error is always a lurking reality. I decided to turn GitGuardian on across my GitHub repositories to see what the experience was really like."
+        ]
+      },
+      {
+        heading: "2. What is GitGuardian and What is Its Real Purpose?",
+        paragraphs: [
+          "At its core, **GitGuardian** is an automated secrets detection and DevSecOps security engine designed specifically to protect credentials throughout the software development lifecycle.",
+          "Its primary purpose is to scan your code for **over 400+ types of sensitive secrets**: API keys (OpenAI, Stripe, Google Cloud, AWS), database connection strings with embedded passwords, private SSH keys, JWT secrets, OAuth tokens, and client credentials.",
+          "Why is this so critical? Because automated malicious crawlers scan public GitHub commits **within seconds of push**. If a valid API token leaks into public view, it can be harvested, abused, and rack up thousands of dollars in cloud bills or compromise customer databases before you even realize you made a mistake."
+        ]
+      },
+      {
+        heading: "3. How Does GitGuardian Work? (Real-Time Push & ggshield)",
+        paragraphs: [
+          "GitGuardian approaches secret detection through three defensive layers:",
+          "**1. Real-Time Post-Push Scanning:** The moment you push code to GitHub (public or private), GitGuardian's engine inspects the commit diff in seconds. If an exposed secret is detected, you get an immediate high-priority alert via email or dashboard with the exact file and line number.",
+          "**2. Deep Historic Repository Crawling:** When you first connect a repository, GitGuardian doesn't just look at the `main` branch HEAD. It crawls every commit, every past merge, and every forgotten branch in the repository's entire history to find legacy secrets that might have been committed years ago.",
+          "**3. Local Pre-Commit Protection (ggshield):** This is where it gets truly powerful. Through its CLI tool `ggshield`, you can configure a Git pre-commit hook on your machine. It scans staged files **locally** and cancels the `git commit` command if a secret is found, preventing the credential from ever touching GitHub in the first place."
+        ],
+        codeLabel: "Installing and Configuring ggshield as a Local Git Hook",
+        code: `# 1. Install ggshield CLI via pip or package manager
+pip install ggshield
+
+# 2. Authenticate with your GitGuardian account
+ggshield auth login
+
+# 3. Install ggshield as a pre-commit hook in your local repository
+ggshield install --mode=local
+
+# Now, any commit containing an API key or .env secret will be BLOCKED automatically:
+# Status: [ALERT] Incident detected -> Commit cancelled!`
+      },
+      {
+        heading: "4. The Honest Verdict: Is It Actually Useful or Just Noise?",
+        paragraphs: [
+          "After testing and using it, **yes, it is overwhelmingly useful—especially for Full-Stack developers and freelance teams**.",
+          "Here are the genuine pros and the realistic caveats you should keep in mind:",
+          "**• The Good:** It provides immense peace of mind. GitGuardian includes automated **validity checks**, meaning it tests whether an exposed key is actually active and live or just a dummy placeholder. This drastically cuts down on false alarms.",
+          "**• The Reality Check:** Activating GitGuardian does not replace good security hygiene. If an alert fires, you cannot simply do `git push --force` or delete the line from your code. **Once a secret is committed to Git, consider it permanently compromised.** The only safe response is to immediately rotate and revoke the credential in your service dashboard.",
+          "**• Test Fixtures:** If your automated tests use realistic-looking mock tokens, you may occasionally get an alert. Fortunately, GitGuardian allows you to mark test files as ignored directly in `.gitguardian.yaml`."
+        ]
+      },
+      {
+        heading: "5. What I Learned as a Full-Stack Developer: Beyond .gitignore",
+        paragraphs: [
+          "One of the biggest lessons this reinforced for me is that **`.gitignore` is not a security system**.",
+          "Many developers believe that adding `.env` to `.gitignore` makes them completely safe. But `.gitignore` only ignores *untracked* files. If someone on your team accidentally added `.env` before adding the gitignore rule, or if a branch merge pulls in tracked configuration files, Git will continue to track and upload those secrets silently.",
+          "Enabling GitGuardian pushed me to establish stricter protocols: using `.env.example` templates, injecting credentials strictly via runtime environment variables in production, and having `ggshield` standing guard as an automated checkpoint on every commit."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Things I Want To Remember 🌸",
+      items: [
+        "`.gitignore` only ignores untracked files—it offers zero protection if a secret was ever tracked in Git history",
+        "Automated scrapers crawl GitHub in seconds; a leaked API key can be exploited before you can delete the commit",
+        "`ggshield` as a local pre-commit hook is the ultimate safeguard because it blocks secrets before they leave localhost",
+        "Deleting a secret from your code is NOT enough: once pushed, you must immediately revoke and rotate the credential",
+        "GitGuardian's automated validity check saves time by verifying if a detected key is actually live or just a test token",
+        "Security is part of client respect: protecting APIs and database strings is what keeps our business and client data safe"
+      ]
+    },
+    closingHeading: "Final Thoughts from My Diary",
+    closingText: "Activating GitGuardian felt like installing a smart security alarm on my development workshop. You hope you never need it, but the day it catches an accidental slip-up before it reaches production, it pays for itself a thousand times over.",
+    closing: "Have you enabled secret scanning on your GitHub repos or tried ggshield? Share your experience in the comments below 🌸",
+    closingSign: "Keep your secrets safe and happy coding 🌸",
+    signature: "— Jill"
+  },
+  es: {
+    title: "Querido Diario, Habilité GitGuardian en Mis Repositorios: ¿Realmente Vale la Pena? 🌸",
+    date: "24 de Octubre, 2026",
+    subtitle: "El diario de desarrollo de Jill",
+    back: "Volver al Inicio",
+    intro: "Después de ver recomendaciones constantes de seguridad en Git y GitHub, decidí activar GitGuardian en mis repositorios.",
+    introDesc: "Como desarrolladora Full-Stack que gestiona proyectos para clientes, APIs y bases de datos en producción, me pregunté: ¿es solo otro bot que llena la bandeja de notificaciones o un salvavidas indispensable que todo programador debería tener encendido? Aquí te cuento lo que aprendí, cómo funciona y si realmente vale la pena activarlo.",
+    bannerLabel: "Plataforma oficial y documentación de GitGuardian:",
+    bannerUrl: "https://www.gitguardian.com",
+    screenshotTitle: "Defensa Local: ggshield Bloqueando un Secreto Antes de Hacer Push",
+    screenshotCaption: "Captura de terminal en vivo mostrando cómo el hook de pre-commit de ggshield detecta una API key de Stripe en un archivo .env local y cancela el commit antes de que el secreto salga de la computadora.",
+    sections: [
+      {
+        heading: "1. El Contexto: ¿Por qué decidí activar GitGuardian?",
+        paragraphs: [
+          "Últimamente no paraba de ver sugerencias y avisos en GitHub sobre el escaneo automatizado de secretos y la integración con **GitGuardian**. Si llevas tiempo programando, conoces de sobra ese miedo visceral: son las dos de la mañana, estás terminando un feature, haces un `git add .` apresurado, o un `git stash pop` rebelde... y sin darte cuenta, una API key o la credencial de una base de datos termina dentro del historial de commits.",
+          "Como desarrolladora Full-Stack que maneja proyectos reales para clientes, e-commerces, pasarelas de pago e integraciones en la nube, el error humano siempre es una posibilidad latente. Por eso decidí habilitar GitGuardian en mis repositorios de GitHub para probarlo en primera persona y evaluar su impacto real en mi día a día."
+        ]
+      },
+      {
+        heading: "2. ¿Qué es GitGuardian y cuál es su verdadero propósito?",
+        paragraphs: [
+          "En pocas palabras, **GitGuardian** es un motor automatizado de detección de secretos y seguridad DevSecOps diseñado para vigilar que ninguna credencial confidencial quede expuesta en el código fuente.",
+          "Su propósito principal es escanear tu código en busca de **más de 400 tipos de secretos sensibles**: claves de API (OpenAI, Stripe, Google Cloud, AWS), cadenas de conexión a bases de datos con usuarios y contraseñas, certificados privados SSH, tokens JWT, credenciales OAuth y firmas de webhooks.",
+          "¿Por qué es tan crítico? Porque existen bots maliciosos que monitorean commits públicos en GitHub **en cuestión de segundos**. Si una clave de producción llega a un repositorio público (o a un repo privado con accesos compartidos), puede ser extraída y utilizada para vulnerar bases de datos de clientes o generar miles de dólares en consumo no autorizado antes de que alcances a notar el error."
+        ]
+      },
+      {
+        heading: "3. ¿Cómo funciona por dentro? (Escaneo en Tiempo Real y ggshield)",
+        paragraphs: [
+          "GitGuardian opera mediante tres capas de protección muy bien pensadas:",
+          "**1. Escaneo en tiempo real post-push:** En cuanto haces un `git push` a GitHub (ya sea repositorio público o privado), el motor de GitGuardian analiza el diff del commit en cuestión de segundos. Si detecta un secreto expuesto, te envía una alerta de alta prioridad por correo o dashboard con el archivo y la línea exacta.",
+          "**2. Rastreo profundo del historial (Historic Crawl):** Al conectar un repositorio por primera vez, no solo mira la punta de la rama principal (`main`). Escanea todo el árbol de commits, ramas antiguas y merges del pasado en busca de credenciales olvidadas de hace meses o años.",
+          "**3. Protección local antes del commit con ggshield:** Aquí está la verdadera magia. Mediante su CLI `ggshield`, puedes instalar un pre-commit hook de Git directamente en tu entorno local. Esto significa que antes de que el commit se cree en tu máquina, escanea los archivos en staged y **cancela el commit en la terminal** si encuentra un secreto, evitando que la clave salga de tu localhost."
+        ],
+        codeLabel: "Instalación y configuración de ggshield como hook local de Git",
+        code: `# 1. Instalar la CLI de ggshield con pip o gestor de paquetes
+pip install ggshield
+
+# 2. Iniciar sesión y autenticar con tu cuenta de GitGuardian
+ggshield auth login
+
+# 3. Instalar ggshield como hook de pre-commit en tu repositorio local
+ggshield install --mode=local
+
+# ¡Listo! A partir de ahora, si intentas commitear un .env o una clave real:
+# Estado: [ALERT] Incident detected -> Commit cancelled!`
+      },
+      {
+        heading: "4. La verdad sin rodeos: ¿Es útil o es solo spam de notificaciones?",
+        paragraphs: [
+          "Habiéndolo probado en mis propios proyectos, mi respuesta es un **sí rotundo: es tremendamente útil**, especialmente para quienes trabajamos como Full-Stack y desarrollamos proyectos para clientes.",
+          "Aquí te comparto los puntos fuertes y las advertencias que debes tener muy claras:",
+          "**• Lo mejor:** La tranquilidad mental que te da no tiene precio. Además, GitGuardian incluye una función de **validación de secretos (Validity Check)**: verifica si la clave detectada está verdaderamente activa y funcional en el servicio (por ejemplo en AWS o Stripe) o si es solo un texto de prueba. Esto reduce casi a cero las alertas falsas.",
+          "**• La advertencia crucial:** GitGuardian es una red de seguridad, no una varita mágica. Si recibes una alerta de secreto expuesto, no basta con hacer `git push --force` o borrar la línea del archivo. **Una vez que un secreto tocó Git, debes considerarlo comprometido para siempre.** La única solución segura es revocarlo y rotarlo de inmediato en el panel del proveedor.",
+          "**• Mocks en tests:** Si en tus pruebas unitarias tienes strings que parecen claves reales, a veces puede alertarte. Pero puedes configurar fácilmente un archivo `.gitguardian.yaml` para indicarle qué carpetas de fixtures o mocks debe ignorar."
+        ]
+      },
+      {
+        heading: "5. Lo que aprendí como Full-Stack: Más allá de .gitignore",
+        paragraphs: [
+          "Una de las lecciones más valiosas de esta experiencia es recordar que **`.gitignore` no es un escudo de ciberseguridad**.",
+          "Muchos desarrolladores asumimos que poner `.env` en el `.gitignore` nos protege al 100%. Pero `.gitignore` solo ignora archivos que *nunca* han sido trackeados por Git. Si alguna vez alguien en el equipo commiteó un archivo `.env` por error antes de agregar la regla, o si un merge conflict lo reintroduce, Git lo seguirá subiendo en silencio.",
+          "Habilitar GitGuardian me motivó a estandarizar mis buenas prácticas: usar siempre plantillas `.env.example`, inyectar variables de entorno de producción directamente en los paneles de despliegue y tener `ggshield` como guardián implacable en cada commit."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Cosas Que Quiero Recordar 🌸",
+      items: [
+        "`.gitignore` solo ignora archivos no trackeados; no ofrece protección si un archivo fue commiteado alguna vez en el historial",
+        "Los rastreadores automáticos revisan GitHub en segundos; un secreto filtrado se explota antes de que puedas borrar el commit",
+        "Configurar `ggshield` como hook de pre-commit es la mejor defensa porque frena el secreto en local antes de que salga a la red",
+        "Borrar una API key del código NO es suficiente: una vez subida a Git, es obligatorio revocarla y generar una nueva",
+        "La validación automática de GitGuardian ahorra horas verificando si una credencial detectada sigue activa o es inofensiva",
+        "La seguridad es respeto hacia nuestros clientes: cuidar sus credenciales y bases de datos es parte central de nuestro trabajo"
+      ]
+    },
+    closingHeading: "Reflexión final desde mi diario",
+    closingText: "Habilitar GitGuardian se sintió como instalar una alarma inteligente en mi taller de desarrollo. Esperas no tener que escucharla nunca, pero el día que atrapa un descuido humano antes de que llegue a producción, te ahorra dolores de cabeza monumentales.",
+    closing: "¿Ya activaste el escaneo de secretos en tus repositorios de GitHub o has probado ggshield? Cuéntame tu experiencia en los comentarios 🌸",
+    closingSign: "Cuiden sus credenciales y buen código a todos 🌸",
+    signature: "— Jill"
+  },
+  pt: {
+    title: "Querido Diário, Habilitei o GitGuardian nos Meus Repositórios: Realmente Vale a Pena? 🌸",
+    date: "24 de Outubro de 2026",
+    subtitle: "O diário de desenvolvimento da Jill",
+    back: "Voltar ao Início",
+    intro: "Depois de ver recomendações constantes de segurança no Git e GitHub, decidi ativar o GitGuardian em todos os meus repositórios.",
+    introDesc: "Como desenvolvedora Full-Stack gerenciando projetos para clientes, APIs e bancos de dados em produção, perguntei a mim mesma: é apenas mais um bot com notificações barulhentas ou uma rede de segurança indispensável? Veja tudo o que aprendi, como funciona e se vale a pena ativar.",
+    bannerLabel: "Plataforma oficial e documentação do GitGuardian:",
+    bannerUrl: "https://www.gitguardian.com",
+    screenshotTitle: "Defesa Local: ggshield Bloqueando um Segredo Antes do Push",
+    screenshotCaption: "Captura de terminal ao vivo mostrando o hook de pré-commit do ggshield detectando uma chave de API do Stripe em um arquivo .env local e cancelando o commit antes que o segredo saia do computador.",
+    sections: [
+      {
+        heading: "1. O Contexto: Por que decidi ativar o GitGuardian?",
+        paragraphs: [
+          "Recentemente, comecei a ver avisos frequentes no GitHub recomendando o escaneamento automatizado de segredos e a integração com o **GitGuardian**. Quem desenvolve software conhece bem o pavor: fim de noite, pressa para entregar, um `git add .` descuidado ou um `git stash pop` inesperado... e de repente uma chave de API ou credencial de banco de dados entra para o histórico de commits.",
+          "Como desenvolvedora Full-Stack que lida com clientes reais, e-commerces, sistemas de pagamento e bancos na nuvem, o erro humano é sempre uma possibilidade. Decidi ativar o GitGuardian nos meus repositórios do GitHub para testar na prática e avaliar se realmente fazia sentido no fluxo diário."
+        ]
+      },
+      {
+        heading: "2. O que é o GitGuardian e qual é o seu verdadeiro propósito?",
+        paragraphs: [
+          "Em termos simples, o **GitGuardian** é um motor automatizado de detecção de segredos e segurança DevSecOps criado para impedir que dados confidenciais fiquem expostos no código-fonte.",
+          "Seu objetivo é analisar o código em busca de **mais de 400 tipos de segredos sensíveis**: chaves de API (OpenAI, Stripe, Google Cloud, AWS), strings de conexão de bancos de dados com senhas embutidas, chaves privadas SSH, tokens JWT e credenciais de autenticação OAuth.",
+          "Por que isso é tão crítico? Porque existem rastreadores maliciosos monitorando commits públicos no GitHub **em questão de segundos**. Se uma chave vaza em um repositório público (ou mesmo privado com múltiplos acessos), ela pode ser capturada e explorada quase que instantaneamente."
+        ]
+      },
+      {
+        heading: "3. Como funciona por dentro? (Tempo Real e ggshield)",
+        paragraphs: [
+          "O GitGuardian atua em três camadas bem estruturadas de defesa:",
+          "**1. Escaneamento em tempo real pós-push:** Assim que você envia código ao GitHub, o motor analisa o diff do commit em segundos. Se encontrar um segredo, envia um alerta prioritário por e-mail ou painel com o arquivo e a linha exata.",
+          "**2. Varredura profunda do histórico:** Ao conectar um repositório pela primeira vez, ele não analisa apenas a ponta da branch principal. Ele varre todo o histórico de commits antigos, ramificações esquecidas e merges do passado.",
+          "**3. Proteção local antes do commit com ggshield:** Esta é a funcionalidade mais valiosa. Usando a CLI `ggshield`, você instala um hook de pré-commit local. Ele analisa os arquivos em staged antes que o commit seja gravado e **bloqueia o commit na terminal**, impedindo que a chave saia do seu ambiente de desenvolvimento."
+        ],
+        codeLabel: "Instalação e configuração do ggshield no Git local",
+        code: `# 1. Instalar a CLI do ggshield via pip
+pip install ggshield
+
+# 2. Autenticar com sua conta do GitGuardian
+ggshield auth login
+
+# 3. Instalar o ggshield como hook de pré-commit no repositório
+ggshield install --mode=local
+
+# A partir de agora, se tentar commitar um .env ou credencial real:
+# Status: [ALERT] Incident detected -> Commit cancelled!`
+      },
+      {
+        heading: "4. A verdade sem rodeios: Vale a pena ou é apenas ruído?",
+        paragraphs: [
+          "Depois de usar no meu ambiente diário, a resposta é um **sim incontestável: vale muito a pena**, especialmente para quem atua como Full-Stack e atende clientes.",
+          "Os principais pontos que observei foram:",
+          "**• O lado positivo:** A paz de espírito é enorme. O recurso de **validação automática (Validity Check)** testa se a chave exposta está realmente ativa ou se é apenas um mock, eliminando alertas falsos.",
+          "**• Alerta importante:** O GitGuardian é uma rede de segurança, não uma solução mágica. Se uma chave for enviada ao Git, não adianta apenas apagar a linha ou usar `git push --force`. **A chave deve ser considerada permanentemente comprometida e rotacionada imediatamente no provedor.**",
+          "**• Mocks de teste:** Se seus testes usam strings parecidas com chaves reais, podem ocorrer avisos ocasionais, mas é muito simples configurar o arquivo `.gitguardian.yaml` para ignorar pastas de mocks."
+        ]
+      },
+      {
+        heading: "5. O que aprendi como Full-Stack: Além do .gitignore",
+        paragraphs: [
+          "Uma das maiores lições desta experiência foi reforçar que **o `.gitignore` não é uma ferramenta de segurança**.",
+          "Muitas pessoas acreditam que colocar o `.env` no `.gitignore` resolve tudo. Porém, o `.gitignore` só ignora arquivos que nunca foram rastreados pelo Git. Se em algum momento o `.env` foi commitado anteriormente, ele continuará sendo enviado silenciosamente.",
+          "Ativar o GitGuardian me incentivou a aprimorar minhas práticas: adotar arquivos `.env.example`, injetar credenciais apenas em tempo de execução e ter o `ggshield` ativo como sentinela em cada commit."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Coisas Que Quero Lembrar 🌸",
+      items: [
+        "O `.gitignore` apenas ignora arquivos não rastreados; não protege se o arquivo já foi commitado no histórico",
+        "Bots automatizados vasculham o GitHub em segundos; uma credencial vazada é explorada quase em tempo real",
+        "Configurar o `ggshield` como hook de pré-commit é a defesa ideal por bloquear o erro antes de sair do localhost",
+        "Excluir o segredo do código NÃO resolve: uma vez commitado no Git, a rotação e revogação imediata são obrigatórias",
+        "A validação de credenciais do GitGuardian poupa tempo ao checar se a chave detectada está ativa ou inofensiva",
+        "A segurança é respeito pelos nossos clientes: proteger suas APIs e dados confidenciais é parte central do nosso ofício"
+      ]
+    },
+    closingHeading: "Reflexão final do meu diário",
+    closingText: "Ativar o GitGuardian foi como instalar um alarme inteligente no meu espaço de trabalho. Você torce para nunca precisar ouvi-lo, mas no dia em que ele impede um descuido humano antes da produção, ele se paga instantaneamente.",
+    closing: "Você já ativou o escaneamento de segredos no GitHub ou testou o ggshield? Conte sua experiência nos comentários 🌸",
+    closingSign: "Mantenham suas credenciais protegidas e bom código a todos 🌸",
+    signature: "— Jill"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            <span class="badge-icon">🛡️</span> Security & DevSecOps Tools
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main" set:html={c.intro}></p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="repo-banner">
+              <span class="repo-icon">🛡️</span>
+              <div class="repo-info">
+                <strong>{c.bannerLabel}</strong>
+                <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
+                  {c.bannerUrl}
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          <!-- Terminal / ggshield Showcase -->
+          <section class="content-section">
+            <h2 class="section-heading">{c.screenshotTitle}</h2>
+            <div class="terminal-screenshot-wrapper">
+              <div class="terminal-topbar">
+                <div class="terminal-controls">
+                  <span class="terminal-dot red"></span>
+                  <span class="terminal-dot yellow"></span>
+                  <span class="terminal-dot green"></span>
+                </div>
+                <span class="terminal-bar-title">zsh — ggshield secret scan pre-commit — 80x24</span>
+              </div>
+              <img 
+                src={gitguardianPoc.src} 
+                alt="Terminal ejecutando ggshield bloqueando el commit por filtración de API key en .env" 
+                class="terminal-screenshot-img"
+                loading="eager"
+              />
+              <div class="terminal-caption-bar">
+                <span class="caption-icon">🔒</span>
+                <p class="caption-text">{c.screenshotCaption}</p>
+              </div>
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          {c.sections.map(sec => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+              {sec.code && (
+                <div class="code-container">
+                  {sec.codeLabel && <div class="code-header">{sec.codeLabel}</div>}
+                  <pre class="code-block"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <!-- Signature Remember Section (Things I Want To Remember) -->
+          <section class="content-section remember-box">
+            <h2 class="section-heading">{c.remember.heading}</h2>
+            <ul class="remember-list">
+              {c.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span class="remember-text" set:html={item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <p class="closing-callout">{c.closing}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-gitguardian" currentLang={lang} />
+          </section>
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top center, rgba(16, 185, 129, 0.08) 0%, rgba(15, 15, 26, 0.98) 70%);
+    color: #e2e8f0;
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #34d399;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #10b981;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #6ee7b7;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .badge-icon {
+    font-size: 1rem;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(16, 185, 129, 0.08);
+    border-left: 4px solid #10b981;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .repo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .repo-icon {
+    font-size: 1.5rem;
+  }
+
+  .repo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow: hidden;
+  }
+
+  .repo-info strong {
+    font-size: 0.9rem;
+    color: #f8fafc;
+  }
+
+  .repo-link {
+    color: #38bdf8;
+    text-decoration: underline;
+    font-family: monospace;
+    font-size: 0.95rem;
+    word-break: break-all;
+    transition: color 0.2s ease;
+  }
+
+  .repo-link:hover {
+    color: #7dd3fc;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Terminal Screenshot Showcase */
+  .terminal-screenshot-wrapper {
+    background: #09060f;
+    border: 1.5px solid rgba(16, 185, 129, 0.35);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    margin: 1.5rem 0 2rem;
+  }
+
+  .terminal-topbar {
+    background: #111e1f;
+    padding: 0.65rem 1rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+  }
+
+  .terminal-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .terminal-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red { background: #ff5f56; }
+  .terminal-dot.yellow { background: #ffbd2e; }
+  .terminal-dot.green { background: #27c93f; }
+
+  .terminal-bar-title {
+    margin: 0 auto;
+    font-size: 0.78rem;
+    font-family: monospace;
+    color: #94a3b8;
+    letter-spacing: 0.02em;
+  }
+
+  .terminal-screenshot-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .terminal-caption-bar {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(15, 23, 42, 0.85);
+  }
+
+  .caption-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .caption-text {
+    font-size: 0.86rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+    margin: 0;
+    font-style: italic;
+  }
+
+  .code-container {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    background: rgba(30, 41, 59, 0.8);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-block {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #38bdf8;
+  }
+
+  /* Remember Box */
+  .remember-box {
+    background: rgba(255, 75, 145, 0.04);
+    border: 1.5px solid rgba(255, 75, 145, 0.25);
+    border-radius: 1.25rem;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 75, 145, 0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(255, 75, 145, 0.08);
+    border-color: rgba(255, 75, 145, 0.35);
+  }
+
+  .remember-dot {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .closing-callout {
+    font-size: 1.05rem;
+    color: #38bdf8;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .closing-signature {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: #34d399;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+    .remember-box {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+</style>
