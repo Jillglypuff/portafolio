@@ -1,13 +1,11 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { useTranslations } from '../i18n/utils';
-import FloralBanner from './FloralBanner.vue';
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 <section class="hero" id="hero">
-  <FloralBanner client:load />
   <div class="hero-inner">
     <p class="hero-eyebrow" id="hero-eyebrow">{t('hero.eyebrow')}</p>
     <div style="overflow: hidden;">

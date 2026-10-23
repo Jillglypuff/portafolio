@@ -232,16 +232,6 @@ const page = content[lang] || content.es;
 <Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
   <Animations client:load />
   <Nav lang={lang} />
-  
-  <!-- Falling Petals Background Animation -->
-  <div class="falling-petals-container" aria-hidden="true">
-    <div class="petal p-1">🌸</div>
-    <div class="petal p-2">🌸</div>
-    <div class="petal p-3">🌸</div>
-    <div class="petal p-4">🌸</div>
-    <div class="petal p-5">🌸</div>
-    <div class="petal p-6">🌸</div>
-  </div>
 
   <main class="blog-view">
     <div class="blog-container container-narrow">
@@ -315,10 +305,6 @@ const page = content[lang] || content.es;
       </article>
 
     </div>
-
-    <!-- Decorative ambient flowers (static, low opacity) -->
-    <div class="decorative-flower-1" aria-hidden="true">🌸</div>
-    <div class="decorative-flower-2" aria-hidden="true">🌺</div>
   </main>
 </Layout>
 
@@ -377,43 +363,45 @@ const page = content[lang] || content.es;
     position: relative;
     overflow: hidden;
     background: var(--bg);
+    color: var(--text);
+    transition: background 0.8s ease;
+  }
+
+  /* Submerged Underwater Card */
+  .blog-card {
+    position: relative;
+    background: rgba(14, 20, 32, 0.72);
+    backdrop-filter: blur(16px) saturate(135%);
+    -webkit-backdrop-filter: blur(16px) saturate(135%);
+    border: 1.5px solid rgba(255, 75, 145, 0.22);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.08);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  /* Water Sheen Light Refraction on Submerged Card */
+  .blog-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(56, 189, 248, 0.04) 50%, rgba(255, 75, 145, 0.06) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blog-card > * {
+    position: relative;
+    z-index: 1;
   }
 
   .blog-container {
     max-width: 850px;
     margin: 0 auto;
     position: relative;
-    z-index: 10;
-  }
-
-  .back-nav {
-    margin-bottom: 24px;
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.3s ease, transform 0.3s ease;
-  }
-
-  .back-link:hover {
-    color: var(--rose);
-    transform: translateX(-4px);
-  }
-
-  /* Glassmorphic Blog Card */
-  .blog-card {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 75, 145, 0.15);
-    border-radius: 28px;
-    padding: 3.5rem 4rem;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    z-index: 4; /* Submerged beneath floating flowers (z-index 5) */
   }
 
   .post-header {
@@ -670,5 +658,74 @@ const page = content[lang] || content.es;
     .header-photo-wrapper {
       width: 130px;
     }
+  }
+
+  /* ═════════════════════════════════════════════════════════════════
+     ZEN THEME OVERRIDES (DAY vs NIGHT ACCORDING TO COSTA RICA TIME)
+     ═════════════════════════════════════════════════════════════════ */
+  :global(.zen-theme-day) .blog-view {
+    background: #ffffff !important;
+  }
+
+  :global(.zen-theme-day) .blog-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(16px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+    border: 1.5px solid rgba(255, 75, 145, 0.28) !important;
+    box-shadow: 0 25px 60px rgba(180, 100, 140, 0.16), 0 0 40px rgba(56, 189, 248, 0.12) !important;
+  }
+
+  :global(.zen-theme-day) .blog-card::before {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(56, 189, 248, 0.08) 50%, rgba(255, 75, 145, 0.08) 100%) !important;
+  }
+
+  :global(.zen-theme-day) .post-title {
+    color: #0f172a !important;
+  }
+
+  :global(.zen-theme-day) .post-subtitle {
+    color: #ff4b91 !important;
+  }
+
+  :global(.zen-theme-day) .post-date,
+  :global(.zen-theme-day) .post-dot {
+    color: #64748b !important;
+  }
+
+  :global(.zen-theme-day) .back-link {
+    color: #475569 !important;
+  }
+
+  :global(.zen-theme-day) .back-link:hover {
+    color: #ff4b91 !important;
+  }
+
+  :global(.zen-theme-day) .post-content,
+  :global(.zen-theme-day) .post-content p {
+    color: #1e293b !important;
+  }
+
+  :global(.zen-theme-day) .lead-text {
+    color: #0f172a !important;
+  }
+
+  :global(.zen-theme-day) .lead-desc {
+    color: #334155 !important;
+  }
+
+  :global(.zen-theme-day) .bullet-text {
+    color: #1e293b !important;
+  }
+
+  :global(.zen-theme-day) .section-heading {
+    color: #0f172a !important;
+  }
+
+  :global(.zen-theme-day) .post-divider {
+    background: linear-gradient(to right, transparent, rgba(255, 75, 145, 0.35), transparent) !important;
+  }
+
+  :global(.zen-theme-day) .bullet-list-normal li {
+    color: #1e293b !important;
   }
 </style>

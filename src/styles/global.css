@@ -31,6 +31,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
+  position: relative;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
@@ -138,7 +140,7 @@ ul { list-style: none; }
   flex: 1;
   max-width: 850px;
   position: relative;
-  z-index: 1;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -287,10 +289,10 @@ ul { list-style: none; }
 .chip-5 { top: 45%;  right: 0%;  color: #68A063;       border-color: #C3E6C0; }
 
 /* ─── LAYOUT ──────────────────────────────────────────────────── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 1; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 10; }
 .container-narrow { max-width: 760px; }
-.section { padding: var(--section-padding, 100px) 0; position: relative; overflow: hidden; }
-.section-tinted { background: var(--bg-tint); }
+.section { padding: var(--section-padding, 100px) 0; position: relative; overflow: hidden; z-index: 5; }
+.section-tinted { background: transparent; }
 
 .section-label {
   font-size: 0.75rem;
@@ -593,12 +595,6 @@ ul { list-style: none; }
   position: relative;
   overflow: hidden;
 }
-.section-contact::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 50 Q 50 10 70 50 Q 50 90 30 50' fill='none' stroke='rgba(255, 75, 145, 0.08)' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='3' fill='rgba(255, 75, 145, 0.1)'/%3E%3C/svg%3E");
-}
 .contact-sub {
   color: rgba(255,255,255,0.8);
   font-size: 1.0625rem;
@@ -640,38 +636,13 @@ ul { list-style: none; }
   .container { padding: 0 20px; }
 }
 
-/* ─── CUSTOM CURSOR ───────────────────────────────────────────────── */
-@media (pointer: fine) {
-  body { cursor: none; }
-  a, button, .btn, [role="button"] { cursor: none; }
+/* ─── NATIVE NATURAL CURSOR & FLUID WATER SURFACE ─────────────────── */
+/* Natural crisp cursor navigation; water waves are rendered organically via GSAP in WaterPond.vue */
+body {
+  cursor: default;
 }
-.cursor-dot {
-  position: fixed;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--rose);
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s, background 0.2s, width 0.2s, height 0.2s;
-  mix-blend-mode: multiply;
-}
-.cursor-ring {
-  position: fixed;
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  border: 2px solid rgba(201, 107, 138, 0.45);
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-}
-.cursor-sparkle {
-  position: fixed;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9997;
-  transform: translate(-50%, -50%);
+a, button, .btn, [role="button"] {
+  cursor: pointer;
 }
 
 /* ─── SCROLL PROGRESS BAR ─────────────────────────────────────────── */
@@ -899,10 +870,7 @@ ul { list-style: none; }
   outline-offset: 3px;
   border-radius: 4px;
 }
-/* Hide outline for mouse users but show for keyboard */
-.cursor-dot ~ :focus:not(:focus-visible) {
-  outline: none;
-}
+
 
 /* ─── PREFERS-REDUCED-MOTION (CRITICAL a11y) ─────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -945,3 +913,390 @@ ul { list-style: none; }
 .featured-tag { display: flex; align-items: center; gap: 5px; }
 .contact-location { display: flex; align-items: center; gap: 6px; }
 [data-icon] { flex-shrink: 0; }
+
+/* ═════════════════════════════════════════════════════════════════
+   DAY MODE (LIGHT WATER BATH THEME - COSTA RICA TIME)
+   ═════════════════════════════════════════════════════════════════ */
+html.theme-day {
+  --bg:          #faf8fa;
+  --bg-tint:     #f3eff6;
+  --bg-floral:   rgba(255, 75, 145, 0.04);
+  --card:        rgba(255, 255, 255, 0.85);
+  --text:        #0f172a;
+  --text-muted:  #475569;
+  --border:      rgba(255, 75, 145, 0.28);
+  --shadow-sm:   0 2px 10px rgba(255, 75, 145, 0.08);
+  --shadow-md:   0 10px 30px rgba(180, 100, 140, 0.12);
+  --shadow-lg:   0 20px 50px rgba(180, 100, 140, 0.18);
+}
+
+html.theme-day body {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+html.theme-day .nav {
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(255, 75, 145, 0.22);
+  box-shadow: 0 4px 20px rgba(180, 100, 140, 0.08);
+}
+
+html.theme-day .nav-logo {
+  color: #ff4b91;
+}
+
+html.theme-day .nav-links a {
+  color: #1e293b;
+}
+
+html.theme-day .nav-links a:hover {
+  color: #ff4b91;
+}
+
+html.theme-day .nav-theme-btn {
+  background: rgba(255, 75, 145, 0.06);
+  border-color: rgba(255, 75, 145, 0.35);
+  color: #ff4b91;
+}
+
+html.theme-day .lang-btn {
+  background: rgba(255, 75, 145, 0.06);
+  border-color: rgba(255, 75, 145, 0.3);
+  color: #1e293b;
+}
+
+html.theme-day .lang-dropdown {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(255, 75, 145, 0.25);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+}
+
+html.theme-day .dropdown-inner {
+  background: rgba(255, 255, 255, 0.98);
+}
+
+html.theme-day .lang-dropdown a {
+  color: #1e293b;
+}
+
+html.theme-day .lang-dropdown a:hover {
+  background: rgba(255, 75, 145, 0.08);
+  color: #ff4b91;
+}
+
+html.theme-day .section-title {
+  color: #0f172a;
+}
+
+html.theme-day .section-label {
+  color: #ff4b91;
+  background: rgba(255, 75, 145, 0.08);
+}
+
+html.theme-day .section-tinted {
+  background: rgba(255, 75, 145, 0.02);
+}
+
+html.theme-day .hero-char {
+  color: #0f172a;
+}
+
+html.theme-day .hero-name-line.accent .hero-char {
+  color: #ff4b91;
+}
+
+html.theme-day #hero-tagline {
+  color: #334155;
+}
+
+html.theme-day .stat-card,
+html.theme-day .help-card,
+html.theme-day .project-card,
+html.theme-day .tech-card,
+html.theme-day .advisory-card,
+html.theme-day .skill-group,
+html.theme-day .carousel-stage-wrapper {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-color: rgba(255, 75, 145, 0.25);
+  box-shadow: 0 10px 30px rgba(180, 100, 140, 0.1);
+  color: #0f172a;
+}
+
+html.theme-day .stat-card p,
+html.theme-day .help-card p,
+html.theme-day .project-card p,
+html.theme-day .tech-card p,
+html.theme-day .advisory-card p {
+  color: #475569;
+}
+
+html.theme-day .skill-group-title {
+  color: #0f172a;
+}
+
+html.theme-day .skill-tag {
+  background: rgba(255, 75, 145, 0.06);
+  border-color: rgba(255, 75, 145, 0.22);
+  color: #1e293b;
+}
+
+html.theme-day .blog-card {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(255, 75, 145, 0.25);
+  box-shadow: 0 12px 35px rgba(180, 100, 140, 0.1);
+}
+
+html.theme-day .card-post-title,
+html.theme-day .upcoming-heading,
+html.theme-day .upcoming-item-title,
+html.theme-day .carousel-card-title {
+  color: #0f172a;
+}
+
+html.theme-day .card-post-desc,
+html.theme-day .upcoming-item-desc,
+html.theme-day .carousel-card-desc {
+  color: #475569;
+}
+
+html.theme-day .carousel-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 75, 145, 0.22);
+}
+
+html.theme-day .carousel-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 75, 145, 0.35);
+  color: #0f172a;
+}
+
+html.theme-day .upcoming-empty-card {
+  background: linear-gradient(135deg, rgba(255, 75, 145, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-color: rgba(255, 75, 145, 0.35);
+}
+
+html.theme-day .upcoming-empty-title {
+  color: #0f172a;
+}
+
+html.theme-day .upcoming-empty-desc {
+  color: #475569;
+}
+
+html.theme-day .contact-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 75, 145, 0.28);
+  color: #0f172a;
+}
+
+html.theme-day .contact-heading {
+  color: #0f172a;
+}
+
+html.theme-day .contact-desc {
+  color: #475569;
+}
+
+html.theme-day .footer {
+  background: #f8fafc;
+  border-top-color: rgba(255, 75, 145, 0.2);
+  color: #475569;
+}
+
+html.theme-day .blob-1,
+html.theme-day .blob-2,
+html.theme-day .blob-3 {
+  opacity: 0.1;
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   BLOG SYSTEM - UNIFORM COLOR & DAY/NIGHT THEME
+   ═════════════════════════════════════════════════════════════════ */
+.blog-view,
+.blog-post-page {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  min-height: 100vh;
+}
+
+/* Ensure no radial-gradient darkening on scroll */
+.blog-view,
+.blog-post-page,
+.blog-post-page main,
+.blog-container,
+.blog-content {
+  background-image: none !important;
+}
+
+/* Night Mode Blog Text & Elements */
+.blog-post-page .post-title,
+.blog-post-page h1,
+.blog-post-page h2,
+.blog-post-page h3,
+.blog-post-page h4,
+.blog-view .post-title,
+.blog-view h1,
+.blog-view h2,
+.blog-view h3,
+.blog-view h4 {
+  color: var(--text) !important;
+}
+
+.blog-post-page p,
+.blog-post-page li,
+.blog-view p,
+.blog-view li {
+  color: var(--text-muted) !important;
+}
+
+.blog-post-page p strong,
+.blog-post-page li strong,
+.blog-view p strong,
+.blog-view li strong {
+  color: var(--text) !important;
+}
+
+/* Day Mode Blog Styles (Matches daytime water theme) */
+html.theme-day .blog-view,
+html.theme-day .blog-post-page {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html.theme-day .blog-card,
+html.theme-day .blog-post-card,
+html.theme-day .article-content,
+html.theme-day .content-card,
+html.theme-day .blog-container .card {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(255, 75, 145, 0.25) !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 30px rgba(180, 100, 140, 0.1) !important;
+}
+
+html.theme-day .blog-post-page .post-title,
+html.theme-day .blog-post-page h1,
+html.theme-day .blog-post-page h2,
+html.theme-day .blog-post-page h3,
+html.theme-day .blog-post-page h4,
+html.theme-day .blog-view .post-title,
+html.theme-day .blog-view h1,
+html.theme-day .blog-view h2,
+html.theme-day .blog-view h3,
+html.theme-day .blog-view h4 {
+  color: #0f172a !important;
+}
+
+html.theme-day .blog-post-page p,
+html.theme-day .blog-post-page li,
+html.theme-day .blog-view p,
+html.theme-day .blog-view li {
+  color: #334155 !important;
+}
+
+html.theme-day .blog-post-page p strong,
+html.theme-day .blog-post-page li strong,
+html.theme-day .blog-view p strong,
+html.theme-day .blog-view li strong {
+  color: #0f172a !important;
+}
+
+html.theme-day .blog-post-page .lead-text,
+html.theme-day .blog-view .lead-text,
+html.theme-day .blog-post-page .post-subtitle,
+html.theme-day .blog-view .post-subtitle {
+  color: #475569 !important;
+}
+
+html.theme-day .blog-post-page .back-link,
+html.theme-day .blog-view .back-link {
+  color: var(--rose-dark) !important;
+}
+
+html.theme-day .blog-post-page .back-link:hover,
+html.theme-day .blog-view .back-link:hover {
+  color: var(--rose) !important;
+}
+
+html.theme-day .blog-post-page pre,
+html.theme-day .blog-view pre,
+html.theme-day .blog-post-page code:not(pre code),
+html.theme-day .blog-view code:not(pre code) {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.theme-day .blog-post-page .takeaway-box,
+html.theme-day .blog-post-page .quote-box,
+html.theme-day .blog-post-page .note-box,
+html.theme-day .blog-view .takeaway-box,
+html.theme-day .blog-view .quote-box,
+html.theme-day .blog-view .note-box,
+html.theme-day .section-card {
+  background: rgba(255, 75, 145, 0.04) !important;
+  border-color: rgba(255, 75, 145, 0.25) !important;
+  color: #0f172a !important;
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   SUBMERGED CONTENT LAYER (DEBAJO DEL AGUA - TOU.TOKYO WAVE EFFECT)
+   ═════════════════════════════════════════════════════════════════ */
+/* Hide pink decorative blobs & pink section washes so the water background is pure white */
+.blob,
+.blob-1,
+.blob-2,
+.blob-3,
+.contact-blob {
+  display: none !important;
+}
+
+html.theme-day,
+html.theme-day body {
+  --bg: #ffffff !important;
+  --bg-tint: #ffffff !important;
+  background: #ffffff !important;
+}
+
+html.theme-day .section-tinted {
+  background: transparent !important;
+}
+
+.hero,
+.section {
+  position: relative;
+  z-index: 5;
+}
+
+.hero-inner,
+.container {
+  position: relative;
+  z-index: 8;
+}
+
+/* Translucent white cards so the tou.tokyo 3D wave swells & shadows pass visibly beneath and over them */
+html.theme-day .stat-card,
+html.theme-day .help-card,
+html.theme-day .project-card,
+html.theme-day .tech-card,
+html.theme-day .advisory-card,
+html.theme-day .skill-group,
+html.theme-day .carousel-stage-wrapper,
+html.theme-day .blog-card,
+html.theme-day .contact-card {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.blog-view,
+.blog-post-page,
+html.theme-day .blog-view,
+html.theme-day .blog-post-page {
+  background: transparent !important;
+  position: relative;
+  z-index: 5;
+}

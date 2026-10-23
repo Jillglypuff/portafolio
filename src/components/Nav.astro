@@ -18,6 +18,25 @@ const t = useTranslations(lang);
     </ul>
 
     <div class="nav-actions">
+      <!-- Outlined Day/Night Mode Switcher (Costa Rica Time) -->
+      <button 
+        type="button" 
+        class="nav-theme-btn" 
+        id="theme-toggle-btn"
+        title="Modo Día / Noche (Hora Costa Rica)"
+        aria-label="Alternar modo día y noche"
+      >
+        <!-- Outlined Sun (Shows in dark mode to switch to day) -->
+        <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4.5"></circle>
+          <path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77"></path>
+        </svg>
+        <!-- Outlined Moon (Shows in light mode to switch to night) -->
+        <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
       <a href={`/${lang}/#contact`} class="nav-cta">{t('nav.contact')}</a>
       
       <!-- Language Dropdown - Far Right Corner -->
@@ -46,6 +65,63 @@ const t = useTranslations(lang);
 </nav>
 
 <script>
+  function getCostaRicaHour() {
+    try {
+      const crStr = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Costa_Rica',
+        hour: 'numeric',
+        hour12: false
+      }).format(new Date());
+      return parseInt(crStr, 10);
+    } catch (e) {
+      const d = new Date();
+      return (d.getUTCHours() - 6 + 24) % 24;
+    }
+  }
+
+  function applyThemeMode(isDay) {
+    const root = document.documentElement;
+    if (isDay) {
+      root.classList.add('theme-day', 'zen-theme-day');
+      root.classList.remove('theme-night', 'zen-theme-night');
+    } else {
+      root.classList.add('theme-night', 'zen-theme-night');
+      root.classList.remove('theme-day', 'zen-theme-day');
+    }
+    window.dispatchEvent(new CustomEvent('jill-theme-changed', { detail: { isDay } }));
+  }
+
+  function initTheme() {
+    const saved = localStorage.getItem('jill_theme_mode');
+    let isDay = false;
+    if (saved === 'day') {
+      isDay = true;
+    } else if (saved === 'night') {
+      isDay = false;
+    } else {
+      const h = getCostaRicaHour();
+      isDay = (h >= 6 && h < 18);
+    }
+    applyThemeMode(isDay);
+  }
+
+  function setupThemeToggle() {
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    if (!themeBtn) return;
+    
+    // Replace to avoid duplicate event listeners on page reload
+    const newBtn = themeBtn.cloneNode(true);
+    themeBtn.parentNode.replaceChild(newBtn, themeBtn);
+    
+    newBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isDayNow = document.documentElement.classList.contains('theme-day');
+      const newDay = !isDayNow;
+      localStorage.setItem('jill_theme_mode', newDay ? 'day' : 'night');
+      applyThemeMode(newDay);
+    });
+  }
+
   const btn = document.getElementById('lang-btn');
   const menu = document.getElementById('lang-menu');
 
@@ -61,6 +137,14 @@ const t = useTranslations(lang);
       btn.classList.remove('is-active');
     });
   }
+
+  initTheme();
+  setupThemeToggle();
+
+  document.addEventListener('astro:page-load', () => {
+    initTheme();
+    setupThemeToggle();
+  });
 </script>
 
 <style>
@@ -94,6 +178,44 @@ const t = useTranslations(lang);
     background: linear-gradient(135deg, var(--rose), var(--rose-dark)) !important;
     letter-spacing: 0.03em !important;
     padding: 6px 24px !important;
+  }
+
+  /* Outlined Theme Toggle Button (No emoji, minimalist vector stroke) */
+  .nav-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--rose);
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0;
+  }
+
+  .nav-theme-btn:hover {
+    color: var(--rose);
+    border-color: var(--rose);
+    background: rgba(255, 75, 145, 0.08);
+    transform: scale(1.08);
+  }
+
+  .theme-icon {
+    width: 18px;
+    height: 18px;
+    display: none;
+    stroke: var(--rose);
+  }
+
+  :global(html:not(.theme-day)) .sun-icon {
+    display: block;
+  }
+
+  :global(html.theme-day) .moon-icon {
+    display: block;
   }
 
   /* Language Selector Styles - Minimalist & Far Right */

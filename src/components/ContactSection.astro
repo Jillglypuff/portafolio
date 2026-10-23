@@ -1,10 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { useTranslations } from '../i18n/utils';
-import flower22 from '../assets/flowers/22.png';
-import flower20 from '../assets/flowers/20.png';
-import flower17 from '../assets/flowers/17.png';
-import flower12 from '../assets/flowers/12.png';
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
@@ -12,23 +8,6 @@ const t = useTranslations(lang);
   <!-- Decorative blob for contact section -->
   <div class="contact-blob" aria-hidden="true"></div>
   
-  <!-- Large floating flowers -->
-  <div class="floating-flower-contact reveal" aria-hidden="true" style="top: -100px; right: -100px;">
-    <img src={flower22.src} alt="" />
-  </div>
-
-  <div class="floating-flower-contact reveal" aria-hidden="true" style="bottom: -80px; left: -120px; width: 350px; opacity: 0.12;">
-    <img src={flower20.src} alt="" style="animation-delay: -2s;" />
-  </div>
-
-  <div class="floating-flower-contact reveal" aria-hidden="true" style="top: 20%; left: -60px; width: 180px; opacity: 0.1;">
-    <img src={flower17.src} alt="" style="animation-delay: -5s; animation-duration: 12s;" />
-  </div>
-
-  <div class="floating-flower-contact reveal" aria-hidden="true" style="bottom: 20%; right: -50px; width: 220px; opacity: 0.08;">
-    <img src={flower12.src} alt="" style="animation-delay: -1s; animation-duration: 15s;" />
-  </div>
-
   <div class="container container-narrow">
     <div class="section-label reveal">{t('contact.title')}</div>
     <h2 class="section-title reveal">
@@ -76,7 +55,7 @@ const t = useTranslations(lang);
 <style>
   .section-contact {
     padding: var(--section-padding, 120px) 0 calc(var(--section-padding, 120px) + 40px);
-    background: var(--bg);
+    background: transparent;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -93,28 +72,6 @@ const t = useTranslations(lang);
     filter: blur(80px);
     pointer-events: none;
     z-index: 0;
-  }
-
-  .floating-flower-contact {
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    opacity: 0.15;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .floating-flower-contact img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: hue-rotate(-10deg) brightness(1.2);
-    animation: float 10s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(-20px, 30px) rotate(5deg); }
   }
 
   .contact-card {

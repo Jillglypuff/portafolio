@@ -101,24 +101,13 @@ const row2 = [
   overflow: hidden;
   background: transparent;
   padding: 1rem 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
 }
 
-/* Edge Fade Masks */
+/* Edge Fade Masks handled cleanly via mask-image so water waves stay 100% visible */
 .fade-mask {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 18%;
-  z-index: 8;
-  pointer-events: none;
-}
-.fade-mask.left {
-  left: 0;
-  background: linear-gradient(to right, var(--bg, #0a080d) 15%, transparent 100%);
-}
-.fade-mask.right {
-  right: 0;
-  background: linear-gradient(to left, var(--bg, #0a080d) 15%, transparent 100%);
+  display: none;
 }
 
 /* Infinite Marquee Track */
@@ -164,7 +153,7 @@ const row2 = [
 
 .tech-text.outline {
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(252, 228, 236, 0.5);
+  -webkit-text-stroke: 2px var(--rose);
 }
 
 .tech-star {
@@ -173,13 +162,13 @@ const row2 = [
   opacity: 0.75;
 }
 
-/* Scroll Animations (Very slow and premium: 140s) */
+/* Scroll Animations (Ultra-slow and calm: 280s) */
 .scroll-left {
-  animation: marquee-left 140s linear infinite;
+  animation: marquee-left 280s linear infinite;
 }
 
 .scroll-right {
-  animation: marquee-right 140s linear infinite;
+  animation: marquee-right 280s linear infinite;
 }
 
 @keyframes marquee-left {

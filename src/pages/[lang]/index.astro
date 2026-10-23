@@ -10,9 +10,7 @@ import AdvisorySection from '../../components/AdvisorySection.astro';
 
 import BlogSection from '../../components/BlogSection.astro';
 import ContactSection from '../../components/ContactSection.astro';
-import Particles from '../../components/Particles.vue';
 import Animations from '../../components/Animations.vue';
-import ScrollFlower from '../../components/ScrollFlower.vue';
 
 export function getStaticPaths() {
   return [
@@ -32,14 +30,12 @@ const { lang } = Astro.params;
   <div class="blob blob-3" aria-hidden="true"></div>
 
   <!-- Vue islands -->
-  <Particles client:load />
   <Animations client:load />
 
   <!-- Static sections -->
   <Nav lang={lang} />
   <HeroSection lang={lang} />
   <AboutSection lang={lang} />
-  <ScrollFlower client:visible />
   <ProjectsSection lang={lang} />
   <AdvisorySection lang={lang} />
 

@@ -4,6 +4,7 @@ import { ui } from '../i18n/ui';
 import flower19 from '../assets/flowers/19.png';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
+import WaterPond from '../components/WaterPond.vue';
 
 interface Props {
   title?: string;
@@ -76,6 +77,8 @@ const ogImageURL = new URL(flower19.src, Astro.site);
     />
   </head>
   <body>
+    <!-- Zen Water Bath with Floating Flowers & Waves -->
+    <WaterPond client:load />
     <slot />
     <Analytics />
     <SpeedInsights />

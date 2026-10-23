@@ -559,17 +559,62 @@ onUnmounted(() => {
 
 
 
-/* ─── CAROUSEL STAGE WRAPPER (NO BORDERS) ───────────────────────── */
+/* ─── CAROUSEL STAGE WRAPPER (MATCHES OTHER SITE CARDS) ──────────── */
 .carousel-stage-wrapper {
   position: relative;
   width: 100%;
-  background: linear-gradient(145deg, rgba(22, 14, 31, 0.85) 0%, rgba(10, 8, 13, 0.95) 100%);
-  border: none;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-md);
   padding: 36px 40px;
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   margin-bottom: 28px;
+  transition: var(--transition);
+}
+
+:global(html.theme-day) .carousel-stage-wrapper {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 75, 145, 0.25);
+  box-shadow: 0 10px 30px rgba(180, 100, 140, 0.1);
+  color: #0f172a;
+}
+
+:global(html.theme-day) .nav-arrow {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(255, 75, 145, 0.35);
+  color: #0f172a;
+  box-shadow: 0 8px 24px rgba(180, 100, 140, 0.15);
+}
+
+:global(html.theme-day) .subgallery-bar {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 75, 145, 0.25);
+}
+
+:global(html.theme-day) .sub-pill {
+  background: rgba(255, 75, 145, 0.06);
+  border-color: rgba(255, 75, 145, 0.2);
+  color: #475569;
+}
+
+:global(html.theme-day) .sub-pill:hover {
+  color: #0f172a;
+  border-color: var(--rose);
+}
+
+:global(html.theme-day) .tech-tag {
+  background: rgba(255, 75, 145, 0.06);
+  border-color: rgba(255, 75, 145, 0.2);
+  color: #1e293b;
+}
+
+:global(html.theme-day) .screen-hover-hint {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 75, 145, 0.35);
+  color: #0f172a;
+  box-shadow: 0 8px 24px rgba(180, 100, 140, 0.2);
 }
 
 /* Floating Navigation Arrows */
@@ -584,22 +629,28 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(10, 8, 13, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   border: 1.5px solid rgba(255, 75, 145, 0.4);
-  color: var(--text);
+  color: var(--rose);
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px rgba(180, 100, 140, 0.18);
   backdrop-filter: blur(8px);
   transition: var(--transition);
+}
+
+:global(html.theme-night) .nav-arrow {
+  background: rgba(10, 8, 13, 0.85);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .nav-prev { left: -20px; }
 .nav-next { right: -20px; }
 
 .nav-arrow:hover {
-  background: var(--rose);
-  color: #ffffff;
-  border-color: var(--rose);
+  background: var(--rose) !important;
+  color: #ffffff !important;
+  border-color: var(--rose) !important;
   transform: translateY(-50%) scale(1.1);
   box-shadow: 0 10px 28px rgba(255, 75, 145, 0.45);
 }
@@ -788,16 +839,22 @@ onUnmounted(() => {
   gap: 8px;
   margin-top: 14px;
   padding: 4px 12px;
-  background: rgba(22, 14, 31, 0.85);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 75, 145, 0.28);
   border-radius: 20px;
   backdrop-filter: blur(8px);
+  box-shadow: 0 4px 14px rgba(180, 100, 140, 0.1);
+}
+
+:global(html.theme-night) .subgallery-bar {
+  background: rgba(22, 14, 31, 0.85);
+  border-color: var(--border);
 }
 
 .sub-arrow {
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--rose);
   font-size: 1.1rem;
   line-height: 1;
   padding: 2px 6px;
@@ -819,8 +876,8 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 75, 145, 0.06);
+  border: 1px solid rgba(255, 75, 145, 0.22);
   color: var(--text-muted);
   font-size: 0.72rem;
   font-weight: 600;
@@ -871,8 +928,8 @@ onUnmounted(() => {
   letter-spacing: 0.06em;
   padding: 3px 10px;
   border-radius: 8px;
-  color: var(--rose-light);
-  background: rgba(255, 75, 145, 0.12);
+  color: var(--rose);
+  background: rgba(255, 75, 145, 0.10);
   border: 1px solid rgba(255, 75, 145, 0.28);
 }
 
@@ -911,15 +968,15 @@ onUnmounted(() => {
   padding: 4px 10px;
   border-radius: 6px;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 75, 145, 0.06);
+  border: 1px solid rgba(255, 75, 145, 0.22);
   transition: var(--transition);
 }
 
 .tech-tag:hover {
-  border-color: rgba(255, 75, 145, 0.3);
-  background: rgba(255, 75, 145, 0.08);
-  color: var(--rose-light);
+  border-color: var(--rose);
+  background: rgba(255, 75, 145, 0.12);
+  color: var(--rose);
 }
 
 .project-action-buttons {
@@ -956,15 +1013,21 @@ onUnmounted(() => {
 }
 
 .btn-secondary {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--rose);
+  border: 1.5px solid rgba(255, 75, 145, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+:global(html.theme-night) .btn-secondary {
   background: rgba(22, 14, 31, 0.85);
   color: var(--text);
   border: 1px solid var(--border);
-  backdrop-filter: blur(8px);
 }
 
 .btn-secondary:hover {
   border-color: var(--rose);
-  color: var(--rose-light);
+  color: var(--rose-dark);
   transform: translateY(-2px);
   background: rgba(255, 75, 145, 0.1);
 }
@@ -977,15 +1040,15 @@ onUnmounted(() => {
   gap: 8px;
   margin-top: 24px;
   padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 75, 145, 0.12);
 }
 
 .stage-dot {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 75, 145, 0.12);
+  border: 2px solid var(--rose);
   cursor: pointer;
   padding: 0;
   transition: all 0.25s ease;

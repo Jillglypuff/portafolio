@@ -6,46 +6,7 @@ import anime from 'animejs';
 
 // ─── 1. Custom cursor + sparkle trail ────────────────────────────
 function initCursor() {
-  if (window.matchMedia('(pointer: coarse)').matches) return;
-
-  const dot  = Object.assign(document.createElement('div'), { className: 'cursor-dot' });
-  const ring = Object.assign(document.createElement('div'), { className: 'cursor-ring' });
-  ring.style.borderColor = 'rgba(255, 75, 145, 0.45)';
-  document.body.append(dot, ring);
-
-  const SPARKLE_COLORS = ['#ff4b91', '#ff9ebb', '#fce4ec', '#f8bbd0', '#f48fb1'];
-  let lastSparkle = 0;
-
-  document.addEventListener('mousemove', (e) => {
-    const { clientX: x, clientY: y } = e;
-    anime({ targets: dot,  left: x, top: y, duration: 60,  easing: 'linear' });
-    anime({ targets: ring, left: x, top: y, duration: 260, easing: 'easeOutExpo' });
-
-    // Throttle sparkles
-    const now = Date.now();
-    if (now - lastSparkle < 55) return;
-    lastSparkle = now;
-
-    const spark = Object.assign(document.createElement('div'), { className: 'cursor-sparkle' });
-    spark.style.cssText = `left:${x}px;top:${y}px;background:${SPARKLE_COLORS[Math.floor(Math.random()*SPARKLE_COLORS.length)]};width:${Math.random()*5+3}px;height:${Math.random()*5+3}px`;
-    document.body.appendChild(spark);
-    anime({
-      targets: spark,
-      translateX: () => anime.random(-30, 30),
-      translateY: () => anime.random(-30, 10),
-      opacity: [1, 0],
-      scale: [1, 0],
-      duration: anime.random(500, 900),
-      easing: 'easeOutExpo',
-      complete: () => spark.remove(),
-    });
-  });
-
-  // Ring grows on hover
-  document.querySelectorAll('a, .btn, .skill-tag, .stat-card, .help-card, .skill-group, .nav-cta').forEach((el) => {
-    el.addEventListener('mouseenter', () => anime({ targets: ring, scale: 1.7, opacity: 0.8, duration: 200, easing: 'easeOutQuad' }));
-    el.addEventListener('mouseleave', () => anime({ targets: ring, scale: 1,   opacity: 1,   duration: 300, easing: 'easeOutElastic(1, 0.5)' }));
-  });
+  // Fluid water wave wakes are rendered seamlessly via GSAP in WaterPond.vue canvas
 }
 
 // ─── 2. Scroll progress bar ───────────────────────────────────────
