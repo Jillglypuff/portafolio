@@ -522,67 +522,68 @@ function generateRiverFlowers(totalHeight: number) {
     }
 
     if (!isMobile && cardLeftPct >= 8) {
-      // ── DESKTOP: Fill the left and right banks densely with flowers, plus bottom clusters ──
-      const flowerYStep = 75; // Dense vertical pacing for a lush river of flowers filling all open margins
-      const totalSteps = Math.max(12, Math.floor((totalHeight - 100) / flowerYStep));
+      // ── DESKTOP: Organic, natural floating flower scatter across both banks (0% card/text overlap) ──
+      // Avoid rigid parallel lines by choosing completely random X positions across the full width of each bank,
+      // with varied bloom sizes (large anchor, medium drift, delicate small) and organic 2D distance checks.
+      const placed: Array<{ xPct: number; yPx: number; radiusPx: number }> = [];
 
-      for (let s = 0; s < totalSteps; s++) {
-        const baseY = 60 + s * flowerYStep + (Math.random() - 0.5) * 18;
+      const canPlace = (xPct: number, yPx: number, sizePx: number) => {
+        const r = sizePx * 0.42;
+        const xPx = (xPct / 100) * winWidth;
+        for (const p of placed) {
+          const pxPx = (p.xPct / 100) * winWidth;
+          const dist = Math.hypot(xPx - pxPx, yPx - p.yPx);
+          if (dist < (r + p.radiusPx) * 0.65) {
+            return false;
+          }
+        }
+        return true;
+      };
 
-        // 1. LEFT RIVER BANK: Multi-column stream (Outer + Inner + Mid fillers)
-        // A. Outer flower
-        const leftOuterSize = 105 + Math.random() * 45;
-        const leftOuterWidthPct = (leftOuterSize / winWidth) * 100;
-        const maxSafeLeftOuterX = Math.max(0.5, cardLeftPct - leftOuterWidthPct - 1.5);
-        if (maxSafeLeftOuterX > 1.0) {
-          const outerX = 0.5 + Math.random() * Math.min(3.8, maxSafeLeftOuterX - 0.5);
-          pushFlower(outerX, baseY + (Math.random() - 0.5) * 15, leftOuterSize);
+      const getRandomSize = () => {
+        const r = Math.random();
+        if (r < 0.22) return 130 + Math.random() * 25; // Large anchor bloom
+        if (r < 0.75) return 92 + Math.random() * 32;  // Medium drifting flower
+        return 65 + Math.random() * 22;                // Small delicate flower
+      };
+
+      const targetSpacing = 65;
+      const numBands = Math.max(14, Math.floor((totalHeight - 200) / targetSpacing));
+
+      for (let b = 0; b < numBands; b++) {
+        const bandY = 70 + b * targetSpacing + (Math.random() - 0.5) * 30;
+
+        // 1. LEFT RIVER BANK: Natural floating scatter across the full bank width
+        const leftAttempts = Math.random() < 0.65 ? 2 : 1;
+        for (let a = 0; a < leftAttempts; a++) {
+          const size = getRandomSize();
+          const wPct = (size / winWidth) * 100;
+          const maxX = cardLeftPct - wPct - 1.2;
+          if (maxX > 1.0) {
+            const x = 0.8 + Math.random() * (maxX - 0.8);
+            const y = bandY + (a === 1 ? (Math.random() > 0.5 ? 28 : -28) : 0);
+            if (canPlace(x, y, size)) {
+              placed.push({ xPct: x, yPx: y, radiusPx: size * 0.42 });
+              pushFlower(x, y, size);
+            }
+          }
         }
 
-        // B. Inner flower (flanking the card border safely)
-        const leftInnerSize = 95 + Math.random() * 40;
-        const leftInnerWidthPct = (leftInnerSize / winWidth) * 100;
-        const maxSafeLeftInnerX = Math.max(0.5, cardLeftPct - leftInnerWidthPct - 1.5);
-        if (maxSafeLeftInnerX > 4.0) {
-          const innerX = Math.max(2.0, maxSafeLeftInnerX - (Math.random() * 3.5));
-          pushFlower(innerX, baseY + 35 + (Math.random() - 0.5) * 15, leftInnerSize);
-        }
-
-        // C. Mid-bank filler flower (fills the center of the bank)
-        if (s % 2 === 0 && maxSafeLeftInnerX > 6.5) {
-          const leftMidSize = 85 + Math.random() * 35;
-          const leftMidWidthPct = (leftMidSize / winWidth) * 100;
-          const maxSafeMidX = Math.max(0.5, cardLeftPct - leftMidWidthPct - 1.5);
-          const midX = 3.5 + Math.random() * Math.max(1.0, maxSafeMidX - 6.0);
-          pushFlower(midX, baseY + 18 + (Math.random() - 0.5) * 15, leftMidSize);
-        }
-
-        // 2. RIGHT RIVER BANK: Multi-column stream (Inner + Outer + Mid fillers)
-        const minSafeRightX = cardRightPct + 1.5;
-
-        // A. Outer flower
-        const rightOuterSize = 105 + Math.random() * 45;
-        const rightOuterWidthPct = (rightOuterSize / winWidth) * 100;
-        const maxRightBoundary = 98 - rightOuterWidthPct;
-        if (maxRightBoundary > minSafeRightX + 2.0) {
-          const outerX = Math.max(minSafeRightX + 1.0, maxRightBoundary - (Math.random() * 3.8));
-          pushFlower(outerX, baseY + (Math.random() - 0.5) * 15, rightOuterSize);
-        }
-
-        // B. Inner flower (flanking the card border safely)
-        const rightInnerSize = 95 + Math.random() * 40;
-        const rightInnerWidthPct = (rightInnerSize / winWidth) * 100;
-        const maxRightInnerBoundary = 98 - rightInnerWidthPct;
-        if (maxRightInnerBoundary > minSafeRightX + 1.0) {
-          const innerX = minSafeRightX + Math.random() * Math.min(3.5, maxRightInnerBoundary - minSafeRightX);
-          pushFlower(innerX, baseY + 35 + (Math.random() - 0.5) * 15, rightInnerSize);
-        }
-
-        // C. Mid-bank filler flower (fills the center of the right bank)
-        if (s % 2 === 1 && maxRightBoundary > minSafeRightX + 6.0) {
-          const rightMidSize = 85 + Math.random() * 35;
-          const midX = minSafeRightX + 3.0 + Math.random() * (maxRightBoundary - minSafeRightX - 6.0);
-          pushFlower(midX, baseY + 18 + (Math.random() - 0.5) * 15, rightMidSize);
+        // 2. RIGHT RIVER BANK: Natural floating scatter across the full bank width
+        const rightAttempts = Math.random() < 0.65 ? 2 : 1;
+        for (let a = 0; a < rightAttempts; a++) {
+          const size = getRandomSize();
+          const wPct = (size / winWidth) * 100;
+          const minX = cardRightPct + 1.2;
+          const maxX = 99.2 - wPct;
+          if (maxX > minX) {
+            const x = minX + Math.random() * (maxX - minX);
+            const y = bandY + (a === 1 ? (Math.random() > 0.5 ? 28 : -28) : 0);
+            if (canPlace(x, y, size)) {
+              placed.push({ xPct: x, yPx: y, radiusPx: size * 0.42 });
+              pushFlower(x, y, size);
+            }
+          }
         }
       }
 

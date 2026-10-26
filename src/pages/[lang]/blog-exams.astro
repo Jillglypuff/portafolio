@@ -4,7 +4,6 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
-import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -839,7 +838,7 @@ const page = content[lang] || content.en;
               </div>
 
               <div class="saturation-box">
-                <h4 class="sat-title">⚡ {page.plotTwist.saturationTitle}</h4>
+                <h4 class="sat-title">{page.plotTwist.saturationTitle}</h4>
                 <p>{page.plotTwist.saturationDesc}</p>
               </div>
             </div>
@@ -891,8 +890,6 @@ const page = content[lang] || content.en;
 
           <!-- Comments Section -->
           <CommentsSection slug="blog-exams" lang={lang} client:load />
-        
-          <BlogNavigation currentSlug="blog-exams" lang={lang} />
         </div>
       </article>
 
