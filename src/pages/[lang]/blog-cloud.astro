@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -636,6 +637,8 @@ const page = content[lang] || content.es;
 
           <!-- Comments Section -->
           <CommentsSection slug="blog-cloud" lang={lang} client:load />
+        
+          <BlogNavigation currentSlug="blog-cloud" lang={lang} />
         </div>
       </article>
 

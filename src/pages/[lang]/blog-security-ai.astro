@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -214,7 +215,7 @@ const c = content[lang] || content.es;
           <h1 class="post-title">{c.title}</h1>
           <p class="post-subtitle">{c.subtitle}</p>
           <div class="post-date">
-            <span class="calendar-icon">📅</span> {c.date}
+             {c.date}
           </div>
         </header>
 
@@ -278,6 +279,8 @@ const c = content[lang] || content.es;
           <section class="comments-wrapper">
             <CommentsSection client:load postSlug="blog-security-ai" currentLang={lang} />
           </section>
+        
+          <BlogNavigation currentSlug="blog-security-ai" lang={lang} />
         </div>
       </article>
     </main>

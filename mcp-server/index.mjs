@@ -32,7 +32,7 @@ if (!supabaseUrl || !supabaseServiceKey) {
   console.error('[MCP Warning] SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY should be configured in .env or environment.');
 }
 
-const supabase = (supabaseUrl && supabaseServiceKey) 
+const supabase = (supabaseUrl && supabaseServiceKey)
   ? createClient(supabaseUrl, supabaseServiceKey)
   : null;
 
@@ -190,14 +190,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             content: [
               {
                 type: 'text',
-                text: '🎉 ¡No hay comentarios pendientes de moderación en este momento!',
+                text: '¡No hay comentarios pendientes de moderación en este momento!',
               },
             ],
           };
         }
 
-        const formatted = data.map((c) => 
-          `📌 ID: ${c.id}\n👤 Autor: ${c.author_name}\n📄 Artículo: ${c.post_slug}\n📅 Fecha: ${c.created_at}\n💬 Comentario: "${c.content}"\n`
+        const formatted = data.map((c) =>
+          `ID: ${c.id}\n Autor: ${c.author_name}\n Artículo: ${c.post_slug}\nFecha: ${c.created_at}\nComentario: "${c.content}"\n`
         ).join('\n---\n\n');
 
         return {

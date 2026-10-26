@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -851,6 +852,8 @@ Componentes Nativos de Plataforma`}</code></pre>
 
           <!-- Comments Section -->
           <CommentsSection slug="blog-rnvsflutter" lang={lang} client:load />
+        
+          <BlogNavigation currentSlug="blog-rnvsflutter" lang={lang} />
         </div>
       </article>
 

@@ -496,4 +496,54 @@ onMounted(() => {
   padding-left: 2.65rem;
   white-space: pre-line;
 }
+
+:global(html.theme-day) .comments-title,
+:global(html.theme-day) .form-heading,
+:global(html.theme-day) .list-heading,
+:global(html.theme-day) .author-name {
+  color: #0f172a !important;
+}
+
+:global(html.theme-day) .form-label,
+:global(html.theme-day) .comment-content,
+:global(html.theme-day) .empty-title {
+  color: #334155 !important;
+}
+
+:global(html.theme-day) .empty-sub,
+:global(html.theme-day) .comment-date {
+  color: #64748b !important;
+}
+
+:global(html.theme-day) .comment-form-card {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(255, 75, 145, 0.28) !important;
+  box-shadow: 0 4px 20px rgba(255, 75, 145, 0.08) !important;
+}
+
+:global(html.theme-day) .form-input,
+:global(html.theme-day) .form-textarea {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(255, 75, 145, 0.3) !important;
+  color: #0f172a !important;
+}
+
+:global(html.theme-day) .form-input:focus,
+:global(html.theme-day) .form-textarea:focus {
+  border-color: #ff4b91 !important;
+  box-shadow: 0 0 0 3px rgba(255, 75, 145, 0.2) !important;
+}
+
+:global(html.theme-day) .empty-state,
+:global(html.theme-day) .loading-state {
+  background: rgba(255, 75, 145, 0.03) !important;
+  border: 1.5px dashed rgba(255, 75, 145, 0.3) !important;
+  color: #475569 !important;
+}
+
+:global(html.theme-day) .comment-card {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(255, 75, 145, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(255, 75, 145, 0.06) !important;
+}
 </style>

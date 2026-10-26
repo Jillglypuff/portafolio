@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 import gitguardianPoc from '../../assets/gitguardian_poc.jpg';
 
 export function getStaticPaths() {
@@ -289,7 +290,7 @@ const c = content[lang as keyof typeof content] || content.es;
 
         <header class="post-header">
           <div class="meta-badge">
-            <span class="badge-icon">🛡️</span> Security & DevSecOps Tools
+            Security & DevSecOps Tools
           </div>
           <h1 class="post-title">{c.title}</h1>
           <p class="post-subtitle">{c.subtitle}</p>
@@ -306,7 +307,6 @@ const c = content[lang as keyof typeof content] || content.es;
             </div>
             
             <div class="repo-banner">
-              <span class="repo-icon">🛡️</span>
               <div class="repo-info">
                 <strong>{c.bannerLabel}</strong>
                 <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
@@ -337,7 +337,6 @@ const c = content[lang as keyof typeof content] || content.es;
                 loading="eager"
               />
               <div class="terminal-caption-bar">
-                <span class="caption-icon">🔒</span>
                 <p class="caption-text">{c.screenshotCaption}</p>
               </div>
             </div>
@@ -386,6 +385,8 @@ const c = content[lang as keyof typeof content] || content.es;
           <section class="comments-wrapper">
             <CommentsSection client:load postSlug="blog-gitguardian" currentLang={lang} />
           </section>
+
+          <BlogNavigation currentSlug="blog-gitguardian" lang={lang} />
         </div>
       </article>
     </main>

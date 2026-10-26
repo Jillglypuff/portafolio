@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -109,7 +110,7 @@ bool InjectDLL(DWORD processId, const char* dllPath) {
       "Crucial para herramientas de monitoreo (APM), escudos de seguridad (EDR) y overlays de accesibilidad."
     ],
     section1: {
-      heading: "1. Cómo Funciona la Inyección de Memoria y el DLL Hooking ⚙️",
+      heading: "1. Cómo Funciona la Inyección de Memoria y el DLL Hooking",
       paragraphs: [
         "Cada proceso en ejecución en un sistema operativo funciona dentro de un espacio de dirección de memoria virtual aislado. La **Inyección de Memoria** es el mecanismo mediante el cual un proceso externo asigna memoria y ejecuta código dentro de otro proceso.",
         "**• VirtualAllocEx y WriteProcessMemory:** Funciones de la API de Windows utilizadas para reservar memoria en un proceso objetivo y escribir payloads binarios o rutas de archivos DLL.",
@@ -344,6 +345,8 @@ const c = content[lang as keyof typeof content] || content.es;
           <section class="comments-wrapper">
             <CommentsSection client:load postSlug="blog-memory-injection" currentLang={lang} />
           </section>
+        
+          <BlogNavigation currentSlug="blog-memory-injection" lang={lang} />
         </div>
       </article>
     </main>

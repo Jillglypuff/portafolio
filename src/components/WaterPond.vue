@@ -178,325 +178,456 @@ function generateRiverFlowers(totalHeight: number) {
     });
   };
 
-  // ── 1. HERO, ABOUT, PROJECTS & ADVISORY FLOWERS (Exact open-water zones marked in blue) ──
   const aboutEl = typeof document !== 'undefined' ? document.getElementById('about') : null;
-  const aboutLabelEl = aboutEl?.querySelector('.section-label') as HTMLElement | null;
-  const projectsEl = typeof document !== 'undefined' ? document.getElementById('projects') : null;
-  const projectsLabelEl = projectsEl?.querySelector('.section-label') as HTMLElement | null;
-  const advisoryEl = typeof document !== 'undefined' ? document.getElementById('advisory') : null;
-  const advisoryLabelEl = advisoryEl?.querySelector('.section-label') as HTMLElement | null;
-  const skillsEl = typeof document !== 'undefined' ? document.getElementById('skills') : null;
-  const skillsLabelEl = skillsEl?.querySelector('.section-label') as HTMLElement | null;
-  const blogEl = typeof document !== 'undefined' ? document.getElementById('blog') : null;
-  const blogLabelEl = blogEl?.querySelector('.section-label') as HTMLElement | null;
-  const contactEl = typeof document !== 'undefined' ? document.getElementById('contact') : null;
-  const contactLabelEl = contactEl?.querySelector('.section-label') as HTMLElement | null;
-  const scrollYNow = typeof window !== 'undefined' ? (window.scrollY || window.pageYOffset || 0) : 0;
+  const isHomePage = !!aboutEl;
 
-  // Exact Y coordinate of the "SOBRE MÍ" bar
-  const aboutLabelY = aboutLabelEl
-    ? aboutLabelEl.getBoundingClientRect().top + scrollYNow
-    : (aboutEl ? aboutEl.offsetTop + 100 : vh * 1.08);
+  if (isHomePage) {
+    const aboutLabelEl = aboutEl?.querySelector('.section-label') as HTMLElement | null;
+    const projectsEl = typeof document !== 'undefined' ? document.getElementById('projects') : null;
+    const projectsLabelEl = projectsEl?.querySelector('.section-label') as HTMLElement | null;
+    const advisoryEl = typeof document !== 'undefined' ? document.getElementById('advisory') : null;
+    const advisoryLabelEl = advisoryEl?.querySelector('.section-label') as HTMLElement | null;
+    const skillsEl = typeof document !== 'undefined' ? document.getElementById('skills') : null;
+    const skillsLabelEl = skillsEl?.querySelector('.section-label') as HTMLElement | null;
+    const blogEl = typeof document !== 'undefined' ? document.getElementById('blog') : null;
+    const blogLabelEl = blogEl?.querySelector('.section-label') as HTMLElement | null;
+    const contactEl = typeof document !== 'undefined' ? document.getElementById('contact') : null;
+    const contactLabelEl = contactEl?.querySelector('.section-label') as HTMLElement | null;
+    const scrollYNow = typeof window !== 'undefined' ? (window.scrollY || window.pageYOffset || 0) : 0;
 
-  // Exact Y coordinate of the "PROYECTOS" bar & Projects Card
-  const projectsLabelY = projectsLabelEl
-    ? projectsLabelEl.getBoundingClientRect().top + scrollYNow
-    : (projectsEl ? projectsEl.offsetTop + 90 : aboutLabelY + 680);
-  const projectsCardEl = projectsEl?.querySelector('.carousel-stage-wrapper') as HTMLElement | null;
-  const projectsCardTop = projectsCardEl
-    ? projectsCardEl.getBoundingClientRect().top + scrollYNow
-    : projectsLabelY + 185;
+    // Exact Y coordinate of the "SOBRE MÍ" bar
+    const aboutLabelY = aboutLabelEl
+      ? aboutLabelEl.getBoundingClientRect().top + scrollYNow
+      : (aboutEl ? aboutEl.offsetTop + 100 : vh * 1.08);
 
-  // Exact Y coordinate of the "ASESORÍAS" bar
-  const advisoryLabelY = advisoryLabelEl
-    ? advisoryLabelEl.getBoundingClientRect().top + scrollYNow
-    : (advisoryEl ? advisoryEl.offsetTop + 100 : projectsLabelY + 860);
+    // Exact Y coordinate of the "PROYECTOS" bar & Projects Card
+    const projectsLabelY = projectsLabelEl
+      ? projectsLabelEl.getBoundingClientRect().top + scrollYNow
+      : (projectsEl ? projectsEl.offsetTop + 90 : aboutLabelY + 680);
+    const projectsCardEl = projectsEl?.querySelector('.carousel-stage-wrapper') as HTMLElement | null;
+    const projectsCardTop = projectsCardEl
+      ? projectsCardEl.getBoundingClientRect().top + scrollYNow
+      : projectsLabelY + 185;
 
-  // Exact Y coordinate of the "TECNOLOGÍAS" bar
-  const skillsLabelY = skillsLabelEl
-    ? skillsLabelEl.getBoundingClientRect().top + scrollYNow
-    : (skillsEl ? skillsEl.offsetTop + 100 : advisoryLabelY + 560);
+    // Exact Y coordinate of the "ASESORÍAS" bar
+    const advisoryLabelY = advisoryLabelEl
+      ? advisoryLabelEl.getBoundingClientRect().top + scrollYNow
+      : (advisoryEl ? advisoryEl.offsetTop + 100 : projectsLabelY + 860);
 
-  // Exact Y coordinate of the "BLOG" bar
-  const blogLabelY = blogLabelEl
-    ? blogLabelEl.getBoundingClientRect().top + scrollYNow
-    : (blogEl ? blogEl.offsetTop + 100 : skillsLabelY + 520);
+    // Exact Y coordinate of the "TECNOLOGÍAS" bar
+    const skillsLabelY = skillsLabelEl
+      ? skillsLabelEl.getBoundingClientRect().top + scrollYNow
+      : (skillsEl ? skillsEl.offsetTop + 100 : advisoryLabelY + 560);
 
-  // Exact Y coordinate of the "CONTACTO" bar & Contact Card
-  const contactLabelY = contactLabelEl
-    ? contactLabelEl.getBoundingClientRect().top + scrollYNow
-    : (contactEl ? contactEl.offsetTop + 120 : blogLabelY + 920);
-  const contactCardEl = contactEl?.querySelector('.contact-card') as HTMLElement | null;
-  const contactCardTop = contactCardEl
-    ? contactCardEl.getBoundingClientRect().top + scrollYNow
-    : contactLabelY + 155;
+    // Exact Y coordinate of the "BLOG" bar
+    const blogLabelY = blogLabelEl
+      ? blogLabelEl.getBoundingClientRect().top + scrollYNow
+      : (blogEl ? blogEl.offsetTop + 100 : skillsLabelY + 520);
 
-  if (!isMobile) {
-    const curatedSpots = [
-      // ── A. HERO SECTION (Marked in blue) ──
-      // Top arc above eyebrow (avoiding nav and eyebrow text)
-      { x: 11.5, y: vh * 0.065, size: 155 },
-      { x: 25.5, y: vh * 0.075, size: 150 },
-      { x: 33.5, y: vh * 0.055, size: 155 },
-      { x: 40.5, y: vh * 0.085, size: 145 },
-      { x: 48.0, y: vh * 0.060, size: 155 },
-      { x: 59.5, y: vh * 0.065, size: 150 },
-      { x: 75.5, y: vh * 0.065, size: 150 },
+    // Exact Y coordinate of the "CONTACTO" bar & Contact Card
+    const contactLabelY = contactLabelEl
+      ? contactLabelEl.getBoundingClientRect().top + scrollYNow
+      : (contactEl ? contactEl.offsetTop + 120 : blogLabelY + 920);
+    const contactCardEl = contactEl?.querySelector('.contact-card') as HTMLElement | null;
+    const contactCardTop = contactCardEl
+      ? contactCardEl.getBoundingClientRect().top + scrollYNow
+      : contactLabelY + 155;
 
-      // Inner left & right upper ring (flanking eyebrow & title)
-      { x: 14.5, y: vh * 0.24, size: 165 },
-      { x: 73.0, y: vh * 0.37, size: 155 },
-      { x: 83.0, y: vh * 0.22, size: 160 },
+    if (!isMobile) {
+      const curatedSpots = [
+        // ── A. HERO SECTION (Marked in blue) ──
+        // Top arc above eyebrow (avoiding nav and eyebrow text)
+        { x: 11.5, y: vh * 0.065, size: 155 },
+        { x: 25.5, y: vh * 0.075, size: 150 },
+        { x: 33.5, y: vh * 0.055, size: 155 },
+        { x: 40.5, y: vh * 0.085, size: 145 },
+        { x: 48.0, y: vh * 0.060, size: 155 },
+        { x: 59.5, y: vh * 0.065, size: 150 },
+        { x: 75.5, y: vh * 0.065, size: 150 },
 
-      // Outer left & right mid-banks
-      { x: 2.5,  y: vh * 0.26, size: 175 },
-      { x: 91.5, y: vh * 0.28, size: 170 },
+        // Inner left & right upper ring (flanking eyebrow & title)
+        { x: 14.5, y: vh * 0.24, size: 165 },
+        { x: 73.0, y: vh * 0.37, size: 155 },
+        { x: 83.0, y: vh * 0.22, size: 160 },
 
-      // Inner left & right lower ring (flanking tagline)
-      { x: 16.5, y: vh * 0.50, size: 155 },
-      { x: 78.5, y: vh * 0.54, size: 160 },
+        // Outer left & right mid-banks
+        { x: 2.5,  y: vh * 0.26, size: 175 },
+        { x: 91.5, y: vh * 0.28, size: 170 },
 
-      // Bottom of Hero (below CTA buttons & lower-left gap marked in blue)
-      { x: 19.5, y: vh * 0.84, size: 150 },
-      { x: 48.0, y: vh * 0.83, size: 160 },
+        // Inner left & right lower ring (flanking tagline)
+        { x: 16.5, y: vh * 0.50, size: 155 },
+        { x: 78.5, y: vh * 0.54, size: 160 },
 
-      // ── B. BETWEEN HERO & ABOUT (Marked in blue) ──
-      // Flanking & just below CTA buttons ("Ver mi trabajo" / "Di Hola")
-      { x: 23.5, y: aboutLabelY - 310, size: 155 },
-      { x: 69.5, y: aboutLabelY - 330, size: 140 },
-      { x: 82.0, y: aboutLabelY - 300, size: 150 },
+        // Bottom of Hero (below CTA buttons & lower-left gap marked in blue)
+        { x: 19.5, y: vh * 0.84, size: 150 },
+        { x: 48.0, y: vh * 0.83, size: 160 },
 
-      // Band directly above the "SOBRE MÍ" bar (left, center, center-right, right)
-      { x: 26.5, y: aboutLabelY - 150, size: 160 },
-      { x: 46.5, y: aboutLabelY - 145, size: 165 },
-      { x: 62.0, y: aboutLabelY - 140, size: 150 },
-      { x: 76.5, y: aboutLabelY - 180, size: 160 },
+        // ── B. BETWEEN HERO & ABOUT (Marked in blue) ──
+        // Flanking & just below CTA buttons ("Ver mi trabajo" / "Di Hola")
+        { x: 23.5, y: aboutLabelY - 310, size: 155 },
+        { x: 69.5, y: aboutLabelY - 330, size: 140 },
+        { x: 82.0, y: aboutLabelY - 300, size: 150 },
 
-      // Below "SOBRE MÍ" bar, in the open space to the right of "Desarrolladora Full-stack." and above the stat cards
-      { x: 54.5, y: aboutLabelY + 45,  size: 150 },
-      { x: 75.5, y: aboutLabelY + 35,  size: 165 },
+        // Band directly above the "SOBRE MÍ" bar (left, center, center-right, right)
+        { x: 26.5, y: aboutLabelY - 150, size: 160 },
+        { x: 46.5, y: aboutLabelY - 145, size: 165 },
+        { x: 62.0, y: aboutLabelY - 140, size: 150 },
+        { x: 76.5, y: aboutLabelY - 180, size: 160 },
 
-      // ── B2. INSIDE ABOUT SECTION (Marked in blue around text & stat cards) ──
-      // Left side of "constante." & paragraphs
-      { x: 9.5,  y: aboutLabelY + 225, size: 135 },
-      { x: 5.0,  y: aboutLabelY + 375, size: 145 },
-      { x: 2.5,  y: aboutLabelY + 515, size: 130 },
-      { x: 10.0, y: aboutLabelY + 520, size: 95 },
+        // Below "SOBRE MÍ" bar, in the open space to the right of "Desarrolladora Full-stack." and above the stat cards
+        { x: 54.5, y: aboutLabelY + 45,  size: 150 },
+        { x: 75.5, y: aboutLabelY + 35,  size: 165 },
 
-      // Center gap between "En producción constante." and the stat cards
-      { x: 43.5, y: aboutLabelY + 195, size: 130 },
+        // ── B2. INSIDE ABOUT SECTION (Marked in blue around text & stat cards) ──
+        // Left side of "constante." & paragraphs
+        { x: 9.5,  y: aboutLabelY + 225, size: 135 },
+        { x: 5.0,  y: aboutLabelY + 375, size: 145 },
+        { x: 2.5,  y: aboutLabelY + 515, size: 130 },
+        { x: 10.0, y: aboutLabelY + 520, size: 95 },
 
-      // Around & below the 4 stat cards on the right
-      { x: 79.5, y: aboutLabelY + 285, size: 135 },
-      { x: 87.5, y: aboutLabelY + 385, size: 150 },
-      { x: 57.5, y: aboutLabelY + 545, size: 95 },
-      { x: 69.0, y: aboutLabelY + 525, size: 110 },
+        // Center gap between "En producción constante." and the stat cards
+        { x: 43.5, y: aboutLabelY + 195, size: 130 },
 
-      // Outer left & right banks along the Hero -> About transition
-      { x: 3.5,  y: aboutLabelY - 220, size: 180 },
-      { x: 3.0,  y: aboutLabelY + 95,  size: 165 },
-      { x: 91.0, y: aboutLabelY - 60,  size: 175 },
-      { x: 91.5, y: aboutLabelY + 205, size: 170 },
+        // Around & below the 4 stat cards on the right
+        { x: 79.5, y: aboutLabelY + 285, size: 135 },
+        { x: 87.5, y: aboutLabelY + 385, size: 150 },
+        { x: 57.5, y: aboutLabelY + 545, size: 95 },
+        { x: 69.0, y: aboutLabelY + 525, size: 110 },
 
-      // ── C. BETWEEN ABOUT & PROYECTOS (Marked in blue) ──
-      // Open space below the right-hand stat cards in About
-      { x: 67.5, y: projectsLabelY - 320, size: 170 },
-      { x: 86.0, y: projectsLabelY - 360, size: 145 },
+        // Outer left & right banks along the Hero -> About transition
+        { x: 3.5,  y: aboutLabelY - 220, size: 180 },
+        { x: 3.0,  y: aboutLabelY + 95,  size: 165 },
+        { x: 91.0, y: aboutLabelY - 60,  size: 175 },
+        { x: 91.5, y: aboutLabelY + 205, size: 170 },
 
-      // Band directly above the "PROYECTOS" bar (left, center-left, center-right, right)
-      { x: 17.5, y: projectsLabelY - 150, size: 160 },
-      { x: 38.0, y: projectsLabelY - 135, size: 155 },
-      { x: 53.5, y: projectsLabelY - 175, size: 165 },
-      { x: 78.5, y: projectsLabelY - 155, size: 145 },
+        // ── C. BETWEEN ABOUT & PROYECTOS (Marked in blue) ──
+        // Open space below the right-hand stat cards in About
+        { x: 67.5, y: projectsLabelY - 320, size: 170 },
+        { x: 86.0, y: projectsLabelY - 360, size: 145 },
 
-      // Below "PROYECTOS" bar, flanking "Mi trabajo en práctica. / Construido para usuarios reales."
-      { x: 19.5, y: projectsLabelY + 50,  size: 150 },
-      { x: 77.5, y: projectsLabelY + 45,  size: 165 },
+        // Band directly above the "PROYECTOS" bar (left, center-left, center-right, right)
+        { x: 17.5, y: projectsLabelY - 150, size: 160 },
+        { x: 38.0, y: projectsLabelY - 135, size: 155 },
+        { x: 53.5, y: projectsLabelY - 175, size: 165 },
+        { x: 78.5, y: projectsLabelY - 155, size: 145 },
 
-      // Outer left & right banks near Proyectos header (well spaced so they never stack)
-      { x: 2.5,  y: projectsLabelY - 220, size: 175 },
-      { x: 3.5,  y: projectsLabelY + 90,  size: 170 },
-      { x: 91.0, y: projectsLabelY - 180, size: 170 },
-      { x: 91.5, y: projectsLabelY + 80,  size: 170 },
+        // Below "PROYECTOS" bar, flanking "Mi trabajo en práctica. / Construido para usuarios reales."
+        { x: 19.5, y: projectsLabelY + 50,  size: 150 },
+        { x: 77.5, y: projectsLabelY + 45,  size: 165 },
 
-      // ── C2. AROUND THE PROJECTS CAROUSEL CARD (Marked in blue) ──
-      // Upper-left (above laptop mockup) & top-center border of the card
-      { x: 13.5, y: projectsCardTop + 40,  size: 150 },
-      { x: 51.5, y: projectsCardTop - 25,  size: 150 },
+        // Outer left & right banks near Proyectos header (well spaced so they never stack)
+        { x: 2.5,  y: projectsLabelY - 220, size: 175 },
+        { x: 3.5,  y: projectsLabelY + 90,  size: 170 },
+        { x: 91.0, y: projectsLabelY - 180, size: 170 },
+        { x: 91.5, y: projectsLabelY + 80,  size: 170 },
 
-      // Lower-left below "<" arrow & bottom-left corner of the card
-      { x: 4.5,  y: projectsCardTop + 365, size: 165 },
-      { x: 15.0, y: projectsCardTop + 445, size: 155 },
+        // ── C2. AROUND THE PROJECTS CAROUSEL CARD (Marked in blue) ──
+        // Upper-left (above laptop mockup) & top-center border of the card
+        { x: 13.5, y: projectsCardTop + 40,  size: 150 },
+        { x: 51.5, y: projectsCardTop - 25,  size: 150 },
 
-      // Right side (between tags/button and ">" arrow) & bottom-right corner below ">" arrow
-      { x: 82.5, y: projectsCardTop + 295, size: 145 },
-      { x: 90.0, y: projectsCardTop + 415, size: 165 },
+        // Lower-left below "<" arrow & bottom-left corner of the card
+        { x: 4.5,  y: projectsCardTop + 365, size: 165 },
+        { x: 15.0, y: projectsCardTop + 445, size: 155 },
 
-      // ── D. BETWEEN PROYECTOS & ASESORÍAS (Marked in blue) ──
-      // Lower left & right of pagination dots on the Projects card bottom edge
-      { x: 28.5, y: advisoryLabelY - 265, size: 175 },
-      { x: 74.5, y: advisoryLabelY - 295, size: 170 },
+        // Right side (between tags/button and ">" arrow) & bottom-right corner below ">" arrow
+        { x: 82.5, y: projectsCardTop + 295, size: 145 },
+        { x: 90.0, y: projectsCardTop + 415, size: 165 },
 
-      // Open water band between Projects card and "ASESORÍAS" bar
-      { x: 5.0,  y: advisoryLabelY - 150, size: 155 },
-      { x: 17.5, y: advisoryLabelY - 190, size: 155 },
-      { x: 42.0, y: advisoryLabelY - 140, size: 160 },
-      { x: 56.5, y: advisoryLabelY - 180, size: 165 },
-      { x: 81.0, y: advisoryLabelY - 120, size: 165 },
+        // ── D. BETWEEN PROYECTOS & ASESORÍAS (Marked in blue) ──
+        // Lower left & right of pagination dots on the Projects card bottom edge
+        { x: 28.5, y: advisoryLabelY - 265, size: 175 },
+        { x: 74.5, y: advisoryLabelY - 295, size: 170 },
 
-      // Right side of "ASESORÍAS" bar & flanking "Disponible para asesorías"
-      { x: 68.0, y: advisoryLabelY - 45,  size: 145 },
-      { x: 18.0, y: advisoryLabelY + 10,  size: 155 },
-      { x: 70.0, y: advisoryLabelY + 75,  size: 150 },
-      { x: 83.0, y: advisoryLabelY + 105, size: 145 },
+        // Open water band between Projects card and "ASESORÍAS" bar
+        { x: 5.0,  y: advisoryLabelY - 150, size: 155 },
+        { x: 17.5, y: advisoryLabelY - 190, size: 155 },
+        { x: 42.0, y: advisoryLabelY - 140, size: 160 },
+        { x: 56.5, y: advisoryLabelY - 180, size: 165 },
+        { x: 81.0, y: advisoryLabelY - 120, size: 165 },
 
-      // Around the Advisory card (upper-left corner, middle-right)
-      { x: 27.5, y: advisoryLabelY + 135, size: 145 },
-      { x: 9.5,  y: advisoryLabelY + 260, size: 185 },
-      { x: 91.0, y: advisoryLabelY + 210, size: 175 },
+        // Right side of "ASESORÍAS" bar & flanking "Disponible para asesorías"
+        { x: 68.0, y: advisoryLabelY - 45,  size: 145 },
+        { x: 18.0, y: advisoryLabelY + 10,  size: 155 },
+        { x: 70.0, y: advisoryLabelY + 75,  size: 150 },
+        { x: 83.0, y: advisoryLabelY + 105, size: 145 },
 
-      // ── E. BETWEEN ASESORÍAS & TECNOLOGÍAS (Marked in blue) ──
-      // Along & beside the bottom of the Advisory card
-      { x: 20.5, y: skillsLabelY - 310, size: 155 },
-      { x: 33.5, y: skillsLabelY - 245, size: 160 },
-      { x: 53.0, y: skillsLabelY - 260, size: 155 },
-      { x: 74.5, y: skillsLabelY - 260, size: 180 },
+        // Around the Advisory card (upper-left corner, middle-right)
+        { x: 27.5, y: advisoryLabelY + 135, size: 145 },
+        { x: 9.5,  y: advisoryLabelY + 260, size: 185 },
+        { x: 91.0, y: advisoryLabelY + 210, size: 175 },
 
-      // Open band directly above & alongside the "TECNOLOGÍAS" bar
-      { x: 21.0, y: skillsLabelY - 135, size: 150 },
-      { x: 42.5, y: skillsLabelY - 60,  size: 155 },
-      { x: 60.5, y: skillsLabelY - 125, size: 150 },
-      { x: 73.5, y: skillsLabelY - 20,  size: 145 },
+        // ── E. BETWEEN ASESORÍAS & TECNOLOGÍAS (Marked in blue) ──
+        // Along & beside the bottom of the Advisory card
+        { x: 20.5, y: skillsLabelY - 310, size: 155 },
+        { x: 33.5, y: skillsLabelY - 245, size: 160 },
+        { x: 53.0, y: skillsLabelY - 260, size: 155 },
+        { x: 74.5, y: skillsLabelY - 260, size: 180 },
 
-      // Flanking "Tecnologías / Powered by code" and open water to its right (above the marquee)
-      { x: 1.5,  y: skillsLabelY + 45,  size: 155 },
-      { x: 10.5, y: skillsLabelY + 115, size: 170 },
-      { x: 47.0, y: skillsLabelY + 85,  size: 155 },
-      { x: 61.0, y: skillsLabelY + 45,  size: 170 },
-      { x: 82.0, y: skillsLabelY + 75,  size: 165 },
+        // Open band directly above & alongside the "TECNOLOGÍAS" bar
+        { x: 21.0, y: skillsLabelY - 135, size: 150 },
+        { x: 42.5, y: skillsLabelY - 60,  size: 155 },
+        { x: 60.5, y: skillsLabelY - 125, size: 150 },
+        { x: 73.5, y: skillsLabelY - 20,  size: 145 },
 
-      // ── F. BETWEEN TECNOLOGÍAS & BLOG (Marked in blue) ──
-      // Above "BLOG" bar (below second row of tech marquee)
-      { x: 19.5, y: blogLabelY - 65,  size: 150 },
-      { x: 33.5, y: blogLabelY - 70,  size: 150 },
+        // Flanking "Tecnologías / Powered by code" and open water to its right (above the marquee)
+        { x: 1.5,  y: skillsLabelY + 45,  size: 155 },
+        { x: 10.5, y: skillsLabelY + 115, size: 170 },
+        { x: 47.0, y: skillsLabelY + 85,  size: 155 },
+        { x: 61.0, y: skillsLabelY + 45,  size: 170 },
+        { x: 82.0, y: skillsLabelY + 75,  size: 165 },
 
-      // Open water to the right of "Diario de Desarrollo / Notas de mi viaje"
-      { x: 47.5, y: blogLabelY + 15,  size: 170 },
-      { x: 68.0, y: blogLabelY + 55,  size: 160 },
-      { x: 80.0, y: blogLabelY + 20,  size: 165 },
+        // ── F. BETWEEN TECNOLOGÍAS & BLOG (Marked in blue) ──
+        // Above "BLOG" bar (below second row of tech marquee)
+        { x: 19.5, y: blogLabelY - 65,  size: 150 },
+        { x: 33.5, y: blogLabelY - 70,  size: 150 },
 
-      // Along the top corners & left edge of the 3 Blog cards (smaller so they never cover card text)
-      { x: 0.4,  y: blogLabelY + 235, size: 82 },
-      { x: 0.4,  y: blogLabelY + 390, size: 80 },
-      { x: 48.5, y: blogLabelY + 175, size: 88 },
-      { x: 76.5, y: blogLabelY + 195, size: 92 },
+        // Open water to the right of "Diario de Desarrollo / Notas de mi viaje"
+        { x: 47.5, y: blogLabelY + 15,  size: 170 },
+        { x: 68.0, y: blogLabelY + 55,  size: 160 },
+        { x: 80.0, y: blogLabelY + 20,  size: 165 },
 
-      // Outer banks around Blog header & cards
-      { x: 0.5,  y: blogLabelY + 90,  size: 95 },
-      { x: 91.5, y: blogLabelY - 50,  size: 165 },
-      { x: 92.0, y: blogLabelY + 185, size: 145 },
-      { x: 92.0, y: blogLabelY + 460, size: 150 },
+        // Along the top corners & left edge of the 3 Blog cards (smaller so they never cover card text)
+        { x: 0.4,  y: blogLabelY + 235, size: 82 },
+        { x: 0.4,  y: blogLabelY + 390, size: 80 },
+        { x: 48.5, y: blogLabelY + 175, size: 88 },
+        { x: 76.5, y: blogLabelY + 195, size: 92 },
 
-      // ── G. BETWEEN BLOG & CONTACTO (Marked in blue) ──
-      // Open space below the shorter middle Blog card ("PRÓXIMOS ARTÍCULOS")
-      { x: 41.5, y: contactLabelY - 380, size: 145 },
+        // Outer banks around Blog header & cards
+        { x: 0.5,  y: blogLabelY + 90,  size: 95 },
+        { x: 91.5, y: blogLabelY - 50,  size: 165 },
+        { x: 92.0, y: blogLabelY + 185, size: 145 },
+        { x: 92.0, y: blogLabelY + 460, size: 150 },
 
-      // Open water band below the left & right Blog cards and above "CONTACTO"
-      { x: 18.5, y: contactLabelY - 185, size: 145 },
-      { x: 45.5, y: contactLabelY - 165, size: 155 },
-      { x: 62.5, y: contactLabelY - 235, size: 140 },
-      { x: 77.0, y: contactLabelY - 185, size: 150 },
+        // ── G. BETWEEN BLOG & CONTACTO (Marked in blue) ──
+        // Open space below the shorter middle Blog card ("PRÓXIMOS ARTÍCULOS")
+        { x: 41.5, y: contactLabelY - 380, size: 145 },
 
-      // Around the "CONTACTO" bar & flanking "Construyamos algo / que valga la pena."
-      { x: 17.5, y: contactLabelY + 10,  size: 145 },
-      { x: 26.5, y: contactLabelY - 45,  size: 155 },
-      { x: 67.5, y: contactLabelY - 35,  size: 165 },
-      { x: 26.0, y: contactLabelY + 105, size: 145 },
-      { x: 78.0, y: contactLabelY + 75,  size: 160 },
+        // Open water band below the left & right Blog cards and above "CONTACTO"
+        { x: 18.5, y: contactLabelY - 185, size: 145 },
+        { x: 45.5, y: contactLabelY - 165, size: 155 },
+        { x: 62.5, y: contactLabelY - 235, size: 140 },
+        { x: 77.0, y: contactLabelY - 185, size: 150 },
 
-      // ── H. AROUND CONTACT CARD & FOOTER (Marked in blue) ──
-      // Upper-left & top-left corner of Contact card
-      { x: 11.5, y: contactCardTop + 15,  size: 145 },
-      { x: 24.5, y: contactCardTop + 10,  size: 160 },
+        // Around the "CONTACTO" bar & flanking "Construyamos algo / que valga la pena."
+        { x: 17.5, y: contactLabelY + 10,  size: 145 },
+        { x: 26.5, y: contactLabelY - 45,  size: 155 },
+        { x: 67.5, y: contactLabelY - 35,  size: 165 },
+        { x: 26.0, y: contactLabelY + 105, size: 145 },
+        { x: 78.0, y: contactLabelY + 75,  size: 160 },
 
-      // Middle-left & outer-left of Contact card
-      { x: 30.5, y: contactCardTop + 135, size: 135 },
-      { x: 4.5,  y: contactCardTop + 230, size: 165 },
+        // ── H. AROUND CONTACT CARD & FOOTER (Marked in blue) ──
+        // Upper-left & top-left corner of Contact card
+        { x: 11.5, y: contactCardTop + 15,  size: 145 },
+        { x: 24.5, y: contactCardTop + 10,  size: 160 },
 
-      // Bottom-left corner of Contact card & lower-left beside Footer
-      { x: 27.5, y: contactCardTop + 305, size: 155 },
-      { x: 17.0, y: contactCardTop + 440, size: 165 },
+        // Middle-left & outer-left of Contact card
+        { x: 30.5, y: contactCardTop + 135, size: 135 },
+        { x: 4.5,  y: contactCardTop + 230, size: 165 },
 
-      // Center below Contact card (above Footer text)
-      { x: 51.5, y: contactCardTop + 365, size: 155 },
+        // Bottom-left corner of Contact card & lower-left beside Footer
+        { x: 27.5, y: contactCardTop + 305, size: 155 },
+        { x: 17.0, y: contactCardTop + 440, size: 165 },
 
-      // Right side of Contact card & bottom-right beside Footer
-      { x: 68.0, y: contactCardTop + 65,  size: 175 },
-      { x: 72.5, y: contactCardTop + 280, size: 170 },
-      { x: 69.0, y: contactCardTop + 435, size: 155 },
-      { x: 84.5, y: contactCardTop + 430, size: 160 },
+        // Center below Contact card (above Footer text)
+        { x: 51.5, y: contactCardTop + 365, size: 155 },
 
-      // Outer right bank along Contact card
-      { x: 90.5, y: contactCardTop + 170, size: 175 }
-    ];
+        // Right side of Contact card & bottom-right beside Footer
+        { x: 68.0, y: contactCardTop + 65,  size: 175 },
+        { x: 72.5, y: contactCardTop + 280, size: 170 },
+        { x: 69.0, y: contactCardTop + 435, size: 155 },
+        { x: 84.5, y: contactCardTop + 430, size: 160 },
 
-    curatedSpots.forEach((spot) => {
-      const jitterX = (Math.random() - 0.5) * 1.0;
-      const jitterY = (Math.random() - 0.5) * 12;
-      pushFlower(
-        spot.x + jitterX,
-        Math.min(totalHeight - 195, Math.max(48, spot.y + jitterY)),
-        spot.size + (Math.random() - 0.5) * 14
-      );
-    });
-  } else {
-    const mobileSpots = [
-      { x: 4,  y: vh * 0.09, size: 85 },
-      { x: 78, y: vh * 0.10, size: 85 },
-      { x: 2,  y: vh * 0.42, size: 90 },
-      { x: 82, y: vh * 0.45, size: 90 },
-      { x: 12, y: aboutLabelY - 130, size: 90 },
-      { x: 68, y: aboutLabelY - 120, size: 95 },
-      { x: 10, y: projectsLabelY - 120, size: 90 },
-      { x: 70, y: projectsLabelY - 110, size: 90 },
-      { x: 12, y: advisoryLabelY - 120, size: 90 },
-      { x: 68, y: advisoryLabelY - 110, size: 90 },
-      { x: 12, y: skillsLabelY - 110, size: 90 },
-      { x: 68, y: skillsLabelY + 40,  size: 90 },
-      { x: 14, y: blogLabelY - 60,    size: 90 },
-      { x: 68, y: blogLabelY + 30,    size: 90 },
-      { x: 12, y: contactLabelY - 110, size: 90 },
-      { x: 68, y: contactLabelY - 90,  size: 90 }
-    ];
-    mobileSpots.forEach((spot) => {
-      pushFlower(spot.x, spot.y, spot.size);
-    });
-  }
+        // Outer right bank along Contact card
+        { x: 90.5, y: contactCardTop + 170, size: 175 }
+      ];
 
-  // ── 2. EXTRA FLOWERS (Only if page is taller than Contact section, e.g. long blog pages) ──
-  const restStart = contactLabelY + 520;
-  const restHeight = totalHeight - restStart - 180;
-  const restCount = restHeight > 200 ? Math.min(26, Math.round(restHeight / 160)) : 0;
-
-  for (let i = 0; i < restCount; i++) {
-    const progress = i / restCount;
-    const y = restStart + progress * restHeight + (Math.random() - 0.5) * 50;
-    const isLeftBank = (i % 2 === 0);
-    const tier = i % 3;
-
-    let x = 0;
-    if (isMobile) {
-      x = isLeftBank ? (0.5 + Math.random() * 4.5) : (84.0 + Math.random() * 6.0);
+      curatedSpots.forEach((spot) => {
+        const jitterX = (Math.random() - 0.5) * 1.0;
+        const jitterY = (Math.random() - 0.5) * 12;
+        pushFlower(
+          spot.x + jitterX,
+          Math.min(totalHeight - 195, Math.max(48, spot.y + jitterY)),
+          spot.size + (Math.random() - 0.5) * 14
+        );
+      });
     } else {
-      // Staggered horizontal depth so flowers don't form a straight vertical line
-      if (isLeftBank) {
-        x = tier === 0 ? (1.0 + Math.random() * 3.5) : tier === 1 ? (5.5 + Math.random() * 4.5) : (2.5 + Math.random() * 5.0);
+      const mobileSpots = [
+        { x: 4,  y: vh * 0.09, size: 85 },
+        { x: 78, y: vh * 0.10, size: 85 },
+        { x: 2,  y: vh * 0.42, size: 90 },
+        { x: 82, y: vh * 0.45, size: 90 },
+        { x: 12, y: aboutLabelY - 130, size: 90 },
+        { x: 68, y: aboutLabelY - 120, size: 95 },
+        { x: 10, y: projectsLabelY - 120, size: 90 },
+        { x: 70, y: projectsLabelY - 110, size: 90 },
+        { x: 12, y: advisoryLabelY - 120, size: 90 },
+        { x: 68, y: advisoryLabelY - 110, size: 90 },
+        { x: 12, y: skillsLabelY - 110, size: 90 },
+        { x: 68, y: skillsLabelY + 40,  size: 90 },
+        { x: 14, y: blogLabelY - 60,    size: 90 },
+        { x: 68, y: blogLabelY + 30,    size: 90 },
+        { x: 12, y: contactLabelY - 110, size: 90 },
+        { x: 68, y: contactLabelY - 90,  size: 90 }
+      ];
+      mobileSpots.forEach((spot) => {
+        pushFlower(spot.x, spot.y, spot.size);
+      });
+    }
+
+    // ── 2. EXTRA FLOWERS (Only if page is taller than Contact section, e.g. long home page) ──
+    const restStart = contactLabelY + 520;
+    const restHeight = totalHeight - restStart - 180;
+    const restCount = restHeight > 200 ? Math.min(26, Math.round(restHeight / 160)) : 0;
+
+    for (let i = 0; i < restCount; i++) {
+      const progress = i / restCount;
+      const y = restStart + progress * restHeight + (Math.random() - 0.5) * 50;
+      const isLeftBank = (i % 2 === 0);
+      const tier = i % 3;
+
+      let x = 0;
+      if (isMobile) {
+        x = isLeftBank ? (0.5 + Math.random() * 4.5) : (84.0 + Math.random() * 6.0);
       } else {
-        x = tier === 0 ? (89.5 + Math.random() * 4.0) : tier === 1 ? (84.0 + Math.random() * 4.5) : (87.0 + Math.random() * 4.5);
+        // Staggered horizontal depth so flowers don't form a straight vertical line
+        if (isLeftBank) {
+          x = tier === 0 ? (1.0 + Math.random() * 3.5) : tier === 1 ? (5.5 + Math.random() * 4.5) : (2.5 + Math.random() * 5.0);
+        } else {
+          x = tier === 0 ? (89.5 + Math.random() * 4.0) : tier === 1 ? (84.0 + Math.random() * 4.5) : (87.0 + Math.random() * 4.5);
+        }
+      }
+
+      pushFlower(x, y);
+    }
+  } else {
+    // ── DEDICATED BLOG POST PAGES: Rich, lush flowers ALL AROUND the card (0% card/text overlap) ──
+    const winWidth = typeof window !== 'undefined' ? window.innerWidth : 1440;
+    const postArticleEl = (document.querySelector('.post-article, .blog-container, .blog-card, .post-card, article') as HTMLElement | null);
+
+    let cardLeftPct = isMobile ? 4 : 18.5;
+    let cardRightPct = isMobile ? 96 : 81.5;
+    let cardTop = 180;
+    let cardBottom = totalHeight - 320;
+
+    if (postArticleEl && typeof window !== 'undefined') {
+      const rect = postArticleEl.getBoundingClientRect();
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      if (rect.width > 0 && winWidth > 0) {
+        cardLeftPct = (rect.left / winWidth) * 100;
+        cardRightPct = (rect.right / winWidth) * 100;
+        cardTop = rect.top + scrollY;
+        cardBottom = rect.bottom + scrollY;
       }
     }
 
-    pushFlower(x, y);
+    if (!isMobile && cardLeftPct >= 8) {
+      // ── DESKTOP: Fill the left and right banks densely with flowers, plus bottom clusters ──
+      const flowerYStep = 75; // Dense vertical pacing for a lush river of flowers filling all open margins
+      const totalSteps = Math.max(12, Math.floor((totalHeight - 100) / flowerYStep));
+
+      for (let s = 0; s < totalSteps; s++) {
+        const baseY = 60 + s * flowerYStep + (Math.random() - 0.5) * 18;
+
+        // 1. LEFT RIVER BANK: Multi-column stream (Outer + Inner + Mid fillers)
+        // A. Outer flower
+        const leftOuterSize = 105 + Math.random() * 45;
+        const leftOuterWidthPct = (leftOuterSize / winWidth) * 100;
+        const maxSafeLeftOuterX = Math.max(0.5, cardLeftPct - leftOuterWidthPct - 1.5);
+        if (maxSafeLeftOuterX > 1.0) {
+          const outerX = 0.5 + Math.random() * Math.min(3.8, maxSafeLeftOuterX - 0.5);
+          pushFlower(outerX, baseY + (Math.random() - 0.5) * 15, leftOuterSize);
+        }
+
+        // B. Inner flower (flanking the card border safely)
+        const leftInnerSize = 95 + Math.random() * 40;
+        const leftInnerWidthPct = (leftInnerSize / winWidth) * 100;
+        const maxSafeLeftInnerX = Math.max(0.5, cardLeftPct - leftInnerWidthPct - 1.5);
+        if (maxSafeLeftInnerX > 4.0) {
+          const innerX = Math.max(2.0, maxSafeLeftInnerX - (Math.random() * 3.5));
+          pushFlower(innerX, baseY + 35 + (Math.random() - 0.5) * 15, leftInnerSize);
+        }
+
+        // C. Mid-bank filler flower (fills the center of the bank)
+        if (s % 2 === 0 && maxSafeLeftInnerX > 6.5) {
+          const leftMidSize = 85 + Math.random() * 35;
+          const leftMidWidthPct = (leftMidSize / winWidth) * 100;
+          const maxSafeMidX = Math.max(0.5, cardLeftPct - leftMidWidthPct - 1.5);
+          const midX = 3.5 + Math.random() * Math.max(1.0, maxSafeMidX - 6.0);
+          pushFlower(midX, baseY + 18 + (Math.random() - 0.5) * 15, leftMidSize);
+        }
+
+        // 2. RIGHT RIVER BANK: Multi-column stream (Inner + Outer + Mid fillers)
+        const minSafeRightX = cardRightPct + 1.5;
+
+        // A. Outer flower
+        const rightOuterSize = 105 + Math.random() * 45;
+        const rightOuterWidthPct = (rightOuterSize / winWidth) * 100;
+        const maxRightBoundary = 98 - rightOuterWidthPct;
+        if (maxRightBoundary > minSafeRightX + 2.0) {
+          const outerX = Math.max(minSafeRightX + 1.0, maxRightBoundary - (Math.random() * 3.8));
+          pushFlower(outerX, baseY + (Math.random() - 0.5) * 15, rightOuterSize);
+        }
+
+        // B. Inner flower (flanking the card border safely)
+        const rightInnerSize = 95 + Math.random() * 40;
+        const rightInnerWidthPct = (rightInnerSize / winWidth) * 100;
+        const maxRightInnerBoundary = 98 - rightInnerWidthPct;
+        if (maxRightInnerBoundary > minSafeRightX + 1.0) {
+          const innerX = minSafeRightX + Math.random() * Math.min(3.5, maxRightInnerBoundary - minSafeRightX);
+          pushFlower(innerX, baseY + 35 + (Math.random() - 0.5) * 15, rightInnerSize);
+        }
+
+        // C. Mid-bank filler flower (fills the center of the right bank)
+        if (s % 2 === 1 && maxRightBoundary > minSafeRightX + 6.0) {
+          const rightMidSize = 85 + Math.random() * 35;
+          const midX = minSafeRightX + 3.0 + Math.random() * (maxRightBoundary - minSafeRightX - 6.0);
+          pushFlower(midX, baseY + 18 + (Math.random() - 0.5) * 15, rightMidSize);
+        }
+      }
+
+      // 3. BOTTOM RIVER CLUSTER: Fill the wide open water directly beneath the card
+      const bottomStartY = Math.max(cardBottom + 30, totalHeight - 480);
+      const bottomSpots = [
+        { x: 6.0,  yRel: 40,  size: 135 },
+        { x: 19.5, yRel: 50,  size: 145 },
+        { x: 33.0, yRel: 35,  size: 155 },
+        { x: 48.0, yRel: 55,  size: 150 },
+        { x: 63.5, yRel: 40,  size: 155 },
+        { x: 78.0, yRel: 50,  size: 145 },
+        { x: 91.5, yRel: 35,  size: 140 },
+        // Second staggered row below card
+        { x: 12.0, yRel: 150, size: 140 },
+        { x: 26.5, yRel: 165, size: 150 },
+        { x: 41.0, yRel: 145, size: 160 },
+        { x: 56.5, yRel: 160, size: 155 },
+        { x: 71.0, yRel: 150, size: 150 },
+        { x: 85.5, yRel: 160, size: 140 }
+      ];
+
+      bottomSpots.forEach((spot) => {
+        const y = bottomStartY + spot.yRel + (Math.random() - 0.5) * 20;
+        if (y < totalHeight - 30) {
+          pushFlower(spot.x + (Math.random() - 0.5) * 2.0, y, spot.size);
+        }
+      });
+    } else {
+      // ── MOBILE: Position flowers in top, bottom, and outer edges ──
+      const mobileStep = 220;
+      const count = Math.max(6, Math.floor((totalHeight - 160) / mobileStep));
+      for (let i = 0; i < count; i++) {
+        const isLeft = (i % 2 === 0);
+        const y = 80 + i * mobileStep + (Math.random() - 0.5) * 25;
+        const x = isLeft ? (-3.0 + Math.random() * 1.5) : (93.5 + Math.random() * 1.5);
+        pushFlower(x, y, 65 + Math.random() * 20);
+      }
+      // Mobile bottom cluster below card
+      const mobileBottomY = Math.max(cardBottom + 25, totalHeight - 200);
+      pushFlower(12.0, mobileBottomY, 75);
+      pushFlower(38.0, mobileBottomY + 30, 80);
+      pushFlower(64.0, mobileBottomY + 15, 75);
+      pushFlower(86.0, mobileBottomY + 35, 75);
+    }
   }
 
   flowers.splice(0, flowers.length, ...items);

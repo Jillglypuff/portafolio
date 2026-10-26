@@ -1,0 +1,164 @@
+---
+import { getAdjacentBlogPosts } from '../data/blogsNav';
+
+interface Props {
+  currentSlug: string;
+  lang?: string;
+}
+
+const { currentSlug, lang = 'es' } = Astro.props;
+const currentLanguage = (lang === 'en' || lang === 'pt') ? lang : 'es';
+
+const { prevPost, nextPost } = getAdjacentBlogPosts(currentSlug);
+
+const labels = {
+  es: {
+    prev: "Entrada anterior",
+    next: "Siguiente entrada",
+  },
+  en: {
+    prev: "Previous entry",
+    next: "Next entry",
+  },
+  pt: {
+    prev: "Entrada anterior",
+    next: "Próxima entrada",
+  }
+}[currentLanguage];
+
+const hasAny = prevPost || nextPost;
+---
+
+{hasAny && (
+  <nav class="blog-arrows-nav" aria-label="Navegación entre entradas">
+    <div class="arrows-container">
+      {prevPost ? (
+        <a 
+          href={`/${currentLanguage}/${prevPost.slug === 'blog' ? 'blog' : prevPost.slug}/`}
+          class="arrow-link arrow-prev"
+          aria-label={labels.prev}
+          title={`${labels.prev}: ${prevPost.titles[currentLanguage]}`}
+          id="blog-nav-prev"
+        >
+          <svg class="arrow-svg" width="44" height="24" viewBox="0 0 44 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="40" y1="12" x2="4" y2="12"></line>
+            <polyline points="14 20 4 12 14 4"></polyline>
+          </svg>
+        </a>
+      ) : (
+        <span class="arrow-placeholder" aria-hidden="true"></span>
+      )}
+
+      {nextPost ? (
+        <a 
+          href={`/${currentLanguage}/${nextPost.slug === 'blog' ? 'blog' : nextPost.slug}/`}
+          class="arrow-link arrow-next"
+          aria-label={labels.next}
+          title={`${labels.next}: ${nextPost.titles[currentLanguage]}`}
+          id="blog-nav-next"
+        >
+          <svg class="arrow-svg" width="44" height="24" viewBox="0 0 44 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="12" x2="40" y2="12"></line>
+            <polyline points="30 4 40 12 30 20"></polyline>
+          </svg>
+        </a>
+      ) : (
+        <span class="arrow-placeholder" aria-hidden="true"></span>
+      )}
+    </div>
+  </nav>
+)}
+
+<style>
+  .blog-arrows-nav {
+    width: 100%;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 75, 145, 0.2);
+    position: relative;
+    z-index: 10;
+  }
+
+  .arrows-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .arrow-placeholder {
+    width: 60px;
+    height: 44px;
+    visibility: hidden;
+  }
+
+  .arrow-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.1rem;
+    border-radius: 9999px;
+    color: var(--rose, #ff4b91);
+    background: rgba(255, 75, 145, 0.08);
+    border: 1.5px solid rgba(255, 75, 145, 0.35);
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+  }
+
+  .arrow-svg {
+    transition: transform 0.25s ease;
+  }
+
+  .arrow-prev:hover {
+    background: var(--rose, #ff4b91);
+    color: #ffffff;
+    border-color: var(--rose, #ff4b91);
+    transform: translateX(-4px);
+    box-shadow: 0 4px 16px rgba(255, 75, 145, 0.35);
+  }
+
+  .arrow-prev:hover .arrow-svg {
+    transform: translateX(-3px);
+  }
+
+  .arrow-next:hover {
+    background: var(--rose, #ff4b91);
+    color: #ffffff;
+    border-color: var(--rose, #ff4b91);
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(255, 75, 145, 0.35);
+  }
+
+  .arrow-next:hover .arrow-svg {
+    transform: translateX(3px);
+  }
+
+  /* ☀️ Modo día */
+  :global(html.theme-day) .arrow-link {
+    color: var(--rose-dark, #d4145a);
+    background: rgba(255, 75, 145, 0.08);
+    border-color: rgba(255, 75, 145, 0.35);
+  }
+
+  :global(html.theme-day) .arrow-link:hover {
+    color: #ffffff;
+    background: var(--rose, #ff4b91);
+    border-color: var(--rose, #ff4b91);
+    box-shadow: 0 4px 16px rgba(255, 75, 145, 0.35);
+  }
+
+  /* 🌙 Modo noche */
+  :global(html:not(.theme-day)) .arrow-link {
+    color: #f8fafc;
+    background: rgba(255, 75, 145, 0.12);
+    border-color: rgba(255, 75, 145, 0.3);
+  }
+
+  :global(html:not(.theme-day)) .arrow-link:hover {
+    color: #ffffff;
+    background: var(--rose, #ff4b91);
+    border-color: var(--rose, #ff4b91);
+    box-shadow: 0 4px 18px rgba(255, 75, 145, 0.45);
+  }
+</style>

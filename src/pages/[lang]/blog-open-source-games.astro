@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -30,7 +31,7 @@ const content = {
       "Clear legal distinction: Clean-room logic code can be open source, but selling mods with extracted proprietary assets is illegal."
     ],
     section1: {
-      heading: "1. Reverse Engineering Tools & Binary Analysis ⚙️",
+      heading: "1. Reverse Engineering Tools & Binary Analysis",
       paragraphs: [
         `Between university classes, workout routines at the gym, and managing operational workflows for <a href="https://lagatacr.com" target="_blank" class="inline-blog-link">lagatacr.com</a>, finding time for video games doesn't happen often. But when I do play, I look at software through a technical lens.`,
         "When developers perform reverse engineering on closed-source game executables, they rely on standardized industry tools:",
@@ -40,7 +41,7 @@ const content = {
       ]
     },
     section2: {
-      heading: "2. Dual-Process Execution & Memory Injection Hooks ⚔️",
+      heading: "2. Dual-Process Execution & Memory Injection Hooks",
       paragraphs: [
         "In complex gaming crossovers (such as linking Elden Ring combat telemetry into a voxel engine like Minecraft), developers often use a **Dual-Process Architecture** where both games run concurrently on the host system.",
         "Rather than just porting raw 3D assets, dynamic memory injection and Inter-Process Communication (IPC) enable real-time state synchronization:",
@@ -78,7 +79,7 @@ PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
 }`
     },
     section3: {
-      heading: "3. Commercial Rules: Can You Sell Game Mods or Crossovers? ⚖️",
+      heading: "3. Commercial Rules: Can You Sell Game Mods or Crossovers?",
       paragraphs: [
         "A critical question often arises in software engineering: **Can someone sell a mod or crossover that uses assets or logic from commercial games?**",
         "**• Selling Commercial Assets is Illegal:** Absolutely not. Extracting proprietary 3D meshes, textures, sound files, or original code from publishers (like FromSoftware, Nintendo, or Bethesda) and selling them violates copyright law and End User License Agreements (EULA). This results in DMCA cease-and-desist notices and legal liability.",
@@ -113,7 +114,7 @@ PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
       "Distinción legal clara: El código de lógica clean-room puede ser open source, pero vender mods con assets propietarios es ilegal."
     ],
     section1: {
-      heading: "1. Herramientas de Ingeniería Inversa y Análisis de Binarios ⚙️",
+      heading: "1. Herramientas de Ingeniería Inversa y Análisis de Binarios",
       paragraphs: [
         `Entre las clases de la universidad, mis rutinas en el gimnasio y la administración operativa de <a href="https://lagatacr.com" target="_blank" class="inline-blog-link">lagatacr.com</a>, rara vez me queda tiempo libre para jugar videojuegos. Sin embargo, cuando juego, me gusta entender cómo está construido el software por dentro.`,
         "Cuando los desarrolladores analizan un ejecutable de código cerrado, utilizan herramientas estándar de la industria:",
@@ -123,7 +124,7 @@ PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
       ]
     },
     section2: {
-      heading: "2. Ejecución Dual en Memoria e Inyección de Hooks ⚔️",
+      heading: "2. Ejecución Dual en Memoria e Inyección de Hooks",
       paragraphs: [
         "En crossovers complejos (como enviar telemetría de combate de Elden Ring hacia un motor de vóxeles como Minecraft), los desarrolladores suelen emplear una **Arquitectura de Proceso Dual** donde ambos juegos se ejecutan simultáneamente en el sistema.",
         "En lugar de simplemente portar modelos 3D, la inyección de memoria dinámica y la comunicación entre procesos (IPC) permiten la sincronización en tiempo real:",
@@ -161,7 +162,7 @@ PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
 }`
     },
     section3: {
-      heading: "3. Marco Comercial: ¿Se Pueden Vender Mods o Crossovers? ⚖️",
+      heading: "3. Marco Comercial: ¿Se Pueden Vender Mods o Crossovers?",
       paragraphs: [
         "Surge una pregunta fundamental en desarrollo: **¿Puede alguien vender un mod o crossover que utilice assets o código de juegos comerciales?**",
         "**• Vender Assets Comerciales es Ilegal:** Definitivamente no. Extraer modelos 3D, texturas, audio o código de empresas (como FromSoftware, Nintendo o Bethesda) y venderlos viola las leyes de derechos de autor y las licencias EULA. Esto resulta en notificaciones DMCA y responsabilidad legal.",
@@ -196,7 +197,7 @@ PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
       "Distinção legal clara: Código clean-room pode ser open-source, mas vender mods com assets proprietários é ilegal."
     ],
     section1: {
-      heading: "1. Ferramentas de Engenharia Reversa e Análise de Binários ⚙️",
+      heading: "1. Ferramentas de Engenharia Reversa e Análise de Binários",
       paragraphs: [
         `Entre as aulas na universidade, treinos na academia e a administração de <a href="https://lagatacr.com" target="_blank" class="inline-blog-link">lagatacr.com</a>, raramente sobra tempo livre para jogar. Mas quando jogo, gosto de observar como o software é construído internamente.`,
         "Quando desenvolvedores analisam executáveis comerciais de código fechado, usam ferramentas padrão da indústria:",
@@ -206,7 +207,7 @@ PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
       ]
     },
     section2: {
-      heading: "2. Execução Dupla em Memória e Hooks de Injeção ⚔️",
+      heading: "2. Execução Dupla em Memória e Hooks de Injeção",
       paragraphs: [
         "Em crossovers complexos (como sincronizar a telemetria de combate do Elden Ring com um motor em voxels como o Minecraft), desenvolvedores utilizam uma **Arquitetura de Processo Duplo** onde ambos os jogos rodam simultaneamente no sistema.",
         "Em vez de apenas portar modelos 3D, a injeção de memória dinâmica e a comunicação entre processos (IPC) permitem sincronização em tempo real:",
@@ -242,7 +243,7 @@ PlayerTelemetry ReadGameProcessState(HANDLE hProcess, uintptr_t baseAddress) {
 }`
     },
     section3: {
-      heading: "3. Regras Comerciais: É Permitido Vender Mods ou Crossovers? ⚖️",
+      heading: "3. Regras Comerciais: É Permitido Vender Mods ou Crossovers?",
       paragraphs: [
         "Uma questão fundamental em engenharia de software: **É possível vender um mod ou crossover que utiliza assets ou código de jogos comerciais?**",
         "**• Vender Assets Comerciais é Ilegal:** Definitivamente não. Extrair modelos 3D, texturas, áudio ou código de empresas (como FromSoftware, Nintendo ou Bethesda) e vendê-los viola leis de direitos autorais e licenças EULA, resultando em notificações DMCA e sanções legais.",
@@ -288,7 +289,7 @@ const c = content[lang as keyof typeof content] || content.es;
           <h1 class="post-title">{c.title}</h1>
           <p class="post-subtitle">{c.subtitle}</p>
           <div class="post-date">
-            <span class="calendar-icon">📅</span> {c.date}
+             {c.date}
           </div>
         </header>
 
@@ -362,6 +363,8 @@ const c = content[lang as keyof typeof content] || content.es;
           <section class="comments-wrapper">
             <CommentsSection client:load postSlug="blog-open-source-games" currentLang={lang} />
           </section>
+        
+          <BlogNavigation currentSlug="blog-open-source-games" lang={lang} />
         </div>
       </article>
     </main>

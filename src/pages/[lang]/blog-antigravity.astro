@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -215,6 +216,13 @@ const content = {
 };
 
 const page = content[lang] || content.es;
+
+function formatMarkdown(str: string) {
+  if (!str) return '';
+  return str
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+}
 ---
 
 <Layout title={`${page.title} — Jill Hernandez`} lang={lang}>
@@ -262,7 +270,7 @@ const page = content[lang] || content.es;
           <p class="lead-text">{page.intro}</p>
           <p class="lead-desc">{page.introDesc}</p>
           {page.introExtra.map((para) => (
-            <p set:html={para}></p>
+            <p set:html={formatMarkdown(para)}></p>
           ))}
 
           <hr class="post-divider" />
@@ -272,7 +280,7 @@ const page = content[lang] || content.es;
             <h2 class="section-heading">{page.assistant.heading}</h2>
             <div class="section-body">
               {page.assistant.paragraphs.map((para) => (
-                <p set:html={para}></p>
+                <p set:html={formatMarkdown(para)}></p>
               ))}
             </div>
           </div>
@@ -284,7 +292,7 @@ const page = content[lang] || content.es;
             <h2 class="section-heading">{page.tokenTips.heading}</h2>
             <div class="section-body">
               {page.tokenTips.paragraphs.map((para) => (
-                <p set:html={para}></p>
+                <p set:html={formatMarkdown(para)}></p>
               ))}
             </div>
           </div>
@@ -296,7 +304,7 @@ const page = content[lang] || content.es;
             <h2 class="section-heading">{page.ecosystem.heading}</h2>
             <div class="section-body">
               {page.ecosystem.paragraphs.map((para) => (
-                <p set:html={para}></p>
+                <p set:html={formatMarkdown(para)}></p>
               ))}
             </div>
           </div>
@@ -308,7 +316,7 @@ const page = content[lang] || content.es;
             <h2 class="section-heading">{page.perk.heading}</h2>
             <div class="section-body">
               {page.perk.paragraphs.map((para) => (
-                <p set:html={para}></p>
+                <p set:html={formatMarkdown(para)}></p>
               ))}
             </div>
           </div>
@@ -322,7 +330,7 @@ const page = content[lang] || content.es;
               {page.remember.items.map((item) => (
                 <li class="remember-item">
                   <span class="remember-dot">🌸</span>
-                  <span>{item}</span>
+                  <span class="remember-text" set:html={formatMarkdown(item)}></span>
                 </li>
               ))}
             </ul>
@@ -339,6 +347,8 @@ const page = content[lang] || content.es;
 
           <!-- Comments Section -->
           <CommentsSection slug="blog-antigravity" lang={lang} client:load />
+        
+          <BlogNavigation currentSlug="blog-antigravity" lang={lang} />
         </div>
       </article>
 
@@ -493,6 +503,31 @@ const page = content[lang] || content.es;
     font-size: 1.125rem;
     line-height: 1.8;
     color: rgba(255, 255, 255, 0.85);
+  }
+
+  .post-content strong {
+    color: var(--text, #ffffff);
+    font-weight: 700;
+  }
+
+  .inline-code {
+    background: rgba(255, 75, 145, 0.12);
+    color: #ff4b91;
+    padding: 0.15rem 0.45rem;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9em;
+    border: 1px solid rgba(255, 75, 145, 0.25);
+  }
+
+  :global(html.theme-day) .post-content strong {
+    color: #0f172a !important;
+  }
+
+  :global(html.theme-day) .inline-code {
+    background: rgba(255, 75, 145, 0.1) !important;
+    color: #db2777 !important;
+    border-color: rgba(255, 75, 145, 0.3) !important;
   }
 
   .post-content p {

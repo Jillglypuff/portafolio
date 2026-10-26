@@ -1165,70 +1165,255 @@ html.theme-day .blog-post-page {
   color: #0f172a !important;
 }
 
-html.theme-day .blog-card,
+/* Dedicated Blog Container: White background with delicate pink border */
+html.theme-day .blog-post-page .post-card,
+html.theme-day .blog-view .blog-card,
+html.theme-day .post-card,
 html.theme-day .blog-post-card,
 html.theme-day .article-content,
 html.theme-day .content-card,
 html.theme-day .blog-container .card {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(255, 75, 145, 0.25) !important;
+  background: #ffffff !important;
+  border: 1.5px solid rgba(255, 75, 145, 0.45) !important;
+  border-radius: 1.5rem !important;
   color: #0f172a !important;
-  box-shadow: 0 10px 30px rgba(180, 100, 140, 0.1) !important;
+  box-shadow: 0 16px 40px rgba(255, 75, 145, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04) !important;
 }
 
+/* Titles: Remove white background-clip gradient so titles are 100% visible and crisp */
 html.theme-day .blog-post-page .post-title,
+html.theme-day .blog-view .post-title,
+html.theme-day .post-title {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #0f172a !important;
+  color: #0f172a !important;
+}
+
+/* Headings in blog posts */
 html.theme-day .blog-post-page h1,
 html.theme-day .blog-post-page h2,
 html.theme-day .blog-post-page h3,
 html.theme-day .blog-post-page h4,
-html.theme-day .blog-view .post-title,
 html.theme-day .blog-view h1,
 html.theme-day .blog-view h2,
 html.theme-day .blog-view h3,
-html.theme-day .blog-view h4 {
+html.theme-day .blog-view h4,
+html.theme-day .blog-post-page .section-heading,
+html.theme-day .blog-view .section-heading,
+html.theme-day .section-heading {
   color: #0f172a !important;
 }
 
+/* Post Meta: Date, Subtitle, Category & Badge */
+html.theme-day .blog-post-page .post-date,
+html.theme-day .blog-view .post-date,
+html.theme-day .post-date {
+  color: #475569 !important;
+}
+
+html.theme-day .blog-post-page .post-subtitle,
+html.theme-day .blog-view .post-subtitle,
+html.theme-day .post-subtitle {
+  color: #475569 !important;
+}
+
+html.theme-day .blog-post-page .meta-badge,
+html.theme-day .meta-badge {
+  background: rgba(255, 75, 145, 0.08) !important;
+  border: 1px solid rgba(255, 75, 145, 0.35) !important;
+  color: var(--rose-dark, #d4145a) !important;
+  font-weight: 600 !important;
+}
+
+html.theme-day .post-category {
+  color: var(--rose-dark, #d4145a) !important;
+}
+
+/* Paragraphs & Text Content */
 html.theme-day .blog-post-page p,
 html.theme-day .blog-post-page li,
 html.theme-day .blog-view p,
-html.theme-day .blog-view li {
+html.theme-day .blog-view li,
+html.theme-day .blog-post-page .section-paragraph,
+html.theme-day .blog-view .section-paragraph,
+html.theme-day .section-paragraph {
   color: #334155 !important;
 }
 
 html.theme-day .blog-post-page p strong,
 html.theme-day .blog-post-page li strong,
 html.theme-day .blog-view p strong,
-html.theme-day .blog-view li strong {
+html.theme-day .blog-view li strong,
+html.theme-day .post-card strong {
   color: #0f172a !important;
 }
 
 html.theme-day .blog-post-page .lead-text,
 html.theme-day .blog-view .lead-text,
-html.theme-day .blog-post-page .post-subtitle,
-html.theme-day .blog-view .post-subtitle {
+html.theme-day .blog-post-page .lead-desc,
+html.theme-day .blog-view .lead-desc {
+  color: #334155 !important;
+}
+
+/* Intro Callout Bubble */
+html.theme-day .intro-bubble {
+  background: rgba(255, 75, 145, 0.05) !important;
+  border-left: 4px solid var(--rose, #ff4b91) !important;
+}
+html.theme-day .intro-main {
+  color: #0f172a !important;
+}
+html.theme-day .intro-desc {
   color: #475569 !important;
 }
 
-html.theme-day .blog-post-page .back-link,
-html.theme-day .blog-view .back-link {
-  color: var(--rose-dark) !important;
+/* Bullet Items & Lists */
+html.theme-day .bullet-item,
+html.theme-day .bullet-text,
+html.theme-day .remember-text {
+  color: #334155 !important;
+}
+html.theme-day .bullet-icon {
+  color: var(--rose, #ff4b91) !important;
 }
 
-html.theme-day .blog-post-page .back-link:hover,
-html.theme-day .blog-view .back-link:hover {
-  color: var(--rose) !important;
+/* Repo Banner */
+html.theme-day .repo-banner {
+  background: #f8fafc !important;
+  border: 1px solid rgba(255, 75, 145, 0.3) !important;
+}
+html.theme-day .repo-info strong {
+  color: #0f172a !important;
+}
+html.theme-day .repo-link {
+  color: #0284c7 !important;
+}
+html.theme-day .repo-link:hover {
+  color: var(--rose, #ff4b91) !important;
 }
 
-html.theme-day .blog-post-page pre,
-html.theme-day .blog-view pre,
+/* Dividers */
+html.theme-day .blog-post-page .divider,
+html.theme-day .blog-view .post-divider,
+html.theme-day .divider {
+  background: linear-gradient(90deg, transparent, rgba(255, 75, 145, 0.35), transparent) !important;
+}
+
+/* Terminal Screenshot Showcase */
+html.theme-day .terminal-screenshot-wrapper {
+  border: 1.5px solid rgba(255, 75, 145, 0.35) !important;
+  box-shadow: 0 12px 30px rgba(180, 100, 140, 0.12) !important;
+}
+html.theme-day .terminal-caption-bar {
+  background: #f8fafc !important;
+  border-top: 1px solid rgba(255, 75, 145, 0.15) !important;
+}
+html.theme-day .caption-text {
+  color: #475569 !important;
+}
+
+/* Code Blocks & Boxes */
+html.theme-day .code-container,
+html.theme-day .code-box {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 75, 145, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+}
+html.theme-day .code-header {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+html.theme-day .code-title {
+  color: #cbd5e1 !important;
+}
+html.theme-day .code-block {
+  color: #38bdf8 !important;
+}
 html.theme-day .blog-post-page code:not(pre code),
 html.theme-day .blog-view code:not(pre code) {
   background: #f1f5f9 !important;
   color: #0f172a !important;
-  border-color: #cbd5e1 !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 0.15rem 0.4rem !important;
+  border-radius: 4px !important;
 }
 
+/* Remember Box */
+html.theme-day .remember-box {
+  background: rgba(255, 75, 145, 0.03) !important;
+  border: 1.5px solid rgba(255, 75, 145, 0.35) !important;
+}
+html.theme-day .remember-item {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 75, 145, 0.25) !important;
+  color: #1e293b !important;
+  box-shadow: 0 2px 8px rgba(255, 75, 145, 0.06) !important;
+}
+html.theme-day .remember-item:hover {
+  background: rgba(255, 75, 145, 0.06) !important;
+  border-color: rgba(255, 75, 145, 0.45) !important;
+}
+
+/* Conclusion Box */
+html.theme-day .conclusion-box {
+  background: rgba(255, 75, 145, 0.04) !important;
+  border: 1.5px solid rgba(255, 75, 145, 0.3) !important;
+}
+html.theme-day .closing-paragraph {
+  color: #1e293b !important;
+}
+html.theme-day .closing-callout {
+  color: var(--rose-dark, #d4145a) !important;
+}
+html.theme-day .closing-signature {
+  color: var(--rose-dark, #d4145a) !important;
+}
+html.theme-day .signature-name {
+  color: #0f172a !important;
+}
+
+/* Back Link across all blog templates */
+.blog-post-page .back-link,
+.blog-view .back-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  text-decoration: none !important;
+  margin-bottom: 2rem !important;
+  position: relative !important;
+  z-index: 40 !important;
+  transition: all 0.2s ease !important;
+}
+.blog-post-page .back-link .arrow,
+.blog-view .back-link .arrow {
+  font-size: 1.15rem !important;
+  line-height: 1 !important;
+  transition: transform 0.2s ease !important;
+}
+html.theme-day .blog-post-page .back-link,
+html.theme-day .blog-view .back-link {
+  color: var(--rose-dark, #d4145a) !important;
+}
+html.theme-day .blog-post-page .back-link:hover,
+html.theme-day .blog-view .back-link:hover {
+  color: var(--rose, #ff4b91) !important;
+  transform: translateX(-4px) !important;
+}
+html:not(.theme-day) .blog-post-page .back-link,
+html:not(.theme-day) .blog-view .back-link {
+  color: #34d399 !important;
+}
+html:not(.theme-day) .blog-post-page .back-link:hover,
+html:not(.theme-day) .blog-view .back-link:hover {
+  color: #10b981 !important;
+  transform: translateX(-4px) !important;
+}
+
+/* Takeaway, Quote, Note boxes */
 html.theme-day .blog-post-page .takeaway-box,
 html.theme-day .blog-post-page .quote-box,
 html.theme-day .blog-post-page .note-box,
@@ -1239,6 +1424,40 @@ html.theme-day .section-card {
   background: rgba(255, 75, 145, 0.04) !important;
   border-color: rgba(255, 75, 145, 0.25) !important;
   color: #0f172a !important;
+}
+
+/* Comments Section in Blog */
+html.theme-day .comments-wrapper {
+  border-top: 1px solid rgba(255, 75, 145, 0.25) !important;
+}
+html.theme-day .comments-title,
+html.theme-day .form-heading,
+html.theme-day .author-name {
+  color: #0f172a !important;
+}
+html.theme-day .form-label,
+html.theme-day .comment-content {
+  color: #334155 !important;
+}
+html.theme-day .comment-form-card {
+  background: rgba(255, 75, 145, 0.03) !important;
+  border: 1px solid rgba(255, 75, 145, 0.22) !important;
+}
+html.theme-day .comment-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 75, 145, 0.22) !important;
+  box-shadow: 0 4px 15px rgba(255, 75, 145, 0.06) !important;
+}
+html.theme-day .form-input,
+html.theme-day .form-textarea {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 75, 145, 0.3) !important;
+  color: #0f172a !important;
+}
+html.theme-day .form-input:focus,
+html.theme-day .form-textarea:focus {
+  border-color: #ff4b91 !important;
+  box-shadow: 0 0 0 3px rgba(255, 75, 145, 0.2) !important;
 }
 
 
@@ -1285,7 +1504,7 @@ html.theme-day .tech-card,
 html.theme-day .advisory-card,
 html.theme-day .skill-group,
 html.theme-day .carousel-stage-wrapper,
-html.theme-day .blog-card,
+html.theme-day #blog .blog-card,
 html.theme-day .contact-card {
   background: rgba(255, 255, 255, 0.72) !important;
   backdrop-filter: blur(12px);
@@ -1300,3 +1519,96 @@ html.theme-day .blog-post-page {
   position: relative;
   z-index: 5;
 }
+
+/* Ensure blog-post-page has room below the fixed 64px navbar so back-link is prominent and visible */
+.blog-post-page {
+  padding-top: calc(64px + 1.5rem) !important;
+}
+
+.blog-post-page .container {
+  padding-top: 0 !important;
+}
+
+/* Semantic article wrapper: never has card background or border */
+.post-article {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative !important;
+  z-index: 30 !important;
+}
+
+/* Blog Content Containers: Always above floating flower water pond (z-index: 25) */
+.post-card,
+.blog-card,
+.blog-post-card,
+.blog-post-page .post-card,
+.blog-view .blog-card {
+  position: relative !important;
+  z-index: 30 !important;
+}
+
+/* ☀️ Day Mode: Solid white container with crisp pink border and dark text */
+html.theme-day .blog-post-page .post-card,
+html.theme-day .blog-view .blog-card,
+html.theme-day .post-card,
+html.theme-day .blog-post-card,
+html.theme-day .article-content,
+html.theme-day .content-card,
+html.theme-day .blog-container .card {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(255, 75, 145, 0.45) !important;
+  border-radius: 1.5rem !important;
+  color: #0f172a !important;
+  box-shadow: 0 16px 40px rgba(255, 75, 145, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.theme-day .post-content,
+html.theme-day .post-content p,
+html.theme-day .post-content li,
+html.theme-day .blog-view p,
+html.theme-day .blog-view li {
+  color: #334155 !important;
+}
+
+html.theme-day .post-content strong,
+html.theme-day .blog-view strong,
+html.theme-day .blog-post-page strong,
+html.theme-day .section-heading,
+html.theme-day .lead-text {
+  color: #0f172a !important;
+}
+
+/* 🌙 Night Mode: Rich dark container with glowing pink border and bright text */
+html:not(.theme-day) .blog-post-page .post-card,
+html:not(.theme-day) .blog-view .blog-card,
+html:not(.theme-day) .post-card,
+html:not(.theme-day) .blog-post-card,
+html:not(.theme-day) .article-content,
+html:not(.theme-day) .content-card,
+html:not(.theme-day) .blog-container .card {
+  background: rgba(18, 14, 24, 0.94) !important;
+  border: 1px solid rgba(255, 75, 145, 0.28) !important;
+  border-radius: 1.5rem !important;
+  color: #f1f5f9 !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+html:not(.theme-day) .post-content,
+html:not(.theme-day) .post-content p,
+html:not(.theme-day) .post-content li,
+html:not(.theme-day) .blog-view p,
+html:not(.theme-day) .blog-view li {
+  color: #cbd5e1 !important;
+}
+
+html:not(.theme-day) .post-content strong,
+html:not(.theme-day) .blog-view strong,
+html:not(.theme-day) .blog-post-page strong,
+html:not(.theme-day) .section-heading,
+html:not(.theme-day) .lead-text {
+  color: #ffffff !important;
+}
+

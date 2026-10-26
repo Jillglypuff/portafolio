@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import jillPhoto from '../../assets/jill.jpeg';
 import Animations from '../../components/Animations.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -21,7 +22,7 @@ const content = {
     title: "Dear Diary, This Is Where It Begins 🌸",
     date: "June 5, 2026",
     subtitle: "A developer diary by Jill",
-    intro: "Hi, I'm Jill. 💻✨",
+    intro: "Hi, I'm Jill.",
     introDesc: "I'm a Full Stack Developer, a curious learner, and the kind of person who somehow ends up opening fifteen browser tabs while trying to understand one technical concept.",
     welcome: "If you've found your way here, welcome.",
     welcomeSub: "This little corner of my portfolio is something I've wanted to create for a long time.",
@@ -34,7 +35,7 @@ const content = {
     insteadDesc: "Instead, I wanted a place that feels a little more personal. A place where I can document what I'm learning, what I'm building, what breaks, what gets fixed, and all the lessons I collect along the way.",
     sections: [
       {
-        title: "How I ended up in tech 💻",
+        title: "How I ended up in tech",
         paragraphs: [
           "The funny thing is that technology wasn't a straight path for me.",
           "My journey started in technical support, helping people solve problems, troubleshooting systems, and learning how technology behaves when things don't go according to plan.",
@@ -90,7 +91,7 @@ const content = {
     title: "Querido Diario: Aquí es donde comienza 🌸",
     date: "5 de Junio, 2026",
     subtitle: "El diario de desarrollo de Jill",
-    intro: "Hola, soy Jill. 💻✨",
+    intro: "Hola, soy Jill.",
     introDesc: "Soy desarrolladora Full Stack, una aprendiz curiosa y el tipo de persona que termina abriendo quince pestañas en el navegador mientras intenta comprender un solo concepto técnico.",
     welcome: "Si has encontrado el camino hasta aquí, bienvenido/a.",
     welcomeSub: "Este pequeño rincón de mi portafolio es algo que he querido crear desde hace mucho tiempo.",
@@ -103,7 +104,7 @@ const content = {
     insteadDesc: "En su lugar, quería un espacio que se sintiera un poco más personal. Un lugar donde pueda documentar lo que estoy aprendiendo, lo que estoy construyendo, lo que se rompe, lo que se soluciona y todas las lecciones que voy recopilando en el camino.",
     sections: [
       {
-        title: "Cómo terminé en la tecnología 💻",
+        title: "Cómo terminé en la tecnología",
         paragraphs: [
           "Lo curioso es que la tecnología no fue un camino directo para mí.",
           "Mi viaje comenzó en soporte técnico, ayudando a las personas a resolver problemas, solucionando fallas en sistemas y aprendiendo cómo se comporta la tecnología cuando las cosas no salen según lo planeado.",
@@ -159,7 +160,7 @@ const content = {
     title: "Querido Diário, é aqui que começa 🌸",
     date: "5 de Junho, 2026",
     subtitle: "Diário de desenvolvimento da Jill",
-    intro: "Olá, eu sou a Jill. 💻✨",
+    intro: "Olá, eu sou a Jill.",
     introDesc: "Sou desenvolvedora Full Stack, uma aprendiz curiosa e o tipo de pessoa que acaba abrindo quinze abas no navegador enquanto tenta entender um único conceito técnico.",
     welcome: "Se você encontrou o caminho até aqui, seja bem-vindo/a.",
     welcomeSub: "Este pequeno canto do meu portfólio é algo que eu queria criar há muito tempo.",
@@ -172,7 +173,7 @@ const content = {
     insteadDesc: "Em vez disso, eu queria um lugar que parecesse um pouco mais pessoal. Um lugar onde eu possa documentar o que estou aprendendo, o que estou construindo, o que quebra, o que é consertado e todas as lições que coleciono ao longo do caminho.",
     sections: [
       {
-        title: "Como vim parar na tecnologia 💻",
+        title: "Como vim parar na tecnologia",
         paragraphs: [
           "O engraçado é que a tecnologia não foi um caminho reto para mim.",
           "Minha jornada começou no suporte técnico, ajudando as pessoas a resolver problemas, diagnosticando falhas em sistemas e aprendendo como a tecnologia se comporta quando as coisas não saem como planejado.",
@@ -301,6 +302,7 @@ const page = content[lang] || content.es;
               </div>
             </div>
           ))}
+          <BlogNavigation currentSlug="blog" lang={lang} />
         </div>
       </article>
 

@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import { useTranslations } from '../../i18n/utils';
 import Animations from '../../components/Animations.vue';
 import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
 
 export function getStaticPaths() {
   return [
@@ -30,7 +31,7 @@ const content = {
       "Crucial for security triage, patch differential analysis, and recovering lost source code in enterprise systems."
     ],
     section1: {
-      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Tooling Breakdown ⚙️",
+      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Tooling Breakdown",
       paragraphs: [
         "In modern software engineering, closed-source executables (`.exe`, `.dll`, `.so`, `.dylib`) are black boxes. Decompilation tools allow developers and security researchers to peer inside.",
         "**• Ghidra (NSA Open Source):** A free, multi-architecture reverse engineering framework. Excellent C decompiler, scriptable in Python/Java, and ideal for team collaboration.",
@@ -99,7 +100,7 @@ for func in function_manager.getFunctions(True):
       "Crucial para auditorías de seguridad, análisis diferencial de parches y recuperación de código fuente perdido."
     ],
     section1: {
-      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Comparativa Técnica ⚙️",
+      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Comparativa Técnica",
       paragraphs: [
         "En ingeniería de software, los ejecutables de código cerrado (`.exe`, `.dll`, `.so`) son cajas negras. Las herramientas de descompilación permiten ver qué hay dentro.",
         "**• Ghidra (Open Source de la NSA):** Framework gratuito y multiplataforma. Excelente descompilador de C, automatizable con Python/Java y perfecto para trabajo en equipo.",
@@ -168,7 +169,7 @@ for func in function_manager.getFunctions(True):
       "Fundamentais para auditorias de segurança e recuperação de código-fonte legado."
     ],
     section1: {
-      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Comparativo Técnico ⚙️",
+      heading: "1. Ghidra vs. IDA Pro vs. x64dbg — Comparativo Técnico",
       paragraphs: [
         "Executáveis de código fechado (`.exe`, `.dll`) são caixas pretas. Ferramentas de descompilação permitem entender o que há dentro.",
         "**• Ghidra (Open Source da NSA):** Framework gratuito e poderoso. Excelente descompilador de C e scriptável em Python/Java.",
@@ -320,6 +321,8 @@ const c = content[lang as keyof typeof content] || content.es;
           <section class="comments-wrapper">
             <CommentsSection client:load postSlug="blog-decompilation-tools" currentLang={lang} />
           </section>
+        
+          <BlogNavigation currentSlug="blog-decompilation-tools" lang={lang} />
         </div>
       </article>
     </main>
