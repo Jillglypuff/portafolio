@@ -760,6 +760,21 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "en": "Droplets & VPS Servers",
       "pt": "Droplets e Servidores VPS"
     }
+  },
+  {
+    "number": "51",
+    "slug": "blog-php-cve-115560",
+    "publishDate": "2026-10-28",
+    "titles": {
+      "es": "Querido Diario, La Nueva Vulnerabilidad de PHP (CVE-2026-115560), la Alerta de CISA y Por Qué Blindar php.ini Nos Salvó 🌸",
+      "en": "Dear Diary, The New PHP Advisory (CVE-2026-115560), CISA KEV Alert & Why Hardening Saved Us 🌸",
+      "pt": "Querido Diário, A Nova Vulnerabilidade do PHP (CVE-2026-115560), o Alerta da CISA e Como o php.ini Nos Salvou 🌸"
+    },
+    "shortTitles": {
+      "es": "PHP CVE-2026-115560 y Alerta CISA",
+      "en": "PHP CVE-2026-115560 & CISA KEV",
+      "pt": "PHP CVE-2026-115560 e Alerta CISA"
+    }
   }
 ];
 
