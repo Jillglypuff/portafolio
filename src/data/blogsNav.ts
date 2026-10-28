@@ -700,6 +700,66 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "en": "GitGuardian & Secret Scanning",
       "pt": "GitGuardian e Proteção de Segredos"
     }
+  },
+  {
+    "number": "47",
+    "slug": "blog-python-venv-cve",
+    "publishDate": "2026-10-28",
+    "titles": {
+      "es": "Querido Diario, La Vulnerabilidad en Python venv (CVE-2024-9287): Inyección de Comandos y el Peligro de 'source activate' 🌸",
+      "en": "Dear Diary, The Python venv Vulnerability (CVE-2024-9287), Command Injection, and the Risk of 'source activate' 🌸",
+      "pt": "Querido Diário, A Vulnerabilidade em Python venv (CVE-2024-9287): Injeção de Comandos e o Perigo de 'source activate' 🌸"
+    },
+    "shortTitles": {
+      "es": "Vulnerabilidad CPython venv",
+      "en": "CPython venv Vulnerability",
+      "pt": "Vulnerabilidade CPython venv"
+    }
+  },
+  {
+    "number": "48",
+    "slug": "blog-cyberpanel-rce",
+    "publishDate": "2026-10-29",
+    "titles": {
+      "es": "Querido Diario, El Desastre de CyberPanel (CVE-2024-51567): RCE Masivo en Python y Servidores Secuestrados 🌸",
+      "en": "Dear Diary, The CyberPanel Disaster (CVE-2024-51567): Massive Python RCE, Command Injection, and Compromised VPS Servers 🌸",
+      "pt": "Querido Diário, O Desastre do CyberPanel (CVE-2024-51567): RCE Massivo em Python e Servidores Sequestrados 🌸"
+    },
+    "shortTitles": {
+      "es": "CyberPanel RCE Masivo en Python",
+      "en": "CyberPanel Massive Python RCE",
+      "pt": "CyberPanel RCE Massivo em Python"
+    }
+  },
+  {
+    "number": "49",
+    "slug": "blog-psaux-ransomware",
+    "publishDate": "2026-10-30",
+    "titles": {
+      "es": "Querido Diario, Qué Es el Ransomware PSAUX y Cómo Cifra un Servidor Linux 🌸",
+      "en": "Dear Diary, What Is PSAUX Ransomware and How Does It Hijack a Linux Server? 🌸",
+      "pt": "Querido Diário, O Que É o Ransomware PSAUX e Como Ele Sequestra um Servidor Linux 🌸"
+    },
+    "shortTitles": {
+      "es": "Ransomware PSAUX en Linux",
+      "en": "PSAUX Linux Ransomware",
+      "pt": "Ransomware PSAUX no Linux"
+    }
+  },
+  {
+    "number": "50",
+    "slug": "blog-droplets-vps",
+    "publishDate": "2026-10-31",
+    "titles": {
+      "es": "Querido Diario, Qué Son Realmente los Droplets y Servidores VPS (Y Por Qué Cambian Todo) 🌸",
+      "en": "Dear Diary, What Are Droplets and VPS Servers Really? (And Why They Change Everything) 🌸",
+      "pt": "Querido Diário, O Que São Realmente Droplets e Servidores VPS (E Por Que Eles Mudam Tudo) 🌸"
+    },
+    "shortTitles": {
+      "es": "Droplets y Servidores VPS",
+      "en": "Droplets & VPS Servers",
+      "pt": "Droplets e Servidores VPS"
+    }
   }
 ];
 

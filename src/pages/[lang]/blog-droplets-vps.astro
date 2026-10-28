@@ -1,0 +1,677 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, What Are Droplets and VPS Servers Really? (And Why They Change Everything) 🌸",
+    date: "October 31, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "When you first start programming, someone tells you to 'spin up a droplet' or 'deploy to a VPS'—and for months, you might just nod along without fully understanding what you're actually renting in the cloud.",
+    introDesc: "What makes a VPS different from old-school shared hosting? What is a 'Droplet' versus a regular virtual machine? And why does owning your own virtual slice of a server give you absolute superpower—paired with the serious responsibility of being your own sysadmin? Here is the developer breakdown.",
+    bannerLabel: "Cloud Computing & Infrastructure Reference:",
+    bannerUrl: "https://www.digitalocean.com/products/droplets",
+    sections: [
+      {
+        heading: "1. The Jargon Demystified: What is a Droplet?",
+        paragraphs: [
+          "Let's get the branding out of the way first: **a 'Droplet' is simply DigitalOcean's marketing name for a Virtual Private Server (VPS)**.",
+          "Different cloud providers use their own signature terminology for the exact same foundational concept: DigitalOcean calls them *Droplets*, Linode (Akamai) calls them *Linodes*, AWS calls them *EC2 Instances*, and Hetzner calls them *Cloud Servers*.",
+          "Underneath all those fancy names, they are all the exact same thing: **an isolated virtual machine running Linux (or Windows) with dedicated virtual CPUs, RAM, and SSD storage**, living inside a colossal physical server (bare metal) in a remote data center."
+        ]
+      },
+      {
+        heading: "2. The Evolution: Shared Hosting vs. VPS vs. Serverless",
+        paragraphs: [
+          "To understand why VPS instances are so beloved by developers, it helps to understand what came before and after them:",
+          "**• Shared Hosting (The 2000s Era):** You rented a tiny folder on a giant Apache server shared with 500 other websites. If one neighbor had a slow PHP script or got hacked, your site crashed too. You had zero root access, couldn't install custom packages, and had to upload files via FTP.",
+          "**• Virtual Private Server (VPS):** A hypervisor (like KVM) partitions a massive physical server into completely independent sandboxed operating systems. You receive your own dedicated IP address and **full `root` access**. You can reboot, reformat, configure firewalls, or compile any runtime you desire.",
+          "**• Dedicated Bare Metal:** You rent the entire physical server hardware rack. Insane power and isolation, but significantly more expensive and slower to provision.",
+          "**• Serverless / Containers:** As I explored in my post on <a href={`/${lang}/blog-serverless/`} class=\"inline-blog-link\">Serverless vs. Traditional Backends</a>, services like Google Cloud Run or AWS Lambda abstract the server away entirely. But when you need persistent background workers, WebSockets, or a low-cost database, a VPS remains the most cost-effective Swiss Army knife in software engineering."
+        ],
+        codeLabel: "The Hosting Architecture Spectrum",
+        code: `Shared Hosting  ──►  Virtual Private Server (VPS/Droplet)  ──►  Serverless / PaaS
+-----------------    ---------------------------------------    -------------------
+• Cheap ($2/mo)      • Affordable ($4 - $20/mo)                • Pay-per-invocation
+• Zero root access   • Full root terminal access (sudo)        • Zero server management
+• Strict limits      • Run Docker, Redis, Postgres, WebSockets • Ephemeral containers
+• Neighbor impact    • Isolated kernel, vCPUs, & private RAM   • Autoscaling to zero`
+      },
+      {
+        heading: "3. Why Full-Stack Developers Love Owning a VPS",
+        paragraphs: [
+          "For $4 to $6 a month, a single entry-level droplet gives you a playground where you can deploy an entire tech stack:",
+          "1. A Node.js or Go API handling REST and WebSockets.",
+          "2. A managed or self-hosted PostgreSQL / MySQL database.",
+          "3. A Redis cache and message queue (BullMQ or Celery).",
+          "4. An Nginx or Caddy reverse proxy providing automated SSL certificates via Let's Encrypt.",
+          "5. Multiple Docker containers orchestrated with Docker Compose.",
+          "You are no longer bound by framework restrictions or artificial provider limits. If your app needs a background cron script running every 10 seconds, or a headless browser rendering PDF invoices, you simply install it."
+        ]
+      },
+      {
+        heading: "4. The Flip Side: With Root Access Comes Sysadmin Responsibility",
+        paragraphs: [
+          "Having full root access is liberating, but it also means **there is no customer support team managing your operating system**. You are the sysadmin.",
+          "As we saw during the recent <a href={`/${lang}/blog-cyberpanel-rce/`} class=\"inline-blog-link\">CyberPanel RCE flaw (CVE-2024-51567)</a> and the devastating wave of <a href={`/${lang}/blog-psaux-ransomware/`} class=\"inline-blog-link\">PSAUX ransomware encrypting Linux servers</a>, unhardened VPS instances connected to public IP addresses are attacked by automated bots within seconds of being created.",
+          "If you leave default passwords active, expose management ports, or fail to patch dependencies (like the <a href={`/${lang}/blog-php-cve-exploit/`} class=\"inline-blog-link\">PHP vulnerability that caused downtime on Forge</a>), your VPS can be hijacked in minutes."
+        ],
+        codeLabel: "The 5-Minute VPS Hardening Checklist for Any New Droplet",
+        code: `# 1. Create a non-root user with sudo privileges:
+adduser jill && usermod -aG sudo jill
+
+# 2. Add your public SSH key and disable password login:
+# Inside /etc/ssh/sshd_config:
+PasswordAuthentication no
+PermitRootLogin prohibit-password
+
+# 3. Enable UFW firewall:
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow OpenSSH
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw enable
+
+# 4. Enable automated unattended security upgrades:
+apt install unattended-upgrades fail2ban -y
+systemctl enable fail2ban`
+      },
+      {
+        heading: "5. Lessons for Full-Stack Developers",
+        paragraphs: [
+          "Learning how a VPS works was one of the biggest turning points in my transition into full-stack development.",
+          "When you understand what happens beneath your application code—how ports bind, how systemd restarts your worker processes, and how virtualized disks store your databases—you stop being afraid of deployments.",
+          "A droplet isn't magic cloud dust: it's a trusty, hard-working Linux box ready to serve your creations to the world."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Things I Want To Remember 🌸",
+      items: [
+        "**A Droplet is just DigitalOcean's name for a VPS:** Linodes, EC2, and Cloud Servers are all the exact same core concept.",
+        "**Hypervisors provide true isolation:** KVM splits physical server hardware into secure, dedicated virtual slices.",
+        "**Root access is a superpower:** You can host APIs, databases, Docker containers, and cron jobs for just a few dollars a month.",
+        "**You are the sysadmin:** Always use SSH keys, configure a UFW firewall, and disable password logins immediately on creation.",
+        "**Pair your VPS with offsite backups:** A VPS is easily rebuildable if you store immutable backups outside the server."
+      ]
+    },
+    closingHeading: "Closing Thoughts",
+    closingText: "Stepping beyond simple static website hosting and spinning up your first Linux VPS feels like receiving the keys to your own house in the cloud. It takes a little care and security discipline, but the architectural freedom it gives you as a developer is unmatched.",
+    closing: "Spin up a test droplet, experiment with Linux, and never stop learning how the internet really runs!",
+    closingSign: "With curiosity and terminal commands,",
+    signature: "Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario, Qué Son Realmente los Droplets y Servidores VPS (Y Por Qué Cambian Todo) 🌸",
+    date: "31 de octubre de 2026",
+    subtitle: "Una entrada en el diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Cuando comienzas en programación, todo el mundo te dice 'crea un droplet' o 'despliega tu app en un VPS'—y durante meses muchos simplemente asienten sin entender con claridad qué es lo que realmente están alquilando en la nube.",
+    introDesc: "¿En qué se diferencia un VPS del hosting compartido de toda la vida? ¿Qué es un 'Droplet' comparado con una máquina virtual normal? ¿Y por qué tener tu propio pedacito virtual de servidor te da superpoderes como desarrollador, pero también la enorme responsabilidad de ser tu propia administradora de sistemas? Aquí te lo explico sin rodeos.",
+    bannerLabel: "Documentación y Conceptos de Infraestructura Cloud:",
+    bannerUrl: "https://www.digitalocean.com/products/droplets",
+    sections: [
+      {
+        heading: "1. Desarmando el Nombre: ¿Qué es un Droplet?",
+        paragraphs: [
+          "Comencemos quitando el marketing del camino: **un 'Droplet' no es más que el nombre comercial que DigitalOcean le dio a un Servidor Privado Virtual (VPS)**.",
+          "Cada proveedor en la nube utiliza su propia palabra de marca para describir exactamente el mismo concepto fundamental: DigitalOcean los llama *Droplets*, Linode los llama *Linodes*, AWS los llama *Instancias EC2*, y Hetzner los llama *Cloud Servers*.",
+          "Detrás de todos esos nombres, la realidad técnica es idéntica: **una máquina virtual aislada con Linux (o Windows) que cuenta con núcleos virtuales de CPU (vCPU), memoria RAM dedicada y disco SSD**, viviendo dentro de un servidor físico colosal (bare metal) en un centro de datos remoto."
+        ]
+      },
+      {
+        heading: "2. La Evolución: Hosting Compartido vs. VPS vs. Serverless",
+        paragraphs: [
+          "Para valorar por qué los servidores VPS son tan amados por los desarrolladores, vale la pena repasar cómo evolucionó el alojamiento web:",
+          "**• Hosting Compartido (La época de los 2000s):** Alquilabas una carpetita en un servidor Apache compartido con otros 500 sitios web. Si el sitio de un vecino tenía un script lento en PHP o era hackeado, tu página también se caía. No tenías acceso root, no podías instalar nada a nivel de sistema y todo se subía por FTP.",
+          "**• Servidor Privado Virtual (VPS):** Un hipervisor (como KVM) divide un servidor físico gigante en máquinas virtuales totalmente independientes. Tienes tu propia dirección IP pública y **acceso total como `root`**. Puedes reiniciar el sistema, configurar cortafuegos o instalar el lenguaje y base de datos que quieras.",
+          "**• Servidor Dedicado (Bare Metal):** Alquilas el hardware físico completo solo para ti. Potencia descomunal y cero vecinos, pero con precios mucho más elevados.",
+          "**• Serverless / Contenedores:** Como analicé en mi entrada sobre <a href={`/${lang}/blog-serverless/`} class=\"inline-blog-link\">Serverless vs. Backends Tradicionales</a>, plataformas como Cloud Run o AWS Lambda eliminan por completo la noción de servidor. Pero cuando necesitas tareas en segundo plano continuas, WebSockets o bases de datos económicas, el VPS sigue siendo la navaja suiza más rentable del desarrollo de software."
+        ],
+        codeLabel: "Comparativa del Espectro de Alojamiento Web",
+        code: `Hosting Compartido ──► Servidor VPS (Droplet)       ──► Serverless / PaaS
+------------------     ----------------------------     ---------------------
+• Barato ($2/mes)      • Accesible ($4 - $20/mes)       • Pago por petición
+• Cero acceso root     • Control total como root (sudo) • Cero mantenimiento de SO
+• Límites estrictos    • Docker, Redis, Postgres, Colas • Contenedores efímeros
+• Vecinos ruidosos     • Kernel y recursos aislados     • Autoescala a cero`
+      },
+      {
+        heading: "3. Por Qué Como Desarrolladora Full-Stack Amo Tener un VPS",
+        paragraphs: [
+          "Por $4 a $6 dólares al mes, un solo droplet básico se convierte en un laboratorio completo donde puedes alojar un stack completo sin pedirle permiso a nadie:",
+          "1. Una API en Node.js, Go o Python manejando peticiones REST y WebSockets en tiempo real.",
+          "2. Una base de datos PostgreSQL o MariaDB administrada a tu gusto.",
+          "3. Una instancia de Redis para caché y colas de tareas con BullMQ.",
+          "4. Un servidor Nginx o Caddy como proxy inverso emitiendo certificados SSL automáticos y gratuitos de Let's Encrypt.",
+          "5. Múltiples aplicaciones encapsuladas limpiamente con Docker Compose.",
+          "Dejas de depender de los límites impuestos por plataformas comerciales. Si necesitas un script en cron que corra cada 10 segundos o una librería que genere PDFs, simplemente la instalas."
+        ]
+      },
+      {
+        heading: "4. La Otra Cara de la Moneda: Con el Acceso Root Eres la Sysadmin",
+        paragraphs: [
+          "Tener el control total es increíble, pero también significa que **no hay un equipo de soporte cuidando tu sistema operativo**. La responsable eres tú.",
+          "Tal como vimos con la <a href={`/${lang}/blog-cyberpanel-rce/`} class=\"inline-blog-link\">vulnerabilidad crítica en CyberPanel (CVE-2024-51567)</a> y el ataque del <a href={`/${lang}/blog-psaux-ransomware/`} class=\"inline-blog-link\">ransomware PSAUX secuestrando servidores Linux</a>, cualquier droplet expuesto a internet recibe miles de intentos de escaneo y fuerza bruta cada día.",
+          "Si dejas contraseñas débiles, no configuras un cortafuegos o no actualizas paquetes del sistema (como vimos con la <a href={`/${lang}/blog-php-cve-exploit/`} class=\"inline-blog-link\">caída que sufrí en Forge por el bug de PHP</a>), tu servidor puede ser comprometido en cuestión de minutos."
+        ],
+        codeLabel: "Guía Rápida de 5 Minutos para Asegurar Cualquier Nuevo Droplet",
+        code: `# 1. Crear un usuario personal sin usar root directamente:
+adduser jill && usermod -aG sudo jill
+
+# 2. Configurar llaves SSH y apagar el login por contraseña:
+# En /etc/ssh/sshd_config:
+PasswordAuthentication no
+PermitRootLogin prohibit-password
+
+# 3. Encender el cortafuegos UFW:
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow OpenSSH
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw enable
+
+# 4. Activar actualizaciones de seguridad automáticas y fail2ban:
+apt install unattended-upgrades fail2ban -y
+systemctl enable fail2ban`
+      },
+      {
+        heading: "5. Lecciones para Desarrolladores Full-Stack",
+        paragraphs: [
+          "Aprender a manejar un VPS fue uno de los saltos más importantes en mi camino profesional.",
+          "Cuando entiendes qué ocurre por debajo de tu código —cómo escuchan los puertos, cómo systemd mantiene vivos tus procesos y cómo los discos virtuales guardan tus datos—, el miedo a los despliegues desaparece.",
+          "Un droplet no es magia negra en la nube: es una máquina Linux fiel, lista para responderle al mundo lo que tú programaste."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Cosas que Quiero Recordar 🌸",
+      items: [
+        "**Un Droplet es solo el nombre de DigitalOcean para un VPS:** Linodes, instancias EC2 y servidores cloud son el mismo concepto.",
+        "**El hipervisor garantiza aislamiento:** KVM divide el hardware físico en máquinas virtuales seguras e independientes.",
+        "**El acceso root es un superpoder accesible:** Puedes correr bases de datos, APIs y colas por unos pocos dólares al mes.",
+        "**La seguridad es tu responsabilidad:** Usa siempre llaves SSH, activa el firewall UFW y deshabilita el login por contraseña.",
+        "**Ten siempre respaldos fuera del VPS:** Una máquina virtual se reconstruye en minutos si tus datos están respaldados en la nube."
+      ]
+    },
+    closingHeading: "Reflexión Final",
+    closingText: "Pasar de plataformas cerradas a configurar tu propio droplet en Linux es como recibir las llaves de tu propia casa en la nube. Requiere orden y disciplina de seguridad, pero la libertad que te da como desarrolladora no tiene comparación.",
+    closing: "¡Anímate a levantar un droplet de prueba, experimenta en la terminal y pierde el miedo a los servidores!",
+    closingSign: "Con curiosidad y comandos en la terminal,",
+    signature: "Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário, O Que São Realmente Droplets e Servidores VPS (E Por Que Eles Mudam Tudo) 🌸",
+    date: "31 de outubro de 2026",
+    subtitle: "Uma entrada no diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "Quando você começa na programação, todo mundo fala para você 'subir um droplet' ou 'rodar em um VPS'—mas muitos demoram para entender o que realmente estão contratando na nuvem.",
+    introDesc: "Qual a diferença entre um VPS e a hospedagem compartilhada tradicional? O que é um 'Droplet' comparado a uma máquina virtual comum? E por que ter sua própria fatia virtual de um servidor te dá superpoderes, acompanhado da responsabilidade de cuidar da segurança? Veja a explicação direta.",
+    bannerLabel: "Documentação de Infraestrutura e Droplets:",
+    bannerUrl: "https://www.digitalocean.com/products/droplets",
+    sections: [
+      {
+        heading: "1. O Que É um Droplet?",
+        paragraphs: [
+          "**'Droplet' é simplesmente o nome comercial que a DigitalOcean dá a um Servidor Privado Virtual (VPS)**.",
+          "Cada provedor tem seu termo próprio: a Linode chama de *Linodes*, a AWS de *Instâncias EC2* e a Hetzner de *Cloud Servers*.",
+          "No fundo, todos representam o mesmo conceito: **uma máquina virtual isolada rodando Linux com memória RAM dedicada, vCPUs e armazenamento SSD**, hospedada dentro de um servidor físico de grande porte em um data center."
+        ]
+      },
+      {
+        heading: "2. Hospedagem Compartilhada vs. VPS vs. Serverless",
+        paragraphs: [
+          "**• Hospedagem Compartilhada:** Vários clientes dividem o mesmo sistema operacional. Sem acesso root e com limitações severas.",
+          "**• Servidor VPS:** Uma máquina virtual particionada por hipervisor (KVM) com **acesso root total**. Você escolhe sistemas, portas, bancos de dados e ferramentas.",
+          "**• Serverless:** Conforme detalhei no post sobre <a href={`/${lang}/blog-serverless/`} class=\"inline-blog-link\">Serverless vs. Backends Tradicionais</a>, você não gerencia servidores, mas para serviços contínuos o VPS continua imbatível em custo-benefício."
+        ]
+      },
+      {
+        heading: "3. Por Que Desenvolvedores Adoram um VPS",
+        paragraphs: [
+          "Por poucos dólares ao mês, você pode rodar Docker Compose com sua API, banco PostgreSQL, Redis e proxy reverso Caddy ou Nginx com certificados SSL automáticos."
+        ]
+      },
+      {
+        heading: "4. A Responsabilidade do Acesso Root",
+        paragraphs: [
+          "Como vimos nos casos recentes do <a href={`/${lang}/blog-cyberpanel-rce/`} class=\"inline-blog-link\">exploit no CyberPanel</a> e do <a href={`/${lang}/blog-psaux-ransomware/`} class=\"inline-blog-link\">ransomware PSAUX</a>, servidores expostos precisam de proteção ativa: autenticação por chave SSH, bloqueio de senhas e firewall UFW ativo."
+        ]
+      },
+      {
+        heading: "5. Lições para Desenvolvedores Full-Stack",
+        paragraphs: [
+          "Dominar o básico de um servidor Linux remove o medo dos deploys e expande drasticamente suas possibilidades arquiteturais."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Coisas que Quero Lembrar 🌸",
+      items: [
+        "**Droplet é apenas o nome da DigitalOcean para VPS:** O conceito técnico é exatamente o mesmo.",
+        "**Hipervisores garantem isolamento:** KVM divide servidores físicos em ambientes virtuais seguros.",
+        "**Acesso root total:** Permite rodar Docker, bancos de dados e APIs sob medida.",
+        "**Segurança em primeiro lugar:** Use chaves SSH, firewall UFW e atualizações automáticas.",
+        "**Mantenha backups externos:** Recriar um VPS é trivial quando seus dados estão seguros na nuvem."
+      ]
+    },
+    closingHeading: "Reflexão Final",
+    closingText: "Configurar seu próprio droplet é um marco no aprendizado Full-Stack: dá liberdade para construir qualquer projeto com autonomia e confiança.",
+    closing: "Crie um droplet de testes, pratique na linha de comando e aproveite o aprendizado!",
+    closingSign: "Com curiosidade e determinação,",
+    signature: "Jill 🌸"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.en;
+---
+
+<Layout title={c.title} lang={lang}>
+  <Nav activeSection="blog" lang={lang} />
+  <div class="blog-post-page">
+    <main class="container">
+      <a href={`/${lang}/`} class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>{c.back}</span>
+      </a>
+
+      <article class="post-article">
+        <header class="post-header">
+          <div class="meta-badge">
+            <span class="badge-icon">☁️</span>
+            <span>Cloud & Infrastructure • Dev Essentials</span>
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <time class="post-date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>{c.date}</span>
+          </time>
+        </header>
+
+        <div class="post-card">
+          <div class="intro-bubble">
+            <p class="intro-main" set:html={c.intro}></p>
+            <p class="intro-desc">{c.introDesc}</p>
+          </div>
+
+          <div class="repo-banner">
+            <div class="repo-info">
+              <strong>{c.bannerLabel}</strong>
+              <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
+                {c.bannerUrl} ↗
+              </a>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          {c.sections.map((sec) => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+              {sec.code && (
+                <div class="code-container">
+                  {sec.codeLabel && <div class="code-header">{sec.codeLabel}</div>}
+                  <pre class="code-block"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <!-- Signature Remember Section -->
+          <section class="content-section remember-box">
+            <h2 class="section-heading">{c.remember.heading}</h2>
+            <ul class="remember-list">
+              {c.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span class="remember-text" set:html={item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <p class="closing-callout">{c.closing}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-droplets-vps" currentLang={lang} />
+          </section>
+
+          <BlogNavigation currentSlug="blog-droplets-vps" lang={lang} />
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #0284c7;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #38bdf8;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(2, 132, 199, 0.12);
+    border: 1px solid rgba(2, 132, 199, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #38bdf8;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(2, 132, 199, 0.08);
+    border-left: 4px solid #0284c7;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .repo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(2, 132, 199, 0.3);
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .repo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow: hidden;
+  }
+
+  .repo-info strong {
+    font-size: 0.9rem;
+    color: #f8fafc;
+  }
+
+  .repo-link {
+    color: #38bdf8;
+    text-decoration: underline;
+    font-family: monospace;
+    font-size: 0.95rem;
+    word-break: break-all;
+    transition: color 0.2s ease;
+  }
+
+  .repo-link:hover {
+    color: #7dd3fc;
+  }
+
+  :global(.inline-blog-link) {
+    color: #38bdf8;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  :global(.inline-blog-link:hover) {
+    color: #7dd3fc;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .code-container {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    background: rgba(30, 41, 59, 0.8);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-block {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #38bdf8;
+  }
+
+  .remember-box {
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%);
+    border: 1px solid rgba(2, 132, 199, 0.25);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(2, 132, 199, 0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(2, 132, 199, 0.08);
+    border-color: rgba(2, 132, 199, 0.35);
+  }
+
+  .remember-dot {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(2, 132, 199, 0.2);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .closing-callout {
+    font-size: 1.05rem;
+    color: #38bdf8;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .closing-signature {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: #38bdf8;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+    .remember-box {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+</style>

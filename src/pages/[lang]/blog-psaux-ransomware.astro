@@ -1,0 +1,704 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, What Is PSAUX Ransomware and How Does It Hijack a Linux Server? 🌸",
+    date: "October 30, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "Most people think ransomware only happens on Windows workstations through phishing emails. But in the server world, automated malware hunts Linux VPS instances 24/7.",
+    introDesc: "When the PSAUX ransomware campaign ripped through thousands of servers via control panel exploits last week, it left thousands of WordPress sites, databases, and local backups completely scrambled with a .psaux extension. Here is what PSAUX is, how Linux ransomware actually executes under the hood, why local backups fail, and how to build truly resilient disaster recovery.",
+    bannerLabel: "Security Advisory & Threat Intelligence Analysis:",
+    bannerUrl: "https://cybersecuritynews.com/cyberpanel-vulnerability-ransomware/",
+    sections: [
+      {
+        heading: "1. The Wake-Up Call: Ransomware Isn't Just for Windows",
+        paragraphs: [
+          "For years, a common misconception among web developers was: *'Linux doesn't get viruses, and ransomware is something that only happens when an office worker clicks a suspicious PDF on Windows.'*",
+          "Last week, the **PSAUX ransomware** campaign shattered that illusion for thousands of sysadmins and developers. By coupling automated vulnerability scanning with immediate root-level payload execution—as we saw in my previous entry on the <a href={`/${lang}/blog-cyberpanel-rce/`} class=\"inline-blog-link\">CyberPanel RCE vulnerability (CVE-2024-51567)</a>—attackers automated the compromise of entire servers in less than 30 seconds.",
+          "Seeing production servers on <a href={`/${lang}/blog-droplets-vps/`} class=\"inline-blog-link\">cloud droplets and VPS instances</a> go dark simultaneously was a stark reminder: Linux servers are prime targets because that is where the crown jewels—production databases, source code, and client data—actually live."
+        ]
+      },
+      {
+        heading: "2. What is PSAUX Ransomware and How Does It Operate?",
+        paragraphs: [
+          "The name **PSAUX** comes from the infamous UNIX command `ps aux`, which lists all active running processes. The creators of this ransomware strain used this name both as their signature and as the file extension appended to every scrambled file (`.psaux`).",
+          "Unlike desktop ransomware that waits for user interaction or crawls desktop folders, PSAUX is built specifically for **headless Linux servers**. It operates in a calculated sequence:",
+          "**1. Process Termination:** The dropped shell script immediately runs `systemctl stop mysqld mariadb openlitespeed nginx apache2` to release file locks on database tables and web assets.",
+          "**2. Competitive Malware Cleanup:** It inspects running processes and kills rival cryptocurrency miners and shell bots, ensuring it has maximum CPU to encrypt as fast as possible.",
+          "**3. High-Speed Encryption:** It traverses `/home/`, `/var/www/`, and `/var/lib/mysql/`, using strong symmetric ciphers (AES or ChaCha20) to encrypt web files, media uploads, SQL dumps, and active database tables.",
+          "**4. The Ransom Demand:** It writes `README_LOCKED.txt` in every web root and directory, demanding payments typically between 0.04 and 0.1 Bitcoin for the decryption key."
+        ],
+        codeLabel: "Anatomy of the PSAUX Execution Script (Decompiled Logic)",
+        code: `#!/bin/bash
+# Typical operational pattern of the PSAUX deployment script:
+
+# 1. Kill services to release filesystem locks:
+killall -9 mysqld mariadb httpd nginx lsphp 2>/dev/null
+systemctl stop mysqld openlitespeed
+
+# 2. Kill potential competing background miners:
+pkill -f xmrig || pkill -f kdevtmpfsi
+
+# 3. Encrypt target directories recursively:
+# Uses embedded binary or OpenSSL with generated symmetric key
+TARGETS=("/home" "/var/www" "/var/lib/mysql" "/backup")
+
+for dir in "\${TARGETS[@]}"; do
+    if [ -d "$dir" ]; then
+        find "$dir" -type f ! -name "*.psaux" ! -name "README_LOCKED.txt" | while read -r file; do
+            # Encrypt file and append .psaux extension
+            encrypt_file "$file" && rm -f "$file"
+        done
+    fi
+done
+
+# 4. Drop ransom instructions:
+echo "All your databases and web files have been locked by PSAUX." > /home/README_LOCKED.txt`
+      },
+      {
+        heading: "3. The Tragedy of Local Backups: Why /backup Doesn't Save You",
+        paragraphs: [
+          "The most heartbreaking part of the PSAUX campaign wasn't just that live websites were encrypted—it was that many developers thought they were safe because they had automated daily backups configured on their server.",
+          "Here is the brutal architectural reality: **If an attacker achieves `root` execution on your VPS, any backup stored on the same server or mounted as a writable volume is dead.**",
+          "Default backup directories like `/backup`, `/var/backups`, or even secondary mounted block storage attached to `/mnt/backup` are easily found by `find / -type f` loops. The ransomware script encrypted the `.tar.gz` and `.sql` backup files right alongside the live databases.",
+          "A backup that can be erased or encrypted by the same credentials running your web server isn't a backup—it is just a duplicate waiting to be destroyed."
+        ]
+      },
+      {
+        heading: "4. Building Real Disaster Recovery: The 3-2-1 Rule and Immutable Storage",
+        paragraphs: [
+          "Defending against ransomware on Linux doesn't mean hoping your web applications will never have a zero-day flaw. It means designing your infrastructure so that even if your server is completely erased by root, **you can restore everything in minutes**.",
+          "**1. Offsite and Isolated Backups:** Your backup system must pull data *out* of your server, or push data to remote object storage (like AWS S3, Cloudflare R2, or Backblaze B2) using credentials that **only have append/write permissions**, never delete permissions.",
+          "**2. Object Lock & Immutability:** Enable WORM (Write Once, Read Many) policies on your storage buckets. With Object Lock enabled, not even you (and certainly not the ransomware bot) can delete or overwrite a backup file for a specified retention window (e.g., 30 days).",
+          "**3. Hypervisor Snapshots:** Enable daily snapshots at your cloud provider level (DigitalOcean, Linode, Hetzner). Cloud snapshots exist outside the virtual machine operating system, completely untouchable by a root shell inside the VPS."
+        ],
+        codeLabel: "Hardening Backups with Immutable Remote Storage",
+        code: `# Best Practice: Using an unprivileged backup runner with S3 Object Lock
+# The VPS credentials can ONLY upload, NEVER overwrite or delete:
+
+# Daily database backup and compressed stream straight to offsite S3:
+mysqldump --single-transaction -u backup_user -p"$DB_PASS" --all-databases | \\
+  gzip -9 | \\
+  aws s3 cp - s3://my-isolated-backups-bucket/$(date +%Y-%m-%d)-database.sql.gz \\
+  --object-lock-mode COMPLIANCE \\
+  --object-lock-retain-until-date $(date -d "+30 days" +%Y-%m-%d)
+
+# Even if a root attacker runs 'rm -rf /' or encrypts the VPS disk,
+# the S3 bucket refuses delete requests until the 30-day compliance window expires!`
+      },
+      {
+        heading: "5. Lessons for Full-Stack Developers",
+        paragraphs: [
+          "Security isn't a single wall; it's a sequence of safety nets.",
+          "This outbreak reminded me of my recent reflection on the <a href={`/${lang}/blog-php-cve-exploit/`} class=\"inline-blog-link\">PHP RCE incident on Forge</a>: vulnerabilities in third-party software *will* happen. We cannot prevent every upstream zero-day from being discovered.",
+          "What we *can* control is our blast radius. By isolating our web server users, closing unnecessary management ports, and maintaining immutable, offsite backups, a catastrophic ransomware attack turns from a business-ending event into a simple 20-minute server rebuild from a snapshot."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Things I Want To Remember 🌸",
+      items: [
+        "**Linux ransomware is real and fast:** PSAUX proves that automated bots can stop services and encrypt thousands of databases in seconds.",
+        "**Local backups are not disaster recovery:** Any backup file located on the same VPS or writable by root will be encrypted during an attack.",
+        "**Object Lock is our best friend:** Using S3 or cloud storage with compliance retention prevents ransomware from destroying backups.",
+        "**Hypervisor snapshots are immune to root shells:** Provider-level VPS snapshots exist outside the Linux OS and cannot be touched by in-guest malware.",
+        "**Minimize the blast radius:** Never run public web applications or control panels with unrestricted root privileges."
+      ]
+    },
+    closingHeading: "Closing Thoughts",
+    closingText: "Watching the PSAUX ransomware incident unfold was a stark reminder of why infrastructure hygiene matters. We spend so many hours writing clean UI components and backend queries, but without resilient backups and defensive servers, everything we build can disappear in a single command.",
+    closing: "Protect your servers, test your offsite backups regularly, and never assume you are too small to be scanned!",
+    closingSign: "Defending our servers with care,",
+    signature: "Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario, Qué Es el Ransomware PSAUX y Cómo Cifra un Servidor Linux 🌸",
+    date: "30 de octubre de 2026",
+    subtitle: "Una entrada en el diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "Mucha gente cree que el ransomware solo ocurre en computadoras Windows a través de correos con enlaces extraños. Pero en el mundo de los servidores, bots automatizados cazan servidores Linux las 24 horas del día.",
+    introDesc: "Cuando el ransomware PSAUX secuestró miles de servidores la semana pasada aprovechando fallos en paneles de control, dejó miles de sitios WordPress, bases de datos y copias locales totalmente cifradas con la extensión .psaux. En esta entrada desmenuzo qué es PSAUX, cómo opera un ransomware dentro de Linux, por qué las copias locales no sirven y cómo armar un plan de recuperación verdaderamente indestructible.",
+    bannerLabel: "Análisis de Amenazas y Reporte de Ciberseguridad:",
+    bannerUrl: "https://cybersecuritynews.com/cyberpanel-vulnerability-ransomware/",
+    sections: [
+      {
+        heading: "1. El Gran Despertar: El ransomware no es exclusivo de Windows",
+        paragraphs: [
+          "Durante mucho tiempo existió un mito cómodo entre desarrolladores web: *'Linux no tiene virus y el ransomware es algo que solo le pasa a una secretaria abriendo un archivo Word sospechoso en Windows.'*",
+          "La semana pasada, la campaña del **ransomware PSAUX** derrumbó ese mito de golpe para miles de administradores y desarrolladores. Al combinar escaneo automatizado con ejecución inmediata de código como root —tal como analizamos en mi entrada sobre la <a href={`/${lang}/blog-cyberpanel-rce/`} class=\"inline-blog-link\">vulnerabilidad RCE en CyberPanel (CVE-2024-51567)</a>—, los atacantes automatizaron el secuestro de servidores enteros en menos de 30 segundos.",
+          "Ver cómo cientos de servidores en <a href={`/${lang}/blog-droplets-vps/`} class=\"inline-blog-link\">droplets y VPS en la nube</a> quedaban fuera de servicio nos dejó una lección clarísima: los servidores Linux son el objetivo favorito de los atacantes porque es ahí donde viven las bases de datos de producción, el código fuente y los datos reales de los clientes."
+        ]
+      },
+      {
+        heading: "2. ¿Qué es el Ransomware PSAUX y Cómo Opera?",
+        paragraphs: [
+          "El nombre **PSAUX** proviene del clásico comando de UNIX `ps aux`, que lista todos los procesos activos en ejecución en el sistema. Los creadores de esta variante utilizaron ese nombre tanto como firma como para la extensión que le agregan a cada archivo secuestrado (`.psaux`).",
+          "A diferencia de un ransomware de escritorio que espera clics del usuario, PSAUX está optimizado específicamente para **servidores Linux desatendidos** y sigue una secuencia metódica:",
+          "**1. Apagado de Servicios:** El script de shell descargado ejecuta de inmediato `systemctl stop mysqld mariadb openlitespeed nginx apache2` para liberar los bloqueos de archivos en bases de datos y páginas web.",
+          "**2. Eliminación de Malware Competidor:** Revisa los procesos en ejecución y mata mineros de criptomonedas o bots rivales, asegurándose de tener el 100% de la CPU para cifrar lo más rápido posible.",
+          "**3. Cifrado a Alta Velocidad:** Recorre carpetas clave como `/home/`, `/var/www/` y `/var/lib/mysql/`, usando cifrado simétrico robusto (AES o ChaCha20) para cifrar código, imágenes, respaldos SQL y las tablas vivas de la base de datos.",
+          "**4. La Nota de Rescate:** Genera un archivo `README_LOCKED.txt` en cada directorio web exigiendo un rescate que suele rondar entre 0.04 y 0.1 Bitcoin para entregar la clave de descifrado."
+        ],
+        codeLabel: "Estructura del Script de Ejecución de PSAUX (Lógica Descompilada)",
+        code: `#!/bin/bash
+# Patrón típico de ejecución del script malicioso de PSAUX:
+
+# 1. Matar servicios para liberar los archivos de base de datos:
+killall -9 mysqld mariadb httpd nginx lsphp 2>/dev/null
+systemctl stop mysqld openlitespeed
+
+# 2. Eliminar posibles mineros rivales que roben CPU:
+pkill -f xmrig || pkill -f kdevtmpfsi
+
+# 3. Cifrar directorios clave de forma recursiva:
+CARPETAS=("/home" "/var/www" "/var/lib/mysql" "/backup")
+
+for dir in "\${CARPETAS[@]}"; do
+    if [ -d "$dir" ]; then
+        find "$dir" -type f ! -name "*.psaux" ! -name "README_LOCKED.txt" | while read -r file; do
+            # Cifra el archivo y le añade la extensión .psaux
+            cifrar_archivo "$file" && rm -f "$file"
+        done
+    fi
+done
+
+# 4. Dejar la nota de extorsión:
+echo "Todos tus archivos y bases de datos han sido bloqueados por PSAUX." > /home/README_LOCKED.txt`
+      },
+      {
+        heading: "3. La Tragedia de los Respaldos Locales: Por qué /backup no te Salva",
+        paragraphs: [
+          "Lo más doloroso de la campaña de PSAUX no fue solo que los sitios en vivo se cayeran, sino que muchos desarrolladores estaban convencidos de que estaban a salvo porque tenían copias de seguridad diarias configuradas dentro del mismo servidor.",
+          "Aquí está la cruda realidad de arquitectura: **Si un atacante logra permisos de `root` en tu VPS, cualquier copia de seguridad almacenada en el mismo servidor o montada como volumen con permisos de escritura está condenada.**",
+          "Carpetas habituales como `/backup`, `/var/backups` o discos secundarios montados en `/mnt/backup` son encontradas en segundos por los comandos de búsqueda recursiva. El script cifró los archivos `.tar.gz` y `.sql` de respaldo exactamente al mismo tiempo que las bases de datos de producción.",
+          "Un respaldo que puede ser borrado o modificado por el mismo usuario root que corre la aplicación web no es un respaldo: es solo una copia duplicada esperando a ser destruida."
+        ]
+      },
+      {
+        heading: "4. Diseñando una Recuperación Real: La Regla 3-2-1 y Almacenamiento Inmutable",
+        paragraphs: [
+          "Defenderse de un ransomware en Linux no consiste en cruzar los dedos esperando que jamás exista una vulnerabilidad en nuestro software. Consiste en diseñar la infraestructura para que, incluso si un atacante borra el servidor entero como root, **podamos restaurarlo todo en minutos**.",
+          "**1. Copias Fuera del Servidor (Offsite e Aisladas):** El sistema de respaldos debe enviar los datos a un almacenamiento de objetos remoto (como AWS S3, Cloudflare R2 o Backblaze B2) utilizando credenciales que **solo tengan permisos de escritura (append)**, jamás de borrado.",
+          "**2. Bloqueo de Objetos (Object Lock):** Activa políticas de inmutabilidad (WORM: Write Once, Read Many). Con Object Lock activado, ni siquiera tú (y mucho menos el bot de ransomware) pueden borrar o sobrescribir un respaldo durante un período de retención protegido (por ejemplo, 30 días).",
+          "**3. Instantáneas del Hipervisor (Snapshots):** Activa snapshots automáticos a nivel de tu proveedor (DigitalOcean, Linode, Hetzner). Los snapshots se guardan fuera del sistema operativo del VPS, haciéndolos totalmente inaccesibles para cualquier script malicioso dentro de la máquina virtual."
+        ],
+        codeLabel: "Protegiendo Respaldos con Almacenamiento Remoto Inmutable",
+        code: `# Buena práctica: Enviar respaldos directamente a un bucket con Object Lock
+# Las credenciales del VPS SOLO pueden subir archivos, NUNCA borrar ni sobrescribir:
+
+# Volcado de bases de datos comprimido y enviado directamente a S3:
+mysqldump --single-transaction -u backup_user -p"$DB_PASS" --all-databases | \\
+  gzip -9 | \\
+  aws s3 cp - s3://mi-bucket-de-respaldos-aislado/$(date +%Y-%m-%d)-db.sql.gz \\
+  --object-lock-mode COMPLIANCE \\
+  --object-lock-retain-until-date $(date -d "+30 days" +%Y-%m-%d)
+
+# ¡Incluso si un atacante root ejecuta 'rm -rf /' o cifra el disco del VPS,
+# el bucket de S3 rechazará cualquier intento de borrado hasta que pasen los 30 días!`
+      },
+      {
+        heading: "5. Lecciones para Desarrolladores Full-Stack",
+        paragraphs: [
+          "La seguridad no es una sola pared mágica; es una serie de redes de contención.",
+          "Este ataque me recordó mucho a lo que viví con la <a href={`/${lang}/blog-php-cve-exploit/`} class=\"inline-blog-link\">caída en Laravel Forge por la vulnerabilidad de PHP (CVE-2026-109618)</a>: los fallos en librerías y paneles van a existir siempre. Lo que podemos controlar es el impacto que tienen en nuestro negocio.",
+          "Al separar usuarios, no usar root para correr servidores web y mantener respaldos inmutables en la nube, un ataque de ransomware pasa de ser una catástrofe que quiebra una empresa a un simple procedimiento de 20 minutos para restaurar una máquina."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Cosas que Quiero Recordar 🌸",
+      items: [
+        "**El ransomware en Linux es real y letal:** PSAUX demostró que bots automatizados pueden apagar servicios y cifrar miles de servidores en segundos.",
+        "**Las copias locales no son recuperación de desastres:** Cualquier archivo guardado en el mismo VPS o accesible por root será cifrado junto al servidor.",
+        "**Object Lock es el mejor salvavidas:** Usar almacenamiento en la nube con retención inmutable impide que un atacante destruya tus respaldos.",
+        "**Los snapshots del proveedor son inmunes al root interno:** Las instantáneas del hipervisor en el panel del VPS existen fuera del sistema operativo.",
+        "**Menor privilegio siempre:** Nunca corras paneles de control web ni aplicaciones con privilegios totales de root sin aislamiento estricto."
+      ]
+    },
+    closingHeading: "Reflexión Final",
+    closingText: "Ver cómo se propagó el ransomware PSAUX fue una gran lección sobre la importancia de la higiene en servidores. Pasamos horas enteras puliendo componentes en el frontend y consultas en el backend, pero sin respaldos a prueba de balas y servidores protegidos, todo lo que construimos puede desaparecer en un solo comando.",
+    closing: "¡Protege tus servidores, prueba tus copias de seguridad con frecuencia y nunca dejes puertos abiertos al azar!",
+    closingSign: "Cuidando nuestros proyectos con determinación,",
+    signature: "Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário, O Que É o Ransomware PSAUX e Como Ele Sequestra um Servidor Linux 🌸",
+    date: "30 de outubro de 2026",
+    subtitle: "Uma entrada no diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "Muitos acreditam que ransomware só ataca computadores Windows através de e-mails suspeitos. Mas no mundo dos servidores, bots automatizados caçam instâncias Linux 24 horas por dia.",
+    introDesc: "Quando o ransomware PSAUX invadiu milhares de servidores na semana passada explorando falhas em painéis de controle, deixou milhares de sites WordPress, bancos de dados e backups locais completamente criptografados com a extensão .psaux. Nesta entrada desvendo o que é o PSAUX, como o ransomware opera no Linux e como criar uma recuperação verdadeiramente resiliente.",
+    bannerLabel: "Análise de Ameaças e Segurança da Informação:",
+    bannerUrl: "https://cybersecuritynews.com/cyberpanel-vulnerability-ransomware/",
+    sections: [
+      {
+        heading: "1. O Grande Alerta: Ransomware Não É Apenas para Windows",
+        paragraphs: [
+          "Durante muito tempo existiu a falsa impressão de que servidores Linux eram imunes a ransomware.",
+          "Na semana passada, a campanha do **ransomware PSAUX** desfez essa ilusão. Combinando varreduras automáticas com execução remota de código como root — como vimos na minha análise sobre a <a href={`/${lang}/blog-cyberpanel-rce/`} class=\"inline-blog-link\">vulnerabilidade no CyberPanel (CVE-2024-51567)</a> —, invasores sequestraram milhares de servidores em instantes.",
+          "Ver instâncias em <a href={`/${lang}/blog-droplets-vps/`} class=\"inline-blog-link\">droplets e servidores VPS na nuvem</a> caindo em massa foi um lembrete direto: os servidores Linux são alvos valiosos porque é neles que residem os bancos de dados e aplicações reais dos clientes."
+        ]
+      },
+      {
+        heading: "2. O Que É o PSAUX e Como Ele Funciona?",
+        paragraphs: [
+          "O nome **PSAUX** vem do comando UNIX `ps aux`, que lista todos os processos em execução. Os invasores usaram esse comando como assinatura e extensão dos arquivos criptografados (`.psaux`).",
+          "Diferente de malwares comuns de desktop, o PSAUX é feito para **servidores Linux autônomos**:",
+          "**1. Parada de Processos:** Para os serviços MySQL e servidores web para liberar travas de arquivos.",
+          "**2. Eliminação de Mineradores Concorrentes:** Mata processos concorrentes para liberar 100% da CPU.",
+          "**3. Criptografia Acelerada:** Criptografa `/home/`, `/var/www/` e `/var/lib/mysql/` com algoritmos simétricos rápidos.",
+          "**4. Nota de Resgate:** Cria notas `README_LOCKED.txt` exigindo pagamentos em Bitcoin."
+        ]
+      },
+      {
+        heading: "3. Por Que Backups Locais Não Salvam Servidores",
+        paragraphs: [
+          "Muitos desenvolvedores achavam que estavam protegidos por manterem backups no mesmo servidor. Porém, se o invasor obtém acesso como `root`, ele criptografa os backups em `/backup` exatamente como faz com as aplicações vivas.",
+          "Um backup acessível pelo mesmo usuário comprometido não é um plano de contingência: é apenas uma cópia esperando para ser apagada."
+        ]
+      },
+      {
+        heading: "4. Recuperação Real com Object Lock e Snapshots",
+        paragraphs: [
+          "**1. Armazenamento Remoto Isolado:** Envie backups para buckets de objetos (como AWS S3 ou Cloudflare R2) com credenciais que apenas gravam dados, sem permissão de exclusão.",
+          "**2. Bloqueio de Objetos (Object Lock):** Torna os arquivos de backup imutáveis por um prazo determinado (ex.: 30 dias).",
+          "**3. Snapshots no Hipervisor:** Snapshots criados pelo provedor da nuvem residem fora do sistema operacional do VPS e não podem ser apagados pelo root infectado."
+        ]
+      },
+      {
+        heading: "5. Lições para Desenvolvedores Full-Stack",
+        paragraphs: [
+          "Assim como relatei na <a href={`/${lang}/blog-php-cve-exploit/`} class=\"inline-blog-link\">queda do Laravel Forge com o PHP</a>, falhas externas sempre podem surgir. Ter backups imutáveis fora do servidor é o que separa um incidente contornável do encerramento definitivo de um negócio."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Coisas que Quero Lembrar 🌸",
+      items: [
+        "**Ransomware em Linux é real e agressivo:** O PSAUX paralisa serviços e criptografa bancos de dados em segundos.",
+        "**Backups locais não salvam ninguém:** Qualquer arquivo no mesmo VPS com acesso root será criptografado junto.",
+        "**Object Lock é proteção essencial:** Garante que backups na nuvem não possam ser deletados nem sobrescritos.",
+        "**Snapshots do provedor são vitais:** Operam no nível do hipervisor e ficam protegidos contra comandos maliciosos internos.",
+        "**Privilégios mínimos sempre:** Isolar usuários e fechar portas não utilizadas reduz drasticamente a superfície de ataque."
+      ]
+    },
+    closingHeading: "Reflexão Final",
+    closingText: "Entender o funcionamento do ransomware PSAUX reforça que o código de uma aplicação só está seguro quando a infraestrutura que o sustenta também é resiliente.",
+    closing: "Mantenha seus servidores protegidos e teste a restauração dos seus backups regularmente!",
+    closingSign: "Cuidando de cada detalhe com dedicação,",
+    signature: "Jill 🌸"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.en;
+---
+
+<Layout title={c.title} lang={lang}>
+  <Nav activeSection="blog" lang={lang} />
+  <div class="blog-post-page">
+    <main class="container">
+      <a href={`/${lang}/`} class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>{c.back}</span>
+      </a>
+
+      <article class="post-article">
+        <header class="post-header">
+          <div class="meta-badge">
+            <span class="badge-icon">⚠️</span>
+            <span>Security Deep Dive • Linux Ransomware</span>
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <time class="post-date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>{c.date}</span>
+          </time>
+        </header>
+
+        <div class="post-card">
+          <div class="intro-bubble">
+            <p class="intro-main" set:html={c.intro}></p>
+            <p class="intro-desc">{c.introDesc}</p>
+          </div>
+
+          <div class="repo-banner">
+            <div class="repo-info">
+              <strong>{c.bannerLabel}</strong>
+              <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
+                {c.bannerUrl} ↗
+              </a>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          {c.sections.map((sec) => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+              {sec.code && (
+                <div class="code-container">
+                  {sec.codeLabel && <div class="code-header">{sec.codeLabel}</div>}
+                  <pre class="code-block"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <!-- Signature Remember Section -->
+          <section class="content-section remember-box">
+            <h2 class="section-heading">{c.remember.heading}</h2>
+            <ul class="remember-list">
+              {c.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span class="remember-text" set:html={item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <p class="closing-callout">{c.closing}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-psaux-ransomware" currentLang={lang} />
+          </section>
+
+          <BlogNavigation currentSlug="blog-psaux-ransomware" lang={lang} />
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e11d48;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #f43f5e;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(225, 29, 72, 0.12);
+    border: 1px solid rgba(225, 29, 72, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #fb7185;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(225, 29, 72, 0.08);
+    border-left: 4px solid #e11d48;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .repo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(225, 29, 72, 0.3);
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .repo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow: hidden;
+  }
+
+  .repo-info strong {
+    font-size: 0.9rem;
+    color: #f8fafc;
+  }
+
+  .repo-link {
+    color: #fb7185;
+    text-decoration: underline;
+    font-family: monospace;
+    font-size: 0.95rem;
+    word-break: break-all;
+    transition: color 0.2s ease;
+  }
+
+  .repo-link:hover {
+    color: #fda4af;
+  }
+
+  :global(.inline-blog-link) {
+    color: #fb7185;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  :global(.inline-blog-link:hover) {
+    color: #fda4af;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(225, 29, 72, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .code-container {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    background: rgba(30, 41, 59, 0.8);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-block {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #fb7185;
+  }
+
+  .remember-box {
+    background: linear-gradient(135deg, rgba(225, 29, 72, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%);
+    border: 1px solid rgba(225, 29, 72, 0.25);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(225, 29, 72, 0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(225, 29, 72, 0.08);
+    border-color: rgba(225, 29, 72, 0.35);
+  }
+
+  .remember-dot {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .closing-callout {
+    font-size: 1.05rem;
+    color: #fb7185;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .closing-signature {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: #fb7185;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+    .remember-box {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+</style>

