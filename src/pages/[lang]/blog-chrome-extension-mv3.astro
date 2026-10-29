@@ -1,0 +1,921 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, What Is a Chrome Extension (Manifest V3): Service Workers, Content Scripts & Security Without eval() 🌸",
+    date: "November 3, 2026",
+    subtitle: "A deep technical breakdown by Jill",
+    back: 'Back to Home',
+    intro: "Browser extensions are often treated like lightweight UI widgets, but in reality, they are <strong>sophisticated, multi-process distributed systems running directly inside the user's browser runtime</strong>.",
+    introDesc: "With Google's transition to Manifest V3 (MV3), the entire architecture of Chrome extensions underwent its biggest paradigm shift in a decade: persistent background pages were replaced by ephemeral Service Workers, blocking network filters were replaced by declarative rules, and remotely hosted code like eval() was permanently banned. Here is the complete technical deep dive.",
+    bannerLabel: "Official Chrome Extensions Documentation Reference:",
+    bannerUrl: "https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3",
+    sections: [
+      {
+        heading: "1. The Evolution: Why Manifest V2 Had to Die and What MV3 Solves",
+        paragraphs: [
+          "At its core, a **Google Chrome Extension** is a zipped bundle of standard web files—HTML, CSS, JavaScript, WebAssembly, and static assets—anchored by a single configuration blueprint: **`manifest.json`**.",
+          "For over a decade, **Manifest V2 (MV2)** served as the foundation for the Chrome Web Store. However, MV2 harbored three systemic architectural flaws:",
+          "**1. Persistent Memory Leaks:** In MV2, background scripts ran inside full, hidden DOM background pages (`background.scripts` or `background.page`). These pages remained resident in RAM 24/7 as long as Chrome was open, holding megabytes of memory and leaking resources even when the user wasn't interacting with them.",
+          "**2. Security & Supply-Chain Vulnerabilities:** MV2 allowed developers to load remotely hosted scripts (`<script src=\"https://cdn.example.com/lib.js\">`) or execute dynamic strings via `eval()` and `new Function()`. If an attacker compromised an external CDN or database, they could silently push malicious payloads to millions of browser extensions without passing Chrome Web Store review.",
+          "**3. Performance Bottlenecks:** MV2 relied on the blocking `chrome.webRequest` API, meaning Chrome had to halt internal network threads and pass every HTTP request through the JavaScript engine before continuing. In high-traffic scenarios, slow extension code degraded browser latency.",
+          "**Manifest V3** was engineered specifically to fix these flaws by enforcing three pillars: **privacy by design**, **ephemeral resource consumption**, and **zero remotely hosted code**."
+        ]
+      },
+      {
+        heading: "2. The Background Engine: Service Workers & The Ephemeral Lifecycle",
+        paragraphs: [
+          "The biggest mental shift in Manifest V3 is that **the background script is now an event-driven Service Worker (`background.service_worker`)**.",
+          "Unlike MV2's persistent pages, a Service Worker has **no DOM** (`window`, `document`, and `Audio` do not exist). More importantly, its lifecycle is **ephemeral**: Chrome spawns the worker when an event fires, and automatically terminates it after **~30 seconds of inactivity** to free system memory.",
+          "This ephemeral lifecycle completely breaks traditional JavaScript assumptions:",
+          "• **No Global In-Memory State:** If you write `let activeCount = 0;` in your service worker, that variable will reset to `0` every time the worker wakes up from idle. All persistent state must be committed to `chrome.storage.local` or `chrome.storage.session`.",
+          "• **No `setInterval` or `setTimeout`:** Long-running intervals will be killed midway when the worker goes dormant. In MV3, all scheduling must be handled via the **`chrome.alarms`** API, which wakes the service worker up reliably when the alarm fires.",
+          "• **What if you really need a DOM?** If an extension needs to parse canvas graphics, decode audio, or inspect HTML strings, MV3 provides the **Offscreen Documents API** (`chrome.offscreen`), creating a headless HTML page on demand without reviving a permanent background page."
+        ],
+        codeLabel: "Service Worker Architecture: Handling Lifecycle & Event Listeners in MV3",
+        code: `// background.js (MV3 Service Worker)
+
+// ❌ ANTI-PATTERN: In-memory variables are wiped on idle termination!
+// let cachedAuthToken = null;
+// setInterval(() => checkStatus(), 60000); // ❌ Gets killed after 30s!
+
+// ✅ BEST PRACTICE: Persist state with chrome.storage and schedule with chrome.alarms
+chrome.runtime.onInstalled.addListener(async () => {
+  // Create an alarm for periodic background sync
+  chrome.alarms.create("syncMilestones", { periodInMinutes: 15 });
+  await chrome.storage.local.set({ extensionReady: true, lastRun: Date.now() });
+});
+
+// Alarm listener wakes the service worker automatically from dormant state
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === "syncMilestones") {
+    const { extensionReady } = await chrome.storage.local.get("extensionReady");
+    if (extensionReady) {
+      console.log("[Worker] Woke up to process periodic maintenance!");
+    }
+  }
+});
+
+// One-time message listener from Content Scripts or Popups
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "GET_CLIENT_DATA") {
+    chrome.storage.local.get(["clientIndex"]).then((data) => {
+      sendResponse({ status: "success", payload: data.clientIndex || [] });
+    });
+    return true; // Indicates async sendResponse
+  }
+});`
+      },
+      {
+        heading: "3. Execution Contexts: Content Scripts in ISOLATED vs. MAIN Worlds",
+        paragraphs: [
+          "While the Service Worker manages background logic, **Content Scripts** are the scripts that actually interact with the web pages the user visits.",
+          "In Manifest V3, content scripts execute under two distinct environments:",
+          "**1. The ISOLATED World (Default):**",
+          "By default, content scripts run in an isolated execution world. They share the same live **DOM tree** with the host web page—meaning they can read elements, attach click listeners, and mutate HTML—**but their JavaScript scopes are completely segregated**.",
+          "The content script cannot see `window.myVariable` defined by the web page, and the web page cannot inspect variables or functions declared inside the content script. This isolation prevents malicious web pages from hijacking extension privileges.",
+          "**2. The MAIN World (Native in MV3):**",
+          "Sometimes an extension legitimately needs to interact with the host page's runtime—such as accessing internal state from React, Angular, or Lexical rich-text editors. In MV2, developers had to inject ugly `<script>` tags into the DOM. Manifest V3 introduced native declaration: adding `\"world\": \"MAIN\"` directly in `manifest.json` content_scripts allows code to execute natively within the target page's window scope.",
+          "To bridge communication between the MAIN world and the ISOLATED world, extensions typically use `window.postMessage` with strict origin verification, or Custom DOM Events."
+        ],
+        codeLabel: "Content Script World Isolation Comparison",
+        code: `┌─────────────────────────────────────────────────────────────────┐
+│                       Host Web Page Context                     │
+│                                                                 │
+│  ┌─────────────────────────┐        ┌─────────────────────────┐ │
+│  │     Page JavaScript     │        │    MAIN World Script    │ │
+│  │   (window.appState)     │ ◄────► │  ("world": "MAIN")      │ │
+│  └────────────┬────────────┘        └────────────┬────────────┘ │
+│               │                                  │              │
+│               ▼                                  ▼              │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │                    Shared Live DOM Tree                    │ │
+│  │          (divs, inputs, buttons, contenteditable)          │ │
+│  └────────────────────────────┬───────────────────────────────┘ │
+│                               │                                 │
+│                               ▼                                 │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │               ISOLATED World Content Script                │ │
+│  │   (Can manipulate DOM, cannot access window.appState)      │ │
+│  │   (Has access to chrome.storage and chrome.runtime)        │ │
+│  └────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘`
+      },
+      {
+        heading: "4. The Security Revolution: No Remote Code and Declarative Net Request",
+        paragraphs: [
+          "Manifest V3 fundamentally redefined browser extension security through two strict enforcement mechanisms:",
+          "**1. The Complete Ban on Remotely Hosted Code:**",
+          "In MV3, **all code executed by the extension must be packaged locally within the `.crx` bundle submitted to the Chrome Web Store**. You cannot import external scripts from a CDN, and `eval()`, `new Function()`, and `setTimeout('codeString', 100)` are strictly disabled by default Content Security Policy (CSP). This guarantees that every line of executable code has been statically analyzed and audited during store review.",
+          "**2. DeclarativeNetRequest (DNR) vs. Blocking WebRequest:**",
+          "In MV2, ad blockers and privacy tools used `chrome.webRequest.onBeforeRequest`, intercepting network traffic synchronously in JavaScript. While powerful, this exposed browsing URLs to extension code and introduced severe page load latency.",
+          "Manifest V3 replaces blocking requests with **`chrome.declarativeNetRequest` (DNR)**. Instead of handing requests to JavaScript, the extension provides a declarative ruleset (regex filters, blocked domains, header modifications) in JSON. **The browser engine evaluates the rules in compiled C++ without ever passing URLs to the extension's JS runtime**—preserving user privacy and maximizing network throughput."
+        ],
+        codeLabel: "Declarative Net Request (rules.json) — Blocking Trackers Without JS Execution",
+        code: `[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||analytics.tracking-network.com^",
+      "resourceTypes": ["script", "xmlhttprequest", "image"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "X-Custom-Extension-Header", "operation": "set", "value": "Validated" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "https://api.myplatform.com/*",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]`
+      },
+      {
+        heading: "5. Production Manifest V3 Blueprint: A Complete Working Anatomy",
+        paragraphs: [
+          "To understand how these pieces orchestrate a production system, here is the complete anatomy of a modern Manifest V3 extension:",
+          "• **`manifest_version: 3`**: Declares compliance with MV3 specifications.",
+          "• **`permissions`**: Minimal required privileges (`storage`, `alarms`, `activeTab`).",
+          "• **`host_permissions`**: Specific domain patterns the extension is authorized to interact with.",
+          "• **`action`**: Configures the browser toolbar icon and popup HTML.",
+          "• **`content_security_policy`**: Strict default policy guaranteeing local code integrity."
+        ],
+        codeLabel: "Complete Production manifest.json Configuration (Manifest V3)",
+        code: `{
+  "manifest_version": 3,
+  "name": "Production Chrome MV3 Architecture",
+  "version": "1.0.0",
+  "description": "Enterprise-grade Manifest V3 browser extension architecture",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*.myplatform.com/*",
+    "https://target-portal.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://target-portal.com/*"],
+      "js": ["content_isolated.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://target-portal.com/*"],
+      "js": ["content_main.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    }
+  ]
+}`
+      }
+    ],
+    remember: {
+      heading: "Key Architecture Rules for Manifest V3 Developers 🌸",
+      items: [
+        "**Never trust in-memory state in Service Workers:** Background workers terminate after 30 seconds of inactivity; always synchronize state with `chrome.storage.local`.",
+        "**Replace intervals with `chrome.alarms`:** Timers in background workers die on idle; use declarative alarms for any scheduled task.",
+        "**Choose your world wisely:** Use the default `ISOLATED` world for security and DOM access; use `MAIN` world only when you need direct access to page JavaScript globals or frameworks.",
+        "**Zero remote code:** Bundle all libraries, dependencies, and WebAssembly locally. No `eval()`, no external CDN scripts.",
+        "**Leverage `chrome.storage.session` for transient secrets:** Unlike `localStorage`, session storage is encrypted in memory and cleared automatically when the browser closes."
+      ]
+    },
+    closingHeading: "Final Thoughts from My Diary",
+    closingText: "Migrating to and building within Manifest V3 requires rethinking how browser extensions operate. While the transition away from persistent background pages felt restrictive at first, the resulting architecture is significantly cleaner, uses far less RAM, and eliminates entire classes of security vulnerabilities.",
+    closing: "Have you migrated your browser extensions to Manifest V3 yet, or hit challenges with Service Worker lifecycles? Let's discuss in the comments 🌸",
+    closingSign: "With declarative rules and ephemeral background workers,",
+    signature: "— Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario, Qué Es una Extensión de Chrome (Manifest V3): Service Workers, Content Scripts y Seguridad sin eval() 🌸",
+    date: "3 de Noviembre, 2026",
+    subtitle: "Una explicación técnica profunda por Jill",
+    back: "Volver al Inicio",
+    intro: "A menudo las extensiones de navegador se perciben como simples botones en la barra de herramientas, pero en realidad son <strong>sistemas distribuidos multiproceso que operan directamente sobre el motor del navegador</strong>.",
+    introDesc: "Con la transición a Manifest V3 (MV3), la arquitectura de extensiones en Chrome experimentó su transformación más radical en una década: los scripts de fondo persistentes fueron sustituidos por Service Workers efímeros, los bloqueos síncronos de red dieron paso a reglas declarativas y el código remoto como eval() quedó vetado para siempre. Aquí tienes el desglose técnico completo.",
+    bannerLabel: "Documentación Oficial de Chrome sobre Manifest V3:",
+    bannerUrl: "https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3",
+    sections: [
+      {
+        heading: "1. La Evolución: Por Qué Manifest V2 Tenía Que Desaparecer y Qué Resuelve MV3",
+        paragraphs: [
+          "En esencia, una **Extensión de Google Chrome** es un paquete comprimido de archivos web tradicionales—HTML, CSS, JavaScript, WebAssembly y recursos estáticos—gobernado por un único archivo descriptor: **`manifest.json`**.",
+          "Durante más de diez años, **Manifest V2 (MV2)** fue la norma en la Chrome Web Store. No obstante, MV2 arrastraba tres debilidades arquitectónicas críticas:",
+          "**1. Consumo Continuo de Memoria:** En MV2, los scripts de fondo residían en páginas DOM invisibles pero permanentes (`background.scripts` o `background.page`). Permanecían activas en la memoria RAM las 24 horas del día mientras Chrome estuviera abierto, acumulando fugas de memoria incluso si el usuario no las utilizaba.",
+          "**2. Vulnerabilidades en la Cadena de Suministro:** MV2 permitía cargar scripts alojados en servidores remotos (`<script src=\"https://cdn.example.com/lib.js\">`) o ejecutar cadenas con `eval()` y `new Function()`. Si un atacante comprometía un CDN externo, podía inyectar código malicioso en millones de navegadores sin pasar por la auditoría de Google.",
+          "**3. Bloqueos de Rendimiento en Red:** MV2 dependía de `chrome.webRequest` síncrono y bloqueante. Cada petición HTTP debía pausarse en el motor C++ de Chrome para ser evaluada por el intérprete de JavaScript de la extensión, degradando los tiempos de carga en conexiones intensivas.",
+          "**Manifest V3** nació para corregir estos problemas bajo tres principios: **privacidad por diseño**, **consumo de recursos bajo demanda** y **prohibición absoluta de código remoto**."
+        ]
+      },
+      {
+        heading: "2. El Núcleo de Fondo: Service Workers y el Ciclo de Vida Efímero",
+        paragraphs: [
+          "El mayor cambio de paradigma en Manifest V3 es que **el script de fondo es ahora un Service Worker basado en eventos (`background.service_worker`)**.",
+          "A diferencia de las páginas de fondo de MV2, un Service Worker **carece de DOM** (`window`, `document` y `Audio` no existen en su contexto). Pero lo más importante es su naturaleza **efímera**: Chrome inicia el Service Worker cuando se dispara un evento y lo destruye automáticamente tras **unos 30 segundos de inactividad** para liberar memoria.",
+          "Este comportamiento exige adaptar la lógica de programación:",
+          "• **Las variables globales en memoria no persisten:** Si declaras `let activeCounter = 0;` en tu service worker, volverá a valer `0` cada vez que el worker despierte. Todo estado persistente debe guardarse en `chrome.storage.local` o `chrome.storage.session`.",
+          "• **No uses `setInterval` ni `setTimeout` prolongados:** Si programas un intervalo, Chrome terminará el worker y el temporizador morirá. En MV3, la programación temporal se gestiona exclusivamente con la API **`chrome.alarms`**, que despierta al service worker de forma confiable.",
+          "• **¿Y si requieres procesar un DOM?** Para decodificar audio, usar un `<canvas>` o analizar HTML con `DOMParser`, MV3 introduce la API de **Offscreen Documents** (`chrome.offscreen`), permitiendo crear un contexto gráfico temporal sin mantener un proceso residente."
+        ],
+        codeLabel: "Arquitectura de Service Worker en MV3 (Gestión de Alarmas y Almacenamiento)",
+        code: `// background.js (Service Worker en Manifest V3)
+
+// ❌ ANTI-PATRÓN: Las variables en memoria se pierden al entrar en reposo
+// let sesionActiva = false;
+// setInterval(() => revisar(), 60000); // ❌ Se destruye a los 30 segundos!
+
+// ✅ BUENA PRÁCTICA: Persistir en storage y planificar con chrome.alarms
+chrome.runtime.onInstalled.addListener(async () => {
+  // Crea una alarma para tareas en segundo plano
+  chrome.alarms.create("tareaMantenimiento", { periodInMinutes: 15 });
+  await chrome.storage.local.set({ extensionIniciada: true, ultimaEjecucion: Date.now() });
+});
+
+// El evento onAlarm despierta al service worker automáticamente
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === "tareaMantenimiento") {
+    const { extensionIniciada } = await chrome.storage.local.get("extensionIniciada");
+    if (extensionIniciada) {
+      console.log("[Worker] Despertado para ejecutar mantenimiento periódico");
+    }
+  }
+});
+
+// Comunicación con Content Scripts o Popups
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "OBTENER_DATOS") {
+    chrome.storage.local.get(["clientes"]).then((data) => {
+      sendResponse({ estado: "ok", registros: data.clientes || [] });
+    });
+    return true; // Mantiene abierto el canal para respuesta asíncrona
+  }
+});`
+      },
+      {
+        heading: "3. Contextos de Ejecución: Content Scripts en ISOLATED vs. MAIN Worlds",
+        paragraphs: [
+          "Mientras el Service Worker gestiona la lógica de fondo, los **Content Scripts** son los encargados de interactuar con el contenido visual de las páginas web.",
+          "En Manifest V3 existen dos modos de ejecución bien delimitados:",
+          "**1. El Mundo ISOLATED (Por Defecto):**",
+          "Por defecto, los content scripts operan en un entorno aislado. Comparten el mismo **árbol DOM** con la página web anfitriona (pueden seleccionar nodos, inyectar estilos y escuchar clics), **pero sus contextos de JavaScript son independientes**.",
+          "El script de la extensión no puede acceder a `window.miVariable` declarada por la página web, y el código de la página web no puede leer variables del script de la extensión. Esto impide que sitios maliciosos roben permisos o interfieran con la extensión.",
+          "**2. El Mundo MAIN (Nativo en MV3):**",
+          "En ocasiones es necesario interactuar con estados internos de aplicaciones complejas (como React o frameworks de texto enriquecido como Lexical). Antes se requerían inyecciones complejas de etiquetas `<script>`. En Manifest V3 basta con indicar `\"world\": \"MAIN\"` en la sección de `content_scripts` del manifest para ejecutar código en el mismo contexto de variables que la página anfitriona.",
+          "Para comunicar el mundo MAIN con el mundo ISOLATED, se recurre a `window.postMessage` con validación de origen o a eventos personalizados (`CustomEvent`)."
+        ],
+        codeLabel: "Comparativa de Aislamiento de Contextos (MAIN vs ISOLATED)",
+        code: `┌─────────────────────────────────────────────────────────────────┐
+│                 Contexto de la Página Anfitriona                │
+│                                                                 │
+│  ┌─────────────────────────┐        ┌─────────────────────────┐ │
+│  │   JavaScript del Sitio  │        │    Script Mundo MAIN    │ │
+│  │    (window.miEstado)    │ ◄────► │    ("world": "MAIN")    │ │
+│  └────────────┬────────────┘        └────────────┬────────────┘ │
+│               │                                  │              │
+│               ▼                                  ▼              │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │                     Árbol DOM Compartido                   │ │
+│  │       (elementos HTML, formularios, editores de texto)     │ │
+│  └────────────────────────────┬───────────────────────────────┘ │
+│                               │                                 │
+│                               ▼                                 │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │             Content Script en Mundo ISOLATED               │ │
+│  │   (Modifica el DOM, no ve variables de window.miEstado)    │ │
+│  │   (Tiene acceso a chrome.storage y APIs de extensión)      │ │
+│  └────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘`
+      },
+      {
+        heading: "4. Revolución en Seguridad: Fin del Código Remoto y Declarative Net Request",
+        paragraphs: [
+          "Manifest V3 fortaleció la seguridad del navegador mediante dos cambios normativos:",
+          "**1. Prohibición Absoluta de Código Remoto:**",
+          "En MV3, **todo el código ejecutable debe residir localmente en el paquete `.crx` evaluado en la tienda oficial**. Está prohibido descargar scripts externos de CDNs en tiempo de ejecución, y mecanismos como `eval()` o `new Function()` están estrictamente bloqueados por la Content Security Policy (CSP). Esto garantiza que no existan comportamientos ocultos no auditados.",
+          "**2. DeclarativeNetRequest (DNR) frente a WebRequest:**",
+          "En MV2, las herramientas de filtrado usaban `chrome.webRequest.onBeforeRequest` para interceptar cada petición en JavaScript. Esto daba acceso al historial de navegación a la extensión y ralentizaba el tráfico.",
+          "Manifest V3 lo sustituyó por **`chrome.declarativeNetRequest` (DNR)**. La extensión entrega reglas declarativas en formato JSON (filtros regex, dominios bloqueados, cabeceras). **El motor de Chromium aplica las reglas directamente en C++ sin exponer las URLs al código JavaScript de la extensión**, preservando la privacidad del usuario y reduciendo la latencia de red a cero."
+        ],
+        codeLabel: "Reglas Declarativas (rules.json) — Filtrado de Red Nativo sin JavaScript",
+        code: `[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||analytics.red-rastreo.com^",
+      "resourceTypes": ["script", "xmlhttprequest", "image"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "X-Extension-Integrity", "operation": "set", "value": "Verified" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "https://api.miplataforma.com/*",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]`
+      },
+      {
+        heading: "5. Estructura de Producción en Manifest V3: Un Ejemplo Completo",
+        paragraphs: [
+          "Para ver cómo interactúan estos componentes en un proyecto real, aquí tienes la anatomía completa de un archivo de configuración bajo Manifest V3:",
+          "• **`manifest_version: 3`**: Especifica la versión del estándar.",
+          "• **`permissions`**: Permisos mínimos requeridos (`storage`, `alarms`, `activeTab`).",
+          "• **`host_permissions`**: Dominios específicos autorizados para inyección o lectura de red.",
+          "• **`action`**: Configuración del icono y la ventana emergente (popup) en la barra del navegador.",
+          "• **`content_scripts`**: Declaración de scripts tanto en mundo aislado como en mundo principal."
+        ],
+        codeLabel: "Configuración manifest.json Completa de Producción (Manifest V3)",
+        code: `{
+  "manifest_version": 3,
+  "name": "Arquitectura Manifest V3 en Producción",
+  "version": "1.0.0",
+  "description": "Plantilla de arquitectura moderna para extensiones de Chromium",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*.miplataforma.com/*",
+    "https://portal-objetivo.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://portal-objetivo.com/*"],
+      "js": ["content_isolated.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://portal-objetivo.com/*"],
+      "js": ["content_main.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    }
+  ]
+}`
+      }
+    ],
+    remember: {
+      heading: "Reglas de Oro para Desarrollar en Manifest V3 🌸",
+      items: [
+        "**Nunca dependas de memoria en Service Workers:** Los workers se destruyen tras 30 segundos de inactividad; guarda siempre el estado en `chrome.storage.local`.",
+        "**Sustituye intervalos por `chrome.alarms`:** Las funciones `setInterval` mueren cuando el worker entra en reposo; usa alarmas declarativas para tareas periódicas.",
+        "**Elige el mundo correcto según el caso:** Usa `ISOLATED` por seguridad y control del DOM; usa `MAIN` únicamente si necesitas variables o funciones globales de la página.",
+        "**Cero código remoto:** Empaqueta todas las librerías dentro de la extensión; nada de scripts por CDN ni llamadas a `eval()`.",
+        "**Aprovecha `chrome.storage.session`:** A diferencia de `localStorage`, el almacenamiento de sesión se borra automáticamente al cerrar el navegador y ofrece mayor seguridad."
+      ]
+    },
+    closingHeading: "Reflexión final desde mi diario",
+    closingText: "Comprender a fondo Manifest V3 demuestra que las extensiones modernas son sistemas robustos con un modelo de seguridad maduro. Aunque despedirse de los scripts de fondo persistentes obligó a repensar muchos patrones, el resultado son extensiones más ligeras, estables y seguras.",
+    closing: "¿Ya migraste tus extensiones a Manifest V3 o has enfrentado retos con el ciclo de vida de los Service Workers? Cuéntame en los comentarios 🌸",
+    closingSign: "Con reglas declarativas y service workers eficientes,",
+    signature: "— Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário, O Que É uma Extensão do Chrome (Manifest V3): Service Workers, Content Scripts e Segurança sem eval() 🌸",
+    date: "3 de Novembro de 2026",
+    subtitle: "Uma análise técnica aprofundada por Jill",
+    back: "Voltar ao Início",
+    intro: "Extensões de navegador costumam ser vistas como simples botões de interface, mas na verdade são <strong>sistemas distribuídos multiprocesso executados diretamente no runtime do navegador</strong>.",
+    introDesc: "Com a transição para o Manifest V3 (MV3), a arquitetura de extensões do Chrome passou pela sua maior reformulação em dez anos: scripts de background persistentes deram lugar a Service Workers efêmeros, bloqueios síncronos de rede viraram regras declarativas e códigos remotos como eval() foram permanentemente banidos. Confira a análise técnica completa.",
+    bannerLabel: "Documentação Oficial do Chrome sobre Manifest V3:",
+    bannerUrl: "https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3",
+    sections: [
+      {
+        heading: "1. A Evolução: Por Que o Manifest V2 Precisou Mudar e o Que o MV3 Resolve",
+        paragraphs: [
+          "Em essência, uma **Extensão do Chrome** é um pacote compactado de arquivos web tradicionais—HTML, CSS, JavaScript e ativos estáticos—coordenados por um arquivo mestre: **`manifest.json`**.",
+          "Durante anos, o **Manifest V2 (MV2)** foi o padrão. No entanto, o MV2 acumulava problemas graves de consumo de RAM (páginas de fundo que ficavam ativas 24 horas por dia), brechas de segurança por carregamento de scripts externos com `eval()` e lentidão na navegação devido a interceptações síncronas de rede com `chrome.webRequest`.",
+          "O **Manifest V3** resolveu esses pontos com três pilares: **privacidade nativa**, **consumo sob demanda com Service Workers** e **proibição estrita de código hospedado remotamente**."
+        ]
+      },
+      {
+        heading: "2. O Motor de Fundo: Service Workers e Ciclo de Vida Efêmero",
+        paragraphs: [
+          "A principal mudança conceitual é que **o script de fundo agora é um Service Worker baseado em eventos (`background.service_worker`)**.",
+          "Ele **não possui DOM** (`window` e `document` não existem) e seu ciclo é **efêmero**: o Chrome o inicializa quando um evento acontece e o finaliza após **aproximadamente 30 segundos de inatividade** para economizar memória.",
+          "Isso significa que variáveis globais em memória são zeradas no repouso (use `chrome.storage.local`), e temporizadores com `setInterval` são encerrados (use `chrome.alarms` para tarefas periódicas confiáveis)."
+        ],
+        codeLabel: "Padrão de Service Worker no Manifest V3 (chrome.alarms e storage)",
+        code: `// background.js (Service Worker MV3)
+chrome.runtime.onInstalled.addListener(async () => {
+  chrome.alarms.create("rotinaSincronizacao", { periodInMinutes: 15 });
+  await chrome.storage.local.set({ extensaoAtiva: true });
+});
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === "rotinaSincronizacao") {
+    console.log("[Worker] Executando rotina agendada no Service Worker");
+  }
+});`
+      },
+      {
+        heading: "3. Contextos de Execução: Mundo ISOLATED vs. Mundo MAIN",
+        paragraphs: [
+          "Os **Content Scripts** interagem com as páginas visitadas em dois contextos:",
+          "**1. Mundo ISOLATED (Padrão):** Compartilha o DOM da página (pode selecionar nós e escutar eventos), mas seu ambiente JavaScript é totalmente isolado do código do site, impedindo que scripts maliciosos acessem a extensão.",
+          "**2. Mundo MAIN (Nativo no MV3):** Executa no mesmo escopo de variáveis da página (`\"world\": \"MAIN\"` no manifest), ideal para interagir diretamente com frameworks como React ou editores de texto enriquecido."
+        ]
+      },
+      {
+        heading: "4. Segurança sem eval() e Declarative Net Request",
+        paragraphs: [
+          "No MV3, **100% do código executável deve estar embutido no pacote local da extensão**. Não é permitido baixar scripts de CDNs externos nem utilizar `eval()` ou `new Function()`, garantindo auditoria completa.",
+          "Além disso, a API de rede foi modernizada com o **`chrome.declarativeNetRequest` (DNR)**: a extensão define regras declarativas em JSON e o próprio motor C++ do Chromium aplica os bloqueios sem precisar expor o tráfego do usuário ao JavaScript."
+        ]
+      },
+      {
+        heading: "5. Estrutura Completa de Produção no Manifest V3",
+        paragraphs: [
+          "Uma extensão moderna sob Manifest V3 combina um `service_worker` para tarefas em segundo plano, permissões declaradas com precisão e content scripts configurados conforme a necessidade de isolamento."
+        ],
+        codeLabel: "Exemplo de manifest.json (Manifest V3)",
+        code: `{
+  "manifest_version": 3,
+  "name": "Extensão Manifest V3",
+  "version": "1.0.0",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["storage", "alarms", "activeTab"],
+  "host_permissions": ["https://*.meusistema.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.meusistema.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}`
+      }
+    ],
+    remember: {
+      heading: "Regras de Ouro no Manifest V3 🌸",
+      items: [
+        "**Não confie em variáveis globais no Service Worker:** Persista estados com `chrome.storage.local`.",
+        "**Use `chrome.alarms` em vez de `setInterval`:** O Service Worker dorme após inatividade.",
+        "**Escolha entre ISOLATED e MAIN conscientemente:** Isole por segurança; use o mundo principal apenas quando estritamente necessário.",
+        "**Código sempre local:** Nenhuma chamada externa a scripts ou funções dinâmicas com `eval()`.",
+        "**Privacidade com Declarative Net Request:** Filtragem de rede direta no motor do navegador sem expor URLs ao JavaScript."
+      ]
+    },
+    closingHeading: "Reflexão final do meu diário",
+    closingText: "Desenvolver no Manifest V3 reforça como a plataforma web evoluiu. Apesar das adaptações iniciais no ciclo de vida dos Service Workers, a arquitetura final é muito mais estável, limpa e segura.",
+    closing: "Você já migrou suas extensões para o Manifest V3 ou teve dificuldades com o ciclo de vida dos Service Workers? Conte nos comentários 🌸",
+    closingSign: "Com regras declarativas e arquitetura moderna,",
+    signature: "— Jill 🌸"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Web Architecture • Manifest V3 & Browser Extensions
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main" set:html={c.intro}></p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="repo-banner">
+              <div class="repo-info">
+                <strong>{c.bannerLabel}</strong>
+                <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
+                  {c.bannerUrl}
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          {c.sections.map(sec => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+              {sec.code && (
+                <div class="code-container">
+                  {sec.codeLabel && <div class="code-header">{sec.codeLabel}</div>}
+                  <pre class="code-block"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <hr class="divider" />
+
+          <!-- Signature Remember Section (Things I Want To Remember) -->
+          <section class="content-section remember-box">
+            <h2 class="section-heading">{c.remember.heading}</h2>
+            <ul class="remember-list">
+              {c.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span class="remember-text" set:html={item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <p class="closing-callout">{c.closing}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-chrome-extension-mv3" currentLang={lang} />
+          </section>
+
+          <BlogNavigation currentSlug="blog-chrome-extension-mv3" lang={lang} />
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--rose, #ff4b91);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #ff7aa8;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(255, 75, 145, 0.14);
+    border: 1px solid rgba(255, 75, 145, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #ff9ec4;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(255, 75, 145, 0.08);
+    border-left: 4px solid var(--rose, #ff4b91);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .repo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 75, 145, 0.3);
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .repo-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+  }
+
+  .repo-link {
+    color: var(--rose, #ff4b91);
+    text-decoration: none;
+    font-weight: 600;
+    word-break: break-all;
+  }
+
+  .repo-link:hover {
+    text-decoration: underline;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .section-paragraph :global(code) {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-size: 0.9em;
+    color: #ff7aa8;
+    border: 1px solid rgba(255, 75, 145, 0.2);
+  }
+
+  .code-container {
+    margin: 1.5rem 0;
+    background: #0f172a;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .code-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-block {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+  }
+
+  .remember-box {
+    background: rgba(255, 75, 145, 0.04);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .remember-dot {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+
+  .remember-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .remember-text :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .closing-callout {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ff9ec4;
+    margin-bottom: 1.5rem;
+  }
+
+  .closing-signature {
+    color: #94a3b8;
+    font-size: 0.95rem;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    color: #f8fafc;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1.5rem 1rem;
+    }
+    
+    .post-card {
+      padding: 1.5rem;
+    }
+
+    .post-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>
+

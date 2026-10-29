@@ -1,0 +1,844 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, How I Built a Custom AI & CRM Chrome Extension for My Business (Without Paying Meta a Dime) 🌸",
+    date: "November 2, 2026",
+    subtitle: "A developer & business owner diary entry by Jill",
+    back: 'Back to Home',
+    intro: "After pausing my business for a few months while juggling multiple jobs, I launched my custom administrative web platform—only to encounter a common challenge: <strong>having a modern web platform doesn't automatically restore day-to-day customer communication</strong>.",
+    introDesc: "Instead of paying high recurring fees for third-party messaging APIs or manually searching through disorganized contact lists, I engineered a Manifest V3 Chrome Extension Agent that bridges historical data, WhatsApp Web, and my web admin panel. Here is the technical architecture behind building a zero-cost browser CRM co-pilot.",
+    bannerLabel: "Web Platform Automated by This Extension:",
+    bannerUrl: "https://lagatacr.com",
+    sections: [
+      {
+        heading: "1. The Challenge: Rebuilding Customer Reach After a Device Migration",
+        paragraphs: [
+          "Every developer who runs a business knows that technical infrastructure is only half of the equation. In my e-commerce business, all sales conversations and customer interactions traditionally took place directly via WhatsApp.",
+          "Last year, juggling three jobs simultaneously forced me to pause business operations for several months. When I resumed, I built a custom web platform with an administrative dashboard to manage orders, exchange rates, and notifications.",
+          "However, I hit an unexpected roadblock during a hardware upgrade: I switched to a new cell phone—keeping the exact same phone number—and while trying to clean up duplicate contacts on the new device, I accidentally wiped out my saved WhatsApp Business contacts. In WhatsApp, if contacts aren't mutually saved in phone address books, status visibility and direct reach drop dramatically. I needed a reliable way to reconnect with past clients and manage conversations without paying for expensive enterprise APIs."
+        ]
+      },
+      {
+        heading: "2. Architectural Decision: Why a Manifest V3 Browser Extension?",
+        paragraphs: [
+          "When designing a solution to bridge customer communication with an existing administrative platform, there are two primary routes: paying for third-party cloud API gateways (with monthly base fees and per-message charges), or building a custom client-side integration right where the communication already occurs.",
+          "A **Manifest V3 Chrome Extension** was the ideal architecture. It runs directly inside the browser session, eliminates the need for external webhooks or intermediary database synchronization, and operates at **$0 infrastructure cost**.",
+          "Using Gemini 4 Argon in Antigravity as a coding co-pilot, I was able to rapidly draft the extension's architecture, write scripts to parse legacy data files, and iterate on complex DOM interactions inside WhatsApp Web."
+        ]
+      },
+      {
+        heading: "3. Phase 1 — Data Engineering: Parsing OpenXML (.xlsx) Archives Programmatically",
+        paragraphs: [
+          "My first technical hurdle was reconstructing customer records from historical order backups saved as `.xlsx` spreadsheets.",
+          "Rather than manually opening dozens of spreadsheets to copy and paste records, I treated the files as what they fundamentally are: compressed ZIP archives containing OpenXML documents.",
+          "By streaming the `.xlsx` archives and extracting `xl/workbook.xml` and `xl/sharedStrings.xml`, we programmatically isolated customer names, order dates, and purchase keywords. In seconds, this produced a clean, normalized JSON dataset of recurring clients that the Chrome extension could load locally into memory for instant lookup inside WhatsApp Web."
+        ],
+        codeLabel: "Manifest V3 Architecture: Dual Injections on WhatsApp Web (MAIN World) & Admin Panel",
+        code: `{
+  "manifest_version": 3,
+  "name": "CRM & Sales Agent Extension",
+  "version": "1.4.0",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://web.whatsapp.com/*",
+    "https://lagatacr.com/*",
+    "https://*.lagatacr.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "css": ["styles.css"],
+      "js": ["bridge.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://lagatacr.com/*", "https://*.lagatacr.com/*"],
+      "js": ["admin_bridge.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}`
+      },
+      {
+        heading: "4. Phase 2 — Taming WhatsApp Web's Lexical Rich-Text Editor",
+        paragraphs: [
+          "From a front-end engineering standpoint, automating **WhatsApp Web** in modern browsers is non-trivial. WhatsApp does not use standard `<textarea>` elements; it uses Meta's **Lexical rich-text editor** framework hosted inside a `div[contenteditable=\"true\"][data-tab=\"10\"]`.",
+          "Direct property assignments such as `el.value = text` or `el.textContent = text` fail completely because Lexical maintains an internal virtual state. Any change made without triggering native event flows is wiped out immediately.",
+          "During development, we resolved two critical real-world automation challenges:",
+          "**• Challenge #1: Avoiding Double Submissions (Idempotency Lock):** Firing an automated submit click alongside a fallback `Enter` event risked dispatching the message twice. We engineered a strict idempotency lock: verifying active DOM text, checking an in-memory `contactedIds` set, and awaiting confirmation that the input box cleared before allowing any retry.",
+          "**• Challenge #2: Handling Multiline Text and Newlines:** Using Chrome's `document.execCommand('insertText')` frequently stripped `\\n` line breaks when lines lacked trailing spaces. We replaced this with a synthetic **`ClipboardEvent('paste')`** carrying a `DataTransfer` object with `text/plain`, coupled with a regex sanitizer (`safeText`) and an optional **Review Mode checkbox** to let the human operator inspect the populated message before sending."
+        ],
+        codeLabel: "Safe Multiline Text Injection into WhatsApp's Lexical Editor (content.js)",
+        code: `async function writeIntoLexicalEditor(el, text, clearFirst = true) {
+  if (!el) return false;
+  realClick(el);
+  el.focus();
+  await sleep(80);
+
+  // Ensure trailing whitespace before each newline to prevent glued words
+  const safeText = text.replace(/\\r\\n/g, "\\n").replace(/([^\\s\\n])\\n/g, "$1 \\n");
+
+  // Dispatch synthetic ClipboardEvent("paste") so Lexical creates clean paragraph nodes
+  // without triggering premature submission on multiline templates
+  const dt = new DataTransfer();
+  dt.setData("text/plain", safeText);
+  const pasteEvt = new ClipboardEvent("paste", {
+    clipboardData: dt,
+    bubbles: true,
+    cancelable: true
+  });
+  el.dispatchEvent(pasteEvt);
+  await sleep(150);
+  el.dispatchEvent(new InputEvent("input", { bubbles: true }));
+  return true;
+}`
+      },
+      {
+        heading: "5. Smart Filtering & Operational Guardrails",
+        paragraphs: [
+          "When automating communication across dozens of contacts, safety mechanisms are paramount to protect account standing and maintain professionalism:",
+          "**1. Multi-Profile Safety:** When running multiple browser tabs with different WhatsApp profiles, the content script inspects DOM selectors (`[aria-label*=\"Business tools\"]`) and locks non-business sessions into **Read-Only Mode** to prevent accidental outreach from personal profiles.",
+          "**2. Excluding Irrelevant Threads:** The scanner inspects only active conversation rows in `#pane-side`, automatically bypassing archived threads and group conversations.",
+          "**3. Commercial Account Detection:** The agent identifies whether a chat belongs to an external corporate account (such as courier services or financial institutions) and skips automated outreach unless an existing order history is verified in the thread.",
+          "**4. Real-Time Interaction Pipeline:** The extension categorizes contacts into interactive states: *Pending*, *Reacted*, *Replied*, and *Action Required*, allowing focused follow-ups."
+        ]
+      },
+      {
+        heading: "6. Zero-Cost Admin Bridge & Client-Side Canvas Generation",
+        paragraphs: [
+          "The most powerful aspect of this setup is how the extension bridges the custom web platform with the messaging interface at zero ongoing cost.",
+          "Using `admin_bridge.js`, when I log into my web platform's administrative panel, the extension passively syncs system configuration and package transit milestones via `chrome.storage.local`. When relevant shipping updates occur, the extension prepares standardized notifications directly in WhatsApp Web.",
+          "Furthermore, we incorporated client-side graphic card generation: using an HTML5 `<canvas>`, the extension dynamically compiles vertical promotional and informative status cards (`1080x1920`) with unique reference codes (`Ref #A01`, `Ref #B02`). When a customer replies referring to a card, typing the reference code into the extension instantly opens the source product link.",
+          "Automated lifecycle routines also handle scheduled cleanups when promotional windows conclude, keeping the communication channel orderly and up-to-date."
+        ],
+        codeLabel: "System Architecture Flow: From Web Admin Panel to WhatsApp Web Automation",
+        code: `┌──────────────────────────────┐     chrome.storage.local     ┌─────────────────────────────────┐
+│   Web Admin Panel            │ ───────────────────────────► │  WhatsApp Web (Custom Agent)    │
+│  (Active Session Detection)  │                              │   Manifest V3 Content Script    │
+├──────────────────────────────┤                              ├─────────────────────────────────┤
+│ • Exchange Rate Sync         │                              │ • Client History & Quick Search │
+│ • Order Milestone Tracking   │                              │ • Safe Lexical Paste & Locking  │
+│ • Shipping & Transit State   │                              │ • Canvas Card Generator (Ref #) │
+│ • Local Invoice Sync         │                              │ • Automated Lifecycle & Cleanup │
+└──────────────────────────────┘                              └─────────────────────────────────┘`
+      }
+    ],
+    remember: {
+      heading: "Key Takeaways (Engineering & Product) 🌸",
+      items: [
+        "**Browser extensions are powerful zero-cost integration bridges:** Before investing in heavy third-party APIs or server middleware, a Manifest V3 extension can bridge two separate web apps via `chrome.storage.local`.",
+        "**Rich-text editors require synthetic clipboard events:** Bypassing virtual editors like Meta's Lexical demands synthetic `ClipboardEvent('paste')` dispatches rather than naive DOM property mutation.",
+        "**Programmatic XML parsing beats manual spreadsheet work:** Treating `.xlsx` files as zipped OpenXML archives allows instant batch extraction of legacy data.",
+        "**Idempotency guards prevent automation hazards:** Always verify DOM state and operation status before firing fallback keystrokes.",
+        "**Automate the routine, preserve human oversight:** Keep administrative reviews for sensitive actions while letting the extension handle repetitive searches and status formatting."
+      ]
+    },
+    closingHeading: "Final Thoughts from My Diary",
+    closingText: "Building this extension was a great reminder of the practical utility of browser extensions. Instead of resigning myself to lost contact history or taking on monthly software subscriptions, a few hours of engineering delivered a tailored CRM co-pilot that directly solves our operational bottlenecks.",
+    closing: "Have you ever built a custom browser extension or automated tool to solve a specific workflow problem in your projects? Let me know in the comments 🌸",
+    closingSign: "With clean architecture and automated browser workflows,",
+    signature: "— Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario, Cómo Creé un Agente de IA y CRM en Chrome para Mi Negocio (Sin Pagarle un Colón a Meta) 🌸",
+    date: "2 de Noviembre, 2026",
+    subtitle: "El diario de desarrollo y tecnología de Jill",
+    back: "Volver al Inicio",
+    intro: "Después de pausar mi negocio durante unos meses por tener varios trabajos al mismo tiempo, lancé mi plataforma web administrativa—y me topé con un reto común: <strong>tener un panel web moderno no restablece automáticamente la comunicación diaria con los clientes</strong>.",
+    introDesc: "En lugar de pagar altas tarifas mensuales por APIs de mensajería de terceros o buscar manualmente en listas desordenadas, programé una Extensión de Chrome (Manifest V3) que conecta datos históricos, WhatsApp Web y mi panel administrativo. Aquí te explico toda la arquitectura técnica para construir un asistente CRM en el navegador a costo cero.",
+    bannerLabel: "Plataforma Web Automatizada con Esta Extensión:",
+    bannerUrl: "https://lagatacr.com",
+    sections: [
+      {
+        heading: "1. El Reto: Recuperando la Comunicación tras un Cambio de Celular",
+        paragraphs: [
+          "Todo desarrollador que emprende sabe que la infraestructura de software es solo la mitad de la ecuación. En mi negocio de comercio electrónico, la comunicación directa y el cierre de consultas se realizaban tradicionalmente a través de WhatsApp.",
+          "El año pasado, trabajar en tres empleos simultáneos me obligó a pausar la operación durante varios meses. Al retomar, desarrollé un sitio web con un panel administrativo a la medida para gestionar pedidos, estados de tránsito y notificaciones.",
+          "Sin embargo, me topé con un inconveniente al renovar mi equipo: cambié de celular—manteniendo exactamente el mismo número telefónico—y al depurar lo que creía que eran contactos duplicados en la libreta del teléfono, borré sin querer los contactos de WhatsApp Business. En WhatsApp, si ambas partes no tienen sus números guardados mutuamente, la visibilidad de los estados y la interacción directa disminuyen drásticamente. Necesitaba una solución para recontactar a mis clientes y ordenar las conversaciones sin pagar costosas APIs empresariales."
+        ]
+      },
+      {
+        heading: "2. Decisión de Arquitectura: ¿Por Qué una Extensión de Chrome Manifest V3?",
+        paragraphs: [
+          "Para enlazar la comunicación con mi sistema administrativo existente tenía dos caminos: pagar proveedores de APIs en la nube con costos por mensaje y tarifas base, o crear una integración local directamente en el entorno donde ocurre la atención: el navegador.",
+          "Una **Extensión de Chrome bajo Manifest V3** resultó ser la arquitectura perfecta. Se ejecuta dentro de la sesión activa del navegador, no requiere servidores intermedios ni webhooks externos, y opera a **costo $0** de infraestructura.",
+          "Apoyándome en un modelo de lenguaje como co-piloto de programación (Argon en Antigravity), pude estructurar la extensión con rapidez, escribir scripts para procesar respaldos antiguos y resolver particularidades complejas del DOM de WhatsApp Web."
+        ]
+      },
+      {
+        heading: "3. Fase 1 — Ingeniería de Datos: Procesando Archivos OpenXML (.xlsx) por Código",
+        paragraphs: [
+          "El primer desafío técnico consistía en recuperar los registros históricos de clientes a partir de respaldos de pedidos en formato `.xlsx`.",
+          "En lugar de abrir archivos manualmente para copiar y pegar nombres, tratamos los archivos `.xlsx` como lo que técnicamente son: contenedores comprimidos en formato ZIP con archivos XML estructurados.",
+          "Leyendo los flujos internos de `xl/workbook.xml` y `xl/sharedStrings.xml`, desarrollamos un script que extrajo de forma automatizada nombres de clientes y palabras clave de artículos solicitados. En cuestión de segundos generamos un archivo JSON limpio y normalizado con los clientes recurrentes, listo para ser consumido localmente por la extensión en el navegador."
+        ],
+        codeLabel: "Arquitectura Manifest V3: Inyección en WhatsApp Web (MAIN World) y Panel Admin",
+        code: `{
+  "manifest_version": 3,
+  "name": "CRM & Sales Agent Extension",
+  "version": "1.4.0",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://web.whatsapp.com/*",
+    "https://lagatacr.com/*",
+    "https://*.lagatacr.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "css": ["styles.css"],
+      "js": ["bridge.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://lagatacr.com/*", "https://*.lagatacr.com/*"],
+      "js": ["admin_bridge.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}`
+      },
+      {
+        heading: "4. Fase 2 — Domando el Editor Lexical de WhatsApp Web",
+        paragraphs: [
+          "Desde la perspectiva de ingeniería web, automatizar **WhatsApp Web** en navegadores modernos presenta particularidades interesantes. La interfaz no utiliza campos `<textarea>` convencionales, sino el framework de edición enriquecida **Lexical** de Meta sobre un contenedor `div[contenteditable=\"true\"][data-tab=\"10\"]`.",
+          "Modificar directamente el DOM con `el.value = text` o `el.textContent = text` no funciona, ya que Lexical gestiona un estado virtual interno y revierte cualquier mutación que no provenga de eventos nativos del usuario.",
+          "Durante la implementación resolvimos dos problemas técnicos clave:",
+          "**• Reto #1: Prevención de Envíos Duplicados (Bloqueo de Idempotencia):** Disparar un clic de envío junto a un evento de tecla `Enter` de respaldo podía provocar que un mensaje se enviara dos veces. Implementamos un candado estricto de idempotencia: verificamos el texto en el DOM, validamos un conjunto en memoria `contactedIds` y esperamos la confirmación de que la caja quedó limpia antes de permitir cualquier reintento.",
+          "**• Reto #2: Pérdida de Saltos de Línea en Texto Multilínea:** El comando `document.execCommand('insertText')` de Chrome eliminaba saltos de línea (`\\n`) cuando las líneas no terminaban con un espacio, provocando que las palabras se unieran. Lo solucionamos despachando un **`ClipboardEvent('paste')` sintético** con un objeto `DataTransfer('text/plain')`, un filtro regex (`safeText`) para asegurar espaciado previo a cada salto, y una casilla de **Modo Revisión** para inspeccionar el texto antes de enviar."
+        ],
+        codeLabel: "Inyección Segura de Texto Multilínea en el Editor Lexical (content.js)",
+        code: `async function writeIntoLexicalEditor(el, text, clearFirst = true) {
+  if (!el) return false;
+  realClick(el);
+  el.focus();
+  await sleep(80);
+
+  // Asegura un espacio antes de cada salto de línea para evitar unión de palabras
+  const safeText = text.replace(/\\r\\n/g, "\\n").replace(/([^\\s\\n])\\n/g, "$1 \\n");
+
+  // Despacha ClipboardEvent("paste") sintético para que Lexical genere párrafos nativos
+  // sin provocar envíos prematuros en mensajes multilínea
+  const dt = new DataTransfer();
+  dt.setData("text/plain", safeText);
+  const pasteEvt = new ClipboardEvent("paste", {
+    clipboardData: dt,
+    bubbles: true,
+    cancelable: true
+  });
+  el.dispatchEvent(pasteEvt);
+  await sleep(150);
+  el.dispatchEvent(new InputEvent("input", { bubbles: true }));
+  return true;
+}`
+      },
+      {
+        heading: "5. Filtros Inteligentes y Salvaguardas Operativas",
+        paragraphs: [
+          "Al interactuar con múltiples conversaciones, es indispensable contar con filtros que garanticen precisión y eviten errores operativos:",
+          "**1. Protección Multi-Perfil:** Cuando se tienen pestañas abiertas con cuentas personales y de empresa, el content script evalúa selectores específicos del DOM (`[aria-label*=\"Herramientas para la empresa\"]`) y bloquea perfiles personales en **Modo Solo Lectura** para evitar cualquier envío accidental desde cuentas no comerciales.",
+          "**2. Exclusión de Chats No Pertinentes:** El escáner recorre únicamente los elementos visibles de la lista principal (`#pane-side`), omitiendo conversaciones archivadas y grupos.",
+          "**3. Detección de Cuentas Comerciales Externas:** El agente identifica si una conversación corresponde a otra empresa (mensajerías, bancos o servicios) y no inicia contacto a menos que exista un historial previo de pedidos en dicho chat.",
+          "**4. Tablero de Estados en Tiempo Real:** El sistema clasifica las conversaciones en categorías dinámicas: *Pendiente*, *Reaccionó*, *Respondió* y *Requiere Atención*, optimizando el tiempo de respuesta."
+        ]
+      },
+      {
+        heading: "6. Puente con el Panel Administrativo y Generación con Canvas",
+        paragraphs: [
+          "La mayor ventaja de esta arquitectura es la comunicación directa entre mi panel web y WhatsApp Web sin incurrir en costos recurrentes.",
+          "A través de `admin_bridge.js`, cuando inicio sesión en el panel de mi plataforma, la extensión sincroniza mediante `chrome.storage.local` parámetros operativos como tipo de cambio y avances logísticos. Cuando se registran actualizaciones de paquetes, la extensión facilita la preparación de avisos estandarizados en WhatsApp Web.",
+          "Asimismo, integramos un generador gráfico en el cliente: utilizando un `<canvas>` de HTML5, la extensión renderiza tarjetas verticales (`1080x1920`) con códigos de referencia (`Ref #A01`, `Ref #B02`). Si un cliente consulta por una tarjeta, ingresar el código en la extensión abre de inmediato el enlace correspondiente.",
+          "Las rutinas automáticas también coordinan la limpieza y actualización de estados al concluir las jornadas de atención, manteniendo la comunicación ordenada."
+        ],
+        codeLabel: "Diagrama del Sistema: Del Panel Administrativo a WhatsApp Web",
+        code: `┌──────────────────────────────┐     chrome.storage.local     ┌─────────────────────────────────┐
+│ Panel Admin Web              │ ───────────────────────────► │  WhatsApp Web (Extensión CRM)   │
+│ (Detección de Sesión Activa) │                              │   Content Script Manifest V3    │
+├──────────────────────────────┤                              ├─────────────────────────────────┤
+│ • Sincronización de Cambio   │                              │ • Historial y Búsqueda Rápida   │
+│ • Hitos Logísticos de Envío  │                              │ • Pegado Seguro en Lexical      │
+│ • Estados de Tránsito        │                              │ • Generador de Canvas (Ref #)   │
+│ • Comprobantes Locales       │                              │ • Limpieza y Ciclo de Estados   │
+└──────────────────────────────┘                              └─────────────────────────────────┘`
+      }
+    ],
+    remember: {
+      heading: "Cosas Que Quiero Recordar (Ingeniería y Producto) 🌸",
+      items: [
+        "**Las extensiones de navegador son puentes de integración ideales a costo $0:** Antes de contratar middleware externo o APIs con cobro recurrente, Manifest V3 permite comunicar dos aplicaciones web vía `chrome.storage.local`.",
+        "**Los editores de texto enriquecido requieren eventos sintéticos de portapapeles:** Para interactuar con frameworks como Lexical, despachar eventos `ClipboardEvent('paste')` es indispensable frente a modificaciones directas del DOM.",
+        "**El procesamiento de XML supera el trabajo manual en hojas de cálculo:** Interpretar los archivos `.xlsx` como paquetes comprimidos OpenXML agiliza la extracción masiva de datos históricos.",
+        "**La idempotencia previene fallos en automatización:** Verificar estados del DOM y banderas de ejecución antes de disparar teclas de respaldo evita envíos duplicados.",
+        "**Automatiza lo repetitivo y conserva el criterio humano:** Deja que la extensión ordene listas y prepare formatos, manteniendo el control manual en las acciones decisivas."
+      ]
+    },
+    closingHeading: "Reflexión final desde mi diario",
+    closingText: "Desarrollar esta extensión me confirmó la enorme utilidad de las extensiones de Chrome para resolver cuellos de botella cotidianos. En lugar de resignarme a perder el contacto con clientes o pagar suscripciones innecesarias, unas horas de programación permitieron crear un asistente a la medida para mi flujo de trabajo.",
+    closing: "¿Alguna vez has desarrollado una extensión o script para resolver un problema de comunicación o gestión en tus proyectos? Cuéntame en los comentarios 🌸",
+    closingSign: "Con arquitectura limpia y flujos de navegador automatizados,",
+    signature: "— Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário, Como Criei uma Extensão de Chrome para CRM e Automação (Sem Pagar Nada à Meta) 🌸",
+    date: "2 de Novembro de 2026",
+    subtitle: "O diário de desenvolvimento e tecnologia da Jill",
+    back: "Voltar ao Início",
+    intro: "Depois de pausar meu negócio por alguns meses enquanto conciliava múltiplos empregos, lancei minha plataforma administrativa web—e me deparei com um desafio clássico: <strong>ter um painel web moderno não restaura automaticamente a comunicação diária com os clientes</strong>.",
+    introDesc: "Em vez de pagar taxas mensais elevadas por APIs de mensagens de terceiros ou pesquisar manualmente em listas desorganizadas, desenvolvi uma Extensão do Chrome (Manifest V3) que conecta dados históricos, o WhatsApp Web e meu painel administrativo. Confira a arquitetura técnica completa para construir um assistente CRM no navegador a custo zero.",
+    bannerLabel: "Plataforma Web Automatizada com Esta Extensão:",
+    bannerUrl: "https://lagatacr.com",
+    sections: [
+      {
+        heading: "1. O Desafio: Reconectando com Clientes Após Troca de Aparelho",
+        paragraphs: [
+          "Qualquer desenvolvedor que empreende sabe que a infraestrutura técnica é apenas parte do trabalho. No meu e-commerce, o contato direto e o fechamento de pedidos sempre aconteceram pelo WhatsApp.",
+          "No ano passado, trabalhar em três empregos ao mesmo tempo me forçou a pausar as operações por alguns meses. Ao retomar, construí um site com painel administrativo sob medida para gerenciar pedidos, cotações e notificações.",
+          "Porém, enfrentei um problema inesperado ao trocar de aparelho celular: troquei o aparelho—mantendo exatamente o mesmo número de telefone—e, ao limpar o que pareciam ser contatos duplicados na agenda, apaguei sem querer os contatos do WhatsApp Business. No WhatsApp, se os contatos não estiverem salvos mutuamente nas agendas, o alcance de status e a comunicação direta caem drasticamente. Eu precisava de uma forma ágil de retomar contato com clientes anteriores sem recorrer a APIs corporativas caras."
+        ]
+      },
+      {
+        heading: "2. Decisão de Arquitetura: Por Que uma Extensão Manifest V3?",
+        paragraphs: [
+          "Para integrar a comunicação ao meu painel web existente, havia dois caminhos: contratar APIs em nuvem com taxas recorrentes e cobrança por mensagem, ou desenvolver uma integração local diretamente no navegador, onde as conversas já acontecem.",
+          "Uma **Extensão do Chrome sob Manifest V3** provou ser a melhor arquitetura. Ela roda na sessão ativa do navegador, não exige servidores intermediários e opera a **custo $0** de infraestrutura.",
+          "Utilizando um modelo de IA como assistente de programação (Argon no Antigravity), estruturei a extensão com rapidez, criei scripts para extrair dados legados e resolvi detalhes do DOM do WhatsApp Web."
+        ]
+      },
+      {
+        heading: "3. Fase 1 — Engenharia de Dados: Processando Arquivos OpenXML (.xlsx) por Código",
+        paragraphs: [
+          "O primeiro obstáculo técnico foi reconstruir o histórico de clientes a partir de arquivos `.xlsx` antigos.",
+          "Em vez de abrir dezenas de planilhas manualmente para copiar e colar dados, tratamos os arquivos `.xlsx` como pacotes compactados em ZIP contendo documentos OpenXML.",
+          "Lendo os fluxos de `xl/workbook.xml` e `xl/sharedStrings.xml`, desenvolvemos um script que extraiu nomes de clientes e termos de itens comprados. Em segundos, consolidamos um JSON limpo e normalizado pronto para ser consultado localmente pela extensão."
+        ],
+        codeLabel: "Arquitetura Manifest V3: Injeção no WhatsApp Web (MAIN World) e Painel Admin",
+        code: `{
+  "manifest_version": 3,
+  "name": "CRM & Sales Agent Extension",
+  "version": "1.4.0",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://web.whatsapp.com/*",
+    "https://lagatacr.com/*",
+    "https://*.lagatacr.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "css": ["styles.css"],
+      "js": ["bridge.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://lagatacr.com/*", "https://*.lagatacr.com/*"],
+      "js": ["admin_bridge.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}`
+      },
+      {
+        heading: "4. Fase 2 — Dominando o Editor Lexical do WhatsApp Web",
+        paragraphs: [
+          "Do ponto de vista de front-end, automatizar o **WhatsApp Web** em navegadores modernos traz peculiaridades. A interface não usa campos `<textarea>` comuns, mas sim o framework de rich-text **Lexical** da Meta em uma `div[contenteditable=\"true\"][data-tab=\"10\"]`.",
+          "Atribuições diretas como `el.value = text` ou `el.textContent = text` falham porque o Lexical mantém um estado virtual interno, revertendo alterações que não sigam o fluxo nativo de eventos.",
+          "Durante o desenvolvimento, resolvemos dois desafios práticos:",
+          "**• Desafio #1: Prevenção de Envios Duplos (Trava de Idempotência):** Clicar no botão de envio disparando simultaneamente um evento `Enter` de fallback poderia enviar a mensagem duas vezes. Criamos uma trava rígida de idempotência: verificamos o texto no DOM, checamos um conjunto em memória `contactedIds` e aguardamos o esvaziamento da caixa de texto antes de permitir reenvios.",
+          "**• Desafio #2: Linhas Grudadas em Textos Multilinha:** O comando `document.execCommand('insertText')` do Chrome eliminava quebras de linha (`\\n`) quando a linha não terminava com espaço. Resolvemos despachando um evento sintético **`ClipboardEvent('paste')`** com objeto `DataTransfer('text/plain')`, sanitização regex (`safeText`) e uma opção de **Modo Revisão** para inspecionar o texto antes do envio."
+        ],
+        codeLabel: "Injeção Segura de Texto Multilinha no Editor Lexical (content.js)",
+        code: `async function writeIntoLexicalEditor(el, text, clearFirst = true) {
+  if (!el) return false;
+  realClick(el);
+  el.focus();
+  await sleep(80);
+
+  // Garante um espaço antes de cada quebra de linha para não colar palavras
+  const safeText = text.replace(/\\r\\n/g, "\\n").replace(/([^\\s\\n])\\n/g, "$1 \\n");
+
+  // Dispara ClipboardEvent("paste") sintético para o Lexical criar parágrafos limpos
+  // sem acionar envio antecipado em modelos multilinha
+  const dt = new DataTransfer();
+  dt.setData("text/plain", safeText);
+  const pasteEvt = new ClipboardEvent("paste", {
+    clipboardData: dt,
+    bubbles: true,
+    cancelable: true
+  });
+  el.dispatchEvent(pasteEvt);
+  await sleep(150);
+  el.dispatchEvent(new InputEvent("input", { bubbles: true }));
+  return true;
+}`
+      },
+      {
+        heading: "5. Filtros Inteligentes e Salvaguardas Operacionais",
+        paragraphs: [
+          "Para garantir segurança e evitar mensagens incorretas, implementamos filtros rigorosos:",
+          "**1. Proteção Multi-Perfil:** Se houver abas abertas com perfis pessoais e de trabalho, o script analisa o DOM (`[aria-label*=\"Herramientas para la empresa\"]` ou equivalente) e trava perfis pessoais em **Modo Somente Leitura**.",
+          "**2. Exclusão de Chats Inadequados:** O leitor analisa apenas a lista principal visível (`#pane-side`), ignorando conversas arquivadas e grupos.",
+          "**3. Detecção de Contas Comerciais:** A extensão reconhece perfis comerciais de outras empresas (bancos, transportadoras) e não envia mensagens a menos que haja histórico prévio comprovado no chat.",
+          "**4. Classificação em Tempo Real:** As conversas são categorizadas em *Pendente*, *Reagiu*, *Respondeu* e *Atenção Necessária*, priorizando quem realmente deseja suporte."
+        ]
+      },
+      {
+        heading: "6. Integração com Painel Admin e Renderização com Canvas",
+        paragraphs: [
+          "A grande vantagem técnica foi conectar o painel administrativo da minha plataforma com o WhatsApp Web a custo zero.",
+          "Com o `admin_bridge.js`, ao iniciar sessão no painel web, a extensão sincroniza via `chrome.storage.local` cotações e etapas de transporte. Quando há atualizações de remessa, a extensão agiliza o envio de avisos padronizados.",
+          "Além disso, implementamos geração de cartões visuais no cliente: com `<canvas>` HTML5, a extensão gera imagens verticais (`1080x1920`) com códigos (`Ref #A01`, `Ref #B02`). Quando um cliente pergunta sobre um item, digitar o código abre o link original instantaneamente.",
+          "Rotinas automatizadas também realizam limpezas periódicas de estados, mantendo o canal de comunicação leve e eficiente."
+        ],
+        codeLabel: "Fluxo do Sistema: Do Painel Admin Web ao WhatsApp Web",
+        code: `┌──────────────────────────────┐     chrome.storage.local     ┌─────────────────────────────────┐
+│ Painel Admin Web             │ ───────────────────────────► │  WhatsApp Web (Extensão CRM)    │
+│ (Detecção de Sessão Ativa)   │                              │   Content Script Manifest V3    │
+├──────────────────────────────┤                              ├─────────────────────────────────┤
+│ • Sincronização de Câmbio    │                              │ • Histórico e Busca Rápida      │
+│ • Marcos de Envio e Carga    │                              │ • Colagem Segura no Lexical     │
+│ • Rastreamento de Trânsito   │                              │ • Gerador com Canvas (Ref #)    │
+│ • Faturas Locais             │                              │ • Limpeza de Ciclo de Estados   │
+└──────────────────────────────┘                              └─────────────────────────────────┘`
+      }
+    ],
+    remember: {
+      heading: "Pontos Para Lembrar (Engenharia e Produto) 🌸",
+      items: [
+        "**Extensões são pontes poderosas a custo $0:** Antes de contratar APIs caras, uma extensão Manifest V3 conecta aplicações web locais via `chrome.storage.local`.",
+        "**Editores de rich-text exigem eventos sintéticos:** O Lexical precisa de `ClipboardEvent('paste')` sintéticos para aceitar textos multilinha com consistência.",
+        "**Interpretar XML é mais rápido que planilhas manuais:** Processar `.xlsx` como arquivos compactados OpenXML agiliza o resgate de históricos em lote.",
+        "**Idempotência evita falhas de automação:** Checar o estado do DOM e travas de execução antes de simular teclas previne envios repetidos.",
+        "**Automatize tarefas repetitivas, mantenha a supervisão humana:** Deixe a extensão organizar listas e formatos, reservando o julgamento humano para decisões sensíveis."
+      ]
+    },
+    closingHeading: "Reflexão final do meu diário",
+    closingText: "Construir essa extensão reforçou como o ecossistema de extensões de navegador é versátil. Em vez de aceitar a perda de contatos ou assinar ferramentas caras, poucas horas de código criaram um assistente sob medida para o meu fluxo de trabalho.",
+    closing: "Você já criou uma extensão ou script próprio para destravar um processo no seu trabalho? Compartilhe nos comentários 🌸",
+    closingSign: "Com arquitetura limpa e fluxos automatizados no navegador,",
+    signature: "— Jill 🌸"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Browser Extensions • Manifest V3 & Full-Stack CRM
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main" set:html={c.intro}></p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="repo-banner">
+              <div class="repo-info">
+                <strong>{c.bannerLabel}</strong>
+                <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
+                  {c.bannerUrl}
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          {c.sections.map(sec => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+              {sec.code && (
+                <div class="code-container">
+                  {sec.codeLabel && <div class="code-header">{sec.codeLabel}</div>}
+                  <pre class="code-block"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <hr class="divider" />
+
+          <!-- Signature Remember Section (Things I Want To Remember) -->
+          <section class="content-section remember-box">
+            <h2 class="section-heading">{c.remember.heading}</h2>
+            <ul class="remember-list">
+              {c.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span class="remember-text" set:html={item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <p class="closing-callout">{c.closing}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-argon-chrome-agent" currentLang={lang} />
+          </section>
+
+          <BlogNavigation currentSlug="blog-argon-chrome-agent" lang={lang} />
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--rose, #ff4b91);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #ff7aa8;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(255, 75, 145, 0.14);
+    border: 1px solid rgba(255, 75, 145, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #ff9ec4;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(255, 75, 145, 0.08);
+    border-left: 4px solid var(--rose, #ff4b91);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .repo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 75, 145, 0.3);
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .repo-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+  }
+
+  .repo-link {
+    color: var(--rose, #ff4b91);
+    text-decoration: none;
+    font-weight: 600;
+    word-break: break-all;
+  }
+
+  .repo-link:hover {
+    text-decoration: underline;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .section-paragraph :global(code) {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-size: 0.9em;
+    color: #ff7aa8;
+    border: 1px solid rgba(255, 75, 145, 0.2);
+  }
+
+  .code-container {
+    margin: 1.5rem 0;
+    background: #0f172a;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .code-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-block {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+  }
+
+  .remember-box {
+    background: rgba(255, 75, 145, 0.04);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .remember-dot {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+
+  .remember-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .remember-text :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .closing-callout {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ff9ec4;
+    margin-bottom: 1.5rem;
+  }
+
+  .closing-signature {
+    color: #94a3b8;
+    font-size: 0.95rem;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    color: #f8fafc;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1.5rem 1rem;
+    }
+    
+    .post-card {
+      padding: 1.5rem;
+    }
+
+    .post-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>

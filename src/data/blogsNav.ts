@@ -1,4 +1,4 @@
-// Auto-generated blog navigation list in chronological order (01 to 46)
+// Auto-generated blog navigation list in chronological order (01 to 53)
 
 export interface BlogPostNav {
   number: string;
@@ -764,7 +764,7 @@ export const BLOG_POSTS: BlogPostNav[] = [
   {
     "number": "51",
     "slug": "blog-php-cve-115560",
-    "publishDate": "2026-10-28",
+    "publishDate": "2026-11-01",
     "titles": {
       "es": "Querido Diario, La Nueva Vulnerabilidad de PHP (CVE-2026-115560), la Alerta de CISA y Por Qué Blindar php.ini Nos Salvó 🌸",
       "en": "Dear Diary, The New PHP Advisory (CVE-2026-115560), CISA KEV Alert & Why Hardening Saved Us 🌸",
@@ -774,6 +774,36 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "es": "PHP CVE-2026-115560 y Alerta CISA",
       "en": "PHP CVE-2026-115560 & CISA KEV",
       "pt": "PHP CVE-2026-115560 e Alerta CISA"
+    }
+  },
+  {
+    "number": "52",
+    "slug": "blog-argon-chrome-agent",
+    "publishDate": "2026-11-02",
+    "titles": {
+      "es": "Querido Diario, Cómo Creé un Agente de IA y CRM en Chrome para Mi Negocio (Sin Pagarle un Colón a Meta) 🌸",
+      "en": "Dear Diary, How I Built a Custom AI & CRM Chrome Extension for My Business (Without Paying Meta a Dime) 🌸",
+      "pt": "Querido Diário, Como Criei uma Extensão de Chrome para CRM e Automação (Sem Pagar Nada à Meta) 🌸"
+    },
+    "shortTitles": {
+      "es": "Extensión CRM en Chrome",
+      "en": "Chrome CRM Extension",
+      "pt": "Extensão CRM no Chrome"
+    }
+  },
+  {
+    "number": "53",
+    "slug": "blog-chrome-extension-mv3",
+    "publishDate": "2026-11-03",
+    "titles": {
+      "es": "Querido Diario, Qué Es una Extensión de Chrome (Manifest V3): Service Workers, Content Scripts y Seguridad sin eval() 🌸",
+      "en": "Dear Diary, What Is a Chrome Extension (Manifest V3): Service Workers, Content Scripts & Security Without eval() 🌸",
+      "pt": "Querido Diário, O Que É uma Extensão do Chrome (Manifest V3): Service Workers, Content Scripts e Segurança sem eval() 🌸"
+    },
+    "shortTitles": {
+      "es": "Extensiones Chrome Manifest V3",
+      "en": "Chrome Extensions Manifest V3",
+      "pt": "Extensões Chrome Manifest V3"
     }
   }
 ];
