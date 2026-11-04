@@ -1,4 +1,4 @@
-// Auto-generated blog navigation list in chronological order (01 to 53)
+// Auto-generated blog navigation list in chronological order (01 to 54)
 
 export interface BlogPostNav {
   number: string;
@@ -804,6 +804,21 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "es": "Extensiones Chrome Manifest V3",
       "en": "Chrome Extensions Manifest V3",
       "pt": "Extensões Chrome Manifest V3"
+    }
+  },
+  {
+    "number": "54",
+    "slug": "blog-kubernetes",
+    "publishDate": "2026-11-04",
+    "titles": {
+      "es": "Querido Diario, En la U Me Enseñaron Kubernetes, No Entendí Ni una Papa y Mi Orgullo de Aries Tuvo Que Investigar 🌸",
+      "en": "Dear Diary, University Tried Teaching Me Kubernetes, I Understood Absolutely Nothing, and My Aries Pride Took Over 🌸",
+      "pt": "Querido Diário, Me Ensinaram Kubernetes na Faculdade, Não Entendi Nada e Meu Orgulho de Áries Teve Que Investigar 🌸"
+    },
+    "shortTitles": {
+      "es": "Kubernetes Sin Complicaciones",
+      "en": "Kubernetes Demystified",
+      "pt": "Kubernetes Sem Complicações"
     }
   }
 ];
