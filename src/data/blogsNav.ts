@@ -1,4 +1,4 @@
-// Auto-generated blog navigation list in chronological order (01 to 54)
+// Auto-generated blog navigation list in chronological order (01 to 55)
 
 export interface BlogPostNav {
   number: string;
@@ -819,6 +819,21 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "es": "Kubernetes Sin Complicaciones",
       "en": "Kubernetes Demystified",
       "pt": "Kubernetes Sem Complicações"
+    }
+  },
+  {
+    "number": "55",
+    "slug": "blog-antigravity-remote-agents",
+    "publishDate": "2026-11-08",
+    "titles": {
+      "es": "Querido Diario, Probé los Remote Agents de Antigravity: Cómo Funcionan, la Realidad de los Tokens y Cuándo Sí Convienen 🌸",
+      "en": "Dear Diary, Testing Antigravity Remote Agents: How They Work, The Token Cost Reality & Real-World Use Cases 🌸",
+      "pt": "Querido Diário, Testei os Remote Agents do Antigravity: Como Funcionam, a Realidade dos Tokens e Quando Valem a Pena 🌸"
+    },
+    "shortTitles": {
+      "es": "Remote Agents en Antigravity",
+      "en": "Antigravity Remote Agents",
+      "pt": "Remote Agents no Antigravity"
     }
   }
 ];
