@@ -1,0 +1,723 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, What Is TTFT (Time to First Token) and Why AI Speed Isn't What You Think 🌸",
+    date: "November 13, 2026",
+    subtitle: "A developer guide to LLM latency, prefill phases & agent responsiveness by Jill",
+    back: 'Back to Home',
+    intro: "When people discuss how 'fast' an AI is, they usually quote raw output numbers like 80 tokens per second. But if you have ever stared at a frozen blinking cursor for 4 long seconds wondering if the server crashed, you know the truth: <strong>the single most critical metric for perceived speed is TTFT (Time to First Token)</strong>.",
+    introDesc: "Why does an AI feel instant at 120ms TTFT even if its overall response takes time, while another feels infuriatingly laggy despite high throughput? How do the Prefill and Decoding phases operate inside GPU memory, why does TTFT compound catastrophically in multi-step autonomous agents, and how do we optimize it in real production architectures? Here is the complete engineering breakdown.",
+    bannerLabel: "LLM Performance & Latency Benchmarks (Artificial Analysis):",
+    bannerUrl: "https://artificialanalysis.ai/leaderboards/providers",
+    sections: [
+      {
+        heading: "1. The Psychology of Waiting: Why Throughput Is a Deceptive Metric",
+        paragraphs: [
+          "Let's start with a confession about human impatience—especially from someone with an impatient **Aries** streak. Have you ever typed a prompt into a chatbot and sat there waiting while nothing happened?",
+          "One second passes. Two seconds pass. Three seconds pass. By the fourth second, you are already instinctively reaching for the refresh button or wondering if your Wi-Fi died. Then suddenly, BAM! The entire 500-word essay appears in a blur at 120 tokens per second.",
+          "Now compare that to another model that starts streaming word-by-word within **150 milliseconds**. Even if it prints at a modest 40 tokens per second, it feels *lightning fast*. Why? Because **human psychology perceives responsiveness at the onset of action, not at the completion of work**.",
+          "This onset delay is what engineers call **TTFT: Time to First Token**. It measures the exact duration between the moment your HTTP request leaves your client to the precise millisecond the very first generated token arrives back at your stream buffer."
+        ]
+      },
+      {
+        heading: "2. The Inner Mechanics: Prefill Phase vs. Decoding Phase in GPU Memory",
+        paragraphs: [
+          "To understand why TTFT exists, we have to look inside the GPU clusters serving modern Large Language Models. Generating text with a Transformer is divided into two mathematically distinct computational phases:",
+          "**1. The Prefill Phase (Prompt Processing):**",
+          "Before the model can predict the single next word, it must ingest and process your *entire input prompt* all at once. This includes your system prompt, attached files, project rules, few-shot examples, and previous chat turns.",
+          "In this phase, the GPU performs massive, highly parallel matrix multiplications to compute the **KV Cache (Key-Value Cache)** for every single input token and store it in high-bandwidth GPU memory (HBM). **This computation takes time**. If your prompt is 100 tokens, prefill takes 30ms. If your prompt includes an entire 30,000-token codebase context, prefill can take 2 to 5 full seconds before a single output token is produced! **The Prefill phase is the primary engine behind TTFT.**",
+          "**2. The Decoding Phase (Autoregressive Generation):**",
+          "Once the KV Cache is computed and the first token is born, the model switches to sequential autoregression. Generating subsequent tokens is memory-bandwidth bound rather than compute bound. This phase is measured by **Throughput / Output Speed (Tokens Per Second - TPS)**."
+        ],
+        codeLabel: "The Two Phases of LLM Inference: From Prompt to Streamed Generation",
+        code: `CLIENT REQUEST (Prompt: 4,000 tokens)
+     │
+     ▼  [Network Latency: ~40ms]
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ GPU CLUSTER INFERENCE ENGINE                                                           │
+│                                                                                        │
+│  [ PHASE 1: PREFILL (Compute-Bound) ]                                                  │
+│  • Tokenizes entire 4,000-token prompt                                                 │
+│  • Massive parallel Matrix Multiply (GEMM) across Transformer layers                  │
+│  • Populates Key-Value (KV) Cache in GPU VRAM (HBM)                                    │
+│  • Time taken: ~180ms                                                                  │
+│                                                                                        │
+│                              ►► FIRST TOKEN GENERATED ◄◄                               │
+│                                                                                        │
+│  [ PHASE 2: DECODING (Memory-Bandwidth Bound) ]                                        │
+│  • Generates Token #2, #3, #4... one by one sequentially                               │
+│  • Reuses KV Cache (O(1) memory lookup instead of re-reading prompt)                   │
+│  • Streams chunks back to client at 60 - 120 Tokens/sec                                │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+     │
+     ▼  [TTFT = Network RTT + Queue Time + Prefill Execution]
+FIRST STREAM CHUNK DISPLAYED TO USER (TTFT ~ 240ms)`
+      },
+      {
+        heading: "3. The Compounding Trap: Why TTFT Matters Even MORE for Autonomous Agents",
+        paragraphs: [
+          "In a simple consumer chat UI, high TTFT is an annoyance. But when you build **Autonomous Agents, Background Workers, and Multi-Step Tool Pipelines**, high TTFT is a catastrophic bottleneck.",
+          "Consider how an agent like Antigravity, Claude Code, or a custom automation runner works. An agent rarely answers in one shot; it operates in a loop:",
+          "1. Step 1: Reads file `index.ts` (LLM call).",
+          "2. Step 2: Executes a terminal command (LLM call to decide tool parameters).",
+          "3. Step 3: Inspects the terminal output (LLM call to evaluate results).",
+          "4. Step 4: Writes the corrected patch (LLM call to format output).",
+          "If your agent executes **15 sequential steps**, and your chosen model has an average TTFT of **2.5 seconds** (typical for heavy models handling long chat histories):",
+          "**15 steps × 2.5s = 37.5 SECONDS spent doing absolutely nothing except waiting for the first token of each turn!**",
+          "Now swap that model for an ultra-low latency architecture like **Gemini 4 Hydrogen** or a provider with an optimized **150ms TTFT**: 15 steps × 0.15s = **2.25 seconds total wait time**. The exact same logic finishes nearly 35 seconds faster simply because the initialization penalty was erased."
+        ]
+      },
+      {
+        heading: "4. Reasoning Models (CoT) and the Redefinition of TTFT",
+        paragraphs: [
+          "With the arrival of reasoning models like **Gemini Carbon** or OpenAI's **o1/o3**, the definition of TTFT underwent an architectural shift:",
+          "• **Traditional TTFT:** Network Latency + Prefill Time = First Visible Word.",
+          "• **Reasoning Model TTFT:** Network Latency + Prefill Time + **Hidden Thinking Phase (Chain-of-Thought tokens)** = First Visible Word.",
+          "When you query Gemini Carbon, the server might generate 2,000 *invisible reasoning tokens* to plan and verify its work before it writes its very first public response token. On the client side, the perceived TTFT can easily look like 8 to 20 seconds!",
+          "This is why frontier architectures are introducing dedicated **Reasoning Stream Events**: streaming the internal thought summary in real time so the user's perceived TTFT remains low while the heavy deduction takes place."
+        ],
+        codeLabel: "Latency Profile: Lightweight Streaming Model vs. Deep Reasoning Model",
+        code: `SCENARIO: User asks "Refactor this TypeScript interface and its 4 implementations"
+────────────────────────────────────────────────────────────────────────────────────────
+METRIC                         FAST REFLEX (Gemini 4 Hydrogen)  DEEP REASONING (Gemini Carbon)
+────────────────────────────────────────────────────────────────────────────────────────
+Network Round-Trip Time        ~35ms                            ~35ms
+Server Queue & Load Time       ~20ms                            ~45ms
+Prefill Phase (Prompt KV Cache)~85ms                            ~220ms
+Internal Hidden Thinking (CoT) None (Direct generation)         ~4,200ms (Hidden reasoning)
+Visible TTFT (Time to 1st Word)~140ms                           ~4,500ms
+Subsequent Throughput          ~110 tokens/sec                  ~75 tokens/sec
+UX Best Practice               Immediate text stream            Show dynamic thought spinner`
+      },
+      {
+        heading: "5. The Developer Playbook: How to Minimize TTFT in Your Apps",
+        paragraphs: [
+          "If you are building full-stack applications, dashboards, or agent automations, here is how you actively engineer low TTFT into your architecture:",
+          "**1. Implement Server-Sent Events (SSE) and HTTP Streaming:** Never wait for the full response with `await response.json()`. Use `ReadableStream` on the backend and stream chunks directly into the UI. This drops perceived user latency from 6 seconds down to the TTFT figure.",
+          "**2. Leverage Prompt Caching:** Most major API providers (Google Cloud Vertex, Anthropic, OpenAI) now offer automatic or explicit **Prompt Caching**. If your 8,000-token system prompt and tool definitions don't change between calls, the server reuses the pre-calculated KV Cache from GPU memory, slashing prefill time by up to **80%**.",
+          "**3. Trim Your System Prompts & Conversation History:** Don't dump unnecessary files into context. Every 1,000 unnecessary tokens in your prompt directly inflates the Prefill phase.",
+          "**4. Choose the Right Provider & Region:** Hosting your backend in Virginia (us-east-1) while your model API endpoint sits in Europe adds 120ms of useless transatlantic ping to every single token request."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Key Takeaways for Engineers 🌸",
+      items: [
+        "**TTFT defines perceived speed:** Users judge AI performance by how quickly it starts responding, not by how fast it finishes generating the final paragraph.",
+        "**Prefill vs. Decoding:** TTFT is governed by the Prefill phase (processing the input prompt in parallel); throughput is governed by the Decoding phase (generating tokens sequentially).",
+        "**Agent loops multiply TTFT:** In multi-step agent pipelines, high TTFT compounds into severe latency bottlenecks; prefer low-TTFT models for autonomous workers.",
+        "**Prompt Caching is your best friend:** Reusing pre-calculated KV caches reduces prefill overhead and slashes TTFT on repetitive prompts.",
+        "**Stream everything:** Never block your client UI waiting for a complete JSON response; stream tokens via SSE as they arrive."
+      ]
+    },
+    closingHeading: "Final Thoughts from My Diary",
+    closingText: "Learning to measure and optimize TTFT was a game-changer for my perspective on full-stack AI development. It proved once again that great software isn't just about picking the biggest or smartest model on the benchmark leaderboard—it's about understanding latency, memory architecture, and human psychology to build tools that feel effortless and alive.",
+    closing: "Have you noticed the difference in TTFT between different models and API providers in your daily work? What latency tricks do you use in your apps? Let's chat in the comments 🌸",
+    closingSign: "With sub-200ms streams flowing and GPU caches warmed up,",
+    signature: "— Jill 🌸"
+  },
+  es: {
+    title: "Querido Diario, Qué Es el TTFT (Time to First Token) y Por Qué la Velocidad de una IA No Es lo Que Crees 🌸",
+    date: "13 de Noviembre, 2026",
+    subtitle: "Una guía de ingeniería sobre latencia en LLMs, fases de prefill y rendimiento de agentes por Jill",
+    back: "Volver al Inicio",
+    intro: "Cuando la gente discute qué tan 'rápida' es una inteligencia artificial, suelen presumir números como 80 o 100 tokens por segundo. Pero si alguna vez te has quedado mirando un cursor parpadeando durante 4 eternos segundos sin saber si tu internet murió, ya sabes la verdad: <strong>la métrica más crítica para la velocidad percibida es el TTFT (Time to First Token)</strong>.",
+    introDesc: "¿Por qué un modelo con un TTFT de 140ms se siente supersónico aunque su respuesta tarde unos segundos, mientras otro con alto rendimiento se siente desesperantemente lento? ¿Cómo funcionan las fases de Prefill y Decoding en la memoria de las GPUs, por qué el TTFT se multiplica peligrosamente en agentes autónomos y cómo optimizarlo en producción? Aquí te explico toda la ingeniería detrás sin rodeos.",
+    bannerLabel: "Catálogo Oficial de Rendimiento y Latencia de Modelos:",
+    bannerUrl: "https://artificialanalysis.ai/leaderboards/providers",
+    sections: [
+      {
+        heading: "1. La Psicología de la Espera: Por Qué los 'Tokens por Segundo' Engañan",
+        paragraphs: [
+          "Quiero empezar con una confesión honesta sobre la impaciencia humana—especialmente como buena **Aries** que odia perder el tiempo. ¿Alguna vez le has mandado una pregunta a una IA y te has quedado mirando la pantalla en blanco?",
+          "Pasa un segundo. Pasan dos segundos. Pasan tres segundos. Al cuarto segundo, ya estás pensando instintivamente en darle F5 a la página, creyendo que se congeló el navegador o que se cayó el servidor. Y de repente, ¡pum! Aparece el párrafo entero a toda velocidad a 120 tokens por segundo.",
+          "Ahora compara esa experiencia con otro modelo que a los **150 milisegundos** ya empezó a escribir la primera palabra en tu pantalla. Aunque el resto del texto salga a un ritmo más calmado (40 tokens por segundo), **la sensación para el cerebro humano es que la segunda IA es infinitamente más rápida**. ¿Por qué? Porque **la psicología humana mide la reactividad en el inicio de la acción, no en la conclusión del trabajo**.",
+          "Esa demora inicial antes de ver vida en la pantalla es lo que en ingeniería llamamos **TTFT: Time to First Token (Tiempo al Primer Token)**. Mide exactamente el tiempo transcurrido desde que tu petición HTTP sale de tu computadora hasta el milisegundo exacto en que el primer token generado llega a tu interfaz."
+        ]
+      },
+      {
+        heading: "2. Las Entrañas de la GPU: Fase de Prefill vs. Fase de Decoding",
+        paragraphs: [
+          "Para entender por qué existe el TTFT, hay que mirar qué le pasa a los chips de la GPU cuando le mandas un prompt a un modelo Transformer. Generar texto no es un proceso uniforme; se divide en dos fases matemáticas completamente distintas:",
+          "**1. La Fase de Prefill (Procesamiento del Prompt):**",
+          "Antes de poder calcular cuál es la primera palabra de respuesta, el modelo tiene que tragarse y procesar *todo tu prompt de entrada al mismo tiempo*: el system prompt, los archivos adjuntos, las reglas de formato, el historial de conversación y los ejemplos.",
+          "En esta fase, la GPU ejecuta multiplicaciones de matrices gigantescas en paralelo para calcular el llamado **KV Cache (Key-Value Cache)** de cada uno de los tokens de entrada y guardarlo en la memoria ultrarrápida (HBM) de la tarjeta gráfica. **Este cálculo toma tiempo físico**. Si tu prompt tiene 50 tokens, el prefill tarda 20ms. Pero si le pasas un archivo con 25,000 tokens de código, ¡el prefill puede tardar de 2 a 4 segundos antes de generar una sola palabra! **La fase de Prefill es la principal culpable del TTFT.**",
+          "**2. La Fase de Decoding (Generación Autoregresiva):**",
+          "Una vez que el KV Cache está listo y el primer token sale a la luz, el modelo cambia de modo. Ya no tiene que procesar todo el texto; solo predice la siguiente palabra de una en una reutilizando la memoria en caché. Esta segunda fase es la que se mide en **Throughput o Tokens Por Segundo (TPS)**."
+        ],
+        codeLabel: "Las Dos Fases de Inferencia en un LLM: Del Prompt al Streaming",
+        code: `PETICIÓN DEL USUARIO (Prompt: 4,000 tokens)
+     │
+     ▼  [Latencia de Red: ~40ms]
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ CLUSTER DE GPUs EN LA NUBE                                                             │
+│                                                                                        │
+│  [ FASE 1: PREFILL (Limitada por Cómputo de la GPU) ]                                  │
+│  • Tokeniza y vectoriza los 4,000 tokens de entrada a la vez                           │
+│  • Multiplicación de matrices masiva en paralelo a través de las capas Transformer     │
+│  • Construye y almacena el Key-Value (KV) Cache en la memoria VRAM (HBM)               │
+│  • Tiempo de ejecución: ~180ms                                                         │
+│                                                                                        │
+│                           ►► PRIMER TOKEN GENERADO (TTFT) ◄◄                           │
+│                                                                                        │
+│  [ FASE 2: DECODING (Limitada por Ancho de Banda de Memoria) ]                         │
+│  • Genera Token #2, #3, #4... de forma secuencial palabra por palabra                  │
+│  • Reutiliza el KV Cache en memoria en O(1) en vez de recalcular todo el prompt        │
+│  • Envía chunks por streaming a tu pantalla a 70 - 120 Tokens/segundo                  │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+     │
+     ▼  [TTFT Total = Red RTT + Cola en Servidor + Prefill]
+PRIMERA PALABRA VISIBLE EN TU PANTALLA (TTFT ~ 240ms)`
+      },
+      {
+        heading: "3. La Trampa Oculta: Por Qué el TTFT es CRÍTICO en Agentes Autónomos",
+        paragraphs: [
+          "Si estás en una ventana de chat normal, esperar 3 segundos por el primer token es una molestia menor. Pero cuando construyes **Agentes Autónomos, Subagentes y Pipelines de Herramientas**, un TTFT alto es una condena de muerte para el rendimiento.",
+          "Un agente de software (como Antigravity, Claude Code o un worker de backend) no hace una sola consulta; opera en un bucle cerrado paso a paso:",
+          "1. Paso 1: Lee un archivo del proyecto (Llamada al LLM).",
+          "2. Paso 2: Decide qué comando de consola correr (Llamada al LLM).",
+          "3. Paso 3: Analiza el resultado del comando (Llamada al LLM).",
+          "4. Paso 4: Escribe el código corregido (Llamada al LLM).",
+          "Imagina que tu agente realiza una tarea de **15 pasos seguidos**, y estás usando un modelo pesado con un TTFT promedio de **2.5 segundos** (muy común cuando el historial de chat ya acumuló miles de tokens):",
+          "**15 pasos × 2.5s = ¡37.5 SEGUNDOS desperdiciados en silencio solo esperando que el modelo empiece a emitir cada turno!**",
+          "En cambio, si ejecutas esa misma lógica con un modelo de ultra-baja latencia como **Gemini 4 Hydrogen** con un TTFT de **150 milisegundos**: 15 pasos × 0.15s = **2.25 segundos en total**. El agente termina casi 35 segundos antes simplemente porque eliminaste el costo de arranque de cada iteración."
+        ]
+      },
+      {
+        heading: "4. Modelos de Razonamiento (CoT): La Redefinición del TTFT",
+        paragraphs: [
+          "Con la llegada de modelos de razonamiento como **Gemini Carbon** o la serie **o1/o3** de OpenAI, el concepto de TTFT cambió radicalmente:",
+          "• **En un modelo tradicional:** Latencia de Red + Prefill = Primera palabra visible.",
+          "• **En un modelo de razonamiento:** Latencia de Red + Prefill + **Fase de Pensamiento Oculto (tokens invisibles de Chain-of-Thought)** = Primera palabra visible.",
+          "Cuando consultas a Gemini Carbon, el servidor puede generar 2,000 *tokens de pensamiento interno* para auto-corregir su lógica antes de emitir la primera palabra pública. Desde la perspectiva del cliente, ¡el TTFT percibido puede ser de 6 a 15 segundos!",
+          "Por eso las mejores arquitecturas están implementando eventos de streaming específicos para los pensamientos (*Thought Streaming*), permitiendo que veas un resumen del razonamiento en tiempo real para que la espera no se sienta como una pantalla congelada."
+        ],
+        codeLabel: "Comparativa de Latencia: Modelo Rápido vs. Modelo de Razonamiento Profundo",
+        code: `ESCENARIO: "Refactorizar esta interfaz de TypeScript y sus 4 implementaciones"
+────────────────────────────────────────────────────────────────────────────────────────
+MÉTRICA                        REFLEJO RÁPIDO (Gemini 4 Hydrogen) RAZONAMIENTO (Gemini Carbon)
+────────────────────────────────────────────────────────────────────────────────────────
+Ida y vuelta de Red (Ping RTT) ~35ms                              ~35ms
+Encolamiento en el Servidor    ~20ms                              ~45ms
+Fase de Prefill (KV Cache)     ~85ms                              ~220ms
+Pensamiento Interno (CoT)      Cero (Generación directa)          ~4,200ms (Tokens ocultos)
+TTFT Visible (Primera Palabra) ~140ms                             ~4,500ms
+Velocidad Posterior (TPS)      ~110 tokens/seg                    ~75 tokens/seg
+Experiencia de Usuario (UX)    Texto fluye de inmediato           Requiere indicador visual`
+      },
+      {
+        heading: "5. Guía de Ingeniería: Cómo Reducir el TTFT en Tus Proyectos",
+        paragraphs: [
+          "Si estás construyendo aplicaciones web, paneles o agentes de IA, estas son las mejores prácticas para mantener el TTFT en mínimos históricos:",
+          "**1. Implementa Streaming con Server-Sent Events (SSE):** Nunca uses `await response.json()` esperando que el servidor termine de generar todo el párrafo. Consume el flujo con `ReadableStream` y manda cada token a la UI en tiempo real. Esto reduce la latencia percibida por el usuario de 5 segundos a la cifra de tu TTFT.",
+          "**2. Aprovecha el Prompt Caching:** La mayoría de APIs modernas (Anthropic, Google Cloud Vertex, OpenAI) ofrecen **caché de prompts**. Si tu system prompt de 8,000 tokens no cambia entre llamadas, la GPU reutiliza el KV Cache ya calculado en memoria, reduciendo el tiempo de prefill hasta en un **80%**.",
+          "**3. Depura el Historial de tus Prompts:** No arrojes archivos innecesarios al contexto. Cada 1,000 tokens que le agregas al prompt aumentan directamente el tiempo que la GPU tarda en arrancar.",
+          "**4. Elige la Región Correcta:** Si tu servidor backend está en Virginia (us-east-1) pero la API de IA está configurada en Europa, estás sumando más de 120ms de ping transatlántico innecesario a cada llamada."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Puntos Clave para Ingenieras y Desarrolladores 🌸",
+      items: [
+        "**El TTFT define la velocidad real que siente el usuario:** La gente juzga la agilidad de una IA por cuánto tarda en empezar a hablar, no por cuánto tarda en poner el punto final.",
+        "**Prefill vs. Decoding:** El TTFT depende de la fase de Prefill (procesar el prompt en paralelo); los tokens por segundo dependen de la fase de Decoding (generar palabras de una en una).",
+        "**El TTFT destruye el rendimiento en agentes:** En flujos multi-paso, los segundos de TTFT se acumulan en cada turno; usa siempre modelos de bajo TTFT para workers autónomos.",
+        "**El Prompt Caching es indispensable:** Guardar en memoria el KV Cache de prompts largos reduce drásticamente el tiempo de arranque de la GPU.",
+        "**Todo con streaming:** Nunca bloquees una interfaz esperando una respuesta completa; transmite los tokens mediante SSE conforme van naciendo."
+      ]
+    },
+    closingHeading: "Reflexión final desde mi diario",
+    closingText: "Entender el TTFT me cambió por completo la forma de evaluar y consumir modelos de inteligencia artificial. Me demostró que hacer buen software no se trata de elegir el modelo con el número más rimbombante en la tabla de benchmarks, sino de entender la física del hardware, la memoria de las GPUs y la psicología humana para construir experiencias que se sientan vivas y fluidas.",
+    closing: "¿Habías notado la diferencia de TTFT entre diferentes modelos y APIs en tu trabajo diario? ¿Qué trucos de latencia usas en tus proyectos? Cuéntame en los comentarios 🌸",
+    closingSign: "Con streams fluidos en menos de 200ms y la memoria de GPU bien aprovechada,",
+    signature: "— Jill 🌸"
+  },
+  pt: {
+    title: "Querido Diário, O Que É TTFT (Time to First Token) e Por Que a Velocidade da IA Não É o Que Você Pensa 🌸",
+    date: "13 de Novembro de 2026",
+    subtitle: "Um guia de engenharia sobre latência de LLMs, fases de prefill e agentes rápidos por Jill",
+    back: "Voltar ao Início",
+    intro: "Quando as pessoas debatem sobre quão 'rápida' é uma inteligência artificial, costumam falar em 80 ou 100 tokens por segundo. Mas se você já ficou encarando um cursor piscando por 4 segundos sem saber se o sistema travou, você sabe a verdade: <strong>a métrica mais decisiva para a percepção de velocidade é o TTFT (Time to First Token)</strong>.",
+    introDesc: "Por que um modelo com TTFT de 140ms parece instantâneo mesmo que a resposta completa leve algum tempo, enquanto outro com alta taxa de tokens parece frustrantemente lento? Como funcionam as fases de Prefill e Decoding na memória das GPUs, por que o TTFT se acumula de forma crítica em agentes autônomos e como otimizá-lo em código real? Confira a análise técnica completa.",
+    bannerLabel: "Leaderboard e Métricas de Provedores e Latência:",
+    bannerUrl: "https://artificialanalysis.ai/leaderboards/providers",
+    sections: [
+      {
+        heading: "1. A Psicologia da Espera: Por Que os Tokens por Segundo Enganam",
+        paragraphs: [
+          "Vamos começar com uma reflexão sincera sobre a paciência humana—especialmente para quem tem um lado **Áries** que odeia esperar. Você digita uma mensagem para uma IA e a tela fica completamente estática.",
+          "Um segundo... dois segundos... três segundos. No quarto segundo você já pensa em recarregar a página achando que a internet caiu. De repente, todo o texto aparece de uma vez a 120 tokens por segundo.",
+          "Agora compare isso com um modelo que começa a escrever em **150 milissegundos**. Mesmo que gere o texto a 40 tokens por segundo, a sensação humana é de rapidez absoluta. **A mente humana avalia a agilidade no início da resposta, e não no momento em que ela termina**.",
+          "Esse intervalo inicial é o **TTFT: Time to First Token (Tempo até o Primeiro Token)**: o tempo exato entre o envio da requisição e a chegada do primeiro pedaço de texto gerado."
+        ]
+      },
+      {
+        heading: "2. Como as GPUs Processam: Fase de Prefill vs. Fase de Decoding",
+        paragraphs: [
+          "Dentro dos clusters de GPU, a inferência de um modelo Transformer é dividida em duas etapas matemáticas distintas:",
+          "**1. Fase de Prefill (Processamento do Prompt):** O modelo precisa ler e processar todo o prompt de entrada de uma só vez (instruções, contexto, arquivos e histórico). A GPU calcula o **KV Cache (Key-Value Cache)** e o armazena na memória VRAM. Quanto maior o prompt, mais tempo essa fase consome. **O Prefill é o principal responsável pelo TTFT.**",
+          "**2. Fase de Decoding (Geração Sequencial):** Com o primeiro token gerado, o modelo passa a prever palavra por palavra reutilizando a memória em cache. Essa fase é a velocidade de saída medida em **Tokens Por Segundo (TPS)**."
+        ],
+        codeLabel: "As Duas Fases de Inferência em um LLM",
+        code: `PROMPT DO USUÁRIO (4.000 tokens) ──► Latência de Rede (~40ms)
+     │
+     ▼
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ CLUSTER DE GPUs                                                                        │
+│ • FASE DE PREFILL: Processa os 4.000 tokens em paralelo e calcula o KV Cache (~180ms)  │
+│                                                                                        │
+│                          ►► PRIMEIRO TOKEN GERADO (TTFT) ◄◄                            │
+│                                                                                        │
+│ • FASE DE DECODING: Gera palavra por palavra sequencialmente em streaming (~90 tok/s)  │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+     │
+     ▼
+PRIMEIRA PALAVRA RENDERIZADA NA TELA DO USUÁRIO (TTFT ~ 240ms)`
+      },
+      {
+        heading: "3. O Efeito Acumulativo: Por Que o TTFT é Crucial para Agentes",
+        paragraphs: [
+          "Em um chat comum, esperar 2 segundos incomoda pouco. Mas em **Agentes Autônomos** que executam 15 passos seguidos (lendo arquivos, rodando comandos no terminal e validando testes):",
+          "**15 passos × 2.5s de TTFT = 37.5 SEGUNDOS perdidos apenas esperando o início de cada turno!**",
+          "Usando um modelo com TTFT de **150ms** (como o Gemini 4 Hydrogen), esses mesmos 15 passos gastam apenas **2.25 segundos** de espera. A tarefa inteira termina meio minuto mais rápido sem mudar uma linha da lógica."
+        ]
+      },
+      {
+        heading: "4. Modelos de Raciocínio (CoT) e a Mudança no TTFT",
+        paragraphs: [
+          "Modelos de raciocínio profundo (como o **Gemini Carbon** ou a linha o1/o3) alteram o TTFT: antes de emitir a primeira palavra visível, o modelo gera milhares de tokens de pensamento interno invisíveis para auditar sua lógica, elevando o TTFT aparente para 5 a 15 segundos. Daí a importância de interfaces que mostram o resumo do raciocínio em tempo real."
+        ]
+      },
+      {
+        heading: "5. Como Reduzir o TTFT nas Suas Aplicações",
+        paragraphs: [
+          "• **Use Streaming via SSE:** Nunca espere o JSON completo; transmita os tokens via `ReadableStream` para a interface assim que forem gerados.",
+          "• **Ative o Prompt Caching:** Reutilize o KV Cache de prompts longos para cortar até 80% do tempo de prefill.",
+          "• **Otimize seus Prompts:** Evite incluir arquivos desnecessários no contexto; cada mil tokens adicionais atrasam a resposta inicial.",
+          "• **Aproxime as Regiões:** Configure seus servidores na mesma região geográfica dos endpoints da API de IA."
+        ]
+      }
+    ],
+    remember: {
+      heading: "Lições Essenciais Sobre TTFT 🌸",
+      items: [
+        "**O TTFT comanda a percepção de agilidade:** O usuário mede a velocidade pelo tempo que o sistema leva para começar a responder.",
+        "**Prefill vs. Decoding:** O TTFT depende do processamento paralelo do prompt; o throughput depende da geração palavra por palavra.",
+        "**Agentes multiplicam a latência:** Em fluxos de múltiplos passos, modelos com TTFT baixo são indispensáveis para evitar esperas longas.",
+        "**Prompt Caching economiza tempo:** Reaproveitar a memória do prompt acelera a inicialização da GPU.",
+        "**Sempre use streaming:** Envie os tokens em tempo real para criar uma experiência de usuário viva e dinâmica."
+      ]
+    },
+    closingHeading: "Reflexão final do meu diário",
+    closingText: "Compreender o TTFT me fez enxergar o desenvolvimento com IA de forma muito mais madura. Criar aplicações de alto nível não depende apenas de escolher o modelo mais potente do leaderboard, mas de entender a latência, o fluxo de dados e a percepção humana para entregar experiências realmente fluidas e eficientes.",
+    closing: "Você já percebeu a diferença de TTFT entre diferentes modelos no seu trabalho diário? Conte nos comentários 🌸",
+    closingSign: "Com streams abaixo de 200ms e caches de GPU otimizados,",
+    signature: "— Jill 🌸"
+  }
+};
+
+const c = content[lang as keyof typeof content] || content.es;
+---
+
+<Layout title={`${c.title} | Jill Portfolio`} lang={lang}>
+  <Animations client:load />
+  
+  <div class="blog-post-page">
+    <Nav activeSection="blog" lang={lang} />
+    
+    <main class="container">
+      <article class="post-article">
+        <a href={`/${lang}/#blog`} class="back-link">
+          <span class="arrow">←</span> {c.back}
+        </a>
+
+        <header class="post-header">
+          <div class="meta-badge">
+            Performance Engineering • TTFT, Prefill & LLM Latency
+          </div>
+          <h1 class="post-title">{c.title}</h1>
+          <p class="post-subtitle">{c.subtitle}</p>
+          <div class="post-date">
+            <span class="calendar-icon"></span> {c.date}
+          </div>
+        </header>
+
+        <div class="post-card">
+          <section class="intro-section">
+            <div class="intro-bubble">
+              <p class="intro-main" set:html={c.intro}></p>
+              <p class="intro-desc">{c.introDesc}</p>
+            </div>
+            
+            <div class="repo-banner">
+              <div class="repo-info">
+                <strong>{c.bannerLabel}</strong>
+                <a href={c.bannerUrl} target="_blank" rel="noopener noreferrer" class="repo-link">
+                  {c.bannerUrl}
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <hr class="divider" />
+
+          {c.sections.map(sec => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map(p => (
+                <p class="section-paragraph" set:html={p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+              ))}
+              {sec.code && (
+                <div class="code-container">
+                  {sec.codeLabel && <div class="code-header">{sec.codeLabel}</div>}
+                  <pre class="code-block"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <hr class="divider" />
+
+          <!-- Signature Remember Section (Things I Want To Remember) -->
+          <section class="content-section remember-box">
+            <h2 class="section-heading">{c.remember.heading}</h2>
+            <ul class="remember-list">
+              {c.remember.items.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <span class="remember-text" set:html={item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="content-section conclusion-box">
+            <h2 class="section-heading">{c.closingHeading}</h2>
+            <p class="closing-paragraph">{c.closingText}</p>
+            <p class="closing-callout">{c.closing}</p>
+            <div class="closing-signature">
+              <p>{c.closingSign}</p>
+              <p class="signature-name">{c.signature}</p>
+            </div>
+          </section>
+
+          <section class="comments-wrapper">
+            <CommentsSection client:load postSlug="blog-ttft" currentLang={lang} />
+          </section>
+
+          <BlogNavigation currentSlug="blog-ttft" lang={lang} />
+        </div>
+      </article>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .blog-post-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--rose, #ff4b91);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #ff7aa8;
+    transform: translateX(-4px);
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(255, 75, 145, 0.14);
+    border: 1px solid rgba(255, 75, 145, 0.35);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #ff9ec4;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-subtitle {
+    font-size: 1.125rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-bubble {
+    background: rgba(255, 75, 145, 0.08);
+    border-left: 4px solid var(--rose, #ff4b91);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-main {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-desc {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .repo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 75, 145, 0.3);
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .repo-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+  }
+
+  .repo-link {
+    color: var(--rose, #ff4b91);
+    text-decoration: none;
+    font-weight: 600;
+    word-break: break-all;
+  }
+
+  .repo-link:hover {
+    text-decoration: underline;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+  }
+
+  .section-paragraph :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .section-paragraph :global(code) {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-size: 0.9em;
+    color: #ff7aa8;
+    border: 1px solid rgba(255, 75, 145, 0.2);
+  }
+
+  .code-container {
+    margin: 1.5rem 0;
+    background: #0f172a;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .code-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .code-block {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+  }
+
+  .remember-box {
+    background: rgba(255, 75, 145, 0.04);
+    border: 1px solid rgba(255, 75, 145, 0.2);
+    border-radius: 1rem;
+    padding: 1.75rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .remember-dot {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+
+  .remember-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .remember-text :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .closing-callout {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ff9ec4;
+    margin-bottom: 1.5rem;
+  }
+
+  .closing-signature {
+    color: #94a3b8;
+    font-size: 0.95rem;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    color: #f8fafc;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1.5rem 1rem;
+    }
+    
+    .post-card {
+      padding: 1.5rem;
+    }
+
+    .post-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>

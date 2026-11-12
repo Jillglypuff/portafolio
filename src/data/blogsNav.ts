@@ -1,4 +1,4 @@
-// Auto-generated blog navigation list in chronological order (01 to 55)
+// Auto-generated blog navigation list in chronological order (01 to 57)
 
 export interface BlogPostNav {
   number: string;
@@ -834,6 +834,36 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "es": "Remote Agents en Antigravity",
       "en": "Antigravity Remote Agents",
       "pt": "Remote Agents no Antigravity"
+    }
+  },
+  {
+    "number": "56",
+    "slug": "blog-gemini-carbon-hydrogen",
+    "publishDate": "2026-11-12",
+    "titles": {
+      "es": "Querido Diario, Gemini Carbon vs. Gemini 4 Hydrogen: Benchmarks, Métricas y la Batalla por Seguir Instrucciones 🌸",
+      "en": "Dear Diary, Gemini Carbon vs. Gemini 4 Hydrogen: Benchmarks, Real Stats & The Instruction-Following Battle 🌸",
+      "pt": "Querido Diário, Gemini Carbon vs. Gemini 4 Hydrogen: Benchmarks, Métricas e a Luta para Seguir Instruções 🌸"
+    },
+    "shortTitles": {
+      "es": "Gemini Carbon & Hydrogen",
+      "en": "Gemini Carbon & Hydrogen",
+      "pt": "Gemini Carbon & Hydrogen"
+    }
+  },
+  {
+    "number": "57",
+    "slug": "blog-ttft",
+    "publishDate": "2026-11-13",
+    "titles": {
+      "es": "Querido Diario, Qué Es el TTFT (Time to First Token) y Por Qué la Velocidad de una IA No Es lo Que Crees 🌸",
+      "en": "Dear Diary, What Is TTFT (Time to First Token) and Why AI Speed Isn't What You Think 🌸",
+      "pt": "Querido Diário, O Que É TTFT (Time to First Token) e Por Que a Velocidade da IA Não É o Que Você Pensa 🌸"
+    },
+    "shortTitles": {
+      "es": "¿Qué Es TTFT en IA?",
+      "en": "What Is TTFT in AI?",
+      "pt": "O Que É TTFT na IA?"
     }
   }
 ];
