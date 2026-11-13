@@ -1,4 +1,4 @@
-// Auto-generated blog navigation list in chronological order (01 to 57)
+// Auto-generated blog navigation list in chronological order (01 to 59)
 
 export interface BlogPostNav {
   number: string;
@@ -864,6 +864,36 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "es": "¿Qué Es TTFT en IA?",
       "en": "What Is TTFT in AI?",
       "pt": "O Que É TTFT na IA?"
+    }
+  },
+  {
+    "number": "58",
+    "slug": "blog-nvidia-conspiracy-reality",
+    "publishDate": "2026-11-14",
+    "titles": {
+      "es": "Querido Diario, El Escándalo de Nvidia, Teorías de Espionaje y la Caída de la Bolsa: Qué Es Real y Qué Pasará con la IA 🌸",
+      "en": "Dear Diary, The Nvidia Jensen Scandal, Espionage Conspiracies & Stock Drops: What's Real & What's Next for AI 🌸",
+      "pt": "Querido Diário, O Escândalo da Nvidia, Teorias de Espionagem e a Queda na Bolsa: O Que É Real e o Futuro da IA 🌸"
+    },
+    "shortTitles": {
+      "es": "Nvidia, Conspiraciones & la IA",
+      "en": "Nvidia, Conspiracies & AI",
+      "pt": "Nvidia, Conspirações e IA"
+    }
+  },
+  {
+    "number": "59",
+    "slug": "blog-microsoft-outage-vulnerabilities",
+    "publishDate": "2026-11-15",
+    "titles": {
+      "es": "Querido Diario, Hoy se Cayó Microsoft a Nivel Mundial: Qué Pasó con Azure, Outlook y la Anatomía de un Fallo en Cascada 🌸",
+      "en": "Dear Diary, Microsoft Crashed Worldwide Today: Inside Azure, Outlook & The Anatomy of a Cascading Failure 🌸",
+      "pt": "Querido Diário, A Microsoft Caiu no Mundo Todo Hoje: O Que Houve com o Azure, Outlook e a Anatomia de uma Falha em Cascata 🌸"
+    },
+    "shortTitles": {
+      "es": "La Caída Mundial de Microsoft",
+      "en": "Microsoft Global Outage",
+      "pt": "A Queda Global da Microsoft"
     }
   }
 ];
