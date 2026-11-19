@@ -936,7 +936,7 @@ export function getAdjacentBlogPosts(currentSlug: string): {
 } {
   // Normalize slug (strip leading/trailing slashes)
   const cleanSlug = currentSlug.replace(/^\/+|\/+$/g, '');
-
+  
   // Handle bonus/ad-hoc blogs gracefully if visited directly
   if (cleanSlug === 'blog-webhooks') {
     const prevPost = BLOG_POSTS.find(p => p.slug === 'blog-wordpress') || null;
