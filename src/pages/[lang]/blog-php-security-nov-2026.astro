@@ -1,0 +1,692 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, Today's Massive PHP Security Release (18 CVEs & 7 Critical 9.2 Bugs): Why You Need to Patch Right Now 🌸",
+    date: "November 20, 2026",
+    subtitle: "Breaking down PHP 8.2.36, 8.3.37, 8.4.28 & 8.5.13: PHP-FPM Request Smuggling, Session TOCTOU, Use-After-Free & PHP2Shell fixes by Jill",
+    back: 'Back to Home',
+    intro: "If you run WordPress, Laravel, Symfony, or custom PHP microservices in production, drop your coffee and check your server versions right now. On <strong>November 19, 2026</strong>, The PHP Foundation dropped a massive emergency security release fixing <strong>18 vulnerabilities</strong>—with <strong>7 rated Critical (CVSS 9.2)</strong>.",
+    introDesc: "From single-request Remote Code Execution via PHP-FPM Request Smuggling (CVE-2026-129289) to Session TOCTOU race conditions, Use-After-Free memory bugs in epoll, and the finalized patch for CVE-2026-115560, here is the complete engineering breakdown of what broke and how to protect your servers.",
+    bannerLabel: "Official PHP Security Advisories & Release Changelog:",
+    bannerUrl: "https://www.php.net/ChangeLog-8.php",
+    sections: [
+      {
+        heading: "1. The Patch Matrix: Which PHP Versions Are Safe?",
+        paragraphs: [
+          "Every active PHP branch received urgent security updates. If your container image or VPS is running anything older than the numbers below, your stack is exposed:",
+          "• **PHP 8.2** → Upgrade immediately to **8.2.36**",
+          "• **PHP 8.3** → Upgrade immediately to **8.3.37**",
+          "• **PHP 8.4** → Upgrade immediately to **8.4.28**",
+          "• **PHP 8.5** → Upgrade immediately to **8.5.13**",
+          "Remember: simply running `apt upgrade` or rebuilding your Docker image isn't enough if you forget to **restart the `php-fpm` worker pool** or web server processes so the patched binaries load into memory."
+        ]
+      },
+      {
+        heading: "2. CVE-2026-129289 (CVSS 9.2): PHP-FPM Request Smuggling",
+        paragraphs: [
+          "The headliner of this release is **CVE-2026-129289**, an HTTP request smuggling bug inside **PHP-FPM** that allows an unauthenticated attacker to achieve **Remote Code Execution (RCE)** with worker privileges using a single crafted request.",
+          "How does it happen? Modern reverse proxies like **Nginx, Apache, HAProxy, and LiteSpeed (LSAPI)** keep persistent FastCGI connections open to PHP-FPM workers to avoid TCP handshake overhead.",
+          "When an application opens `php://input` to inspect a request body—for instance, a webhook signature verifier or custom router—and **returns early without draining the entire request stream**, the leftover bytes remain sitting in the shared FastCGI socket buffer. The next FastCGI framing header gets desynchronized, letting an attacker smuggle arbitrary FastCGI parameters (like `PHP_VALUE` or `auto_prepend_file`) directly into PHP-FPM."
+        ],
+        codeLabel: "How Unread php://input Streams Enable FastCGI Request Smuggling",
+        code: `[ ATTACKER HTTP REQUEST ]
+  POST /webhook.php HTTP/1.1
+  Content-Length: 450
+  [ Body: Partial payload + Smuggled FastCGI Parameters ]
+         │
+         ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ REVERSE PROXY (Nginx / Apache / HAProxy)                             │
+│ • Forwards request over a REUSED persistent FastCGI socket           │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ UNPATCHED PHP-FPM WORKER (CVE-2026-129289)                           │
+│ 1. App opens php://input (e.g., reads first 64 bytes for header check)│
+│ 2. App exits early without reading remaining bytes                   │
+│ 3. Leftover bytes stay in socket buffer and corrupt the next frame   │
+│ 4. Attacker injects PHP_VALUE / auto_prepend_file ──► RCE!           │
+└──────────────────────────────────────────────────────────────────────┘`
+      },
+      {
+        heading: "3. Session Attacks & The Finalized PHP2Shell Fix (CVE-2026-115560 & CVE-2026-126714)",
+        paragraphs: [
+          "Two other CVSS 9.2 critical bugs target PHP's session subsystem:",
+          "• **CVE-2026-115560 (Session Serializer / Upload Progress Flaw):** Remember the October 'PHP2Shell' warnings we talked about earlier? This release delivers the complete, finalized upstream fix for the serializer mismatch and input validation bug tied to upload progress and shared session storage.",
+          "• **CVE-2026-126714 (Session TOCTOU Race Condition):** A Time-of-Check to Time-of-Use race condition in session file write paths. If an attacker wins the race during concurrent session writes and the target app includes popular Composer gadget chains (like **Guzzle** or **Monolog**), it can trigger arbitrary deserialization and code execution."
+        ]
+      },
+      {
+        heading: "4. Memory Corruption, Local Privilege Escalation & PHAR Bypass",
+        paragraphs: [
+          "Beyond request smuggling and sessions, the release cleans up several dangerous C-level memory bugs and cryptographic flaws:",
+          "• **Engine Use-After-Free (CVE-2026-129182 & CVE-2026-129474):** Use-After-Free vulnerabilities in core engine internals and magic method backtraces that cause memory corruption and potential RCE.",
+          "• **PHP-FPM `epoll` Use-After-Free (CVE-2026-129291):** A memory flaw in PHP-FPM's Linux `epoll` event loop that can be abused for **Local Privilege Escalation (LPE)**—meaning a compromised low-privilege worker could escalate on the host.",
+          "• **Timezone Cache UAF (CVE-2026-129496):** A Use-After-Free inside PHP's date/timezone caching layer.",
+          "• **PHAR Signature Downgrade (CVE-2026-128090):** An OpenSSL signature bypass in PHAR archives caused by an algorithm downgrade attack, allowing tampered `.phar` packages to pass integrity checks."
+        ]
+      },
+      {
+        heading: "5. Emergency Checklist for Sysadmins & DevOps",
+        paragraphs: [
+          "Don't wait for automated vulnerability scanners to ping your Slack channel at 3 AM. Run through this checklist today:",
+          "1. **Check your active PHP version:** Run `php -v` and `php-fpm -v` on every container and VPS.",
+          "2. **Rebuild & Upgrade:** Update to **8.2.36**, **8.3.37**, **8.4.28**, or **8.5.13** (if using Docker, pull the fresh `php:8.x-fpm-alpine` / `debian` tags and bust your build cache).",
+          "3. **Verify PHP-FPM Worker Restart:** Confirm with `systemctl restart php8.x-fpm` (or rolling pod restart in Kubernetes) that old workers aren't still serving requests.",
+          "4. **Audit FastCGI Keepalive & `php://input`:** Temporarily disable `fastcgi_keep_conn on;` in Nginx if you have a legacy server you cannot patch tonight."
+        ]
+      }
+    ],
+    rememberTitle: "Things I Want To Remember 🌸",
+    rememberItems: [
+      "<strong>18 CVEs, 7 Critical (CVSS 9.2):</strong> Released November 19, 2026 across PHP 8.2.36, 8.3.37, 8.4.28, and 8.5.13.",
+      "<strong>CVE-2026-129289 (PHP-FPM Smuggling):</strong> Reused FastCGI sockets + unread <code>php://input</code> streams allow single-request RCE on Nginx/Apache/HAProxy setups.",
+      "<strong>Session CVEs (115560 & 126714):</strong> Finalized fix for the PHP2Shell serializer bug plus a Session TOCTOU race condition involving Guzzle/Monolog gadget chains.",
+      "<strong>Memory & Crypto Fixes:</strong> Patches multiple engine Use-After-Free flaws, PHP-FPM <code>epoll</code> LPE (CVE-2026-129291), and a PHAR OpenSSL signature downgrade.",
+      "<strong>Temporary Mitigation:</strong> If you cannot upgrade tonight, check Nginx FastCGI connection reuse (<code>fastcgi_keep_conn</code>) and restart worker processes right after patching."
+    ],
+    closing: "Security releases with 7 critical 9.2 CVEs are never fun on a busy week, but updating a Docker base image takes 3 minutes—recovering from an RCE takes days. Patch your PHP-FPM pools tonight and sleep peacefully! 🌸",
+    signature: "Jill"
+  },
+  es: {
+    title: "Querido Diario, El Release de Seguridad de PHP de Hoy (18 CVEs y 7 Críticos 9.2): Por Qué Debes Actualizar Ya 🌸",
+    date: "20 de noviembre de 2026",
+    subtitle: "Desglose de PHP 8.2.36, 8.3.37, 8.4.28 y 8.5.13: Request Smuggling en PHP-FPM, Session TOCTOU, Use-After-Free y PHP2Shell por Jill",
+    back: 'Volver al Inicio',
+    intro: "Si manejas WordPress, Laravel, Symfony o APIs en PHP en producción, deja el café un segundo y revisa la versión de tu servidor. Este <strong>19 de noviembre de 2026</strong>, The PHP Foundation publicó una actualización crítica de seguridad que corrige <strong>18 vulnerabilidades</strong>—de las cuales <strong>7 tienen gravedad Crítica (CVSS 9.2)</strong>.",
+    introDesc: "Desde Ejecución Remota de Código (RCE) en una sola petición mediante Request Smuggling en PHP-FPM (CVE-2026-129289) hasta condiciones de carrera TOCTOU en sesiones, fallos Use-After-Free en epoll y el parche definitivo de CVE-2026-115560. Aquí tienes el análisis técnico completo y los pasos para blindar tus servidores.",
+    bannerLabel: "Avisos Oficiales de Seguridad y Changelog de PHP:",
+    bannerUrl: "https://www.php.net/ChangeLog-8.php",
+    sections: [
+      {
+        heading: "1. Matriz de Parches: ¿Qué Versiones Están Seguras?",
+        paragraphs: [
+          "Todas las ramas activas de PHP recibieron actualizaciones urgentes. Si tu contenedor Docker o VPS tiene cualquier versión anterior a estas, estás expuesto:",
+          "• **PHP 8.2** → Actualizar a **8.2.36**",
+          "• **PHP 8.3** → Actualizar a **8.3.37**",
+          "• **PHP 8.4** → Actualizar a **8.4.28**",
+          "• **PHP 8.5** → Actualizar a **8.5.13**",
+          "Ojo con un clásico error de sysadmin: no basta con ejecutar `apt upgrade` o recompilar el paquete; es obligatorio **reiniciar los procesos workers de `php-fpm`** o el servidor web para que el binario parchado cargue en memoria."
+        ]
+      },
+      {
+        heading: "2. CVE-2026-129289 (CVSS 9.2): Request Smuggling en PHP-FPM",
+        paragraphs: [
+          "La falla más peligrosa de este paquete es **CVE-2026-129289**, una vulnerabilidad de contrabando de peticiones HTTP (*Request Smuggling*) en **PHP-FPM** que permite a un atacante sin autenticar lograr **Ejecución Remota de Código (RCE)** con privilegios del worker en una sola petición.",
+          "¿Cómo ocurre? Proxies inversos como **Nginx, Apache, HAProxy y LiteSpeed (LSAPI)** reutilizan conexiones FastCGI persistentes hacia PHP-FPM para ahorrar tiempo de handshake TCP.",
+          "Cuando una aplicación abre `php://input` para leer parte del cuerpo HTTP—por ejemplo, para verificar una firma o enrutar—y **termina la respuesta antes de vaciar todo el stream**, los bytes sobrantes se quedan atrapados en el socket FastCGI compartido. Eso desincroniza la siguiente cabecera FastCGI y permite inyectar directivas maliciosas (`PHP_VALUE` o `auto_prepend_file`) directo en PHP-FPM."
+        ],
+        codeLabel: "Cómo un Stream php://input Sin Vaciar Permite FastCGI Request Smuggling",
+        code: `[ PETICIÓN HTTP DEL ATACANTE ]
+  POST /webhook.php HTTP/1.1
+  Content-Length: 450
+  [ Body: Payload parcial + Parámetros FastCGI ocultos ]
+         │
+         ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ PROXY INVERSO (Nginx / Apache / HAProxy)                             │
+│ • Reenvía la petición por un socket FastCGI persistente REUTILIZADO  │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ WORKER PHP-FPM SIN PARCHE (CVE-2026-129289)                          │
+│ 1. La app abre php://input (ej. lee solo los primeros 64 bytes)      │
+│ 2. La app responde y sale sin consumir el resto del cuerpo           │
+│ 3. Los bytes sobrantes corrompen la trama del siguiente request      │
+│ 4. El atacante inyecta PHP_VALUE / auto_prepend_file ──► ¡RCE!       │
+└──────────────────────────────────────────────────────────────────────┘`
+      },
+      {
+        heading: "3. Ataques a Sesiones y el Cierre de PHP2Shell (CVE-2026-115560 y CVE-2026-126714)",
+        paragraphs: [
+          "Otros dos CVEs críticos con puntaje 9.2 apuntan directo al manejo de sesiones:",
+          "• **CVE-2026-115560 (Serializador de Sesiones / Upload Progress):** ¿Recuerdan la alerta previa de octubre conocida como 'PHP2Shell'? Esta actualización entrega el parche oficial definitivo en el core para corregir la validación de entrada y desajuste del serializador en el progreso de subida de archivos y sesiones compartidas.",
+          "• **CVE-2026-126714 (Condición de Carrera TOCTOU en Sesiones):** Una vulnerabilidad *Time-of-Check to Time-of-Use* en las rutas de escritura de sesiones. Si un atacante gana la carrera durante escrituras concurrentes y tu proyecto incluye dependencias populares en Composer (como **Guzzle** o **Monolog**), puede encadenar *gadgets* de deserialización para ejecutar código arbitrario."
+        ]
+      },
+      {
+        heading: "4. Corrupción de Memoria, Escalada Local y Bypass en PHAR",
+        paragraphs: [
+          "Además de red y sesiones, el release corrige múltiples fallos graves a nivel de memoria en C y criptografía:",
+          "• **Use-After-Free en el Motor (CVE-2026-129182 y CVE-2026-129474):** Fallos UAF en componentes internos del motor y *backtraces* de métodos mágicos capaces de corromper memoria y derivar en RCE.",
+          "• **PHP-FPM `epoll` Use-After-Free (CVE-2026-129291):** Bug de memoria en el bucle de eventos `epoll` de PHP-FPM en Linux que permite **Escalada Local de Privilegios (LPE)** dentro del servidor.",
+          "• **UAF en Caché de Zonas Horarias (CVE-2026-129496):** Error Use-After-Free en la capa de caché de fechas y timezones.",
+          "• **Bypass de Firma en PHAR (CVE-2026-128090):** Degradación de algoritmo OpenSSL en archivos `.phar` que permite evadir la verificación criptográfica de firma."
+        ]
+      },
+      {
+        heading: "5. Checklist de Emergencia para Sysadmins y DevOps",
+        paragraphs: [
+          "No esperes a que un escáner automático o una intrusión te despierte a las 3 de la mañana. Haz esto hoy mismo:",
+          "1. **Verifica tu versión activa:** Ejecuta `php -v` y `php-fpm -v` en cada droplet, VPS o contenedor.",
+          "2. **Actualiza y reconstruye:** Sube a **8.2.36**, **8.3.37**, **8.4.28** o **8.5.13** (en Docker, descarga los nuevos tags oficiales limpiando caché).",
+          "3. **Reinicia los workers:** Ejecuta `systemctl restart php8.x-fpm` (o reinicia los pods en Kubernetes) para asegurar que no queden procesos viejos atendiendo tráfico.",
+          "4. **Mitigación temporal si no puedes actualizar hoy:** Revisa en Nginx si usas `fastcgi_keep_conn on;` en rutas que lean `php://input` parcialmente y desactívalo temporalmente mientras aplicas el parche."
+        ]
+      }
+    ],
+    rememberTitle: "Cosas que quiero recordar 🌸",
+    rememberItems: [
+      "<strong>18 CVEs, 7 Críticos (CVSS 9.2):</strong> Publicados el 19 de noviembre de 2026 para PHP 8.2.36, 8.3.37, 8.4.28 y 8.5.13.",
+      "<strong>CVE-2026-129289 (PHP-FPM Smuggling):</strong> Conexiones FastCGI reutilizadas + lectura incompleta de <code>php://input</code> permiten RCE en una sola petición bajo Nginx/Apache/HAProxy.",
+      "<strong>CVEs de Sesión (115560 y 126714):</strong> Parche definitivo para el fallo PHP2Shell del serializador y corrección de una carrera TOCTOU explotable con gadgets como Guzzle o Monolog.",
+      "<strong>Memoria y Criptografía:</strong> Múltiples Use-After-Free en el motor, LPE en <code>epoll</code> de PHP-FPM (CVE-2026-129291) y bypass de firma OpenSSL en PHAR.",
+      "<strong>Regla de oro tras actualizar:</strong> Siempre reinicia <code>php-fpm</code> después de parchar; el paquete en disco no protege los workers que ya están corriendo en RAM."
+    ],
+    closing: "Un release de seguridad con 7 fallos críticos 9.2 nunca cae en buen momento, pero reconstruir una imagen Docker o actualizar paquetes toma 3 minutos—recuperar un servidor tras un RCE toma días. ¡Actualicen sus pools de PHP-FPM hoy y duerman tranquilos! 🌸",
+    signature: "Jill"
+  },
+  pt: {
+    title: "Querido Diário, O Release de Segurança do PHP de Hoje (18 CVEs e 7 Críticos 9.2): Por Que Atualizar Agora 🌸",
+    date: "20 de novembro de 2026",
+    subtitle: "Análise do PHP 8.2.36, 8.3.37, 8.4.28 e 8.5.13: Request Smuggling no PHP-FPM, Session TOCTOU, Use-After-Free e PHP2Shell por Jill",
+    back: 'Voltar ao Início',
+    intro: "Se você mantém WordPress, Laravel, Symfony ou APIs PHP em produção, pare o café por um segundo e cheque a versão do seu servidor. Em <strong>19 de novembro de 2026</strong>, a The PHP Foundation lançou um pacote emergencial corrigindo <strong>18 vulnerabilidades</strong>—com <strong>7 classificadas como Críticas (CVSS 9.2)</strong>.",
+    introDesc: "De Execução Remota de Código (RCE) em uma única requisição via PHP-FPM Request Smuggling (CVE-2026-129289) até condições de corrida TOCTOU em sessões, bugs Use-After-Free no epoll e a correção final do CVE-2026-115560. Confira os detalhes técnicos e como proteger sua infraestrutura.",
+    bannerLabel: "Avisos Oficiais de Segurança e Changelog do PHP:",
+    bannerUrl: "https://www.php.net/ChangeLog-8.php",
+    sections: [
+      {
+        heading: "1. Matriz de Correção: Quais Versões Estão Seguras?",
+        paragraphs: [
+          "Todas as versões suportadas do PHP receberam atualizações urgentes. Se o seu container ou VPS estiver abaixo destas versões, seu ambiente está vulnerável:",
+          "• **PHP 8.2** → Atualizar para **8.2.36**",
+          "• **PHP 8.3** → Atualizar para **8.3.37**",
+          "• **PHP 8.4** → Atualizar para **8.4.28**",
+          "• **PHP 8.5** → Atualizar para **8.5.13**",
+          "Lembrete importante: rodar `apt upgrade` não basta se você esquecer de **reiniciar os workers do `php-fpm`** para carregar o binário atualizado na memória."
+        ]
+      },
+      {
+        heading: "2. CVE-2026-129289 (CVSS 9.2): Request Smuggling no PHP-FPM",
+        paragraphs: [
+          "O destaque mais crítico é o **CVE-2026-129289**, uma falha de *HTTP Request Smuggling* no **PHP-FPM** que permite a um invasor não autenticado obter **Execução Remota de Código (RCE)** com os privilégios do worker em apenas uma requisição.",
+          "Como funciona? Proxies reversos como **Nginx, Apache, HAProxy e LiteSpeed (LSAPI)** mantêm conexões FastCGI persistentes abertas com o PHP-FPM para evitar latência de TCP.",
+          "Quando uma aplicação abre `php://input` para ler parte do corpo da requisição e **retorna antes de esvaziar completamente o fluxo**, os bytes restantes permanecem no buffer compartilhado do socket FastCGI. Isso dessincroniza o próximo cabeçalho FastCGI, permitindo injetar diretivas como `PHP_VALUE` ou `auto_prepend_file`."
+        ],
+        codeLabel: "Como Fluxos php://input Não Lidos Geram FastCGI Request Smuggling",
+        code: `[ REQUISIÇÃO HTTP DO INVASOR ]
+  POST /webhook.php HTTP/1.1
+  Content-Length: 450
+  [ Body: Payload parcial + Parâmetros FastCGI ocultos ]
+         │
+         ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ PROXY REVERSO (Nginx / Apache / HAProxy)                             │
+│ • Encaminha requisição em socket FastCGI persistente REUTILIZADO     │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ WORKER PHP-FPM SEM PATCH (CVE-2026-129289)                           │
+│ 1. A app abre php://input (ex: lê apenas os primeiros 64 bytes)      │
+│ 2. A app encerra cedo sem consumir o restante do stream              │
+│ 3. Bytes sobrando corrompem o próximo frame FastCGI                  │
+│ 4. Invasor injeta PHP_VALUE / auto_prepend_file ──► RCE!             │
+└──────────────────────────────────────────────────────────────────────┘`
+      },
+      {
+        heading: "3. Falhas em Sessões e a Correção Final do PHP2Shell (CVE-2026-115560 & CVE-2026-126714)",
+        paragraphs: [
+          "Outras duas falhas críticas CVSS 9.2 atingem o sistema de sessões:",
+          "• **CVE-2026-115560 (Serializador de Sessão / Upload Progress):** Conclui a correção oficial definitiva para o bug de validação e dessincronização do serializador ligado ao progresso de upload (caso 'PHP2Shell' de outubro).",
+          "• **CVE-2026-126714 (Condição de Corrida TOCTOU em Sessões):** Uma falha *Time-of-Check to Time-of-Use* em caminhos de gravação de sessão que, combinada com cadeias de *gadgets* populares do Composer (como **Guzzle** ou **Monolog**), possibilita execução arbitrária de código."
+        ]
+      },
+      {
+        heading: "4. Corrupção de Memória, Escalação Local e Bypass em PHAR",
+        paragraphs: [
+          "Além de rede e sessões, a atualização corrige falhas perigosas de memória em C e assinaturas criptográficas:",
+          "• **Use-After-Free no Motor (CVE-2026-129182 e CVE-2026-129474):** Bugs UAF no núcleo do motor e em backtraces de métodos mágicos que levam à corrupção de memória e potencial RCE.",
+          "• **PHP-FPM `epoll` Use-After-Free (CVE-2026-129291):** Falha no loop de eventos `epoll` no Linux permitindo **Escalação Local de Privilégios (LPE)**.",
+          "• **UAF no Cache de Fuso Horário (CVE-2026-129496):** Bug Use-After-Free no cache de datas e timezones.",
+          "• **Bypass de Assinatura PHAR (CVE-2026-128090):** Downgrade de algoritmo OpenSSL em pacotes `.phar` contornando a verificação de integridade."
+        ]
+      },
+      {
+        heading: "5. Checklist de Emergência para Sysadmins e DevOps",
+        paragraphs: [
+          "Não espere um alerta às 3 da manhã. Execute este checklist hoje:",
+          "1. **Cheque sua versão ativa:** Rode `php -v` e `php-fpm -v` em cada VPS ou container.",
+          "2. **Atualize:** Suba para **8.2.36**, **8.3.37**, **8.4.28** ou **8.5.13** (em Docker, atualize as tags sem cache).",
+          "3. **Reinicie os workers:** Rode `systemctl restart php8.x-fpm` (ou recrie os pods no Kubernetes).",
+          "4. **Mitigação temporária:** Se não puder atualizar hoje, verifique se o Nginx usa `fastcgi_keep_conn on;` e desative-o temporariamente em rotas que leem `php://input`."
+        ]
+      }
+    ],
+    rememberTitle: "Coisas que quero lembrar 🌸",
+    rememberItems: [
+      "<strong>18 CVEs, 7 Críticos (CVSS 9.2):</strong> Lançados em 19 de novembro de 2026 para PHP 8.2.36, 8.3.37, 8.4.28 e 8.5.13.",
+      "<strong>CVE-2026-129289 (PHP-FPM Smuggling):</strong> Conexões FastCGI reutilizadas + leitura parcial de <code>php://input</code> permitem RCE em uma requisição.",
+      "<strong>CVEs de Sessão (115560 e 126714):</strong> Correção definitiva do PHP2Shell no serializador e correção da corrida TOCTOU explorável via Guzzle/Monolog.",
+      "<strong>Memória e Criptografia:</strong> Múltiplos Use-After-Free no motor, LPE no <code>epoll</code> do PHP-FPM (CVE-2026-129291) e bypass OpenSSL em PHAR.",
+      "<strong>Regra de ouro pós-patch:</strong> Sempre reinicie o <code>php-fpm</code> após atualizar os pacotes para substituir os workers em RAM."
+    ],
+    closing: "Um release de segurança com 7 falhas críticas 9.2 nunca é bem-vindo no meio da semana, mas atualizar uma imagem Docker leva 3 minutos—recuperar um servidor após um RCE leva dias. Atualizem seus pools PHP-FPM hoje e durmam tranquilos! 🌸",
+    signature: "Jill"
+  }
+};
+
+const currentContent = content[lang as keyof typeof content] || content.en;
+---
+
+<Layout title={currentContent.title} description={currentContent.subtitle}>
+  <Nav currentLang={lang} />
+  <main class="container">
+    <div class="content-wrapper">
+      <header class="blog-header">
+        <a href={`/${lang}/`} class="back-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+          {currentContent.back}
+        </a>
+        <div class="post-meta">
+          <span class="post-date">{currentContent.date}</span>
+          <span class="post-separator">•</span>
+          <span class="post-author">Jill</span>
+        </div>
+        <h1 class="post-title">{currentContent.title}</h1>
+        <p class="post-subtitle">{currentContent.subtitle}</p>
+      </header>
+
+      <article class="post-card">
+        <div class="intro-box">
+          <p class="intro-lead" set:html={currentContent.intro} />
+          <p class="intro-description">{currentContent.introDesc}</p>
+        </div>
+
+        {currentContent.bannerUrl && (
+          <div class="banner-box">
+            <span class="banner-label">{currentContent.bannerLabel}</span>
+            <a href={currentContent.bannerUrl} target="_blank" rel="noopener noreferrer" class="banner-link">
+              {currentContent.bannerUrl}
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-icon">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        )}
+
+        <div class="article-body">
+          {currentContent.sections.map((sec) => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map((p) => (
+                <p class="section-paragraph" set:html={p} />
+              ))}
+              {sec.code && (
+                <div class="code-block-wrapper">
+                  {sec.codeLabel && <span class="code-label">{sec.codeLabel}</span>}
+                  <pre class="ascii-code"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <section class="remember-box">
+            <h2 class="remember-title">{currentContent.rememberTitle}</h2>
+            <ul class="remember-list">
+              {currentContent.rememberItems.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <div class="remember-text" set:html={item} />
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <div class="conclusion-box">
+            <p class="closing-paragraph">{currentContent.closing}</p>
+            <p class="closing-callout">Patch early, stay secure! 🌸</p>
+            <div class="closing-signature">
+              <span>With love & code,</span>
+              <div class="signature-name">{currentContent.signature}</div>
+            </div>
+          </div>
+        </div>
+
+        <BlogNavigation currentSlug="blog-php-security-nov-2026" />
+
+        <div class="comments-wrapper">
+          <CommentsSection 
+            client:load 
+            lang={lang} 
+            postSlug="blog-php-security-nov-2026" 
+          />
+        </div>
+      </article>
+    </div>
+  </main>
+  <Animations />
+</Layout>
+
+<style>
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .blog-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ff9ec4;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: transform 0.2s ease, color 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .back-link:hover {
+    color: #ffb8d4;
+    transform: translateX(-4px);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #94a3b8;
+    font-size: 0.9rem;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+  }
+
+  .post-subtitle {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-box {
+    background: rgba(255, 158, 196, 0.05);
+    border-left: 4px solid #ff9ec4;
+    padding: 1.5rem 1.75rem;
+    border-radius: 0.5rem 1rem 1rem 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .intro-lead {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: #f1f5f9;
+    margin-bottom: 0.75rem;
+  }
+
+  .intro-lead :global(strong) {
+    color: #ff9ec4;
+  }
+
+  .intro-description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin: 0;
+  }
+
+  .banner-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 158, 196, 0.2);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.9rem;
+  }
+
+  .banner-label {
+    color: #94a3b8;
+  }
+
+  .banner-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #ff9ec4;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    word-break: break-all;
+    transition: color 0.2s ease;
+  }
+
+  .banner-link:hover {
+    color: #ffb8d4;
+  }
+
+  .external-icon {
+    flex-shrink: 0;
+  }
+
+  .article-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .section-heading {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #f8fafc;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #cbd5e1;
+    margin: 0;
+  }
+
+  .section-paragraph :global(strong) {
+    color: #f8fafc;
+    font-weight: 600;
+  }
+
+  .section-paragraph :global(code) {
+    background: rgba(15, 23, 42, 0.8);
+    color: #ff9ec4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-size: 0.95em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    border: 1px solid rgba(255, 158, 196, 0.2);
+  }
+
+  .code-block-wrapper {
+    background: #090d16;
+    border: 1px solid rgba(255, 158, 196, 0.2);
+    border-radius: 0.85rem;
+    overflow: hidden;
+    margin: 1.25rem 0;
+  }
+
+  .code-label {
+    display: block;
+    background: rgba(255, 158, 196, 0.08);
+    color: #ff9ec4;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 158, 196, 0.15);
+    letter-spacing: 0.03em;
+  }
+
+  .ascii-code {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #38bdf8;
+  }
+
+  .remember-box {
+    background: linear-gradient(135deg, rgba(255, 158, 196, 0.1) 0%, rgba(147, 51, 234, 0.08) 100%);
+    border: 1px solid rgba(255, 158, 196, 0.25);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-top: 1rem;
+  }
+
+  .remember-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ff9ec4;
+    margin-bottom: 1.25rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .remember-dot {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+
+  .remember-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .remember-text :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .remember-text :global(code) {
+    background: rgba(15, 23, 42, 0.8);
+    color: #ff9ec4;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .closing-callout {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ff9ec4;
+    margin-bottom: 1.5rem;
+  }
+
+  .closing-signature {
+    color: #94a3b8;
+    font-size: 0.95rem;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    color: #f8fafc;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1.5rem 1rem;
+    }
+    
+    .post-card {
+      padding: 1.5rem;
+    }
+
+    .post-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>

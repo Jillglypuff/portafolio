@@ -1,4 +1,4 @@
-// Auto-generated blog navigation list in chronological order (01 to 59)
+// Auto-generated blog navigation list in chronological order (01 to 61)
 
 export interface BlogPostNav {
   number: string;
@@ -895,6 +895,36 @@ export const BLOG_POSTS: BlogPostNav[] = [
       "en": "Microsoft Global Outage",
       "pt": "A Queda Global da Microsoft"
     }
+  },
+  {
+    "number": "60",
+    "slug": "blog-gemini-neon-antigravity",
+    "publishDate": "2026-11-19",
+    "titles": {
+      "es": "Querido Diario, Probando Gemini 4 Neon en Antigravity: Niveles de Pensamiento, Arquitectura y el Equilibrio entre Velocidad y Profundidad 🌸",
+      "en": "Dear Diary, Testing Gemini 4 Neon in Antigravity: Thinking Levels, Architecture & The Middle Ground Between Speed and Depth 🌸",
+      "pt": "Querido Diário, Testando o Gemini 4 Neon no Antigravity: Níveis de Pensamento, Arquitetura e o Equilíbrio entre Velocidade e Profundidade 🌸"
+    },
+    "shortTitles": {
+      "es": "Gemini 4 Neon en Antigravity",
+      "en": "Gemini 4 Neon in Antigravity",
+      "pt": "Gemini 4 Neon no Antigravity"
+    }
+  },
+  {
+    "number": "61",
+    "slug": "blog-php-security-nov-2026",
+    "publishDate": "2026-11-20",
+    "titles": {
+      "es": "Querido Diario, El Release de Seguridad de PHP de Hoy (18 CVEs y 7 Críticos 9.2): Por Qué Debes Actualizar Ya 🌸",
+      "en": "Dear Diary, Today's Massive PHP Security Release (18 CVEs & 7 Critical 9.2 Bugs): Why You Need to Patch Right Now 🌸",
+      "pt": "Querido Diário, O Release de Segurança do PHP de Hoje (18 CVEs e 7 Críticos 9.2): Por Que Atualizar Agora 🌸"
+    },
+    "shortTitles": {
+      "es": "PHP Security Release Nov 2026",
+      "en": "PHP Security Release Nov 2026",
+      "pt": "PHP Security Release Nov 2026"
+    }
   }
 ];
 
@@ -906,7 +936,7 @@ export function getAdjacentBlogPosts(currentSlug: string): {
 } {
   // Normalize slug (strip leading/trailing slashes)
   const cleanSlug = currentSlug.replace(/^\/+|\/+$/g, '');
-  
+
   // Handle bonus/ad-hoc blogs gracefully if visited directly
   if (cleanSlug === 'blog-webhooks') {
     const prevPost = BLOG_POSTS.find(p => p.slug === 'blog-wordpress') || null;

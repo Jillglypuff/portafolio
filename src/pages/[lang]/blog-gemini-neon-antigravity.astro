@@ -1,0 +1,697 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { useTranslations } from '../../i18n/utils';
+import Animations from '../../components/Animations.vue';
+import CommentsSection from '../../components/CommentsSection.vue';
+import BlogNavigation from '../../components/BlogNavigation.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+
+const content = {
+  en: {
+    title: "Dear Diary, Testing Gemini 4 Neon in Antigravity: Thinking Levels, Architecture & The Middle Ground Between Speed and Depth 🌸",
+    date: "November 19, 2026",
+    subtitle: "An objective engineering breakdown of Gemini 4 Neon, its 4 thinking tiers, 1M context specs, API pricing & orchestrator workflows by Jill",
+    back: 'Back to Home',
+    intro: "After spending weeks bouncing between heavy long-horizon reasoning models and ultra-fast lightweight models, Google DeepMind just dropped <strong>Gemini 4 Neon</strong> inside Antigravity. Instead of marketing hype, let's look strictly at the engineering specs, where it sits between Carbon and Hydrogen, and how its four thinking levels actually behave in production codebases.",
+    introDesc: "Why did we need a middle tier between Carbon and Hydrogen? How do Low, Medium, High, and Extra High thinking tiers impact latency and coding benchmarks? What does pairing Neon as an orchestrator with Hydrogen as an executor look like? Here is the technical breakdown.",
+    bannerLabel: "Gemini 4 Neon Official Benchmarks & Specs (Artificial Analysis):",
+    bannerUrl: "https://artificialanalysis.ai/leaderboards/models",
+    sections: [
+      {
+        heading: "1. The Gap Between Carbon and Hydrogen: Why Neon Exists",
+        paragraphs: [
+          "In real software engineering, using only one model tier is either painfully slow or dangerously superficial. Previously in the Gemini 4 lineup, you had two extremes:",
+          "• **Gemini 4 Carbon:** Heavyweight deep reasoning built for massive, long-horizon architecture refactors and research—amazing depth, but high latency and higher token overhead when you just need to fix a multi-file bug.",
+          "• **Gemini 4 Hydrogen:** Ultra-fast, lightweight everyday execution—great for quick UI components, scripts, and fast iterations, but less reliable when tasked with reasoning across complex repository invariants.",
+          "**Gemini 4 Neon** was engineered specifically to sit right in the middle of that spectrum. Its core promise is delivering near-frontier reasoning capability while running up to **3x faster than Carbon** on complex workloads and cutting cost-per-task significantly."
+        ],
+        codeLabel: "The Gemini 4 Trio: Balancing Latency, Cost & Reasoning Horizon",
+        code: `GEMINI 4 MODEL TIERS IN ANTIGRAVITY
+───────────────────────────────────────────────────────────────────────────────
+  [ GEMINI 4 HYDROGEN ]        [ GEMINI 4 NEON ]          [ GEMINI 4 CARBON ]
+  • Fast everyday execution    • Balanced frontier tier   • Deep long-horizon R&D
+  • Lowest latency / TTFT      • Up to 3x faster than     • Maximum reasoning depth
+  • Ideal for single-file        Carbon on dev tasks      • Best for sprawling
+    edits, boilerplate, UI     • Repo-level debugging &     migrations & complex
+    & worker sub-tasks           orchestrator planning      system architecture
+───────────────────────────────────────────────────────────────────────────────
+         ◄── Lower Latency & Cost              Higher Depth & Horizon ──►`
+      },
+      {
+        heading: "2. Four Adjustable Thinking Levels: Controlling Compute at Inference Time",
+        paragraphs: [
+          "One of the most practical engineering features in Gemini 4 Neon is native support for **four configurable thinking levels**: `Low`, `Medium`, `High`, and `Extra High`.",
+          "Instead of treating reasoning depth as an all-or-nothing toggle, you can dial the test-time compute budget based on the task:",
+          "• **Low / Medium:** Ideal for standard CRUD endpoints, component styling, unit test generation, and quick code reviews where you want sub-second responsiveness without burning internal thought tokens.",
+          "• **High / Extra High:** Unlocks deep multi-step planning, race-condition analysis, security auditing, and multi-file refactoring. At its `Extra High` setting, Gemini 4 Neon scored **61 on the Artificial Analysis Intelligence Index** (ranking #3 globally at launch) and claimed top positions on the **Artificial Analysis Coding Agent Index**."
+        ]
+      },
+      {
+        heading: "3. Specs, 1M Unified Context & Real API Pricing",
+        paragraphs: [
+          "For developers integrating models directly via Google AI Studio or Vertex AI—not just inside the Antigravity IDE—the raw numbers determine whether a model makes sense in production:",
+          "• **Unified Context Window:** **1,000,000 tokens** natively supporting text, images, audio, and video inputs.",
+          "• **Output Capacity:** **64K default synchronous output tokens**, scaling all the way up to **1M output tokens** via background long-decode pipelines for massive code generation or document synthesis.",
+          "• **API Pricing:** **$3.00 per million input tokens** (dropping to **$0.15 per million tokens** when leveraging Context Caching) and **$15.00 per million output tokens**.",
+          "That **$0.15/M cached input rate** is huge for agentic workflows. When an agent repeatedly sends a 50,000-token repository index or strict system instructions on every tool-call turn, prompt caching keeps both the bill and the Prefill TTFT under control."
+        ]
+      },
+      {
+        heading: "4. The Antigravity Orchestrator Pattern: Neon + Hydrogen",
+        paragraphs: [
+          "In Google Antigravity (for Pro and Ultra tiers), the cleanest workflow isn't forcing Neon to do every trivial edit itself—it's using **Neon as the planner/orchestrator** and delegating mechanical sub-tasks to **Hydrogen as the execution worker** within the same session.",
+          "1. **Architecture & Diagnosis (Neon - High/Extra High):** Neon reads the repository structure, traces cross-file dependencies, spots the root bug or designs the schema migration, and outputs a strict step-by-step execution plan.",
+          "2. **Parallel Execution (Hydrogen):** Faster worker agents take the well-defined file patches, write the boilerplate, update i18n keys across JSON/Astro files, and run builds.",
+          "3. **Verification (Neon - Medium):** Neon reviews the final diff, verifies edge cases, and catches regressions before you commit.",
+          "This split eliminates the worst flaw of using a single heavy model (waiting forever for trivial edits) and the worst flaw of using a single fast model (hallucinating architecture)."
+        ],
+        codeLabel: "Multi-Model Agent Workflow Inside Antigravity",
+        code: `USER TASK (e.g., Multi-file refactor + i18n + test suite)
+     │
+     ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ ORCHESTRATOR: GEMINI 4 NEON (Thinking: High / Extra High)          │
+│ • Maps repo dependencies inside 1M context window                  │
+│ • Identifies breaking edges & designs strict implementation plan   │
+└───────────────────────────────┬────────────────────────────────────┘
+                                │
+             ┌──────────────────┴──────────────────┐
+             ▼                                     ▼
+┌─────────────────────────────┐     ┌─────────────────────────────┐
+│ WORKER A: GEMINI 4 HYDROGEN │     │ WORKER B: GEMINI 4 HYDROGEN │
+│ • Applies backend TS/SQL    │     │ • Updates UI components &   │
+│   patches at high speed     │     │   multi-language strings    │
+└──────────────┬──────────────┘     └──────────────┬──────────────┘
+               └──────────────────┬────────────────┘
+                                  ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ VERIFIER: GEMINI 4 NEON (Thinking: Medium)                         │
+│ • Audits combined git diff & validates build/test output           │
+└────────────────────────────────────────────────────────────────────┘`
+      }
+    ],
+    rememberTitle: "Things I Want To Remember 🌸",
+    rememberItems: [
+      "<strong>The Middle Tier:</strong> Gemini 4 Neon bridges the gap between Hydrogen (fast execution) and Carbon (heavy deep research), running up to 3x faster than Carbon on complex dev workloads.",
+      "<strong>4 Thinking Levels:</strong> Configurable between Low, Medium, High, and Extra High—reaching #3 globally (score 61) on the Artificial Analysis Intelligence Index at Extra High.",
+      "<strong>Context & Output:</strong> 1M unified multimodal context window with 64K default output (expandable to 1M via background long decode).",
+      "<strong>Caching Economics:</strong> $3.00/M input and $15.00/M output, with cached inputs dropping 95% down to $0.15/M.",
+      "<strong>Best Antigravity Pattern:</strong> Use Neon as the repo-level orchestrator and reviewer, while delegating fast file-level execution to Hydrogen."
+    ],
+    closing: "You don't need the heaviest model on earth for every task, and you shouldn't trust a sprint-speed model with core architecture. Having a sharp middle tier with adjustable thinking budgets finally makes agentic workflows feel balanced. 🌸",
+    signature: "Jill"
+  },
+  es: {
+    title: "Querido Diario, Probando Gemini 4 Neon en Antigravity: Niveles de Pensamiento, Arquitectura y el Equilibrio entre Velocidad y Profundidad 🌸",
+    date: "19 de noviembre de 2026",
+    subtitle: "Análisis técnico de Gemini 4 Neon, sus 4 niveles de razonamiento, ventana de 1M de contexto, precios de API y flujos orquestadores por Jill",
+    back: 'Volver al Inicio',
+    intro: "Después de pasar semanas saltando entre modelos pesados de razonamiento profundo y modelos ultra rápidos para tareas ligeras, Google DeepMind acaba de lanzar <strong>Gemini 4 Neon</strong> dentro de Antigravity. Sin fanatismos ni adornos innecesarios, veamos sus especificaciones reales, dónde encaja entre Carbon e Hydrogen y cómo se comportan sus cuatro niveles de pensamiento en código de producción.",
+    introDesc: "¿Por qué hacía falta un nivel intermedio entre Carbon e Hydrogen? ¿Cómo impactan los modos Low, Medium, High y Extra High en la latencia y en los benchmarks de programación? ¿Y cómo funciona el patrón orquestador combinando Neon con Hydrogen? Aquí tienes el desglose técnico.",
+    bannerLabel: "Benchmarks y Especificaciones Oficiales de Gemini 4 Neon (Artificial Analysis):",
+    bannerUrl: "https://artificialanalysis.ai/leaderboards/models",
+    sections: [
+      {
+        heading: "1. El Hueco Entre Carbon e Hydrogen: Por Qué Nace Neon",
+        paragraphs: [
+          "En ingeniería de software real, usar un solo nivel de modelo siempre te deja en un extremo incómodo: o es desesperadamente lento o es demasiado superficial. Hasta ahora, la familia Gemini 4 tenía dos polos opuestos:",
+          "• **Gemini 4 Carbon:** Razonamiento pesado diseñado para investigación profunda y migraciones arquitectónicas enormes—gran profundidad, pero con latencia alta y demasiado consumo cuando solo necesitas corregir un bug en tres archivos.",
+          "• **Gemini 4 Hydrogen:** Ejecución diaria ultrarrápida y ligera—ideal para componentes UI, scripts y cambios rápidos, pero menos confiable si debe razonar sobre invariantes complejas de todo un repositorio.",
+          "**Gemini 4 Neon** fue diseñado exactamente para cubrir ese punto medio. Su propuesta técnica es ofrecer capacidad de razonamiento casi de frontera siendo hasta **3 veces más rápido que Carbon** en cargas complejas y reduciendo el costo por tarea."
+        ],
+        codeLabel: "El Trío Gemini 4: Balance entre Latencia, Costo y Horizonte de Razonamiento",
+        code: `NIVELES DE MODELOS GEMINI 4 EN ANTIGRAVITY
+───────────────────────────────────────────────────────────────────────────────
+  [ GEMINI 4 HYDROGEN ]        [ GEMINI 4 NEON ]          [ GEMINI 4 CARBON ]
+  • Ejecución diaria rápida    • Nivel intermedio balanceado • I+D profundo de largo
+  • Menor latencia / TTFT      • Hasta 3x más rápido que     horizonte
+  • Ideal para archivos          Carbon en tareas de dev   • Mejor para migraciones
+    aislados, boilerplate, UI  • Debugging multi-archivo y   masivas y arquitectura
+    y subtareas de workers       planificación orquestadora  de sistemas complejos
+───────────────────────────────────────────────────────────────────────────────
+         ◄── Menor Latencia y Costo            Mayor Profundidad ──►`
+      },
+      {
+        heading: "2. Cuatro Niveles de Pensamiento Configurables en Tiempo de Inferencia",
+        paragraphs: [
+          "Una de las características más prácticas de Gemini 4 Neon desde el punto de vista de ingeniería es su soporte nativo para **cuatro niveles de pensamiento**: `Low`, `Medium`, `High` y `Extra High`.",
+          "En lugar de tratar el razonamiento extendido como un interruptor binario, puedes ajustar el presupuesto de cómputo según el problema:",
+          "• **Low / Medium:** Óptimo para endpoints CRUD estándar, ajustes CSS/UI, generación de pruebas unitarias y revisiones rápidas donde buscas respuesta ágil sin quemar miles de tokens internos de pensamiento.",
+          "• **High / Extra High:** Desbloquea planificación multipaso, análisis de condiciones de carrera, auditoría de seguridad y refactorización multi-archivo. En su modo `Extra High`, Gemini 4 Neon alcanzó **61 puntos en el Artificial Analysis Intelligence Index** (puesto #3 global en su lanzamiento) y lideró el **Artificial Analysis Coding Agent Index**."
+        ]
+      },
+      {
+        heading: "3. Especificaciones Técnicas, Contexto de 1M y Precios de API",
+        paragraphs: [
+          "Para quienes integramos modelos directamente vía Google AI Studio o Vertex AI—más allá del editor Antigravity—los números duros deciden si un modelo es viable en producción:",
+          "• **Ventana de Contexto Unificada:** **1,000,000 de tokens** con soporte nativo multimodal (texto, imagen, audio y video).",
+          "• **Capacidad de Salida:** **64K tokens de salida síncrona por defecto**, escalable hasta **1M de tokens** mediante *background long decode* para generación masiva de código o síntesis documental.",
+          "• **Precios de API:** **$3.00 por millón de tokens de entrada** (bajando a **$0.15 por millón** con *Context Caching*) y **$15.00 por millón de tokens de salida**.",
+          "Esa tarifa de **$0.15/M en entradas cacheadas** es clave para agentes autónomos. Cuando un agente reenvía un índice de repositorio de 50,000 tokens en cada turno de herramienta, el caching mantiene controlados tanto la factura como el TTFT de la fase Prefill."
+        ]
+      },
+      {
+        heading: "4. El Patrón Orquestador en Antigravity: Neon + Hydrogen",
+        paragraphs: [
+          "Dentro de Antigravity (para suscriptores Pro y Ultra), el flujo más eficiente no consiste en pedirle a Neon que escriba cada línea trivial, sino en usar a **Neon como planificador/orquestador** y delegar la ejecución mecánica a **Hydrogen como worker** dentro de la misma sesión.",
+          "1. **Arquitectura y Diagnóstico (Neon - High/Extra High):** Neon lee la estructura del repositorio, rastrea dependencias cruzadas, identifica la causa raíz del fallo o diseña la migración y genera un plan estricto paso a paso.",
+          "2. **Ejecución en Paralelo (Hydrogen):** Agentes workers rápidos aplican los parches definidos por archivo, actualizan traducciones o estilos y ejecutan compilaciones.",
+          "3. **Verificación Final (Neon - Medium):** Neon audita el diff combinado, valida casos borde y detecta regresiones antes del commit.",
+          "Dividir así las responsabilidades evita esperar eternamente por ediciones simples y evita que un modelo ligero alucine decisiones de arquitectura."
+        ],
+        codeLabel: "Flujo Agéntico Multi-Modelo dentro de Antigravity",
+        code: `TAREA DEL USUARIO (Ej. Refactor multi-archivo + i18n + suite de pruebas)
+     │
+     ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ ORQUESTADOR: GEMINI 4 NEON (Thinking: High / Extra High)           │
+│ • Mapea dependencias del repo en la ventana de 1M tokens           │
+│ • Detecta impactos laterales y diseña el plan de ejecución         │
+└───────────────────────────────┬────────────────────────────────────┘
+                                │
+             ┌──────────────────┴──────────────────┐
+             ▼                                     ▼
+┌─────────────────────────────┐     ┌─────────────────────────────┐
+│ WORKER A: GEMINI 4 HYDROGEN │     │ WORKER B: GEMINI 4 HYDROGEN │
+│ • Aplica parches backend    │     │ • Actualiza componentes UI y  │
+│   TS/SQL a alta velocidad   │     │   cadenas multi-idioma      │
+└──────────────┬──────────────┘     └──────────────┬──────────────┘
+               └──────────────────┬────────────────┘
+                                  ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ VERIFICADOR: GEMINI 4 NEON (Thinking: Medium)                      │
+│ • Audita el git diff completo y valida el resultado del build      │
+└────────────────────────────────────────────────────────────────────┘`
+      }
+    ],
+    rememberTitle: "Cosas que quiero recordar 🌸",
+    rememberItems: [
+      "<strong>El Punto Medio:</strong> Gemini 4 Neon cubre el espacio entre Hydrogen (ejecución rápida) y Carbon (investigación pesada), siendo hasta 3x más rápido que Carbon en cargas de desarrollo.",
+      "<strong>4 Niveles de Pensamiento:</strong> Ajustable entre Low, Medium, High y Extra High—logrando el #3 global (61 puntos) en el Artificial Analysis Intelligence Index en Extra High.",
+      "<strong>Contexto y Salida:</strong> Ventana multimodal de 1M de tokens con 64K de salida síncrona (hasta 1M en modo background).",
+      "<strong>Economía de Caching:</strong> $3.00/M entrada y $15.00/M salida, bajando un 95% a $0.15/M cuando la entrada está en caché.",
+      "<strong>Mejor Flujo en Antigravity:</strong> Usar Neon para planificar, diagnosticar y revisar diffs, mientras Hydrogen ejecuta los cambios rápidos por archivo."
+    ],
+    closing: "No necesitas el modelo más pesado del planeta para editar un archivo CSS, ni conviene dejar la arquitectura central en manos de un modelo diseñado solo para velocidad. Tener un nivel intermedio con presupuesto de pensamiento ajustable vuelve mucho más sensato el trabajo diario con agentes. 🌸",
+    signature: "Jill"
+  },
+  pt: {
+    title: "Querido Diário, Testando o Gemini 4 Neon no Antigravity: Níveis de Pensamento, Arquitetura e o Equilíbrio entre Velocidade e Profundidade 🌸",
+    date: "19 de novembro de 2026",
+    subtitle: "Análise técnica do Gemini 4 Neon, seus 4 níveis de raciocínio, janela de 1M de contexto, preços de API e fluxos orquestradores por Jill",
+    back: 'Voltar ao Início',
+    intro: "Depois de semanas alternando entre modelos pesados de raciocínio longo e modelos ultrarrápidos para tarefas leves, o Google DeepMind acabou de lançar o <strong>Gemini 4 Neon</strong> no Antigravity. Sem exageros de marketing, vamos olhar diretamente para as especificações técnicas, onde ele se posiciona entre o Carbon e o Hydrogen e como seus quatro níveis de pensamento funcionam na prática.",
+    introDesc: "Por que era necessário um nível intermediário entre Carbon e Hydrogen? Como os modos Low, Medium, High e Extra High afetam a latência e os benchmarks de código? E como funciona o padrão orquestrador combinando Neon e Hydrogen? Confira a análise técnica.",
+    bannerLabel: "Benchmarks e Especificações Oficiais do Gemini 4 Neon (Artificial Analysis):",
+    bannerUrl: "https://artificialanalysis.ai/leaderboards/models",
+    sections: [
+      {
+        heading: "1. A Lacuna Entre Carbon e Hydrogen: Por Que o Neon Existe",
+        paragraphs: [
+          "Na engenharia de software real, depender de um único nível de modelo sempre cobra um preço: ou é lento demais ou é superficial demais. Na linha Gemini 4, tínhamos dois extremos:",
+          "• **Gemini 4 Carbon:** Raciocínio profundo feito para refatorações arquiteturais gigantescas e pesquisa de longo horizonte—profundidade excelente, mas com latência elevada para corrigir um bug simples em poucos arquivos.",
+          "• **Gemini 4 Hydrogen:** Execução diária ultrarrápida e leve—ótimo para componentes de UI e scripts rápidos, porém menos confiável para raciocinar sobre invariantes complexas de um repositório inteiro.",
+          "**Gemini 4 Neon** foi projetado exatamente para ocupar o centro desse espectro. Sua proposta é entregar capacidade de raciocínio próxima à fronteira sendo até **3x mais rápido que o Carbon** em cargas complexas e reduzindo o custo por tarefa."
+        ],
+        codeLabel: "O Trio Gemini 4: Equilíbrio entre Latência, Custo e Horizonte de Raciocínio",
+        code: `NÍVEIS DE MODELOS GEMINI 4 NO ANTIGRAVITY
+───────────────────────────────────────────────────────────────────────────────
+  [ GEMINI 4 HYDROGEN ]        [ GEMINI 4 NEON ]          [ GEMINI 4 CARBON ]
+  • Execução diária rápida     • Nível intermediário      • P&D profundo de longo
+  • Menor latência / TTFT        equilibrado                horizonte
+  • Ideal para edições         • Até 3x mais rápido que   • Melhor para migrações
+    pontuais, UI e subtarefas    Carbon em dev real         massivas e arquitetura
+    de agentes workers         • Debug multi-arquivo        de sistemas complexos
+───────────────────────────────────────────────────────────────────────────────
+         ◄── Menor Latência e Custo            Maior Profundidade ──►`
+      },
+      {
+        heading: "2. Quatro Níveis de Pensamento Ajustáveis na Inferência",
+        paragraphs: [
+          "Um dos recursos mais úteis do Gemini 4 Neon para desenvolvedores é o controle nativo de **quatro níveis de pensamento**: `Low`, `Medium`, `High` e `Extra High`.",
+          "Em vez de um botão tudo-ou-nada, você ajusta o orçamento computacional conforme a complexidade:",
+          "• **Low / Medium:** Ideal para endpoints CRUD, ajustes de estilo, testes unitários e revisões rápidas sem gastar tokens internos desnecessários.",
+          "• **High / Extra High:** Libera planejamento em múltiplas etapas, análise de condições de corrida, auditoria de segurança e refatoração entre vários arquivos. No modo `Extra High`, o Gemini 4 Neon marcou **61 pontos no Artificial Analysis Intelligence Index** (#3 global no lançamento) e liderou o **Artificial Analysis Coding Agent Index**."
+        ]
+      },
+      {
+        heading: "3. Especificações Técnicas, Contexto de 1M e Preços de API",
+        paragraphs: [
+          "Para quem integra modelos diretamente via Google AI Studio ou Vertex AI, os números brutos definem a viabilidade em produção:",
+          "• **Janela de Contexto Unificada:** **1.000.000 de tokens** com suporte nativo multimodal (texto, imagem, áudio e vídeo).",
+          "• **Capacidade de Saída:** **64K tokens de saída síncrona por padrão**, escalando até **1M de tokens** via *background long decode*.",
+          "• **Preços de API:** **US$ 3,00 por milhão de tokens de entrada** (caindo para **US$ 0,15 por milhão** com *Context Caching*) e **US$ 15,00 por milhão de tokens de saída**.",
+          "Essa tarifa de **US$ 0,15/M em entradas em cache** é fundamental para fluxos agênticos, mantendo tanto a fatura quanto o TTFT de Prefill sob controle quando o agente reenvia o índice do repositório a cada turno."
+        ]
+      },
+      {
+        heading: "4. O Padrão Orquestrador no Antigravity: Neon + Hydrogen",
+        paragraphs: [
+          "No Google Antigravity (planos Pro e Ultra), o fluxo mais eficiente é usar o **Neon como planejador/orquestrador** e delegar tarefas mecânicas para o **Hydrogen como worker** dentro da mesma sessão.",
+          "1. **Arquitetura e Diagnóstico (Neon - High/Extra High):** O Neon mapeia o repositório, rastreia dependências entre arquivos, encontra a causa raiz e cria um plano objetivo.",
+          "2. **Execução Paralela (Hydrogen):** Workers rápidos aplicam os patches definidos, atualizam textos multi-idioma e executam builds.",
+          "3. **Verificação (Neon - Medium):** O Neon revisa o diff combinado e valida casos de borda antes do commit."
+        ],
+        codeLabel: "Fluxo Agêntico Multimodelo no Antigravity",
+        code: `TAREFA DO USUÁRIO (Ex: Refatoração multi-arquivo + i18n + testes)
+     │
+     ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ ORQUESTRADOR: GEMINI 4 NEON (Thinking: High / Extra High)          │
+│ • Mapeia dependências do repo na janela de 1M tokens               │
+│ • Identifica impactos laterais e define o plano de execução        │
+└───────────────────────────────┬────────────────────────────────────┘
+                                │
+             ┌──────────────────┴──────────────────┐
+             ▼                                     ▼
+┌─────────────────────────────┐     ┌─────────────────────────────┐
+│ WORKER A: GEMINI 4 HYDROGEN │     │ WORKER B: GEMINI 4 HYDROGEN │
+│ • Aplica patches backend    │     │ • Atualiza componentes UI e │
+│   TS/SQL em alta velocidade │     │   strings multi-idioma      │
+└──────────────┬──────────────┘     └──────────────┬──────────────┘
+               └──────────────────┬────────────────┘
+                                  ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ VERIFICADOR: GEMINI 4 NEON (Thinking: Medium)                      │
+│ • Audita o git diff completo e valida a compilação                 │
+└────────────────────────────────────────────────────────────────────┘`
+      }
+    ],
+    rememberTitle: "Coisas que quero lembrar 🌸",
+    rememberItems: [
+      "<strong>O Meio-Termo:</strong> O Gemini 4 Neon preenche a lacuna entre o Hydrogen (execução rápida) e o Carbon (pesquisa pesada), rodando até 3x mais rápido que o Carbon em cargas de desenvolvimento.",
+      "<strong>4 Níveis de Pensamento:</strong> Configurável entre Low, Medium, High e Extra High—alcançando o 3º lugar global (61 pontos) no Artificial Analysis Intelligence Index.",
+      "<strong>Contexto e Saída:</strong> Janela multimodal de 1M de tokens com 64K de saída padrão (até 1M em background long decode).",
+      "<strong>Economia com Cache:</strong> US$ 3,00/M entrada e US$ 15,00/M saída, com entradas em cache caindo 95% para US$ 0,15/M.",
+      "<strong>Melhor Uso no Antigravity:</strong> Usar o Neon como orquestrador e revisor, delegando edições rápidas por arquivo ao Hydrogen."
+    ],
+    closing: "Você não precisa do modelo mais pesado do mundo para editar um CSS, nem deve confiar a arquitetura principal a um modelo focado apenas em velocidade. Ter um nível intermediário equilibrado torna o trabalho diário com agentes muito mais eficiente. 🌸",
+    signature: "Jill"
+  }
+};
+
+const currentContent = content[lang as keyof typeof content] || content.en;
+---
+
+<Layout title={currentContent.title} description={currentContent.subtitle}>
+  <Nav currentLang={lang} />
+  <main class="container">
+    <div class="content-wrapper">
+      <header class="blog-header">
+        <a href={`/${lang}/`} class="back-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+          {currentContent.back}
+        </a>
+        <div class="post-meta">
+          <span class="post-date">{currentContent.date}</span>
+          <span class="post-separator">•</span>
+          <span class="post-author">Jill</span>
+        </div>
+        <h1 class="post-title">{currentContent.title}</h1>
+        <p class="post-subtitle">{currentContent.subtitle}</p>
+      </header>
+
+      <article class="post-card">
+        <div class="intro-box">
+          <p class="intro-lead" set:html={currentContent.intro} />
+          <p class="intro-description">{currentContent.introDesc}</p>
+        </div>
+
+        {currentContent.bannerUrl && (
+          <div class="banner-box">
+            <span class="banner-label">{currentContent.bannerLabel}</span>
+            <a href={currentContent.bannerUrl} target="_blank" rel="noopener noreferrer" class="banner-link">
+              {currentContent.bannerUrl}
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-icon">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        )}
+
+        <div class="article-body">
+          {currentContent.sections.map((sec) => (
+            <section class="content-section">
+              <h2 class="section-heading">{sec.heading}</h2>
+              {sec.paragraphs.map((p) => (
+                <p class="section-paragraph" set:html={p} />
+              ))}
+              {sec.code && (
+                <div class="code-block-wrapper">
+                  {sec.codeLabel && <span class="code-label">{sec.codeLabel}</span>}
+                  <pre class="ascii-code"><code>{sec.code}</code></pre>
+                </div>
+              )}
+            </section>
+          ))}
+
+          <section class="remember-box">
+            <h2 class="remember-title">{currentContent.rememberTitle}</h2>
+            <ul class="remember-list">
+              {currentContent.rememberItems.map((item) => (
+                <li class="remember-item">
+                  <span class="remember-dot">🌸</span>
+                  <div class="remember-text" set:html={item} />
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <div class="conclusion-box">
+            <p class="closing-paragraph">{currentContent.closing}</p>
+            <p class="closing-callout">Keep shipping smart! 🌸</p>
+            <div class="closing-signature">
+              <span>With love & code,</span>
+              <div class="signature-name">{currentContent.signature}</div>
+            </div>
+          </div>
+        </div>
+
+        <BlogNavigation currentSlug="blog-gemini-neon-antigravity" />
+
+        <div class="comments-wrapper">
+          <CommentsSection 
+            client:load 
+            lang={lang} 
+            postSlug="blog-gemini-neon-antigravity" 
+          />
+        </div>
+      </article>
+    </div>
+  </main>
+  <Animations />
+</Layout>
+
+<style>
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .blog-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ff9ec4;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: transform 0.2s ease, color 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .back-link:hover {
+    color: #ffb8d4;
+    transform: translateX(-4px);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #94a3b8;
+    font-size: 0.9rem;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+  }
+
+  .post-subtitle {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .post-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .intro-box {
+    background: rgba(255, 158, 196, 0.05);
+    border-left: 4px solid #ff9ec4;
+    padding: 1.5rem 1.75rem;
+    border-radius: 0.5rem 1rem 1rem 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .intro-lead {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: #f1f5f9;
+    margin-bottom: 0.75rem;
+  }
+
+  .intro-lead :global(strong) {
+    color: #ff9ec4;
+  }
+
+  .intro-description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin: 0;
+  }
+
+  .banner-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 158, 196, 0.2);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.9rem;
+  }
+
+  .banner-label {
+    color: #94a3b8;
+  }
+
+  .banner-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #ff9ec4;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    word-break: break-all;
+    transition: color 0.2s ease;
+  }
+
+  .banner-link:hover {
+    color: #ffb8d4;
+  }
+
+  .external-icon {
+    flex-shrink: 0;
+  }
+
+  .article-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .section-heading {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #f8fafc;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .section-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #cbd5e1;
+    margin: 0;
+  }
+
+  .section-paragraph :global(strong) {
+    color: #f8fafc;
+    font-weight: 600;
+  }
+
+  .section-paragraph :global(code) {
+    background: rgba(15, 23, 42, 0.8);
+    color: #ff9ec4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-size: 0.95em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    border: 1px solid rgba(255, 158, 196, 0.2);
+  }
+
+  .code-block-wrapper {
+    background: #090d16;
+    border: 1px solid rgba(255, 158, 196, 0.2);
+    border-radius: 0.85rem;
+    overflow: hidden;
+    margin: 1.25rem 0;
+  }
+
+  .code-label {
+    display: block;
+    background: rgba(255, 158, 196, 0.08);
+    color: #ff9ec4;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 158, 196, 0.15);
+    letter-spacing: 0.03em;
+  }
+
+  .ascii-code {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #38bdf8;
+  }
+
+  .remember-box {
+    background: linear-gradient(135deg, rgba(255, 158, 196, 0.1) 0%, rgba(147, 51, 234, 0.08) 100%);
+    border: 1px solid rgba(255, 158, 196, 0.25);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-top: 1rem;
+  }
+
+  .remember-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ff9ec4;
+    margin-bottom: 1.25rem;
+  }
+
+  .remember-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .remember-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .remember-dot {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+
+  .remember-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .remember-text :global(strong) {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .conclusion-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .closing-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .closing-callout {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ff9ec4;
+    margin-bottom: 1.5rem;
+  }
+
+  .closing-signature {
+    color: #94a3b8;
+    font-size: 0.95rem;
+  }
+
+  .signature-name {
+    font-weight: 700;
+    color: #f8fafc;
+    margin-top: 0.25rem;
+  }
+
+  .comments-wrapper {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1.5rem 1rem;
+    }
+    
+    .post-card {
+      padding: 1.5rem;
+    }
+
+    .post-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>
